@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CZ CELLxGENE Census — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="active">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / CZ CELLxGENE Census</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>CZ CELLxGENE Census</h1>
+    <p class="description">Query the CELLxGENE Census (61M+ cells) programmatically. Use when you need expression data across tissues, diseases, or cell types from the largest curated single-cell atlas. Best for population-scal</p>
+    <h1>CZ CELLxGENE Census</h1>
+
+<h2>Overview</h2>
+
+<p>The CZ CELLxGENE Census provides programmatic access to a comprehensive, versioned collection of standardized single-cell genomics data from CZ CELLxGENE Discover. This skill enables efficient querying and analysis of millions of cells across thousands of datasets.</p>
+
+<p>The Census includes:</p>
+<ul><li><strong>61+ million cells</strong> from human and mouse</li>
+<li><strong>Standardized metadata</strong> (cell types, tissues, diseases, donors)</li>
+<li><strong>Raw gene expression</strong> matrices</li>
+<li><strong>Pre-calculated embeddings</strong> and statistics</li>
+<li><strong>Integration with PyTorch, scanpy, and other analysis tools</strong></li>
+</ul>
+<h2>When to Use This Skill</h2>
+
+<p>This skill should be used when:</p>
+<ul><li>Querying single-cell expression data by cell type, tissue, or disease</li>
+<li>Exploring available single-cell datasets and metadata</li>
+<li>Training machine learning models on single-cell data</li>
+<li>Performing large-scale cross-dataset analyses</li>
+<li>Integrating Census data with scanpy or other analysis frameworks</li>
+<li>Computing statistics across millions of cells</li>
+<li>Accessing pre-calculated embeddings or model predictions</li>
+</ul>
+<h2>Installation and Setup</h2>
+
+<p>Install the Census API:</p>
+<pre><code class="language-bash">uv pip install cellxgene-census</code></pre>
+
+<p>For machine learning workflows, install additional dependencies:</p>
+<pre><code class="language-bash">uv pip install cellxgene-census[experimental]</code></pre>
+
+<h2>Core Workflow Patterns</h2>
+
+<h3>1. Opening the Census</h3>
+
+<p>Always use the context manager to ensure proper resource cleanup:</p>
+
+<pre><code class="language-python">import cellxgene_census
+
+# Open latest stable version
+with cellxgene_census.open_soma() as census:
+    # Work with census data
+
+# Open specific version for reproducibility
+with cellxgene_census.open_soma(census_version="2023-07-25") as census:
+    # Work with census data</code></pre>
+
+<p><strong>Key points:</strong></p>
+<ul><li>Use context manager (<code>with</code> statement) for automatic cleanup</li>
+<li>Specify <code>census_version</code> for reproducible analyses</li>
+<li>Default opens latest "stable" release</li>
+</ul>
+<h3>2. Exploring Census Information</h3>
+
+<p>Before querying expression data, explore available datasets and metadata.</p>
+
+<p><strong>Access summary information:</strong></p>
+<pre><code class="language-python"># Get summary statistics
+summary = census["census_info"]["summary"].read().concat().to_pandas()
+print(f"Total cells: {summary['total_cell_count'][0]}")
+
+# Get all datasets
+datasets = census["census_info"]["datasets"].read().concat().to_pandas()
+
+# Filter datasets by criteria
+covid_datasets = datasets[datasets["disease"].str.contains("COVID", na=False)]</code></pre>
+
+<p><strong>Query cell metadata to understand available data:</strong></p>
+<pre><code class="language-python"># Get unique cell types in a tissue
+cell_metadata = cellxgene_census.get_obs(
+    census,
+    "homo_sapiens",
+    value_filter="tissue_general == 'brain' and is_primary_data == True",
+    column_names=["cell_type"]
+)
+unique_cell_types = cell_metadata["cell_type"].unique()
+print(f"Found {len(unique_cell_types)} cell types in brain")
+
+# Count cells by tissue
+tissue_counts = cell_metadata.groupby("tissue_general").size()</code></pre>
+
+<p><strong>Important:</strong> Always filter for <code>is_primary_data == True</code> to avoid counting duplicate cells unless specifically analyzing duplicates.</p>
+
+<h3>3. Querying Expression Data (Small to Medium Scale)</h3>
+
+<p>For queries returning < 100k cells that fit in memory, use <code>get_anndata()</code>:</p>
+
+<pre><code class="language-python"># Basic query with cell type and tissue filters
+adata = cellxgene_census.get_anndata(
+    census=census,
+    organism="Homo sapiens",  # or "Mus musculus"
+    obs_value_filter="cell_type == 'B cell' and tissue_general == 'lung' and is_primary_data == True",
+    obs_column_names=["assay", "disease", "sex", "donor_id"],
+)
+
+# Query specific genes with multiple filters
+adata = cellxgene_census.get_anndata(
+    census=census,
+    organism="Homo sapiens",
+    var_value_filter="feature_name in ['CD4', 'CD8A', 'CD19', 'FOXP3']",
+    obs_value_filter="cell_type == 'T cell' and disease == 'COVID-19' and is_primary_data == True",
+    obs_column_names=["cell_type", "tissue_general", "donor_id"],
+)</code></pre>
+
+<p><strong>Filter syntax:</strong></p>
+<ul><li>Use <code>obs_value_filter</code> for cell filtering</li>
+<li>Use <code>var_value_filter</code> for gene filtering</li>
+<li>Combine conditions with <code>and</code>, <code>or</code></li>
+<li>Use <code>in</code> for multiple values: <code>tissue in ['lung', 'liver']</code></li>
+<li>Select only needed columns with <code>obs_column_names</code></li>
+</ul>
+<p><strong>Getting metadata separately:</strong></p>
+<pre><code class="language-python"># Query cell metadata
+cell_metadata = cellxgene_census.get_obs(
+    census, "homo_sapiens",
+    value_filter="disease == 'COVID-19' and is_primary_data == True",
+    column_names=["cell_type", "tissue_general", "donor_id"]
+)
+
+# Query gene metadata
+gene_metadata = cellxgene_census.get_var(
+    census, "homo_sapiens",
+    value_filter="feature_name in ['CD4', 'CD8A']",
+    column_names=["feature_id", "feature_name", "feature_length"]
+)</code></pre>
+
+<h3>4. Large-Scale Queries (Out-of-Core Processing)</h3>
+
+<p>For queries exceeding available RAM, use <code>axis_query()</code> with iterative processing:</p>
+
+<pre><code class="language-python">import tiledbsoma as soma
+
+# Create axis query
+query = census["census_data"]["homo_sapiens"].axis_query(
+    measurement_name="RNA",
+    obs_query=soma.AxisQuery(
+        value_filter="tissue_general == 'brain' and is_primary_data == True"
+    ),
+    var_query=soma.AxisQuery(
+        value_filter="feature_name in ['FOXP2', 'TBR1', 'SATB2']"
+    )
+)
+
+# Iterate through expression matrix in chunks
+iterator = query.X("raw").tables()
+for batch in iterator:
+    # batch is a pyarrow.Table with columns:
+    # - soma_data: expression value
+    # - soma_dim_0: cell (obs) coordinate
+    # - soma_dim_1: gene (var) coordinate
+    process_batch(batch)</code></pre>
+
+<p><strong>Computing incremental statistics:</strong></p>
+<pre><code class="language-python"># Example: Calculate mean expression
+n_observations = 0
+sum_values = 0.0
+
+iterator = query.X("raw").tables()
+for batch in iterator:
+    values = batch["soma_data"].to_numpy()
+    n_observations += len(values)
+    sum_values += values.sum()
+
+mean_expression = sum_values / n_observations</code></pre>
+
+<h3>5. Machine Learning with PyTorch</h3>
+
+<p>For training models, use the experimental PyTorch integration:</p>
+
+<pre><code class="language-python">from cellxgene_census.experimental.ml import experiment_dataloader
+
+with cellxgene_census.open_soma() as census:
+    # Create dataloader
+    dataloader = experiment_dataloader(
+        census["census_data"]["homo_sapiens"],
+        measurement_name="RNA",
+        X_name="raw",
+        obs_value_filter="tissue_general == 'liver' and is_primary_data == True",
+        obs_column_names=["cell_type"],
+        batch_size=128,
+        shuffle=True,
+    )
+
+    # Training loop
+    for epoch in range(num_epochs):
+        for batch in dataloader:
+            X = batch["X"]  # Gene expression tensor
+            labels = batch["obs"]["cell_type"]  # Cell type labels
+
+            # Forward pass
+            outputs = model(X)
+            loss = criterion(outputs, labels)
+
+            # Backward pass
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()</code></pre>
+
+<p><strong>Train/test splitting:</strong></p>
+<pre><code class="language-python">from cellxgene_census.experimental.ml import ExperimentDataset
+
+# Create dataset from experiment
+dataset = ExperimentDataset(
+    experiment_axis_query,
+    layer_name="raw",
+    obs_column_names=["cell_type"],
+    batch_size=128,
+)
+
+# Split into train and test
+train_dataset, test_dataset = dataset.random_split(
+    split=[0.8, 0.2],
+    seed=42
+)</code></pre>
+
+<h3>6. Integration with Scanpy</h3>
+
+<p>Seamlessly integrate Census data with scanpy workflows:</p>
+
+<pre><code class="language-python">import scanpy as sc
+
+# Load data from Census
+adata = cellxgene_census.get_anndata(
+    census=census,
+    organism="Homo sapiens",
+    obs_value_filter="cell_type == 'neuron' and tissue_general == 'cortex' and is_primary_data == True",
+)
+
+# Standard scanpy workflow
+sc.pp.normalize_total(adata, target_sum=1e4)
+sc.pp.log1p(adata)
+sc.pp.highly_variable_genes(adata, n_top_genes=2000)
+
+# Dimensionality reduction
+sc.pp.pca(adata, n_comps=50)
+sc.pp.neighbors(adata)
+sc.tl.umap(adata)
+
+# Visualization
+sc.pl.umap(adata, color=["cell_type", "tissue", "disease"])</code></pre>
+
+<h3>7. Multi-Dataset Integration</h3>
+
+<p>Query and integrate multiple datasets:</p>
+
+<pre><code class="language-python"># Strategy 1: Query multiple tissues separately
+tissues = ["lung", "liver", "kidney"]
+adatas = []
+
+for tissue in tissues:
+    adata = cellxgene_census.get_anndata(
+        census=census,
+        organism="Homo sapiens",
+        obs_value_filter=f"tissue_general == '{tissue}' and is_primary_data == True",
+    )
+    adata.obs["tissue"] = tissue
+    adatas.append(adata)
+
+# Concatenate
+combined = adatas[0].concatenate(adatas[1:])
+
+# Strategy 2: Query multiple datasets directly
+adata = cellxgene_census.get_anndata(
+    census=census,
+    organism="Homo sapiens",
+    obs_value_filter="tissue_general in ['lung', 'liver', 'kidney'] and is_primary_data == True",
+)</code></pre>
+
+<h2>Key Concepts and Best Practices</h2>
+
+<h3>Always Filter for Primary Data</h3>
+<p>Unless analyzing duplicates, always include <code>is_primary_data == True</code> in queries to avoid counting cells multiple times:</p>
+<pre><code class="language-python">obs_value_filter="cell_type == 'B cell' and is_primary_data == True"</code></pre>
+
+<h3>Specify Census Version for Reproducibility</h3>
+<p>Always specify the Census version in production analyses:</p>
+<pre><code class="language-python">census = cellxgene_census.open_soma(census_version="2023-07-25")</code></pre>
+
+<h3>Estimate Query Size Before Loading</h3>
+<p>For large queries, first check the number of cells to avoid memory issues:</p>
+<pre><code class="language-python"># Get cell count
+metadata = cellxgene_census.get_obs(
+    census, "homo_sapiens",
+    value_filter="tissue_general == 'brain' and is_primary_data == True",
+    column_names=["soma_joinid"]
+)
+n_cells = len(metadata)
+print(f"Query will return {n_cells:,} cells")
+
+# If too large (&gt;100k), use out-of-core processing</code></pre>
+
+<h3>Use tissue_general for Broader Groupings</h3>
+<p>The <code>tissue_general</code> field provides coarser categories than <code>tissue</code>, useful for cross-tissue analyses:</p>
+<pre><code class="language-python"># Broader grouping
+obs_value_filter="tissue_general == 'immune system'"
+
+# Specific tissue
+obs_value_filter="tissue == 'peripheral blood mononuclear cell'"</code></pre>
+
+<h3>Select Only Needed Columns</h3>
+<p>Minimize data transfer by specifying only required metadata columns:</p>
+<pre><code class="language-python">obs_column_names=["cell_type", "tissue_general", "disease"]  # Not all columns</code></pre>
+
+<h3>Check Dataset Presence for Gene-Specific Queries</h3>
+<p>When analyzing specific genes, verify which datasets measured them:</p>
+<pre><code class="language-python">presence = cellxgene_census.get_presence_matrix(
+    census,
+    "homo_sapiens",
+    var_value_filter="feature_name in ['CD4', 'CD8A']"
+)</code></pre>
+
+<h3>Two-Step Workflow: Explore Then Query</h3>
+<p>First explore metadata to understand available data, then query expression:</p>
+<pre><code class="language-python"># Step 1: Explore what's available
+metadata = cellxgene_census.get_obs(
+    census, "homo_sapiens",
+    value_filter="disease == 'COVID-19' and is_primary_data == True",
+    column_names=["cell_type", "tissue_general"]
+)
+print(metadata.value_counts())
+
+# Step 2: Query based on findings
+adata = cellxgene_census.get_anndata(
+    census=census,
+    organism="Homo sapiens",
+    obs_value_filter="disease == 'COVID-19' and cell_type == 'T cell' and is_primary_data == True",
+)</code></pre>
+
+<h2>Available Metadata Fields</h2>
+
+<h3>Cell Metadata (obs)</h3>
+<p>Key fields for filtering:</p>
+<ul><li><code>cell_type</code>, <code>cell_type_ontology_term_id</code></li>
+<li><code>tissue</code>, <code>tissue_general</code>, <code>tissue_ontology_term_id</code></li>
+<li><code>disease</code>, <code>disease_ontology_term_id</code></li>
+<li><code>assay</code>, <code>assay_ontology_term_id</code></li>
+<li><code>donor_id</code>, <code>sex</code>, <code>self_reported_ethnicity</code></li>
+<li><code>development_stage</code>, <code>development_stage_ontology_term_id</code></li>
+<li><code>dataset_id</code></li>
+<li><code>is_primary_data</code> (Boolean: True = unique cell)</li>
+</ul>
+<h3>Gene Metadata (var)</h3>
+<ul><li><code>feature_id</code> (Ensembl gene ID, e.g., "ENSG00000161798")</li>
+<li><code>feature_name</code> (Gene symbol, e.g., "FOXP2")</li>
+<li><code>feature_length</code> (Gene length in base pairs)</li>
+</ul>
+<h2>Reference Documentation</h2>
+
+<p>This skill includes detailed reference documentation:</p>
+
+<h3>references/census_schema.md</h3>
+<p>Comprehensive documentation of:</p>
+<ul><li>Census data structure and organization</li>
+<li>All available metadata fields</li>
+<li>Value filter syntax and operators</li>
+<li>SOMA object types</li>
+<li>Data inclusion criteria</li>
+</ul>
+<p><strong>When to read:</strong> When you need detailed schema information, full list of metadata fields, or complex filter syntax.</p>
+
+<h3>references/common_patterns.md</h3>
+<p>Examples and patterns for:</p>
+<ul><li>Exploratory queries (metadata only)</li>
+<li>Small-to-medium queries (AnnData)</li>
+<li>Large queries (out-of-core processing)</li>
+<li>PyTorch integration</li>
+<li>Scanpy integration workflows</li>
+<li>Multi-dataset integration</li>
+<li>Best practices and common pitfalls</li>
+</ul>
+<p><strong>When to read:</strong> When implementing specific query patterns, looking for code examples, or troubleshooting common issues.</p>
+
+<h2>Common Use Cases</h2>
+
+<h3>Use Case 1: Explore Cell Types in a Tissue</h3>
+<pre><code class="language-python">with cellxgene_census.open_soma() as census:
+    cells = cellxgene_census.get_obs(
+        census, "homo_sapiens",
+        value_filter="tissue_general == 'lung' and is_primary_data == True",
+        column_names=["cell_type"]
+    )
+    print(cells["cell_type"].value_counts())</code></pre>
+
+<h3>Use Case 2: Query Marker Gene Expression</h3>
+<pre><code class="language-python">with cellxgene_census.open_soma() as census:
+    adata = cellxgene_census.get_anndata(
+        census=census,
+        organism="Homo sapiens",
+        var_value_filter="feature_name in ['CD4', 'CD8A', 'CD19']",
+        obs_value_filter="cell_type in ['T cell', 'B cell'] and is_primary_data == True",
+    )</code></pre>
+
+<h3>Use Case 3: Train Cell Type Classifier</h3>
+<pre><code class="language-python">from cellxgene_census.experimental.ml import experiment_dataloader
+
+with cellxgene_census.open_soma() as census:
+    dataloader = experiment_dataloader(
+        census["census_data"]["homo_sapiens"],
+        measurement_name="RNA",
+        X_name="raw",
+        obs_value_filter="is_primary_data == True",
+        obs_column_names=["cell_type"],
+        batch_size=128,
+        shuffle=True,
+    )
+
+    # Train model
+    for epoch in range(epochs):
+        for batch in dataloader:
+            # Training logic
+            pass</code></pre>
+
+<h3>Use Case 4: Cross-Tissue Analysis</h3>
+<pre><code class="language-python">with cellxgene_census.open_soma() as census:
+    adata = cellxgene_census.get_anndata(
+        census=census,
+        organism="Homo sapiens",
+        obs_value_filter="cell_type == 'macrophage' and tissue_general in ['lung', 'liver', 'brain'] and is_primary_data == True",
+    )
+
+    # Analyze macrophage differences across tissues
+    sc.tl.rank_genes_groups(adata, groupby="tissue_general")</code></pre>
+
+<h2>Troubleshooting</h2>
+
+<h3>Query Returns Too Many Cells</h3>
+<ul><li>Add more specific filters to reduce scope</li>
+<li>Use <code>tissue</code> instead of <code>tissue_general</code> for finer granularity</li>
+<li>Filter by specific <code>dataset_id</code> if known</li>
+<li>Switch to out-of-core processing for large queries</li>
+</ul>
+<h3>Memory Errors</h3>
+<ul><li>Reduce query scope with more restrictive filters</li>
+<li>Select fewer genes with <code>var_value_filter</code></li>
+<li>Use out-of-core processing with <code>axis_query()</code></li>
+<li>Process data in batches</li>
+</ul>
+<h3>Duplicate Cells in Results</h3>
+<ul><li>Always include <code>is_primary_data == True</code> in filters</li>
+<li>Check if intentionally querying across multiple datasets</li>
+</ul>
+<h3>Gene Not Found</h3>
+<ul><li>Verify gene name spelling (case-sensitive)</li>
+<li>Try Ensembl ID with <code>feature_id</code> instead of <code>feature_name</code></li>
+<li>Check dataset presence matrix to see if gene was measured</li>
+<li>Some genes may have been filtered during Census construction</li>
+</ul>
+<h3>Version Inconsistencies</h3>
+<ul><li>Always specify <code>census_version</code> explicitly</li>
+<li>Use same version across all analyses</li>
+<li>Check release notes for version-specific changes</li></ul>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Census Schema</h3>
+  <h1>CZ CELLxGENE Census Data Schema Reference</h1>
+
+<h2>Overview</h2>
+
+<p>The CZ CELLxGENE Census is a versioned collection of single-cell data built on the TileDB-SOMA framework. This reference documents the data structure, available metadata fields, and query syntax.</p>
+
+<h2>High-Level Structure</h2>
+
+<p>The Census is organized as a <code>SOMACollection</code> with two main components:</p>
+
+<h3>1. census_info</h3>
+<p>Summary information including:</p>
+<ul><li><strong>summary</strong>: Build date, cell counts, dataset statistics</li>
+<li><strong>datasets</strong>: All datasets from CELLxGENE Discover with metadata</li>
+<li><strong>summary_cell_counts</strong>: Cell counts stratified by metadata categories</li>
+</ul>
+<h3>2. census_data</h3>
+<p>Organism-specific <code>SOMAExperiment</code> objects:</p>
+<ul><li><strong>"homo_sapiens"</strong>: Human single-cell data</li>
+<li><strong>"mus_musculus"</strong>: Mouse single-cell data</li>
+</ul>
+<h2>Data Structure Per Organism</h2>
+
+<p>Each organism experiment contains:</p>
+
+<h3>obs (Cell Metadata)</h3>
+<p>Cell-level annotations stored as a <code>SOMADataFrame</code>. Access via:</p>
+<pre><code class="language-python">census["census_data"]["homo_sapiens"].obs</code></pre>
+
+<h3>ms["RNA"] (Measurement)</h3>
+<p>RNA measurement data including:</p>
+<ul><li><strong>X</strong>: Data matrices with layers:</li>
+</ul><p>  - <code>raw</code>: Raw count data</p>
+<p>  - <code>normalized</code>: (if available) Normalized counts</p>
+<ul><li><strong>var</strong>: Gene metadata</li>
+<li><strong>feature_dataset_presence_matrix</strong>: Sparse boolean array showing which genes were measured in each dataset</li>
+</ul>
+<h2>Cell Metadata Fields (obs)</h2>
+
+<h3>Required/Core Fields</h3>
+
+<p><strong>Identity & Dataset:</strong></p>
+<ul><li><code>soma_joinid</code>: Unique integer identifier for joins</li>
+<li><code>dataset_id</code>: Source dataset identifier</li>
+<li><code>is_primary_data</code>: Boolean flag (True = unique cell, False = duplicate across datasets)</li>
+</ul>
+<p><strong>Cell Type:</strong></p>
+<ul><li><code>cell_type</code>: Human-readable cell type name</li>
+<li><code>cell_type_ontology_term_id</code>: Standardized ontology term (e.g., "CL:0000236")</li>
+</ul>
+<p><strong>Tissue:</strong></p>
+<ul><li><code>tissue</code>: Specific tissue name</li>
+<li><code>tissue_general</code>: Broader tissue category (useful for grouping)</li>
+<li><code>tissue_ontology_term_id</code>: Standardized ontology term</li>
+</ul>
+<p><strong>Assay:</strong></p>
+<ul><li><code>assay</code>: Sequencing technology used</li>
+<li><code>assay_ontology_term_id</code>: Standardized ontology term</li>
+</ul>
+<p><strong>Disease:</strong></p>
+<ul><li><code>disease</code>: Disease status or condition</li>
+<li><code>disease_ontology_term_id</code>: Standardized ontology term</li>
+</ul>
+<p><strong>Donor:</strong></p>
+<ul><li><code>donor_id</code>: Unique donor identifier</li>
+<li><code>sex</code>: Biological sex (male, female, unknown)</li>
+<li><code>self_reported_ethnicity</code>: Ethnicity information</li>
+<li><code>development_stage</code>: Life stage (adult, child, embryonic, etc.)</li>
+<li><code>development_stage_ontology_term_id</code>: Standardized ontology term</li>
+</ul>
+<p><strong>Organism:</strong></p>
+<ul><li><code>organism</code>: Scientific name (Homo sapiens, Mus musculus)</li>
+<li><code>organism_ontology_term_id</code>: Standardized ontology term</li>
+</ul>
+<p><strong>Technical:</strong></p>
+<ul><li><code>suspension_type</code>: Sample preparation type (cell, nucleus, na)</li>
+</ul>
+<h2>Gene Metadata Fields (var)</h2>
+
+<p>Access via:</p>
+<pre><code class="language-python">census["census_data"]["homo_sapiens"].ms["RNA"].var</code></pre>
+
+<p><strong>Available Fields:</strong></p>
+<ul><li><code>soma_joinid</code>: Unique integer identifier for joins</li>
+<li><code>feature_id</code>: Ensembl gene ID (e.g., "ENSG00000161798")</li>
+<li><code>feature_name</code>: Gene symbol (e.g., "FOXP2")</li>
+<li><code>feature_length</code>: Gene length in base pairs</li>
+</ul>
+<h2>Value Filter Syntax</h2>
+
+<p>Queries use Python-like expressions for filtering. The syntax is processed by TileDB-SOMA.</p>
+
+<h3>Comparison Operators</h3>
+<ul><li><code>==</code>: Equal to</li>
+<li><code>!=</code>: Not equal to</li>
+<li><code><</code>, <code>></code>, <code><=</code>, <code>>=</code>: Numeric comparisons</li>
+<li><code>in</code>: Membership test (e.g., <code>feature_id in ['ENSG00000161798', 'ENSG00000188229']</code>)</li>
+</ul>
+<h3>Logical Operators</h3>
+<ul><li><code>and</code>, <code>&</code>: Logical AND</li>
+<li><code>or</code>, <code>|</code>: Logical OR</li>
+</ul>
+<h3>Examples</h3>
+
+<p><strong>Single condition:</strong></p>
+<pre><code class="language-python">value_filter="cell_type == 'B cell'"</code></pre>
+
+<p><strong>Multiple conditions with AND:</strong></p>
+<pre><code class="language-python">value_filter="cell_type == 'B cell' and tissue_general == 'lung' and is_primary_data == True"</code></pre>
+
+<p><strong>Using IN for multiple values:</strong></p>
+<pre><code class="language-python">value_filter="tissue in ['lung', 'liver', 'kidney']"</code></pre>
+
+<p><strong>Complex condition:</strong></p>
+<pre><code class="language-python">value_filter="(cell_type == 'neuron' or cell_type == 'astrocyte') and disease != 'normal'"</code></pre>
+
+<p><strong>Filtering genes:</strong></p>
+<pre><code class="language-python">var_value_filter="feature_name in ['CD4', 'CD8A', 'CD19']"</code></pre>
+
+<h2>Data Inclusion Criteria</h2>
+
+<p>The Census includes all data from CZ CELLxGENE Discover meeting:</p>
+
+<ul><li><strong>Species</strong>: Human (<em>Homo sapiens</em>) or mouse (<em>Mus musculus</em>)</li>
+<li><strong>Technology</strong>: Approved sequencing technologies for RNA</li>
+<li><strong>Count Type</strong>: Raw counts only (no processed/normalized-only data)</li>
+<li><strong>Metadata</strong>: Standardized following CELLxGENE schema</li>
+<li><strong>Both spatial and non-spatial data</strong>: Includes traditional and spatial transcriptomics</li>
+</ul>
+<h2>Important Data Characteristics</h2>
+
+<h3>Duplicate Cells</h3>
+<p>Cells may appear across multiple datasets. Use <code>is_primary_data == True</code> to filter for unique cells in most analyses.</p>
+
+<h3>Count Types</h3>
+<p>The Census includes:</p>
+<ul><li><strong>Molecule counts</strong>: From UMI-based methods</li>
+<li><strong>Full-gene sequencing read counts</strong>: From non-UMI methods</li>
+</ul><p>These may need different normalization approaches.</p>
+
+<h3>Versioning</h3>
+<p>Census releases are versioned (e.g., "2023-07-25", "stable"). Always specify version for reproducible analysis:</p>
+<pre><code class="language-python">census = cellxgene_census.open_soma(census_version="2023-07-25")</code></pre>
+
+<h2>Dataset Presence Matrix</h2>
+
+<p>Access which genes were measured in each dataset:</p>
+<pre><code class="language-python">presence_matrix = census["census_data"]["homo_sapiens"].ms["RNA"]["feature_dataset_presence_matrix"]</code></pre>
+
+<p>This sparse boolean matrix helps understand:</p>
+<ul><li>Gene coverage across datasets</li>
+<li>Which datasets to include for specific gene analyses</li>
+<li>Technical batch effects related to gene coverage</li>
+</ul>
+<h2>SOMA Object Types</h2>
+
+<p>Core TileDB-SOMA objects used:</p>
+<ul><li><strong>DataFrame</strong>: Tabular data (obs, var)</li>
+<li><strong>SparseNDArray</strong>: Sparse matrices (X layers, presence matrix)</li>
+<li><strong>DenseNDArray</strong>: Dense arrays (less common)</li>
+<li><strong>Collection</strong>: Container for related objects</li>
+<li><strong>Experiment</strong>: Top-level container for measurements</li>
+<li><strong>SOMAScene</strong>: Spatial transcriptomics scenes</li>
+<li><strong>obs_spatial_presence</strong>: Spatial data availability</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Common Patterns</h3>
+  <h1>Common Query Patterns and Best Practices</h1>
+
+<h2>Query Pattern Categories</h2>
+
+<h3>1. Exploratory Queries (Metadata Only)</h3>
+
+<p>Use when exploring available data without loading expression matrices.</p>
+
+<p><strong>Pattern: Get unique cell types in a tissue</strong></p>
+<pre><code class="language-python">import cellxgene_census
+
+with cellxgene_census.open_soma() as census:
+    cell_metadata = cellxgene_census.get_obs(
+        census,
+        "homo_sapiens",
+        value_filter="tissue_general == 'brain' and is_primary_data == True",
+        column_names=["cell_type"]
+    )
+    unique_cell_types = cell_metadata["cell_type"].unique()
+    print(f"Found {len(unique_cell_types)} unique cell types")</code></pre>
+
+<p><strong>Pattern: Count cells by condition</strong></p>
+<pre><code class="language-python">cell_metadata = cellxgene_census.get_obs(
+    census,
+    "homo_sapiens",
+    value_filter="disease != 'normal' and is_primary_data == True",
+    column_names=["disease", "tissue_general"]
+)
+counts = cell_metadata.groupby(["disease", "tissue_general"]).size()</code></pre>
+
+<p><strong>Pattern: Explore dataset information</strong></p>
+<pre><code class="language-python"># Access datasets table
+datasets = census["census_info"]["datasets"].read().concat().to_pandas()
+
+# Filter for specific criteria
+covid_datasets = datasets[datasets["disease"].str.contains("COVID", na=False)]</code></pre>
+
+<h3>2. Small-to-Medium Queries (AnnData)</h3>
+
+<p>Use <code>get_anndata()</code> when results fit in memory (typically < 100k cells).</p>
+
+<p><strong>Pattern: Tissue-specific cell type query</strong></p>
+<pre><code class="language-python">adata = cellxgene_census.get_anndata(
+    census=census,
+    organism="Homo sapiens",
+    obs_value_filter="cell_type == 'B cell' and tissue_general == 'lung' and is_primary_data == True",
+    obs_column_names=["assay", "disease", "sex", "donor_id"],
+)</code></pre>
+
+<p><strong>Pattern: Gene-specific query with multiple genes</strong></p>
+<pre><code class="language-python">marker_genes = ["CD4", "CD8A", "CD19", "FOXP3"]
+
+# First get gene IDs
+gene_metadata = cellxgene_census.get_var(
+    census, "homo_sapiens",
+    value_filter=f"feature_name in {marker_genes}",
+    column_names=["feature_id", "feature_name"]
+)
+gene_ids = gene_metadata["feature_id"].tolist()
+
+# Query with gene filter
+adata = cellxgene_census.get_anndata(
+    census=census,
+    organism="Homo sapiens",
+    var_value_filter=f"feature_id in {gene_ids}",
+    obs_value_filter="cell_type == 'T cell' and is_primary_data == True",
+)</code></pre>
+
+<p><strong>Pattern: Multi-tissue query</strong></p>
+<pre><code class="language-python">adata = cellxgene_census.get_anndata(
+    census=census,
+    organism="Homo sapiens",
+    obs_value_filter="tissue_general in ['lung', 'liver', 'kidney'] and is_primary_data == True",
+    obs_column_names=["cell_type", "tissue_general", "dataset_id"],
+)</code></pre>
+
+<p><strong>Pattern: Disease-specific query</strong></p>
+<pre><code class="language-python">adata = cellxgene_census.get_anndata(
+    census=census,
+    organism="Homo sapiens",
+    obs_value_filter="disease == 'COVID-19' and tissue_general == 'lung' and is_primary_data == True",
+)</code></pre>
+
+<h3>3. Large Queries (Out-of-Core Processing)</h3>
+
+<p>Use <code>axis_query()</code> for queries that exceed available RAM.</p>
+
+<p><strong>Pattern: Iterative processing</strong></p>
+<pre><code class="language-python">import pyarrow as pa
+
+# Create query
+query = census["census_data"]["homo_sapiens"].axis_query(
+    measurement_name="RNA",
+    obs_query=soma.AxisQuery(
+        value_filter="tissue_general == 'brain' and is_primary_data == True"
+    ),
+    var_query=soma.AxisQuery(
+        value_filter="feature_name in ['FOXP2', 'TBR1', 'SATB2']"
+    )
+)
+
+# Iterate through X matrix in chunks
+iterator = query.X("raw").tables()
+for batch in iterator:
+    # Process batch (a pyarrow.Table)
+    # batch has columns: soma_data, soma_dim_0, soma_dim_1
+    process_batch(batch)</code></pre>
+
+<p><strong>Pattern: Incremental statistics (mean/variance)</strong></p>
+<pre><code class="language-python"># Using Welford's online algorithm
+n = 0
+mean = 0
+M2 = 0
+
+iterator = query.X("raw").tables()
+for batch in iterator:
+    values = batch["soma_data"].to_numpy()
+    for x in values:
+        n += 1
+        delta = x - mean
+        mean += delta / n
+        delta2 = x - mean
+        M2 += delta * delta2
+
+variance = M2 / (n - 1) if n &gt; 1 else 0</code></pre>
+
+<h3>4. PyTorch Integration (Machine Learning)</h3>
+
+<p>Use <code>experiment_dataloader()</code> for training models.</p>
+
+<p><strong>Pattern: Create training dataloader</strong></p>
+<pre><code class="language-python">from cellxgene_census.experimental.ml import experiment_dataloader
+import torch
+
+with cellxgene_census.open_soma() as census:
+    # Create dataloader
+    dataloader = experiment_dataloader(
+        census["census_data"]["homo_sapiens"],
+        measurement_name="RNA",
+        X_name="raw",
+        obs_value_filter="tissue_general == 'liver' and is_primary_data == True",
+        obs_column_names=["cell_type"],
+        batch_size=128,
+        shuffle=True,
+    )
+
+    # Training loop
+    for epoch in range(num_epochs):
+        for batch in dataloader:
+            X = batch["X"]  # Gene expression
+            labels = batch["obs"]["cell_type"]  # Cell type labels
+            # Train model...</code></pre>
+
+<p><strong>Pattern: Train/test split</strong></p>
+<pre><code class="language-python">from cellxgene_census.experimental.ml import ExperimentDataset
+
+# Create dataset from query
+dataset = ExperimentDataset(
+    experiment_axis_query,
+    layer_name="raw",
+    obs_column_names=["cell_type"],
+    batch_size=128,
+)
+
+# Split data
+train_dataset, test_dataset = dataset.random_split(
+    split=[0.8, 0.2],
+    seed=42
+)
+
+# Create loaders
+train_loader = experiment_dataloader(train_dataset)
+test_loader = experiment_dataloader(test_dataset)</code></pre>
+
+<h3>5. Integration Workflows</h3>
+
+<p><strong>Pattern: Scanpy integration</strong></p>
+<pre><code class="language-python">import scanpy as sc
+
+# Load data
+adata = cellxgene_census.get_anndata(
+    census=census,
+    organism="Homo sapiens",
+    obs_value_filter="cell_type == 'neuron' and is_primary_data == True",
+)
+
+# Standard scanpy workflow
+sc.pp.normalize_total(adata, target_sum=1e4)
+sc.pp.log1p(adata)
+sc.pp.highly_variable_genes(adata)
+sc.pp.pca(adata)
+sc.pp.neighbors(adata)
+sc.tl.umap(adata)
+sc.pl.umap(adata, color=["cell_type", "tissue_general"])</code></pre>
+
+<p><strong>Pattern: Multi-dataset integration</strong></p>
+<pre><code class="language-python"># Query multiple datasets separately
+datasets_to_integrate = ["dataset_id_1", "dataset_id_2", "dataset_id_3"]
+
+adatas = []
+for dataset_id in datasets_to_integrate:
+    adata = cellxgene_census.get_anndata(
+        census=census,
+        organism="Homo sapiens",
+        obs_value_filter=f"dataset_id == '{dataset_id}' and is_primary_data == True",
+    )
+    adatas.append(adata)
+
+# Integrate using scanorama, harmony, or other tools
+import scanpy.external as sce
+sce.pp.scanorama_integrate(adatas)</code></pre>
+
+<h2>Best Practices</h2>
+
+<h3>1. Always Filter for Primary Data</h3>
+<p>Unless specifically analyzing duplicates, always include <code>is_primary_data == True</code>:</p>
+<pre><code class="language-python">obs_value_filter="cell_type == 'B cell' and is_primary_data == True"</code></pre>
+
+<h3>2. Specify Census Version</h3>
+<p>For reproducible analysis, always specify the Census version:</p>
+<pre><code class="language-python">census = cellxgene_census.open_soma(census_version="2023-07-25")</code></pre>
+
+<h3>3. Use Context Manager</h3>
+<p>Always use the context manager to ensure proper cleanup:</p>
+<pre><code class="language-python">with cellxgene_census.open_soma() as census:
+    # Your code here</code></pre>
+
+<h3>4. Select Only Needed Columns</h3>
+<p>Minimize data transfer by selecting only required metadata columns:</p>
+<pre><code class="language-python">obs_column_names=["cell_type", "tissue_general", "disease"]  # Not all columns</code></pre>
+
+<h3>5. Check Dataset Presence for Gene Queries</h3>
+<p>When analyzing specific genes, check which datasets measured them:</p>
+<pre><code class="language-python">presence = cellxgene_census.get_presence_matrix(
+    census,
+    "homo_sapiens",
+    var_value_filter="feature_name in ['CD4', 'CD8A']"
+)</code></pre>
+
+<h3>6. Use tissue_general for Broader Queries</h3>
+<p><code>tissue_general</code> provides coarser groupings than <code>tissue</code>, useful for cross-tissue analyses:</p>
+<pre><code class="language-python"># Better for broad queries
+obs_value_filter="tissue_general == 'immune system'"
+
+# Use specific tissue when needed
+obs_value_filter="tissue == 'peripheral blood mononuclear cell'"</code></pre>
+
+<h3>7. Combine Metadata Exploration with Expression Queries</h3>
+<p>First explore metadata to understand available data, then query expression:</p>
+<pre><code class="language-python"># Step 1: Explore
+metadata = cellxgene_census.get_obs(
+    census, "homo_sapiens",
+    value_filter="disease == 'COVID-19'",
+    column_names=["cell_type", "tissue_general"]
+)
+print(metadata.value_counts())
+
+# Step 2: Query based on findings
+adata = cellxgene_census.get_anndata(
+    census=census,
+    organism="Homo sapiens",
+    obs_value_filter="disease == 'COVID-19' and cell_type == 'T cell' and is_primary_data == True",
+)</code></pre>
+
+<h3>8. Memory Management for Large Queries</h3>
+<p>For large queries, check estimated size before loading:</p>
+<pre><code class="language-python"># Get cell count first
+metadata = cellxgene_census.get_obs(
+    census, "homo_sapiens",
+    value_filter="tissue_general == 'brain' and is_primary_data == True",
+    column_names=["soma_joinid"]
+)
+n_cells = len(metadata)
+print(f"Query will return {n_cells} cells")
+
+# If too large, use out-of-core processing or further filtering</code></pre>
+
+<h3>9. Leverage Ontology Terms for Consistency</h3>
+<p>When possible, use ontology term IDs instead of free text:</p>
+<pre><code class="language-python"># More reliable than cell_type == 'B cell' across datasets
+obs_value_filter="cell_type_ontology_term_id == 'CL:0000236'"</code></pre>
+
+<h3>10. Batch Processing Pattern</h3>
+<p>For systematic analyses across multiple conditions:</p>
+<pre><code class="language-python">tissues = ["lung", "liver", "kidney", "heart"]
+results = {}
+
+for tissue in tissues:
+    adata = cellxgene_census.get_anndata(
+        census=census,
+        organism="Homo sapiens",
+        obs_value_filter=f"tissue_general == '{tissue}' and is_primary_data == True",
+    )
+    # Perform analysis
+    results[tissue] = analyze(adata)</code></pre>
+
+<h2>Common Pitfalls to Avoid</h2>
+
+<ul><li><strong>Not filtering for is_primary_data</strong>: Leads to counting duplicate cells</li>
+<li><strong>Loading too much data</strong>: Use metadata queries to estimate size first</li>
+<li><strong>Not using context manager</strong>: Can cause resource leaks</li>
+<li><strong>Inconsistent versioning</strong>: Results not reproducible without specifying version</li>
+<li><strong>Overly broad queries</strong>: Start with focused queries, expand as needed</li>
+<li><strong>Ignoring dataset presence</strong>: Some genes not measured in all datasets</li>
+<li><strong>Wrong count normalization</strong>: Be aware of UMI vs read count differences</li>
+</ul>
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

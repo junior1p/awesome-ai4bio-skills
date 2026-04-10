@@ -1,0 +1,2386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scientific Visualization — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="active">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / Scientific Visualization</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>Scientific Visualization</h1>
+    <p class="description">Meta-skill for publication-ready figures. Use when creating journal submission figures requiring multi-panel layouts, significance annotations, error bars, colorblind-safe palettes, and specific journ</p>
+    <h1>Scientific Visualization</h1>
+
+<h2>Overview</h2>
+
+<p>Scientific visualization transforms data into clear, accurate figures for publication. Create journal-ready plots with multi-panel layouts, error bars, significance markers, and colorblind-safe palettes. Export as PDF/EPS/TIFF using matplotlib, seaborn, and plotly for manuscripts.</p>
+
+<h2>When to Use This Skill</h2>
+
+<p>This skill should be used when:</p>
+<ul><li>Creating plots or visualizations for scientific manuscripts</li>
+<li>Preparing figures for journal submission (Nature, Science, Cell, PLOS, etc.)</li>
+<li>Ensuring figures are colorblind-friendly and accessible</li>
+<li>Making multi-panel figures with consistent styling</li>
+<li>Exporting figures at correct resolution and format</li>
+<li>Following specific publication guidelines</li>
+<li>Improving existing figures to meet publication standards</li>
+<li>Creating figures that need to work in both color and grayscale</li>
+</ul>
+<h2>Quick Start Guide</h2>
+
+<h3>Basic Publication-Quality Figure</h3>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+
+# Apply publication style (from scripts/style_presets.py)
+from style_presets import apply_publication_style
+apply_publication_style('default')
+
+# Create figure with appropriate size (single column = 3.5 inches)
+fig, ax = plt.subplots(figsize=(3.5, 2.5))
+
+# Plot data
+x = np.linspace(0, 10, 100)
+ax.plot(x, np.sin(x), label='sin(x)')
+ax.plot(x, np.cos(x), label='cos(x)')
+
+# Proper labeling with units
+ax.set_xlabel('Time (seconds)')
+ax.set_ylabel('Amplitude (mV)')
+ax.legend(frameon=False)
+
+# Remove unnecessary spines
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+# Save in publication formats (from scripts/figure_export.py)
+from figure_export import save_publication_figure
+save_publication_figure(fig, 'figure1', formats=['pdf', 'png'], dpi=300)</code></pre>
+
+<h3>Using Pre-configured Styles</h3>
+
+<p>Apply journal-specific styles using the matplotlib style files in <code>assets/</code>:</p>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+
+# Option 1: Use style file directly
+plt.style.use('assets/nature.mplstyle')
+
+# Option 2: Use style_presets.py helper
+from style_presets import configure_for_journal
+configure_for_journal('nature', figure_width='single')
+
+# Now create figures - they'll automatically match Nature specifications
+fig, ax = plt.subplots()
+# ... your plotting code ...</code></pre>
+
+<h3>Quick Start with Seaborn</h3>
+
+<p>For statistical plots, use seaborn with publication styling:</p>
+
+<pre><code class="language-python">import seaborn as sns
+import matplotlib.pyplot as plt
+from style_presets import apply_publication_style
+
+# Apply publication style
+apply_publication_style('default')
+sns.set_theme(style='ticks', context='paper', font_scale=1.1)
+sns.set_palette('colorblind')
+
+# Create statistical comparison figure
+fig, ax = plt.subplots(figsize=(3.5, 3))
+sns.boxplot(data=df, x='treatment', y='response', 
+            order=['Control', 'Low', 'High'], palette='Set2', ax=ax)
+sns.stripplot(data=df, x='treatment', y='response',
+              order=['Control', 'Low', 'High'], 
+              color='black', alpha=0.3, size=3, ax=ax)
+ax.set_ylabel('Response (μM)')
+sns.despine()
+
+# Save figure
+from figure_export import save_publication_figure
+save_publication_figure(fig, 'treatment_comparison', formats=['pdf', 'png'], dpi=300)</code></pre>
+
+<h2>Core Principles and Best Practices</h2>
+
+<h3>1. Resolution and File Format</h3>
+
+<p><strong>Critical requirements</strong> (detailed in <code>references/publication_guidelines.md</code>):</p>
+<ul><li><strong>Raster images</strong> (photos, microscopy): 300-600 DPI</li>
+<li><strong>Line art</strong> (graphs, plots): 600-1200 DPI or vector format</li>
+<li><strong>Vector formats</strong> (preferred): PDF, EPS, SVG</li>
+<li><strong>Raster formats</strong>: TIFF, PNG (never JPEG for scientific data)</li>
+</ul>
+<p><strong>Implementation:</strong></p>
+<pre><code class="language-python"># Use the figure_export.py script for correct settings
+from figure_export import save_publication_figure
+
+# Saves in multiple formats with proper DPI
+save_publication_figure(fig, 'myfigure', formats=['pdf', 'png'], dpi=300)
+
+# Or save for specific journal requirements
+from figure_export import save_for_journal
+save_for_journal(fig, 'figure1', journal='nature', figure_type='combination')</code></pre>
+
+<h3>2. Color Selection - Colorblind Accessibility</h3>
+
+<p><strong>Always use colorblind-friendly palettes</strong> (detailed in <code>references/color_palettes.md</code>):</p>
+
+<p><strong>Recommended: Okabe-Ito palette</strong> (distinguishable by all types of color blindness):</p>
+<pre><code class="language-python"># Option 1: Use assets/color_palettes.py
+from color_palettes import OKABE_ITO_LIST, apply_palette
+apply_palette('okabe_ito')
+
+# Option 2: Manual specification
+okabe_ito = ['#E69F00', '#56B4E9', '#009E73', '#F0E442',
+             '#0072B2', '#D55E00', '#CC79A7', '#000000']
+plt.rcParams['axes.prop_cycle'] = plt.cycler(color=okabe_ito)</code></pre>
+
+<p><strong>For heatmaps/continuous data:</strong></p>
+<ul><li>Use perceptually uniform colormaps: <code>viridis</code>, <code>plasma</code>, <code>cividis</code></li>
+<li>Avoid red-green diverging maps (use <code>PuOr</code>, <code>RdBu</code>, <code>BrBG</code> instead)</li>
+<li>Never use <code>jet</code> or <code>rainbow</code> colormaps</li>
+</ul>
+<p><strong>Always test figures in grayscale</strong> to ensure interpretability.</p>
+
+<h3>3. Typography and Text</h3>
+
+<p><strong>Font guidelines</strong> (detailed in <code>references/publication_guidelines.md</code>):</p>
+<ul><li>Sans-serif fonts: Arial, Helvetica, Calibri</li>
+<li>Minimum sizes at <strong>final print size</strong>:</li>
+</ul><p>  - Axis labels: 7-9 pt</p>
+<p>  - Tick labels: 6-8 pt</p>
+<p>  - Panel labels: 8-12 pt (bold)</p>
+<ul><li>Sentence case for labels: "Time (hours)" not "TIME (HOURS)"</li>
+<li>Always include units in parentheses</li>
+</ul>
+<p><strong>Implementation:</strong></p>
+<pre><code class="language-python"># Set fonts globally
+import matplotlib as mpl
+mpl.rcParams['font.family'] = 'sans-serif'
+mpl.rcParams['font.sans-serif'] = ['Arial', 'Helvetica']
+mpl.rcParams['font.size'] = 8
+mpl.rcParams['axes.labelsize'] = 9
+mpl.rcParams['xtick.labelsize'] = 7
+mpl.rcParams['ytick.labelsize'] = 7</code></pre>
+
+<h3>4. Figure Dimensions</h3>
+
+<p><strong>Journal-specific widths</strong> (detailed in <code>references/journal_requirements.md</code>):</p>
+<ul><li><strong>Nature</strong>: Single 89 mm, Double 183 mm</li>
+<li><strong>Science</strong>: Single 55 mm, Double 175 mm</li>
+<li><strong>Cell</strong>: Single 85 mm, Double 178 mm</li>
+</ul>
+<p><strong>Check figure size compliance:</strong></p>
+<pre><code class="language-python">from figure_export import check_figure_size
+
+fig = plt.figure(figsize=(3.5, 3))  # 89 mm for Nature
+check_figure_size(fig, journal='nature')</code></pre>
+
+<h3>5. Multi-Panel Figures</h3>
+
+<p><strong>Best practices:</strong></p>
+<ul><li>Label panels with bold letters: <strong>A</strong>, <strong>B</strong>, <strong>C</strong> (uppercase for most journals, lowercase for Nature)</li>
+<li>Maintain consistent styling across all panels</li>
+<li>Align panels along edges where possible</li>
+<li>Use adequate white space between panels</li>
+</ul>
+<p><strong>Example implementation</strong> (see <code>references/matplotlib_examples.md</code> for complete code):</p>
+<pre><code class="language-python">from string import ascii_uppercase
+
+fig = plt.figure(figsize=(7, 4))
+gs = fig.add_gridspec(2, 2, hspace=0.4, wspace=0.4)
+
+ax1 = fig.add_subplot(gs[0, 0])
+ax2 = fig.add_subplot(gs[0, 1])
+# ... create other panels ...
+
+# Add panel labels
+for i, ax in enumerate([ax1, ax2, ...]):
+    ax.text(-0.15, 1.05, ascii_uppercase[i], transform=ax.transAxes,
+            fontsize=10, fontweight='bold', va='top')</code></pre>
+
+<h2>Common Tasks</h2>
+
+<h3>Task 1: Create a Publication-Ready Line Plot</h3>
+
+<p>See <code>references/matplotlib_examples.md</code> Example 1 for complete code.</p>
+
+<p><strong>Key steps:</strong></p>
+<ul><li>Apply publication style</li>
+<li>Set appropriate figure size for target journal</li>
+<li>Use colorblind-friendly colors</li>
+<li>Add error bars with correct representation (SEM, SD, or CI)</li>
+<li>Label axes with units</li>
+<li>Remove unnecessary spines</li>
+<li>Save in vector format</li>
+</ul>
+<p><strong>Using seaborn for automatic confidence intervals:</strong></p>
+<pre><code class="language-python">import seaborn as sns
+fig, ax = plt.subplots(figsize=(5, 3))
+sns.lineplot(data=timeseries, x='time', y='measurement',
+             hue='treatment', errorbar=('ci', 95), 
+             markers=True, ax=ax)
+ax.set_xlabel('Time (hours)')
+ax.set_ylabel('Measurement (AU)')
+sns.despine()</code></pre>
+
+<h3>Task 2: Create a Multi-Panel Figure</h3>
+
+<p>See <code>references/matplotlib_examples.md</code> Example 2 for complete code.</p>
+
+<p><strong>Key steps:</strong></p>
+<ul><li>Use <code>GridSpec</code> for flexible layout</li>
+<li>Ensure consistent styling across panels</li>
+<li>Add bold panel labels (A, B, C, etc.)</li>
+<li>Align related panels</li>
+<li>Verify all text is readable at final size</li>
+</ul>
+<h3>Task 3: Create a Heatmap with Proper Colormap</h3>
+
+<p>See <code>references/matplotlib_examples.md</code> Example 4 for complete code.</p>
+
+<p><strong>Key steps:</strong></p>
+<ul><li>Use perceptually uniform colormap (<code>viridis</code>, <code>plasma</code>, <code>cividis</code>)</li>
+<li>Include labeled colorbar</li>
+<li>For diverging data, use colorblind-safe diverging map (<code>RdBu_r</code>, <code>PuOr</code>)</li>
+<li>Set appropriate center value for diverging maps</li>
+<li>Test appearance in grayscale</li>
+</ul>
+<p><strong>Using seaborn for correlation matrices:</strong></p>
+<pre><code class="language-python">import seaborn as sns
+fig, ax = plt.subplots(figsize=(5, 4))
+corr = df.corr()
+mask = np.triu(np.ones_like(corr, dtype=bool))
+sns.heatmap(corr, mask=mask, annot=True, fmt='.2f',
+            cmap='RdBu_r', center=0, square=True,
+            linewidths=1, cbar_kws={'shrink': 0.8}, ax=ax)</code></pre>
+
+<h3>Task 4: Prepare Figure for Specific Journal</h3>
+
+<p><strong>Workflow:</strong></p>
+<ul><li>Check journal requirements: <code>references/journal_requirements.md</code></li>
+<li>Configure matplotlib for journal:</li>
+</ul><p>   <code>`</code>python</p>
+<p>   from style_presets import configure_for_journal</p>
+<p>   configure_for_journal('nature', figure_width='single')</p>
+<p>   <code>`</code></p>
+<ul><li>Create figure (will auto-size correctly)</li>
+<li>Export with journal specifications:</li>
+</ul><p>   <code>`</code>python</p>
+<p>   from figure_export import save_for_journal</p>
+<p>   save_for_journal(fig, 'figure1', journal='nature', figure_type='line_art')</p>
+<p>   <code>`</code></p>
+
+<h3>Task 5: Fix an Existing Figure to Meet Publication Standards</h3>
+
+<p><strong>Checklist approach</strong> (full checklist in <code>references/publication_guidelines.md</code>):</p>
+
+<ul><li><strong>Check resolution</strong>: Verify DPI meets journal requirements</li>
+<li><strong>Check file format</strong>: Use vector for plots, TIFF/PNG for images</li>
+<li><strong>Check colors</strong>: Ensure colorblind-friendly</li>
+<li><strong>Check fonts</strong>: Minimum 6-7 pt at final size, sans-serif</li>
+<li><strong>Check labels</strong>: All axes labeled with units</li>
+<li><strong>Check size</strong>: Matches journal column width</li>
+<li><strong>Test grayscale</strong>: Figure interpretable without color</li>
+<li><strong>Remove chart junk</strong>: No unnecessary grids, 3D effects, shadows</li>
+</ul>
+<h3>Task 6: Create Colorblind-Friendly Visualizations</h3>
+
+<p><strong>Strategy:</strong></p>
+<ul><li>Use approved palettes from <code>assets/color_palettes.py</code></li>
+<li>Add redundant encoding (line styles, markers, patterns)</li>
+<li>Test with colorblind simulator</li>
+<li>Ensure grayscale compatibility</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">from color_palettes import apply_palette
+import matplotlib.pyplot as plt
+
+apply_palette('okabe_ito')
+
+# Add redundant encoding beyond color
+line_styles = ['-', '--', '-.', ':']
+markers = ['o', 's', '^', 'v']
+
+for i, (data, label) in enumerate(datasets):
+    plt.plot(x, data, linestyle=line_styles[i % 4],
+             marker=markers[i % 4], label=label)</code></pre>
+
+<h2>Statistical Rigor</h2>
+
+<p><strong>Always include:</strong></p>
+<ul><li>Error bars (SD, SEM, or CI - specify which in caption)</li>
+<li>Sample size (n) in figure or caption</li>
+<li>Statistical significance markers (<em>, <strong>, </strong></em>)</li>
+<li>Individual data points when possible (not just summary statistics)</li>
+</ul>
+<p><strong>Example with statistics:</strong></p>
+<pre><code class="language-python"># Show individual points with summary statistics
+ax.scatter(x_jittered, individual_points, alpha=0.4, s=8)
+ax.errorbar(x, means, yerr=sems, fmt='o', capsize=3)
+
+# Mark significance
+ax.text(1.5, max_y * 1.1, '***', ha='center', fontsize=8)</code></pre>
+
+<h2>Working with Different Plotting Libraries</h2>
+
+<h3>Matplotlib</h3>
+<ul><li>Most control over publication details</li>
+<li>Best for complex multi-panel figures</li>
+<li>Use provided style files for consistent formatting</li>
+<li>See <code>references/matplotlib_examples.md</code> for extensive examples</li>
+</ul>
+<h3>Seaborn</h3>
+
+<p>Seaborn provides a high-level, dataset-oriented interface for statistical graphics, built on matplotlib. It excels at creating publication-quality statistical visualizations with minimal code while maintaining full compatibility with matplotlib customization.</p>
+
+<p><strong>Key advantages for scientific visualization:</strong></p>
+<ul><li>Automatic statistical estimation and confidence intervals</li>
+<li>Built-in support for multi-panel figures (faceting)</li>
+<li>Colorblind-friendly palettes by default</li>
+<li>Dataset-oriented API using pandas DataFrames</li>
+<li>Semantic mapping of variables to visual properties</li>
+</ul>
+<h4>Quick Start with Publication Style</h4>
+
+<p>Always apply matplotlib publication styles first, then configure seaborn:</p>
+
+<pre><code class="language-python">import seaborn as sns
+import matplotlib.pyplot as plt
+from style_presets import apply_publication_style
+
+# Apply publication style
+apply_publication_style('default')
+
+# Configure seaborn for publication
+sns.set_theme(style='ticks', context='paper', font_scale=1.1)
+sns.set_palette('colorblind')  # Use colorblind-safe palette
+
+# Create figure
+fig, ax = plt.subplots(figsize=(3.5, 2.5))
+sns.scatterplot(data=df, x='time', y='response', 
+                hue='treatment', style='condition', ax=ax)
+sns.despine()  # Remove top and right spines</code></pre>
+
+<h4>Common Plot Types for Publications</h4>
+
+<p><strong>Statistical comparisons:</strong></p>
+<pre><code class="language-python"># Box plot with individual points for transparency
+fig, ax = plt.subplots(figsize=(3.5, 3))
+sns.boxplot(data=df, x='treatment', y='response', 
+            order=['Control', 'Low', 'High'], palette='Set2', ax=ax)
+sns.stripplot(data=df, x='treatment', y='response',
+              order=['Control', 'Low', 'High'], 
+              color='black', alpha=0.3, size=3, ax=ax)
+ax.set_ylabel('Response (μM)')
+sns.despine()</code></pre>
+
+<p><strong>Distribution analysis:</strong></p>
+<pre><code class="language-python"># Violin plot with split comparison
+fig, ax = plt.subplots(figsize=(4, 3))
+sns.violinplot(data=df, x='timepoint', y='expression',
+               hue='treatment', split=True, inner='quartile', ax=ax)
+ax.set_ylabel('Gene Expression (AU)')
+sns.despine()</code></pre>
+
+<p><strong>Correlation matrices:</strong></p>
+<pre><code class="language-python"># Heatmap with proper colormap and annotations
+fig, ax = plt.subplots(figsize=(5, 4))
+corr = df.corr()
+mask = np.triu(np.ones_like(corr, dtype=bool))  # Show only lower triangle
+sns.heatmap(corr, mask=mask, annot=True, fmt='.2f',
+            cmap='RdBu_r', center=0, square=True,
+            linewidths=1, cbar_kws={'shrink': 0.8}, ax=ax)
+plt.tight_layout()</code></pre>
+
+<p><strong>Time series with confidence bands:</strong></p>
+<pre><code class="language-python"># Line plot with automatic CI calculation
+fig, ax = plt.subplots(figsize=(5, 3))
+sns.lineplot(data=timeseries, x='time', y='measurement',
+             hue='treatment', style='replicate',
+             errorbar=('ci', 95), markers=True, dashes=False, ax=ax)
+ax.set_xlabel('Time (hours)')
+ax.set_ylabel('Measurement (AU)')
+sns.despine()</code></pre>
+
+<h4>Multi-Panel Figures with Seaborn</h4>
+
+<p><strong>Using FacetGrid for automatic faceting:</strong></p>
+<pre><code class="language-python"># Create faceted plot
+g = sns.relplot(data=df, x='dose', y='response',
+                hue='treatment', col='cell_line', row='timepoint',
+                kind='line', height=2.5, aspect=1.2,
+                errorbar=('ci', 95), markers=True)
+g.set_axis_labels('Dose (μM)', 'Response (AU)')
+g.set_titles('{row_name} | {col_name}')
+sns.despine()
+
+# Save with correct DPI
+from figure_export import save_publication_figure
+save_publication_figure(g.figure, 'figure_facets', 
+                       formats=['pdf', 'png'], dpi=300)</code></pre>
+
+<p><strong>Combining seaborn with matplotlib subplots:</strong></p>
+<pre><code class="language-python"># Create custom multi-panel layout
+fig, axes = plt.subplots(2, 2, figsize=(7, 6))
+
+# Panel A: Scatter with regression
+sns.regplot(data=df, x='predictor', y='response', ax=axes[0, 0])
+axes[0, 0].text(-0.15, 1.05, 'A', transform=axes[0, 0].transAxes,
+                fontsize=10, fontweight='bold')
+
+# Panel B: Distribution comparison
+sns.violinplot(data=df, x='group', y='value', ax=axes[0, 1])
+axes[0, 1].text(-0.15, 1.05, 'B', transform=axes[0, 1].transAxes,
+                fontsize=10, fontweight='bold')
+
+# Panel C: Heatmap
+sns.heatmap(correlation_data, cmap='viridis', ax=axes[1, 0])
+axes[1, 0].text(-0.15, 1.05, 'C', transform=axes[1, 0].transAxes,
+                fontsize=10, fontweight='bold')
+
+# Panel D: Time series
+sns.lineplot(data=timeseries, x='time', y='signal', 
+             hue='condition', ax=axes[1, 1])
+axes[1, 1].text(-0.15, 1.05, 'D', transform=axes[1, 1].transAxes,
+                fontsize=10, fontweight='bold')
+
+plt.tight_layout()
+sns.despine()</code></pre>
+
+<h4>Color Palettes for Publications</h4>
+
+<p>Seaborn includes several colorblind-safe palettes:</p>
+
+<pre><code class="language-python"># Use built-in colorblind palette (recommended)
+sns.set_palette('colorblind')
+
+# Or specify custom colorblind-safe colors (Okabe-Ito)
+okabe_ito = ['#E69F00', '#56B4E9', '#009E73', '#F0E442',
+             '#0072B2', '#D55E00', '#CC79A7', '#000000']
+sns.set_palette(okabe_ito)
+
+# For heatmaps and continuous data
+sns.heatmap(data, cmap='viridis')  # Perceptually uniform
+sns.heatmap(corr, cmap='RdBu_r', center=0)  # Diverging, centered</code></pre>
+
+<h4>Choosing Between Axes-Level and Figure-Level Functions</h4>
+
+<p><strong>Axes-level functions</strong> (e.g., <code>scatterplot</code>, <code>boxplot</code>, <code>heatmap</code>):</p>
+<ul><li>Use when building custom multi-panel layouts</li>
+<li>Accept <code>ax=</code> parameter for precise placement</li>
+<li>Better integration with matplotlib subplots</li>
+<li>More control over figure composition</li>
+</ul>
+<pre><code class="language-python">fig, ax = plt.subplots(figsize=(3.5, 2.5))
+sns.scatterplot(data=df, x='x', y='y', hue='group', ax=ax)</code></pre>
+
+<p><strong>Figure-level functions</strong> (e.g., <code>relplot</code>, <code>catplot</code>, <code>displot</code>):</p>
+<ul><li>Use for automatic faceting by categorical variables</li>
+<li>Create complete figures with consistent styling</li>
+<li>Great for exploratory analysis</li>
+<li>Use <code>height</code> and <code>aspect</code> for sizing</li>
+</ul>
+<pre><code class="language-python">g = sns.relplot(data=df, x='x', y='y', col='category', kind='scatter')</code></pre>
+
+<h4>Statistical Rigor with Seaborn</h4>
+
+<p>Seaborn automatically computes and displays uncertainty:</p>
+
+<pre><code class="language-python"># Line plot: shows mean ± 95% CI by default
+sns.lineplot(data=df, x='time', y='value', hue='treatment',
+             errorbar=('ci', 95))  # Can change to 'sd', 'se', etc.
+
+# Bar plot: shows mean with bootstrapped CI
+sns.barplot(data=df, x='treatment', y='response',
+            errorbar=('ci', 95), capsize=0.1)
+
+# Always specify error type in figure caption:
+# "Error bars represent 95% confidence intervals"</code></pre>
+
+<h4>Best Practices for Publication-Ready Seaborn Figures</h4>
+
+<ul><li><strong>Always set publication theme first:</strong></li>
+</ul><p>   <code>`</code>python</p>
+<p>   sns.set_theme(style='ticks', context='paper', font_scale=1.1)</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Use colorblind-safe palettes:</strong></li>
+</ul><p>   <code>`</code>python</p>
+<p>   sns.set_palette('colorblind')</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Remove unnecessary elements:</strong></li>
+</ul><p>   <code>`</code>python</p>
+<p>   sns.despine()  # Remove top and right spines</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Control figure size appropriately:</strong></li>
+</ul><p>   <code>`</code>python</p>
+<p>   # Axes-level: use matplotlib figsize</p>
+<p>   fig, ax = plt.subplots(figsize=(3.5, 2.5))</p>
+
+<p>   # Figure-level: use height and aspect</p>
+<p>   g = sns.relplot(..., height=3, aspect=1.2)</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Show individual data points when possible:</strong></li>
+</ul><p>   <code>`</code>python</p>
+<p>   sns.boxplot(...)  # Summary statistics</p>
+<p>   sns.stripplot(..., alpha=0.3)  # Individual points</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Include proper labels with units:</strong></li>
+</ul><p>   <code>`</code>python</p>
+<p>   ax.set_xlabel('Time (hours)')</p>
+<p>   ax.set_ylabel('Expression (AU)')</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Export at correct resolution:</strong></li>
+</ul><p>   <code>`</code>python</p>
+<p>   from figure_export import save_publication_figure</p>
+<p>   save_publication_figure(fig, 'figure_name', </p>
+<p>                          formats=['pdf', 'png'], dpi=300)</p>
+<p>   <code>`</code></p>
+
+<h4>Advanced Seaborn Techniques</h4>
+
+<p><strong>Pairwise relationships for exploratory analysis:</strong></p>
+<pre><code class="language-python"># Quick overview of all relationships
+g = sns.pairplot(data=df, hue='condition', 
+                 vars=['gene1', 'gene2', 'gene3'],
+                 corner=True, diag_kind='kde', height=2)</code></pre>
+
+<p><strong>Hierarchical clustering heatmap:</strong></p>
+<pre><code class="language-python"># Cluster samples and features
+g = sns.clustermap(expression_data, method='ward', 
+                   metric='euclidean', z_score=0,
+                   cmap='RdBu_r', center=0, 
+                   figsize=(10, 8), 
+                   row_colors=condition_colors,
+                   cbar_kws={'label': 'Z-score'})</code></pre>
+
+<p><strong>Joint distributions with marginals:</strong></p>
+<pre><code class="language-python"># Bivariate distribution with context
+g = sns.jointplot(data=df, x='gene1', y='gene2',
+                  hue='treatment', kind='scatter',
+                  height=6, ratio=4, marginal_kws={'kde': True})</code></pre>
+
+<h4>Common Seaborn Issues and Solutions</h4>
+
+<p><strong>Issue: Legend outside plot area</strong></p>
+<pre><code class="language-python">g = sns.relplot(...)
+g._legend.set_bbox_to_anchor((0.9, 0.5))</code></pre>
+
+<p><strong>Issue: Overlapping labels</strong></p>
+<pre><code class="language-python">plt.xticks(rotation=45, ha='right')
+plt.tight_layout()</code></pre>
+
+<p><strong>Issue: Text too small at final size</strong></p>
+<pre><code class="language-python">sns.set_context('paper', font_scale=1.2)  # Increase if needed</code></pre>
+
+<h4>Additional Resources</h4>
+
+<p>For more detailed seaborn information, see:</p>
+<ul><li><code>scientific-packages/seaborn/SKILL.md</code> - Comprehensive seaborn documentation</li>
+<li><code>scientific-packages/seaborn/references/examples.md</code> - Practical use cases</li>
+<li><code>scientific-packages/seaborn/references/function_reference.md</code> - Complete API reference</li>
+<li><code>scientific-packages/seaborn/references/objects_interface.md</code> - Modern declarative API</li>
+</ul>
+<h3>Plotly</h3>
+<ul><li>Interactive figures for exploration</li>
+<li>Export static images for publication</li>
+<li>Configure for publication quality:</li>
+</ul><pre><code class="language-python">fig.update_layout(
+    font=dict(family='Arial, sans-serif', size=10),
+    plot_bgcolor='white',
+    # ... see matplotlib_examples.md Example 8
+)
+fig.write_image('figure.png', scale=3)  # scale=3 gives ~300 DPI</code></pre>
+
+<h2>Resources</h2>
+
+<h3>References Directory</h3>
+
+<p><strong>Load these as needed for detailed information:</strong></p>
+
+<ul><li><strong><code>publication_guidelines.md</code></strong>: Comprehensive best practices</li>
+</ul><p>  - Resolution and file format requirements</p>
+<p>  - Typography guidelines</p>
+<p>  - Layout and composition rules</p>
+<p>  - Statistical rigor requirements</p>
+<p>  - Complete publication checklist</p>
+
+<ul><li><strong><code>color_palettes.md</code></strong>: Color usage guide</li>
+</ul><p>  - Colorblind-friendly palette specifications with RGB values</p>
+<p>  - Sequential and diverging colormap recommendations</p>
+<p>  - Testing procedures for accessibility</p>
+<p>  - Domain-specific palettes (genomics, microscopy)</p>
+
+<ul><li><strong><code>journal_requirements.md</code></strong>: Journal-specific specifications</li>
+</ul><p>  - Technical requirements by publisher</p>
+<p>  - File format and DPI specifications</p>
+<p>  - Figure dimension requirements</p>
+<p>  - Quick reference table</p>
+
+<ul><li><strong><code>matplotlib_examples.md</code></strong>: Practical code examples</li>
+</ul><p>  - 10 complete working examples</p>
+<p>  - Line plots, bar plots, heatmaps, multi-panel figures</p>
+<p>  - Journal-specific figure examples</p>
+<p>  - Tips for each library (matplotlib, seaborn, plotly)</p>
+
+<h3>Scripts Directory</h3>
+
+<p><strong>Use these helper scripts for automation:</strong></p>
+
+<ul><li><strong><code>figure_export.py</code></strong>: Export utilities</li>
+</ul><p>  - <code>save_publication_figure()</code>: Save in multiple formats with correct DPI</p>
+<p>  - <code>save_for_journal()</code>: Use journal-specific requirements automatically</p>
+<p>  - <code>check_figure_size()</code>: Verify dimensions meet journal specs</p>
+<p>  - Run directly: <code>python scripts/figure_export.py</code> for examples</p>
+
+<ul><li><strong><code>style_presets.py</code></strong>: Pre-configured styles</li>
+</ul><p>  - <code>apply_publication_style()</code>: Apply preset styles (default, nature, science, cell)</p>
+<p>  - <code>set_color_palette()</code>: Quick palette switching</p>
+<p>  - <code>configure_for_journal()</code>: One-command journal configuration</p>
+<p>  - Run directly: <code>python scripts/style_presets.py</code> to see examples</p>
+
+<h3>Assets Directory</h3>
+
+<p><strong>Use these files in figures:</strong></p>
+
+<ul><li><strong><code>color_palettes.py</code></strong>: Importable color definitions</li>
+</ul><p>  - All recommended palettes as Python constants</p>
+<p>  - <code>apply_palette()</code> helper function</p>
+<p>  - Can be imported directly into notebooks/scripts</p>
+
+<ul><li><strong>Matplotlib style files</strong>: Use with <code>plt.style.use()</code></li>
+</ul><p>  - <code>publication.mplstyle</code>: General publication quality</p>
+<p>  - <code>nature.mplstyle</code>: Nature journal specifications</p>
+<p>  - <code>presentation.mplstyle</code>: Larger fonts for posters/slides</p>
+
+<h2>Workflow Summary</h2>
+
+<p><strong>Recommended workflow for creating publication figures:</strong></p>
+
+<ul><li><strong>Plan</strong>: Determine target journal, figure type, and content</li>
+<li><strong>Configure</strong>: Apply appropriate style for journal</li>
+</ul><p>   <code>`</code>python</p>
+<p>   from style_presets import configure_for_journal</p>
+<p>   configure_for_journal('nature', 'single')</p>
+<p>   <code>`</code></p>
+<ul><li><strong>Create</strong>: Build figure with proper labels, colors, statistics</li>
+<li><strong>Verify</strong>: Check size, fonts, colors, accessibility</li>
+</ul><p>   <code>`</code>python</p>
+<p>   from figure_export import check_figure_size</p>
+<p>   check_figure_size(fig, journal='nature')</p>
+<p>   <code>`</code></p>
+<ul><li><strong>Export</strong>: Save in required formats</li>
+</ul><p>   <code>`</code>python</p>
+<p>   from figure_export import save_for_journal</p>
+<p>   save_for_journal(fig, 'figure1', 'nature', 'combination')</p>
+<p>   <code>`</code></p>
+<ul><li><strong>Review</strong>: View at final size in manuscript context</li>
+</ul>
+<h2>Common Pitfalls to Avoid</h2>
+
+<ul><li><strong>Font too small</strong>: Text unreadable when printed at final size</li>
+<li><strong>JPEG format</strong>: Never use JPEG for graphs/plots (creates artifacts)</li>
+<li><strong>Red-green colors</strong>: ~8% of males cannot distinguish</li>
+<li><strong>Low resolution</strong>: Pixelated figures in publication</li>
+<li><strong>Missing units</strong>: Always label axes with units</li>
+<li><strong>3D effects</strong>: Distorts perception, avoid completely</li>
+<li><strong>Chart junk</strong>: Remove unnecessary gridlines, decorations</li>
+<li><strong>Truncated axes</strong>: Start bar charts at zero unless scientifically justified</li>
+<li><strong>Inconsistent styling</strong>: Different fonts/colors across figures in same manuscript</li>
+<li><strong>No error bars</strong>: Always show uncertainty</li>
+</ul>
+<h2>Final Checklist</h2>
+
+<p>Before submitting figures, verify:</p>
+
+<ul><li>[ ] Resolution meets journal requirements (300+ DPI)</li>
+<li>[ ] File format is correct (vector for plots, TIFF for images)</li>
+<li>[ ] Figure size matches journal specifications</li>
+<li>[ ] All text readable at final size (≥6 pt)</li>
+<li>[ ] Colors are colorblind-friendly</li>
+<li>[ ] Figure works in grayscale</li>
+<li>[ ] All axes labeled with units</li>
+<li>[ ] Error bars present with definition in caption</li>
+<li>[ ] Panel labels present and consistent</li>
+<li>[ ] No chart junk or 3D effects</li>
+<li>[ ] Fonts consistent across all figures</li>
+<li>[ ] Statistical significance clearly marked</li>
+<li>[ ] Legend is clear and complete</li>
+</ul>
+<p>Use this skill to ensure scientific figures meet the highest publication standards while remaining accessible to all readers.</p>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Color Palettes</h3>
+  <h1>Scientific Color Palettes and Guidelines</h1>
+
+<h2>Overview</h2>
+
+<p>Color choice in scientific visualization is critical for accessibility, clarity, and accurate data representation. This reference provides colorblind-friendly palettes and best practices for color usage.</p>
+
+<h2>Colorblind-Friendly Palettes</h2>
+
+<h3>Okabe-Ito Palette (Recommended for Categories)</h3>
+
+<p>The Okabe-Ito palette is specifically designed to be distinguishable by people with all forms of color blindness.</p>
+
+<pre><code class="language-python"># Okabe-Ito colors (RGB values)
+okabe_ito = {
+    'orange': '#E69F00',      # RGB: (230, 159, 0)
+    'sky_blue': '#56B4E9',    # RGB: (86, 180, 233)
+    'bluish_green': '#009E73', # RGB: (0, 158, 115)
+    'yellow': '#F0E442',      # RGB: (240, 228, 66)
+    'blue': '#0072B2',        # RGB: (0, 114, 178)
+    'vermillion': '#D55E00',  # RGB: (213, 94, 0)
+    'reddish_purple': '#CC79A7', # RGB: (204, 121, 167)
+    'black': '#000000'        # RGB: (0, 0, 0)
+}</code></pre>
+
+<p><strong>Usage in Matplotlib:</strong></p>
+<pre><code class="language-python">import matplotlib.pyplot as plt
+
+colors = ['#E69F00', '#56B4E9', '#009E73', '#F0E442',
+          '#0072B2', '#D55E00', '#CC79A7', '#000000']
+plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors)</code></pre>
+
+<p><strong>Usage in Seaborn:</strong></p>
+<pre><code class="language-python">import seaborn as sns
+
+okabe_ito_palette = ['#E69F00', '#56B4E9', '#009E73', '#F0E442',
+                      '#0072B2', '#D55E00', '#CC79A7']
+sns.set_palette(okabe_ito_palette)</code></pre>
+
+<p><strong>Usage in Plotly:</strong></p>
+<pre><code class="language-python">import plotly.graph_objects as go
+
+okabe_ito_plotly = ['#E69F00', '#56B4E9', '#009E73', '#F0E442',
+                     '#0072B2', '#D55E00', '#CC79A7']
+fig = go.Figure()
+# Apply to discrete color scale</code></pre>
+
+<h3>Wong Palette (Alternative for Categories)</h3>
+
+<p>Another excellent colorblind-friendly palette by Bang Wong (Nature Methods).</p>
+
+<pre><code class="language-python">wong_palette = {
+    'black': '#000000',
+    'orange': '#E69F00',
+    'sky_blue': '#56B4E9',
+    'green': '#009E73',
+    'yellow': '#F0E442',
+    'blue': '#0072B2',
+    'vermillion': '#D55E00',
+    'purple': '#CC79A7'
+}</code></pre>
+
+<h3>Paul Tol Palettes</h3>
+
+<p>Paul Tol has designed multiple scientifically-optimized palettes for different use cases.</p>
+
+<p><strong>Bright Palette (up to 7 categories):</strong></p>
+<pre><code class="language-python">tol_bright = ['#4477AA', '#EE6677', '#228833', '#CCBB44',
+              '#66CCEE', '#AA3377', '#BBBBBB']</code></pre>
+
+<p><strong>Muted Palette (up to 9 categories):</strong></p>
+<pre><code class="language-python">tol_muted = ['#332288', '#88CCEE', '#44AA99', '#117733',
+             '#999933', '#DDCC77', '#CC6677', '#882255', '#AA4499']</code></pre>
+
+<p><strong>High Contrast (3 categories only):</strong></p>
+<pre><code class="language-python">tol_high_contrast = ['#004488', '#DDAA33', '#BB5566']</code></pre>
+
+<h2>Sequential Colormaps (Continuous Data)</h2>
+
+<p>Sequential colormaps represent data from low to high values with a single hue.</p>
+
+<h3>Perceptually Uniform Colormaps</h3>
+
+<p>These colormaps have uniform perceptual change across the color scale.</p>
+
+<p><strong>Viridis (default in Matplotlib):</strong></p>
+<ul><li>Colorblind-friendly</li>
+<li>Prints well in grayscale</li>
+<li>Perceptually uniform</li>
+</ul><pre><code class="language-python">plt.imshow(data, cmap='viridis')</code></pre>
+
+<p><strong>Cividis:</strong></p>
+<ul><li>Optimized for colorblind viewers</li>
+<li>Designed specifically for deuteranopia/protanopia</li>
+</ul><pre><code class="language-python">plt.imshow(data, cmap='cividis')</code></pre>
+
+<p><strong>Plasma, Inferno, Magma:</strong></p>
+<ul><li>Perceptually uniform alternatives to viridis</li>
+<li>Good for different aesthetic preferences</li>
+</ul><pre><code class="language-python">plt.imshow(data, cmap='plasma')</code></pre>
+
+<h3>When to Use Sequential Maps</h3>
+<ul><li>Heatmaps showing intensity</li>
+<li>Geographic elevation data</li>
+<li>Probability distributions</li>
+<li>Any single-variable continuous data (low → high)</li>
+</ul>
+<h2>Diverging Colormaps (Negative to Positive)</h2>
+
+<p>Diverging colormaps have a neutral middle color with two contrasting colors at extremes.</p>
+
+<h3>Colorblind-Safe Diverging Maps</h3>
+
+<p><strong>RdYlBu (Red-Yellow-Blue):</strong></p>
+<pre><code class="language-python">plt.imshow(data, cmap='RdYlBu_r')  # _r reverses: blue (low) to red (high)</code></pre>
+
+<p><strong>PuOr (Purple-Orange):</strong></p>
+<ul><li>Excellent for colorblind viewers</li>
+</ul><pre><code class="language-python">plt.imshow(data, cmap='PuOr')</code></pre>
+
+<p><strong>BrBG (Brown-Blue-Green):</strong></p>
+<ul><li>Good colorblind accessibility</li>
+</ul><pre><code class="language-python">plt.imshow(data, cmap='BrBG')</code></pre>
+
+<h3>Avoid These Diverging Maps</h3>
+<ul><li><strong>RdGn (Red-Green)</strong>: Problematic for red-green colorblindness</li>
+<li><strong>RdYlGn (Red-Yellow-Green)</strong>: Same issue</li>
+</ul>
+<h3>When to Use Diverging Maps</h3>
+<ul><li>Correlation matrices</li>
+<li>Change/difference data (positive vs. negative)</li>
+<li>Deviation from a central value</li>
+<li>Temperature anomalies</li>
+</ul>
+<h2>Special Purpose Palettes</h2>
+
+<h3>For Genomics/Bioinformatics</h3>
+
+<p><strong>Sequence type identification:</strong></p>
+<pre><code class="language-python"># DNA/RNA bases
+nucleotide_colors = {
+    'A': '#00CC00',  # Green
+    'C': '#0000CC',  # Blue
+    'G': '#FFB300',  # Orange
+    'T': '#CC0000',  # Red
+    'U': '#CC0000'   # Red (RNA)
+}</code></pre>
+
+<p><strong>Gene expression:</strong></p>
+<ul><li>Use sequential colormaps (viridis, YlOrRd) for expression levels</li>
+<li>Use diverging colormaps (RdBu) for log2 fold change</li>
+</ul>
+<h3>For Microscopy</h3>
+
+<p><strong>Fluorescence channels:</strong></p>
+<pre><code class="language-python"># Traditional fluorophore colors (use with caution)
+fluorophore_colors = {
+    'DAPI': '#0000FF',      # Blue - DNA
+    'GFP': '#00FF00',       # Green (problematic for colorblind)
+    'RFP': '#FF0000',       # Red
+    'Cy5': '#FF00FF'        # Magenta
+}
+
+# Colorblind-friendly alternatives
+fluorophore_alt = {
+    'Channel1': '#0072B2',  # Blue
+    'Channel2': '#E69F00',  # Orange (instead of green)
+    'Channel3': '#D55E00',  # Vermillion
+    'Channel4': '#CC79A7'   # Magenta
+}</code></pre>
+
+<h2>Color Usage Best Practices</h2>
+
+<h3>Categorical Data (Qualitative Color Schemes)</h3>
+
+<p><strong>Do:</strong></p>
+<ul><li>Use distinct, saturated colors from Okabe-Ito or Wong palette</li>
+<li>Limit to 7-8 categories max in one plot</li>
+<li>Use consistent colors for same categories across figures</li>
+<li>Add patterns/markers when colors alone might be insufficient</li>
+</ul>
+<p><strong>Don't:</strong></p>
+<ul><li>Use red/green combinations</li>
+<li>Use rainbow (jet) colormap for categories</li>
+<li>Use similar hues that are hard to distinguish</li>
+</ul>
+<h3>Continuous Data (Sequential/Diverging Schemes)</h3>
+
+<p><strong>Do:</strong></p>
+<ul><li>Use perceptually uniform colormaps (viridis, plasma, cividis)</li>
+<li>Choose diverging maps when data has meaningful center point</li>
+<li>Include colorbar with labeled ticks</li>
+<li>Test appearance in grayscale</li>
+</ul>
+<p><strong>Don't:</strong></p>
+<ul><li>Use rainbow (jet) colormap - not perceptually uniform</li>
+<li>Use red-green diverging maps</li>
+<li>Omit colorbar on heatmaps</li>
+</ul>
+<h2>Testing for Colorblind Accessibility</h2>
+
+<h3>Online Simulators</h3>
+<ul><li><strong>Coblis</strong>: https://www.color-blindness.com/coblis-color-blindness-simulator/</li>
+<li><strong>Color Oracle</strong>: Free downloadable tool for Windows/Mac/Linux</li>
+<li><strong>Sim Daltonism</strong>: Mac application</li>
+</ul>
+<h3>Types of Color Vision Deficiency</h3>
+<ul><li><strong>Deuteranopia</strong> (~5% of males): Cannot distinguish green</li>
+<li><strong>Protanopia</strong> (~2% of males): Cannot distinguish red</li>
+<li><strong>Tritanopia</strong> (<1%): Cannot distinguish blue (rare)</li>
+</ul>
+<h3>Python Tools</h3>
+<pre><code class="language-python"># Using colorspacious to simulate colorblind vision
+from colorspacious import cspace_convert
+
+def simulate_deuteranopia(image_rgb):
+    from colorspacious import cspace_convert
+    # Convert to colorblind simulation
+    # (Implementation would require colorspacious library)
+    pass</code></pre>
+
+<h2>Implementation Examples</h2>
+
+<h3>Setting Global Matplotlib Style</h3>
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+# Set Okabe-Ito as default color cycle
+okabe_ito_colors = ['#E69F00', '#56B4E9', '#009E73', '#F0E442',
+                     '#0072B2', '#D55E00', '#CC79A7']
+mpl.rcParams['axes.prop_cycle'] = mpl.cycler(color=okabe_ito_colors)
+
+# Set default colormap to viridis
+mpl.rcParams['image.cmap'] = 'viridis'</code></pre>
+
+<h3>Seaborn with Custom Palette</h3>
+<pre><code class="language-python">import seaborn as sns
+
+# Set Paul Tol muted palette
+tol_muted = ['#332288', '#88CCEE', '#44AA99', '#117733',
+             '#999933', '#DDCC77', '#CC6677', '#882255', '#AA4499']
+sns.set_palette(tol_muted)
+
+# For heatmaps
+sns.heatmap(data, cmap='viridis', annot=True)</code></pre>
+
+<h3>Plotly with Discrete Colors</h3>
+<pre><code class="language-python">import plotly.express as px
+
+# Use Okabe-Ito for categorical data
+okabe_ito_plotly = ['#E69F00', '#56B4E9', '#009E73', '#F0E442',
+                     '#0072B2', '#D55E00', '#CC79A7']
+
+fig = px.scatter(df, x='x', y='y', color='category',
+                 color_discrete_sequence=okabe_ito_plotly)</code></pre>
+
+<h2>Grayscale Compatibility</h2>
+
+<p>All figures should remain interpretable in grayscale. Test by converting to grayscale:</p>
+
+<pre><code class="language-python"># Convert figure to grayscale for testing
+fig.savefig('figure_gray.png', dpi=300, colormap='gray')</code></pre>
+
+<p><strong>Strategies for grayscale compatibility:</strong></p>
+<ul><li>Use different line styles (solid, dashed, dotted)</li>
+<li>Use different marker shapes (circles, squares, triangles)</li>
+<li>Add hatching patterns to bars</li>
+<li>Ensure sufficient luminance contrast between colors</li>
+</ul>
+<h2>Color Spaces</h2>
+
+<h3>RGB vs CMYK</h3>
+<ul><li><strong>RGB</strong> (Red, Green, Blue): For digital/screen display</li>
+<li><strong>CMYK</strong> (Cyan, Magenta, Yellow, Black): For print</li>
+</ul>
+<p><strong>Important:</strong> Colors appear different in print vs. screen. When preparing for print:</p>
+<ul><li>Convert to CMYK color space</li>
+<li>Check color appearance in CMYK preview</li>
+<li>Ensure sufficient contrast remains</li>
+</ul>
+<h3>Matplotlib Color Spaces</h3>
+<pre><code class="language-python"># Save for print (CMYK)
+# Note: Direct CMYK support limited; use PDF and let publisher convert
+fig.savefig('figure.pdf', dpi=300)
+
+# For RGB (digital)
+fig.savefig('figure.png', dpi=300)</code></pre>
+
+<h2>Common Mistakes</h2>
+
+<ul><li><strong>Using jet/rainbow colormap</strong>: Not perceptually uniform; avoid</li>
+<li><strong>Red-green combinations</strong>: ~8% of males cannot distinguish</li>
+<li><strong>Too many colors</strong>: More than 7-8 becomes difficult to distinguish</li>
+<li><strong>Inconsistent color meaning</strong>: Same color should mean same thing across figures</li>
+<li><strong>Missing colorbar</strong>: Always include for continuous data</li>
+<li><strong>Low contrast</strong>: Ensure colors differ sufficiently</li>
+<li><strong>Relying solely on color</strong>: Add texture, patterns, or markers</li>
+</ul>
+<h2>Resources</h2>
+
+<ul><li><strong>ColorBrewer</strong>: http://colorbrewer2.org/ - Choose palettes by colorblind-safe option</li>
+<li><strong>Paul Tol's palettes</strong>: https://personal.sron.nl/~pault/</li>
+<li><strong>Okabe-Ito palette origin</strong>: "Color Universal Design" (Okabe & Ito, 2008)</li>
+<li><strong>Matplotlib colormaps</strong>: https://matplotlib.org/stable/tutorials/colors/colormaps.html</li>
+<li><strong>Seaborn palettes</strong>: https://seaborn.pydata.org/tutorial/color_palettes.html</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Journal Requirements</h3>
+  <h1>Journal-Specific Figure Requirements</h1>
+
+<h2>Overview</h2>
+
+<p>Different journals have specific technical requirements for figures. This reference compiles common requirements from major scientific publishers. <strong>Always check the specific journal's author guidelines for the most current requirements.</strong></p>
+
+<h2>Nature Portfolio (Nature, Nature Methods, etc.)</h2>
+
+<h3>Technical Specifications</h3>
+<ul><li><strong>File formats</strong>:</li>
+</ul><p>  - Vector: PDF, EPS, AI (preferred for graphs)</p>
+<p>  - Raster: TIFF, PNG (for images)</p>
+<p>  - Never: PowerPoint, Word, JPEG</p>
+
+<ul><li><strong>Resolution</strong>:</li>
+</ul><p>  - Line art: 1000-1200 DPI</p>
+<p>  - Combination (line art + images): 600 DPI</p>
+<p>  - Photographs/microscopy: 300 DPI minimum</p>
+
+<ul><li><strong>Color space</strong>: RGB (Nature is digital-first)</li>
+</ul>
+<ul><li><strong>Dimensions</strong>:</li>
+</ul><p>  - Single column: 89 mm (3.5 inches)</p>
+<p>  - 1.5 column: 120 mm (4.7 inches)</p>
+<p>  - Double column: 183 mm (7.2 inches)</p>
+<p>  - Maximum height: 247 mm (9.7 inches)</p>
+
+<ul><li><strong>Fonts</strong>:</li>
+</ul><p>  - Arial or Helvetica (or similar sans-serif)</p>
+<p>  - Minimum 5-7 pt at final size</p>
+<p>  - Embed all fonts in PDF/EPS</p>
+
+<h3>Nature Specific Guidelines</h3>
+<ul><li>Panel labels: a, b, c (lowercase, bold) in top-left corner</li>
+<li>Scale bars required for microscopy images</li>
+<li>Gel images: Include molecular weight markers</li>
+<li>Cropping: Indicate with line breaks</li>
+<li>Statistics: Mark significance; define symbols in legend</li>
+<li>Source data: Required for all graphs</li>
+</ul>
+<h3>File Naming</h3>
+<p>Format: <code>FirstAuthorLastName_FigureNumber.ext</code></p>
+<p>Example: <code>Smith_Fig1.pdf</code></p>
+
+<h2>Science (AAAS)</h2>
+
+<h3>Technical Specifications</h3>
+<ul><li><strong>File formats</strong>:</li>
+</ul><p>  - Vector: EPS, PDF (preferred)</p>
+<p>  - Raster: TIFF</p>
+<p>  - Acceptable: AI, PSD (Photoshop)</p>
+
+<ul><li><strong>Resolution</strong>:</li>
+</ul><p>  - Line art: 1000 DPI minimum</p>
+<p>  - Photographs: 300 DPI minimum</p>
+<p>  - Combination: 600 DPI minimum</p>
+
+<ul><li><strong>Color space</strong>: RGB</li>
+</ul>
+<ul><li><strong>Dimensions</strong>:</li>
+</ul><p>  - Single column: 5.5 cm (2.17 inches)</p>
+<p>  - 1.5 column: 12 cm (4.72 inches)</p>
+<p>  - Full width: 17.5 cm (6.89 inches)</p>
+<p>  - Maximum height: 23.3 cm (9.17 inches)</p>
+
+<ul><li><strong>Fonts</strong>:</li>
+</ul><p>  - Helvetica (or Arial)</p>
+<p>  - 6-8 pt minimum at final size</p>
+<p>  - Consistent across all figures</p>
+
+<h3>Science Specific Guidelines</h3>
+<ul><li>Panel labels: (A), (B), (C) in parentheses</li>
+<li>Minimal text within figures (details in caption)</li>
+<li>High contrast for web and print</li>
+<li>Error bars required; define in caption</li>
+<li>Avoid excessive whitespace</li>
+</ul>
+<h3>File Naming</h3>
+<p>Format: <code>Manuscript#_Fig#.ext</code></p>
+<p>Example: <code>abn1234_Fig1.eps</code></p>
+
+<h2>Cell Press (Cell, Neuron, Molecular Cell, etc.)</h2>
+
+<h3>Technical Specifications</h3>
+<ul><li><strong>File formats</strong>:</li>
+</ul><p>  - Vector: PDF, EPS (preferred for graphs/diagrams)</p>
+<p>  - Raster: TIFF (for photographs)</p>
+
+<ul><li><strong>Resolution</strong>:</li>
+</ul><p>  - Line art: 1000 DPI</p>
+<p>  - Photographs: 300 DPI</p>
+<p>  - Combination: 600 DPI</p>
+
+<ul><li><strong>Color space</strong>: RGB</li>
+</ul>
+<ul><li><strong>Dimensions</strong>:</li>
+</ul><p>  - Single column: 85 mm (3.35 inches)</p>
+<p>  - Double column: 178 mm (7.01 inches)</p>
+<p>  - Maximum height: 230 mm (9.06 inches)</p>
+
+<ul><li><strong>Fonts</strong>:</li>
+</ul><p>  - Arial or Helvetica only</p>
+<p>  - 8-12 pt for axis labels</p>
+<p>  - 6-8 pt for tick labels</p>
+
+<h3>Cell Press Specific Guidelines</h3>
+<ul><li>Panel labels: (A), (B), (C) or A, B, C in top-left</li>
+<li>Related panels should match in size</li>
+<li>Scale bars mandatory for microscopy</li>
+<li>Western blots: Include molecular weight markers</li>
+<li>Arrows/arrowheads: 2 pt minimum width</li>
+<li>Line widths: 1-2 pt for data</li>
+</ul>
+<h2>PLOS (Public Library of Science)</h2>
+
+<h3>Technical Specifications</h3>
+<ul><li><strong>File formats</strong>:</li>
+</ul><p>  - Vector: EPS, PDF (preferred)</p>
+<p>  - Raster: TIFF, PNG</p>
+<p>  - TIFF with LZW compression acceptable</p>
+
+<ul><li><strong>Resolution</strong>:</li>
+</ul><p>  - Minimum 300 DPI at final size (all figure types)</p>
+<p>  - 600 DPI preferred for line art</p>
+
+<ul><li><strong>Color space</strong>: RGB</li>
+</ul>
+<ul><li><strong>Dimensions</strong>:</li>
+</ul><p>  - Single column: 8.3 cm (3.27 inches)</p>
+<p>  - 1.5 column: 11.4 cm (4.49 inches)</p>
+<p>  - Double column: 17.3 cm (6.81 inches)</p>
+<p>  - Maximum height: 23.3 cm (9.17 inches)</p>
+
+<ul><li><strong>Fonts</strong>:</li>
+</ul><p>  - Sans-serif preferred (Arial, Helvetica)</p>
+<p>  - 8-12 pt for labels at final size</p>
+
+<h3>PLOS Specific Guidelines</h3>
+<ul><li>Figures should be understandable without caption</li>
+<li>Color required only if adding information</li>
+<li>All figures convertible to grayscale</li>
+<li>Panel labels optional but recommended</li>
+<li>Open access: Figures must be CC-BY licensed</li>
+<li>Source data files encouraged</li>
+</ul>
+<h2>ACS (American Chemical Society)</h2>
+
+<h3>Technical Specifications</h3>
+<ul><li><strong>File formats</strong>:</li>
+</ul><p>  - Preferred: TIFF, PDF, EPS</p>
+<p>  - Application files: AI, CDX (ChemDraw), CDL</p>
+<p>  - Acceptable: PNG (not for publication)</p>
+
+<ul><li><strong>Resolution</strong>:</li>
+</ul><p>  - Minimum 300 DPI at final size</p>
+<p>  - 600 DPI for line art and chemical structures</p>
+<p>  - 1200 DPI for detailed structures</p>
+
+<ul><li><strong>Color space</strong>: RGB or CMYK (check specific journal)</li>
+</ul>
+<ul><li><strong>Dimensions</strong>:</li>
+</ul><p>  - Single column: 3.25 inches (8.25 cm)</p>
+<p>  - Double column: 7 inches (17.78 cm)</p>
+
+<ul><li><strong>Fonts</strong>:</li>
+</ul><p>  - Embedded fonts required</p>
+<p>  - Consistent sizing across figures</p>
+
+<h3>ACS Specific Guidelines</h3>
+<ul><li>Chemical structures: Use ChemDraw or equivalent</li>
+<li>Atom labels: 10-12 pt</li>
+<li>Bond thickness: 2 pt</li>
+<li>Panel labels: Lowercase bold (a, b, c)</li>
+<li>High contrast required (many ACS journals grayscale print)</li>
+</ul>
+<h2>Elsevier Journals (varies by journal)</h2>
+
+<h3>Technical Specifications</h3>
+<ul><li><strong>File formats</strong>:</li>
+</ul><p>  - Vector: EPS, PDF</p>
+<p>  - Raster: TIFF, JPEG (only for photographs)</p>
+
+<ul><li><strong>Resolution</strong>:</li>
+</ul><p>  - Line art: 1000 DPI minimum</p>
+<p>  - Photographs: 300 DPI minimum</p>
+<p>  - Combination: 600 DPI minimum</p>
+
+<ul><li><strong>Color space</strong>: RGB (for online); CMYK (for print journals)</li>
+</ul>
+<ul><li><strong>Dimensions</strong>: Vary by journal</li>
+</ul><p>  - Common single column: 90 mm</p>
+<p>  - Common double column: 190 mm</p>
+
+<ul><li><strong>Fonts</strong>:</li>
+</ul><p>  - Preferred: Arial, Times, Symbol</p>
+<p>  - Minimum 6 pt at final size</p>
+
+<h3>Elsevier Specific Guidelines</h3>
+<ul><li>Check individual journal guidelines (highly variable)</li>
+<li>Some journals charge for color in print</li>
+<li>Panel labels typically (A), (B), (C) or A, B, C</li>
+<li>Graphical abstract often required (separate from figures)</li>
+</ul>
+<h2>IEEE (Engineering/Computer Science)</h2>
+
+<h3>Technical Specifications</h3>
+<ul><li><strong>File formats</strong>:</li>
+</ul><p>  - Vector: PDF, EPS (preferred)</p>
+<p>  - Raster: TIFF, PNG</p>
+
+<ul><li><strong>Resolution</strong>:</li>
+</ul><p>  - Photographs/graphics: 300 DPI minimum at final size</p>
+<p>  - Line art: 600 DPI minimum</p>
+
+<ul><li><strong>Color space</strong>: RGB (online); CMYK (print)</li>
+</ul>
+<ul><li><strong>Dimensions</strong>:</li>
+</ul><p>  - Single column: 3.5 inches (8.9 cm)</p>
+<p>  - Double column: 7.16 inches (18.2 cm)</p>
+
+<ul><li><strong>Fonts</strong>:</li>
+</ul><p>  - Sans-serif preferred</p>
+<p>  - Minimum 8-10 pt at final size</p>
+
+<h3>IEEE Specific Guidelines</h3>
+<ul><li>Figures should be readable in black and white</li>
+<li>Color figures incur no charge (online publication)</li>
+<li>Panel labels: (a), (b), (c) in lowercase</li>
+<li>Captions below figures (not on separate page)</li>
+<li>Use IEEE graphics checker tool before submission</li>
+</ul>
+<h2>BMC (BioMed Central) - Open Access</h2>
+
+<h3>Technical Specifications</h3>
+<ul><li><strong>File formats</strong>:</li>
+</ul><p>  - Any standard format accepted</p>
+<p>  - Preferred: TIFF, PDF, EPS, PNG</p>
+
+<ul><li><strong>Resolution</strong>:</li>
+</ul><p>  - Minimum 600 DPI for line art</p>
+<p>  - Minimum 300 DPI for photographs</p>
+
+<ul><li><strong>Color space</strong>: RGB</li>
+</ul>
+<ul><li><strong>Dimensions</strong>:</li>
+</ul><p>  - Flexible, but consider readability</p>
+<p>  - Maximum width typically 140 mm</p>
+
+<ul><li><strong>Fonts</strong>:</li>
+</ul><p>  - Embedded and readable</p>
+
+<h3>BMC Specific Guidelines</h3>
+<ul><li>Open access: CC-BY license required</li>
+<li>Figure files uploaded separately</li>
+<li>Panel labels as appropriate for field</li>
+<li>Source data encouraged</li>
+<li>Accessibility important (colorblind-friendly)</li>
+</ul>
+<h2>Common Requirements Across Journals</h2>
+
+<h3>Universal Best Practices</h3>
+<ul><li><strong>Never use JPEG for graphs/plots</strong>: Compression artifacts</li>
+<li><strong>Embed all fonts</strong>: In PDF/EPS files</li>
+<li><strong>Layer structure</strong>: Flatten images (merge layers in Photoshop)</li>
+<li><strong>RGB vs CMYK</strong>: Most journals now RGB (digital-first)</li>
+<li><strong>High resolution</strong>: Always better to start high, reduce if needed</li>
+<li><strong>Consistency</strong>: Same style across all figures in manuscript</li>
+<li><strong>File size</strong>: Balance quality with reasonable file sizes (typically <10 MB per figure)</li>
+</ul>
+<h3>Submitting Figures</h3>
+<ul><li><strong>Initial submission</strong>: Lower resolution often acceptable (for review)</li>
+<li><strong>Revision/acceptance</strong>: High-resolution required</li>
+<li><strong>Separate files</strong>: Each figure as separate file</li>
+<li><strong>File naming</strong>: Clear, systematic naming</li>
+<li><strong>Supporting information</strong>: May have different requirements</li>
+</ul>
+<h2>Quick Reference Table</h2>
+
+<p>| Publisher | Single Column | Double Column | Min DPI (photos) | Min DPI (line art) | Preferred Format |</p>
+<p>|-----------|---------------|---------------|------------------|-------------------|------------------|</p>
+<p>| Nature | 89 mm | 183 mm | 300 | 1000 | EPS, PDF |</p>
+<p>| Science | 5.5 cm | 17.5 cm | 300 | 1000 | EPS, PDF |</p>
+<p>| Cell Press | 85 mm | 178 mm | 300 | 1000 | EPS, PDF |</p>
+<p>| PLOS | 8.3 cm | 17.3 cm | 300 | 600 | EPS, TIFF |</p>
+<p>| ACS | 3.25 in | 7 in | 300 | 600 | TIFF, EPS |</p>
+
+<h2>Checking Requirements</h2>
+
+<h3>Before Submission Checklist</h3>
+<ul><li>Read journal's author guidelines (figure section)</li>
+<li>Check file format requirements</li>
+<li>Verify resolution requirements</li>
+<li>Confirm size specifications (width × height)</li>
+<li>Check font requirements</li>
+<li>Verify color space (RGB vs CMYK)</li>
+<li>Check panel labeling style</li>
+<li>Review supplementary materials requirements</li>
+<li>Confirm file naming conventions</li>
+<li>Check file size limits</li>
+</ul>
+<h3>Useful Tools</h3>
+<ul><li><strong>ImageJ/Fiji</strong>: Check/adjust DPI</li>
+<li><strong>Adobe Acrobat</strong>: Verify embedded fonts, check PDF properties</li>
+<li><strong>GIMP</strong>: Free alternative to Photoshop for raster editing</li>
+<li><strong>Inkscape</strong>: Free vector graphics editor</li>
+</ul>
+<h2>Resources</h2>
+
+<ul><li><strong>Journal websites</strong>: Always check "Author Guidelines" or "Instructions for Authors"</li>
+<li><strong>Publisher resources</strong>: Many provide templates and tools</li>
+<li><strong>Format conversion</strong>: Use reputable tools; check output quality</li>
+<li><strong>Help desks</strong>: Contact journal staff if unclear</li>
+</ul>
+<h2>Notes</h2>
+
+<ul><li>Requirements change periodically - always verify current guidelines</li>
+<li>Preprint servers (bioRxiv, arXiv) often have different requirements</li>
+<li>Conference proceedings may have separate requirements</li>
+<li>Some journals offer figure preparation services (often paid)</li>
+<li>Supplementary figures may have relaxed requirements compared to main text figures</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Matplotlib Examples</h3>
+  <h1>Publication-Ready Matplotlib Examples</h1>
+
+<h2>Overview</h2>
+
+<p>This reference provides practical code examples for creating publication-ready scientific figures using Matplotlib, Seaborn, and Plotly. All examples follow best practices from <code>publication_guidelines.md</code> and use colorblind-friendly palettes from <code>color_palettes.md</code>.</p>
+
+<h2>Setup and Configuration</h2>
+
+<h3>Publication-Quality Matplotlib Configuration</h3>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import matplotlib as mpl
+import numpy as np
+
+# Set publication quality parameters
+mpl.rcParams['figure.dpi'] = 300
+mpl.rcParams['savefig.dpi'] = 300
+mpl.rcParams['font.size'] = 8
+mpl.rcParams['font.family'] = 'sans-serif'
+mpl.rcParams['font.sans-serif'] = ['Arial', 'Helvetica']
+mpl.rcParams['axes.labelsize'] = 9
+mpl.rcParams['axes.titlesize'] = 9
+mpl.rcParams['xtick.labelsize'] = 7
+mpl.rcParams['ytick.labelsize'] = 7
+mpl.rcParams['legend.fontsize'] = 7
+mpl.rcParams['axes.linewidth'] = 0.5
+mpl.rcParams['xtick.major.width'] = 0.5
+mpl.rcParams['ytick.major.width'] = 0.5
+mpl.rcParams['lines.linewidth'] = 1.5
+
+# Use colorblind-friendly colors (Okabe-Ito palette)
+okabe_ito = ['#E69F00', '#56B4E9', '#009E73', '#F0E442',
+             '#0072B2', '#D55E00', '#CC79A7', '#000000']
+mpl.rcParams['axes.prop_cycle'] = mpl.cycler(color=okabe_ito)
+
+# Use perceptually uniform colormap
+mpl.rcParams['image.cmap'] = 'viridis'</code></pre>
+
+<h3>Helper Function for Saving</h3>
+
+<pre><code class="language-python">def save_publication_figure(fig, filename, formats=['pdf', 'png'], dpi=300):
+    """
+    Save figure in multiple formats for publication.
+
+    Parameters:
+    -----------
+    fig : matplotlib.figure.Figure
+        Figure to save
+    filename : str
+        Base filename (without extension)
+    formats : list
+        List of file formats to save ['pdf', 'png', 'eps', 'svg']
+    dpi : int
+        Resolution for raster formats
+    """
+    for fmt in formats:
+        output_file = f"{filename}.{fmt}"
+        fig.savefig(output_file, dpi=dpi, bbox_inches='tight',
+                   facecolor='white', edgecolor='none',
+                   transparent=False, format=fmt)
+        print(f"Saved: {output_file}")</code></pre>
+
+<h2>Example 1: Line Plot with Error Bars</h2>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+
+# Generate sample data
+x = np.linspace(0, 10, 50)
+y1 = 2 * x + 1 + np.random.normal(0, 1, 50)
+y2 = 1.5 * x + 2 + np.random.normal(0, 1.2, 50)
+
+# Calculate means and standard errors for binned data
+bins = np.linspace(0, 10, 11)
+y1_mean = [y1[(x &gt;= bins[i]) &amp; (x &lt; bins[i+1])].mean() for i in range(len(bins)-1)]
+y1_sem = [y1[(x &gt;= bins[i]) &amp; (x &lt; bins[i+1])].std() /
+          np.sqrt(len(y1[(x &gt;= bins[i]) &amp; (x &lt; bins[i+1])]))
+          for i in range(len(bins)-1)]
+x_binned = (bins[:-1] + bins[1:]) / 2
+
+# Create figure with appropriate size (single column width = 3.5 inches)
+fig, ax = plt.subplots(figsize=(3.5, 2.5))
+
+# Plot with error bars
+ax.errorbar(x_binned, y1_mean, yerr=y1_sem,
+            marker='o', markersize=4, capsize=3, capthick=0.5,
+            label='Condition A', linewidth=1.5)
+
+# Add labels with units
+ax.set_xlabel('Time (hours)')
+ax.set_ylabel('Fluorescence intensity (a.u.)')
+
+# Add legend
+ax.legend(frameon=False, loc='upper left')
+
+# Remove top and right spines
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+# Tight layout
+fig.tight_layout()
+
+# Save
+save_publication_figure(fig, 'line_plot_with_errors')
+plt.show()</code></pre>
+
+<h2>Example 2: Multi-Panel Figure</h2>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+from string import ascii_uppercase
+
+# Create figure with multiple panels (double column width = 7 inches)
+fig = plt.figure(figsize=(7, 4))
+
+# Define grid for panels
+gs = fig.add_gridspec(2, 3, hspace=0.4, wspace=0.4,
+                      left=0.08, right=0.98, top=0.95, bottom=0.08)
+
+# Panel A: Line plot
+ax_a = fig.add_subplot(gs[0, :2])
+x = np.linspace(0, 10, 100)
+for i, offset in enumerate([0, 0.5, 1.0]):
+    ax_a.plot(x, np.sin(x) + offset, label=f'Dataset {i+1}')
+ax_a.set_xlabel('Time (s)')
+ax_a.set_ylabel('Amplitude (V)')
+ax_a.legend(frameon=False, fontsize=6)
+ax_a.spines['top'].set_visible(False)
+ax_a.spines['right'].set_visible(False)
+
+# Panel B: Bar plot
+ax_b = fig.add_subplot(gs[0, 2])
+categories = ['Control', 'Treatment\nA', 'Treatment\nB']
+values = [100, 125, 140]
+errors = [5, 8, 6]
+ax_b.bar(categories, values, yerr=errors, capsize=3,
+         color=['#0072B2', '#E69F00', '#009E73'], alpha=0.8)
+ax_b.set_ylabel('Response (%)')
+ax_b.spines['top'].set_visible(False)
+ax_b.spines['right'].set_visible(False)
+ax_b.set_ylim(0, 160)
+
+# Panel C: Scatter plot
+ax_c = fig.add_subplot(gs[1, 0])
+x = np.random.randn(100)
+y = 2*x + np.random.randn(100)
+ax_c.scatter(x, y, s=10, alpha=0.6, color='#0072B2')
+ax_c.set_xlabel('Variable X')
+ax_c.set_ylabel('Variable Y')
+ax_c.spines['top'].set_visible(False)
+ax_c.spines['right'].set_visible(False)
+
+# Panel D: Heatmap
+ax_d = fig.add_subplot(gs[1, 1:])
+data = np.random.randn(10, 20)
+im = ax_d.imshow(data, cmap='viridis', aspect='auto')
+ax_d.set_xlabel('Sample number')
+ax_d.set_ylabel('Feature')
+cbar = plt.colorbar(im, ax=ax_d, fraction=0.046, pad=0.04)
+cbar.set_label('Intensity (a.u.)', rotation=270, labelpad=12)
+
+# Add panel labels
+panels = [ax_a, ax_b, ax_c, ax_d]
+for i, ax in enumerate(panels):
+    ax.text(-0.15, 1.05, ascii_uppercase[i], transform=ax.transAxes,
+            fontsize=10, fontweight='bold', va='top')
+
+save_publication_figure(fig, 'multi_panel_figure')
+plt.show()</code></pre>
+
+<h2>Example 3: Box Plot with Individual Points</h2>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+
+# Generate sample data
+np.random.seed(42)
+data = [np.random.normal(100, 15, 30),
+        np.random.normal(120, 20, 30),
+        np.random.normal(140, 18, 30),
+        np.random.normal(110, 22, 30)]
+
+fig, ax = plt.subplots(figsize=(3.5, 3))
+
+# Create box plot
+bp = ax.boxplot(data, widths=0.5, patch_artist=True,
+                showfliers=False,  # We'll add points manually
+                boxprops=dict(facecolor='lightgray', edgecolor='black', linewidth=0.8),
+                medianprops=dict(color='black', linewidth=1.5),
+                whiskerprops=dict(linewidth=0.8),
+                capprops=dict(linewidth=0.8))
+
+# Overlay individual points
+colors = ['#0072B2', '#E69F00', '#009E73', '#D55E00']
+for i, (d, color) in enumerate(zip(data, colors)):
+    # Add jitter to x positions
+    x = np.random.normal(i+1, 0.04, size=len(d))
+    ax.scatter(x, d, alpha=0.4, s=8, color=color)
+
+# Customize
+ax.set_xticklabels(['Control', 'Treatment A', 'Treatment B', 'Treatment C'])
+ax.set_ylabel('Cell count')
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.set_ylim(50, 200)
+
+fig.tight_layout()
+save_publication_figure(fig, 'boxplot_with_points')
+plt.show()</code></pre>
+
+<h2>Example 4: Heatmap with Colorbar</h2>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+
+# Generate correlation matrix
+np.random.seed(42)
+n = 10
+A = np.random.randn(n, n)
+corr_matrix = np.corrcoef(A)
+
+# Create figure
+fig, ax = plt.subplots(figsize=(4, 3.5))
+
+# Plot heatmap
+im = ax.imshow(corr_matrix, cmap='RdBu_r', vmin=-1, vmax=1, aspect='auto')
+
+# Add colorbar
+cbar = plt.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+cbar.set_label('Correlation coefficient', rotation=270, labelpad=15)
+
+# Set ticks and labels
+gene_names = [f'Gene{i+1}' for i in range(n)]
+ax.set_xticks(np.arange(n))
+ax.set_yticks(np.arange(n))
+ax.set_xticklabels(gene_names, rotation=45, ha='right')
+ax.set_yticklabels(gene_names)
+
+# Add grid
+ax.set_xticks(np.arange(n)-.5, minor=True)
+ax.set_yticks(np.arange(n)-.5, minor=True)
+ax.grid(which='minor', color='white', linestyle='-', linewidth=0.5)
+
+fig.tight_layout()
+save_publication_figure(fig, 'correlation_heatmap')
+plt.show()</code></pre>
+
+<h2>Example 5: Seaborn Violin Plot</h2>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+import numpy as np
+
+# Generate sample data
+np.random.seed(42)
+data = pd.DataFrame({
+    'condition': np.repeat(['Control', 'Drug A', 'Drug B'], 50),
+    'value': np.concatenate([
+        np.random.normal(100, 15, 50),
+        np.random.normal(120, 20, 50),
+        np.random.normal(140, 18, 50)
+    ])
+})
+
+# Set style
+sns.set_style('ticks')
+sns.set_palette(['#0072B2', '#E69F00', '#009E73'])
+
+fig, ax = plt.subplots(figsize=(3.5, 3))
+
+# Create violin plot
+sns.violinplot(data=data, x='condition', y='value', ax=ax,
+               inner='box', linewidth=0.8)
+
+# Add strip plot
+sns.stripplot(data=data, x='condition', y='value', ax=ax,
+              size=2, alpha=0.3, color='black')
+
+# Customize
+ax.set_xlabel('')
+ax.set_ylabel('Expression level (AU)')
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+fig.tight_layout()
+save_publication_figure(fig, 'violin_plot')
+plt.show()</code></pre>
+
+<h2>Example 6: Scientific Scatter with Regression</h2>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+from scipy import stats
+
+# Generate data with correlation
+np.random.seed(42)
+x = np.random.randn(100)
+y = 2.5 * x + np.random.randn(100) * 0.8
+
+# Calculate regression
+slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+
+# Create figure
+fig, ax = plt.subplots(figsize=(3.5, 3.5))
+
+# Scatter plot
+ax.scatter(x, y, s=15, alpha=0.6, color='#0072B2', edgecolors='none')
+
+# Regression line
+x_line = np.array([x.min(), x.max()])
+y_line = slope * x_line + intercept
+ax.plot(x_line, y_line, 'r-', linewidth=1.5, label=f'y = {slope:.2f}x + {intercept:.2f}')
+
+# Add statistics text
+stats_text = f'$R^2$ = {r_value**2:.3f}\n$p$ &lt; 0.001' if p_value &lt; 0.001 else f'$R^2$ = {r_value**2:.3f}\n$p$ = {p_value:.3f}'
+ax.text(0.05, 0.95, stats_text, transform=ax.transAxes,
+        verticalalignment='top', fontsize=7,
+        bbox=dict(boxstyle='round', facecolor='white', alpha=0.8, edgecolor='gray', linewidth=0.5))
+
+# Customize
+ax.set_xlabel('Predictor variable')
+ax.set_ylabel('Response variable')
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+fig.tight_layout()
+save_publication_figure(fig, 'scatter_regression')
+plt.show()</code></pre>
+
+<h2>Example 7: Time Series with Shaded Error</h2>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+
+# Generate time series data
+np.random.seed(42)
+time = np.linspace(0, 24, 100)
+n_replicates = 5
+
+# Simulate multiple replicates
+data = np.array([10 * np.exp(-time/10) + np.random.normal(0, 0.5, 100)
+                 for _ in range(n_replicates)])
+
+# Calculate mean and SEM
+mean = data.mean(axis=0)
+sem = data.std(axis=0) / np.sqrt(n_replicates)
+
+# Create figure
+fig, ax = plt.subplots(figsize=(4, 2.5))
+
+# Plot mean line
+ax.plot(time, mean, linewidth=1.5, color='#0072B2', label='Mean ± SEM')
+
+# Add shaded error region
+ax.fill_between(time, mean - sem, mean + sem,
+                alpha=0.3, color='#0072B2', linewidth=0)
+
+# Customize
+ax.set_xlabel('Time (hours)')
+ax.set_ylabel('Concentration (μM)')
+ax.legend(frameon=False, loc='upper right')
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.set_xlim(0, 24)
+ax.set_ylim(0, 12)
+
+fig.tight_layout()
+save_publication_figure(fig, 'timeseries_shaded')
+plt.show()</code></pre>
+
+<h2>Example 8: Plotly Interactive Figure</h2>
+
+<pre><code class="language-python">import plotly.graph_objects as go
+import numpy as np
+
+# Generate data
+np.random.seed(42)
+x = np.random.randn(100)
+y = 2*x + np.random.randn(100)
+colors = np.random.choice(['Group A', 'Group B'], 100)
+
+# Okabe-Ito colors for Plotly
+okabe_ito_plotly = ['#E69F00', '#56B4E9']
+
+# Create figure
+fig = go.Figure()
+
+for group, color in zip(['Group A', 'Group B'], okabe_ito_plotly):
+    mask = colors == group
+    fig.add_trace(go.Scatter(
+        x=x[mask], y=y[mask],
+        mode='markers',
+        name=group,
+        marker=dict(size=6, color=color, opacity=0.6)
+    ))
+
+# Update layout for publication quality
+fig.update_layout(
+    width=500,
+    height=400,
+    font=dict(family='Arial, sans-serif', size=10),
+    plot_bgcolor='white',
+    xaxis=dict(
+        title='Variable X',
+        showgrid=False,
+        showline=True,
+        linewidth=1,
+        linecolor='black',
+        mirror=False
+    ),
+    yaxis=dict(
+        title='Variable Y',
+        showgrid=False,
+        showline=True,
+        linewidth=1,
+        linecolor='black',
+        mirror=False
+    ),
+    legend=dict(
+        x=0.02,
+        y=0.98,
+        bgcolor='rgba(255,255,255,0.8)',
+        bordercolor='gray',
+        borderwidth=0.5
+    )
+)
+
+# Save as static image (requires kaleido)
+fig.write_image('plotly_scatter.png', width=500, height=400, scale=3)  # scale=3 gives ~300 DPI
+fig.write_html('plotly_scatter.html')  # Interactive version
+
+fig.show()</code></pre>
+
+<h2>Example 9: Grouped Bar Plot with Significance</h2>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+
+# Data
+categories = ['WT', 'Mutant A', 'Mutant B']
+control_means = [100, 85, 70]
+control_sem = [5, 6, 5]
+treatment_means = [100, 120, 140]
+treatment_sem = [6, 8, 9]
+
+x = np.arange(len(categories))
+width = 0.35
+
+fig, ax = plt.subplots(figsize=(3.5, 3))
+
+# Create bars
+bars1 = ax.bar(x - width/2, control_means, width, yerr=control_sem,
+               capsize=3, label='Control', color='#0072B2', alpha=0.8)
+bars2 = ax.bar(x + width/2, treatment_means, width, yerr=treatment_sem,
+               capsize=3, label='Treatment', color='#E69F00', alpha=0.8)
+
+# Add significance markers
+def add_significance_bar(ax, x1, x2, y, h, text):
+    """Add significance bar between two bars"""
+    ax.plot([x1, x1, x2, x2], [y, y+h, y+h, y], linewidth=0.8, c='black')
+    ax.text((x1+x2)/2, y+h, text, ha='center', va='bottom', fontsize=7)
+
+# Mark significant differences
+add_significance_bar(ax, x[1]-width/2, x[1]+width/2, 135, 3, '***')
+add_significance_bar(ax, x[2]-width/2, x[2]+width/2, 155, 3, '***')
+
+# Customize
+ax.set_ylabel('Activity (% of WT control)')
+ax.set_xticks(x)
+ax.set_xticklabels(categories)
+ax.legend(frameon=False, loc='upper left')
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.set_ylim(0, 180)
+
+# Add note about significance
+ax.text(0.98, 0.02, '*** p &lt; 0.001', transform=ax.transAxes,
+        ha='right', va='bottom', fontsize=6)
+
+fig.tight_layout()
+save_publication_figure(fig, 'grouped_bar_significance')
+plt.show()</code></pre>
+
+<h2>Example 10: Publication-Ready Figure for Nature</h2>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+from string import ascii_lowercase
+
+# Nature specifications: 89mm single column
+inch_per_mm = 0.0393701
+width_mm = 89
+height_mm = 110
+figsize = (width_mm * inch_per_mm, height_mm * inch_per_mm)
+
+fig = plt.figure(figsize=figsize)
+gs = fig.add_gridspec(3, 2, hspace=0.5, wspace=0.4,
+                      left=0.12, right=0.95, top=0.96, bottom=0.08)
+
+# Panel a: Time course
+ax_a = fig.add_subplot(gs[0, :])
+time = np.linspace(0, 48, 100)
+for i, label in enumerate(['Control', 'Treatment']):
+    y = (1 + i*0.5) * np.exp(-time/20) * (1 + 0.3*np.sin(time/5))
+    ax_a.plot(time, y, linewidth=1.2, label=label)
+ax_a.set_xlabel('Time (h)', fontsize=7)
+ax_a.set_ylabel('Growth (OD$_{600}$)', fontsize=7)
+ax_a.legend(frameon=False, fontsize=6)
+ax_a.tick_params(labelsize=6)
+ax_a.spines['top'].set_visible(False)
+ax_a.spines['right'].set_visible(False)
+
+# Panel b: Bar plot
+ax_b = fig.add_subplot(gs[1, 0])
+categories = ['A', 'B', 'C']
+values = [1.0, 1.5, 2.2]
+errors = [0.1, 0.15, 0.2]
+ax_b.bar(categories, values, yerr=errors, capsize=2, width=0.6,
+         color='#0072B2', alpha=0.8)
+ax_b.set_ylabel('Fold change', fontsize=7)
+ax_b.tick_params(labelsize=6)
+ax_b.spines['top'].set_visible(False)
+ax_b.spines['right'].set_visible(False)
+
+# Panel c: Heatmap
+ax_c = fig.add_subplot(gs[1, 1])
+data = np.random.randn(8, 6)
+im = ax_c.imshow(data, cmap='viridis', aspect='auto')
+ax_c.set_xlabel('Sample', fontsize=7)
+ax_c.set_ylabel('Gene', fontsize=7)
+ax_c.tick_params(labelsize=6)
+
+# Panel d: Scatter
+ax_d = fig.add_subplot(gs[2, :])
+x = np.random.randn(50)
+y = 2*x + np.random.randn(50)*0.5
+ax_d.scatter(x, y, s=8, alpha=0.6, color='#E69F00')
+ax_d.set_xlabel('Expression gene X', fontsize=7)
+ax_d.set_ylabel('Expression gene Y', fontsize=7)
+ax_d.tick_params(labelsize=6)
+ax_d.spines['top'].set_visible(False)
+ax_d.spines['right'].set_visible(False)
+
+# Add lowercase panel labels (Nature style)
+for i, ax in enumerate([ax_a, ax_b, ax_c, ax_d]):
+    ax.text(-0.2, 1.1, f'{ascii_lowercase[i]}', transform=ax.transAxes,
+            fontsize=9, fontweight='bold', va='top')
+
+# Save in Nature-preferred format
+fig.savefig('nature_figure.pdf', dpi=1000, bbox_inches='tight',
+           facecolor='white', edgecolor='none')
+fig.savefig('nature_figure.png', dpi=300, bbox_inches='tight',
+           facecolor='white', edgecolor='none')
+
+plt.show()</code></pre>
+
+<h2>Tips for Each Library</h2>
+
+<h3>Matplotlib</h3>
+<ul><li>Use <code>fig.tight_layout()</code> or <code>constrained_layout=True</code> to prevent overlapping</li>
+<li>Set DPI to 300-600 for publication</li>
+<li>Use vector formats (PDF, EPS) for line plots</li>
+<li>Embed fonts in PDF/EPS files</li>
+</ul>
+<h3>Seaborn</h3>
+<ul><li>Built on matplotlib, so all matplotlib customizations work</li>
+<li>Use <code>sns.set_style('ticks')</code> or <code>'whitegrid'</code> for clean looks</li>
+<li><code>sns.despine()</code> removes top and right spines</li>
+<li>Set custom palette with <code>sns.set_palette()</code></li>
+</ul>
+<h3>Plotly</h3>
+<ul><li>Great for interactive exploratory analysis</li>
+<li>Export static images with <code>fig.write_image()</code> (requires kaleido package)</li>
+<li>Use <code>scale</code> parameter to control DPI (scale=3 ≈ 300 DPI)</li>
+<li>Update layout extensively for publication quality</li>
+</ul>
+<h2>Common Workflow</h2>
+
+<ul><li><strong>Explore with default settings</strong></li>
+<li><strong>Apply publication configuration</strong> (see Setup section)</li>
+<li><strong>Create plot with appropriate size</strong> (check journal requirements)</li>
+<li><strong>Customize colors</strong> (use colorblind-friendly palettes)</li>
+<li><strong>Adjust fonts and line widths</strong> (readable at final size)</li>
+<li><strong>Remove chart junk</strong> (top/right spines, excessive grid)</li>
+<li><strong>Add clear labels with units</strong></li>
+<li><strong>Test in grayscale</strong></li>
+<li><strong>Save in multiple formats</strong> (PDF for vector, PNG for raster)</li>
+<li><strong>Verify in final context</strong> (import into manuscript to check size)</li>
+</ul>
+<h2>Resources</h2>
+
+<ul><li>Matplotlib documentation: https://matplotlib.org/</li>
+<li>Seaborn gallery: https://seaborn.pydata.org/examples/index.html</li>
+<li>Plotly documentation: https://plotly.com/python/</li>
+<li>Nature Methods Points of View: Data visualization column archive</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Publication Guidelines</h3>
+  <h1>Publication-Ready Figure Guidelines</h1>
+
+<h2>Core Principles</h2>
+
+<p>Scientific figures must be clear, accurate, and accessible. Publication-ready figures follow these fundamental principles:</p>
+
+<ul><li><strong>Clarity</strong>: Information should be immediately understandable</li>
+<li><strong>Accuracy</strong>: Data representation must be truthful and unmanipulated</li>
+<li><strong>Accessibility</strong>: Figures should be interpretable by all readers, including those with visual impairments</li>
+<li><strong>Professional</strong>: Clean, polished appearance suitable for peer-reviewed journals</li>
+</ul>
+<h2>Resolution and File Format</h2>
+
+<h3>Resolution Requirements</h3>
+<ul><li><strong>Raster images (photos, microscopy)</strong>: 300-600 DPI at final print size</li>
+<li><strong>Line art and graphs</strong>: 600-1200 DPI (or vector format)</li>
+<li><strong>Combined figures</strong>: 300-600 DPI</li>
+</ul>
+<h3>File Formats</h3>
+<ul><li><strong>Vector formats (preferred for graphs/plots)</strong>: PDF, EPS, SVG</li>
+</ul><p>  - Infinitely scalable without quality loss</p>
+<p>  - Smaller file sizes for line art</p>
+<p>  - Best for: plots, diagrams, schematics</p>
+
+<ul><li><strong>Raster formats</strong>: TIFF, PNG (never JPEG for scientific data)</li>
+</ul><p>  - Use for: photographs, microscopy, images with continuous tone</p>
+<p>  - TIFF: Lossless, widely accepted</p>
+<p>  - PNG: Lossless, good for web and supplementary materials</p>
+<p>  - <strong>Never use JPEG</strong>: Lossy compression introduces artifacts</p>
+
+<h3>Size Specifications</h3>
+<ul><li><strong>Single column</strong>: 85-90 mm (3.35-3.54 inches) width</li>
+<li><strong>1.5 column</strong>: 114-120 mm (4.49-4.72 inches) width</li>
+<li><strong>Double column</strong>: 174-180 mm (6.85-7.08 inches) width</li>
+<li><strong>Maximum height</strong>: Usually 230-240 mm (9-9.5 inches)</li>
+</ul>
+<h2>Typography</h2>
+
+<h3>Font Guidelines</h3>
+<ul><li><strong>Font family</strong>: Sans-serif fonts (Arial, Helvetica, Calibri) for most journals</li>
+</ul><p>  - Some journals prefer specific fonts (check guidelines)</p>
+<p>  - Consistency across all figures in manuscript</p>
+
+<ul><li><strong>Font sizes at final print size</strong>:</li>
+</ul><p>  - Axis labels: 7-9 pt minimum</p>
+<p>  - Tick labels: 6-8 pt minimum</p>
+<p>  - Legends: 6-8 pt</p>
+<p>  - Panel labels (A, B, C): 8-12 pt, bold</p>
+<p>  - Title: Generally avoided in multi-panel figures</p>
+
+<ul><li><strong>Font weight</strong>: Regular weight for most text; bold for panel labels only</li>
+</ul>
+<h3>Text Best Practices</h3>
+<ul><li>Use sentence case for axis labels ("Time (hours)" not "TIME (HOURS)")</li>
+<li>Include units in parentheses</li>
+<li>Avoid abbreviations unless space-constrained (define in caption)</li>
+<li>No text smaller than 5-6 pt at final size</li>
+</ul>
+<h2>Color Usage</h2>
+
+<h3>Color Selection Principles</h3>
+<ul><li><strong>Colorblind-friendly</strong>: ~8% of males have color vision deficiency</li>
+</ul><p>   - Avoid red/green combinations</p>
+<p>   - Use blue/orange, blue/yellow, or add texture/pattern</p>
+<p>   - Test with colorblindness simulators</p>
+
+<ul><li><strong>Purposeful color</strong>: Color should convey meaning, not just aesthetics</li>
+</ul><p>   - Use color to distinguish categories or highlight key data</p>
+<p>   - Maintain consistency across figures (same treatment = same color)</p>
+
+<ul><li><strong>Print considerations</strong>:</li>
+</ul><p>   - Colors may appear different in print vs. screen</p>
+<p>   - Use CMYK color space for print, RGB for digital</p>
+<p>   - Ensure sufficient contrast (especially for grayscale conversion)</p>
+
+<h3>Recommended Color Palettes</h3>
+<ul><li><strong>Qualitative (categories)</strong>: ColorBrewer, Okabe-Ito palette</li>
+<li><strong>Sequential (low to high)</strong>: Viridis, Cividis, Blues, Oranges</li>
+<li><strong>Diverging (negative to positive)</strong>: RdBu, PuOr, BrBG (ensure colorblind-safe)</li>
+</ul>
+<h3>Grayscale Compatibility</h3>
+<ul><li>All figures should be interpretable in grayscale</li>
+<li>Use different line styles (solid, dashed, dotted) and markers</li>
+<li>Add patterns/hatching to bars and areas</li>
+</ul>
+<h2>Layout and Composition</h2>
+
+<h3>Multi-Panel Figures</h3>
+<ul><li><strong>Panel labels</strong>: Use bold uppercase letters (A, B, C) in top-left corner</li>
+<li><strong>Spacing</strong>: Adequate white space between panels</li>
+<li><strong>Alignment</strong>: Align panels along edges or axes where possible</li>
+<li><strong>Sizing</strong>: Related panels should have consistent sizes</li>
+<li><strong>Arrangement</strong>: Logical flow (left-to-right, top-to-bottom)</li>
+</ul>
+<h3>Plot Elements</h3>
+
+<h4>Axes</h4>
+<ul><li><strong>Axis lines</strong>: 0.5-1 pt thickness</li>
+<li><strong>Tick marks</strong>: Point inward or outward consistently</li>
+<li><strong>Tick frequency</strong>: Enough to read values, not cluttered (typically 4-7 major ticks)</li>
+<li><strong>Axis labels</strong>: Required on all plots; state units</li>
+<li><strong>Axis ranges</strong>: Start from zero for bar charts (unless scientifically inappropriate)</li>
+</ul>
+<h4>Lines and Markers</h4>
+<ul><li><strong>Line width</strong>: 1-2 pt for data lines; 0.5-1 pt for reference lines</li>
+<li><strong>Marker size</strong>: 3-6 pt, larger than line width</li>
+<li><strong>Marker types</strong>: Differentiate when multiple series (circles, squares, triangles)</li>
+<li><strong>Error bars</strong>: 0.5-1 pt width; include caps if appropriate</li>
+</ul>
+<h4>Legends</h4>
+<ul><li><strong>Position</strong>: Inside plot area if space permits, outside otherwise</li>
+<li><strong>Frame</strong>: Optional; if used, thin line (0.5 pt)</li>
+<li><strong>Order</strong>: Match order of data appearance (top to bottom or left to right)</li>
+<li><strong>Content</strong>: Concise descriptions; full details in caption</li>
+</ul>
+<h3>White Space and Margins</h3>
+<ul><li>Remove unnecessary white space around plots</li>
+<li>Maintain consistent margins</li>
+<li><code>tight_layout()</code> or <code>constrained_layout=True</code> in matplotlib</li>
+</ul>
+<h2>Data Representation Best Practices</h2>
+
+<h3>Statistical Rigor</h3>
+<ul><li><strong>Error bars</strong>: Always show uncertainty (SD, SEM, CI) and state which in caption</li>
+<li><strong>Sample size</strong>: Indicate n in figure or caption</li>
+<li><strong>Significance</strong>: Mark statistical significance clearly (<em>, <strong>, </strong></em>)</li>
+<li><strong>Replicates</strong>: Show individual data points when possible, not just summary statistics</li>
+</ul>
+<h3>Appropriate Chart Types</h3>
+<ul><li><strong>Bar plots</strong>: Comparing discrete categories; always start y-axis at zero</li>
+<li><strong>Line plots</strong>: Time series or continuous relationships</li>
+<li><strong>Scatter plots</strong>: Correlation between variables; add regression line if appropriate</li>
+<li><strong>Box plots</strong>: Distribution comparisons; show outliers</li>
+<li><strong>Heatmaps</strong>: Matrix data, correlations, expression patterns</li>
+<li><strong>Violin plots</strong>: Distribution shape comparison (better than box plots for bimodal data)</li>
+</ul>
+<h3>Avoiding Distortion</h3>
+<ul><li><strong>No 3D effects</strong>: Distorts perception of values</li>
+<li><strong>No unnecessary decorations</strong>: No gradients, shadows, or chart junk</li>
+<li><strong>Consistent scales</strong>: Use same scale for comparable panels</li>
+<li><strong>No truncated axes</strong>: Unless clearly indicated and scientifically justified</li>
+<li><strong>Linear vs. log scales</strong>: Choose appropriate scale; always label clearly</li>
+</ul>
+<h2>Accessibility</h2>
+
+<h3>Colorblind Considerations</h3>
+<ul><li>Test with online simulators (e.g., Coblis, Color Oracle)</li>
+<li>Use patterns/textures in addition to color</li>
+<li>Provide alternative representations in supplementary materials if needed</li>
+</ul>
+<h3>Visual Impairment</h3>
+<ul><li>High contrast between elements</li>
+<li>Thick enough lines (minimum 0.5 pt)</li>
+<li>Clear, uncluttered layouts</li>
+</ul>
+<h3>Data Availability</h3>
+<ul><li>Include data tables in supplementary materials</li>
+<li>Provide source data files for graphs</li>
+<li>Consider interactive figures for online supplementary materials</li>
+</ul>
+<h2>Common Mistakes to Avoid</h2>
+
+<ul><li><strong>Font too small</strong>: Text unreadable at final print size</li>
+<li><strong>Low resolution</strong>: Pixelated or blurry images</li>
+<li><strong>Chart junk</strong>: Unnecessary grid lines, 3D effects, decorations</li>
+<li><strong>Poor color choices</strong>: Red/green combinations, low contrast</li>
+<li><strong>Missing elements</strong>: No axis labels, no units, no error bars</li>
+<li><strong>Inconsistent styling</strong>: Different fonts/sizes within figure or between figures</li>
+<li><strong>Data distortion</strong>: Truncated axes, inappropriate scales, 3D effects</li>
+<li><strong>JPEG compression</strong>: Artifacts around text and lines</li>
+<li><strong>Too much information</strong>: Cramming too many data series into one plot</li>
+<li><strong>Inaccessible legends</strong>: Legends outside the figure boundary after export</li>
+</ul>
+<h2>Figure Checklist</h2>
+
+<p>Before submission, verify:</p>
+
+<ul><li>[ ] Resolution meets journal requirements (300+ DPI for raster)</li>
+<li>[ ] File format is acceptable (vector for plots, TIFF/PNG for images)</li>
+<li>[ ] Figure dimensions match journal specifications</li>
+<li>[ ] All text is readable at final size (minimum 6-7 pt)</li>
+<li>[ ] Fonts are consistent and embedded (for PDF/EPS)</li>
+<li>[ ] Colors are colorblind-friendly</li>
+<li>[ ] Figure is interpretable in grayscale</li>
+<li>[ ] All axes are labeled with units</li>
+<li>[ ] Error bars or uncertainty indicators are present</li>
+<li>[ ] Statistical significance is marked if applicable</li>
+<li>[ ] Panel labels are present and consistent (A, B, C)</li>
+<li>[ ] Legend is clear and complete</li>
+<li>[ ] No chart junk or unnecessary elements</li>
+<li>[ ] File naming follows journal conventions</li>
+<li>[ ] Figure caption is comprehensive</li>
+<li>[ ] Source data is available</li>
+</ul>
+<h2>Journal-Specific Considerations</h2>
+
+<p>Always consult the specific journal's author guidelines. Common variations include:</p>
+
+<ul><li><strong>Nature journals</strong>: RGB, 300 DPI minimum, specific size requirements</li>
+<li><strong>Science</strong>: EPS or high-res TIFF, specific font requirements</li>
+<li><strong>Cell Press</strong>: PDF or EPS preferred, Arial or Helvetica fonts</li>
+<li><strong>PLOS</strong>: TIFF or EPS, specific color space requirements</li>
+<li><strong>ACS journals</strong>: Application files (AI, EPS) or high-res TIFF</li>
+</ul>
+<p>See <code>journal_requirements.md</code> for detailed specifications from major publishers.</p>
+
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

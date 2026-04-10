@@ -1,0 +1,2164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>deepTools: NGS Data Analysis Toolkit — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="active">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / deepTools: NGS Data Analysis Toolkit</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>deepTools: NGS Data Analysis Toolkit</h1>
+    <p class="description">NGS analysis toolkit. BAM to bigWig conversion, QC (correlation, PCA, fingerprints), heatmaps/profiles (TSS, peaks), for ChIP-seq, RNA-seq, ATAC-seq visualization.</p>
+    <h1>deepTools: NGS Data Analysis Toolkit</h1>
+
+<h2>Overview</h2>
+
+<p>deepTools is a comprehensive suite of Python command-line tools designed for processing and analyzing high-throughput sequencing data. Use deepTools to perform quality control, normalize data, compare samples, and generate publication-quality visualizations for ChIP-seq, RNA-seq, ATAC-seq, MNase-seq, and other NGS experiments.</p>
+
+<p><strong>Core capabilities:</strong></p>
+<ul><li>Convert BAM alignments to normalized coverage tracks (bigWig/bedGraph)</li>
+<li>Quality control assessment (fingerprint, correlation, coverage)</li>
+<li>Sample comparison and correlation analysis</li>
+<li>Heatmap and profile plot generation around genomic features</li>
+<li>Enrichment analysis and peak region visualization</li>
+</ul>
+<h2>When to Use This Skill</h2>
+
+<p>This skill should be used when:</p>
+
+<ul><li><strong>File conversion</strong>: "Convert BAM to bigWig", "generate coverage tracks", "normalize ChIP-seq data"</li>
+<li><strong>Quality control</strong>: "check ChIP quality", "compare replicates", "assess sequencing depth", "QC analysis"</li>
+<li><strong>Visualization</strong>: "create heatmap around TSS", "plot ChIP signal", "visualize enrichment", "generate profile plot"</li>
+<li><strong>Sample comparison</strong>: "compare treatment vs control", "correlate samples", "PCA analysis"</li>
+<li><strong>Analysis workflows</strong>: "analyze ChIP-seq data", "RNA-seq coverage", "ATAC-seq analysis", "complete workflow"</li>
+<li><strong>Working with specific file types</strong>: BAM files, bigWig files, BED region files in genomics context</li>
+</ul>
+<h2>Quick Start</h2>
+
+<p>For users new to deepTools, start with file validation and common workflows:</p>
+
+<h3>1. Validate Input Files</h3>
+
+<p>Before running any analysis, validate BAM, bigWig, and BED files using the validation script:</p>
+
+<pre><code class="language-bash">python scripts/validate_files.py --bam sample1.bam sample2.bam --bed regions.bed</code></pre>
+
+<p>This checks file existence, BAM indices, and format correctness.</p>
+
+<h3>2. Generate Workflow Template</h3>
+
+<p>For standard analyses, use the workflow generator to create customized scripts:</p>
+
+<pre><code class="language-bash"># List available workflows
+python scripts/workflow_generator.py --list
+
+# Generate ChIP-seq QC workflow
+python scripts/workflow_generator.py chipseq_qc -o qc_workflow.sh \
+    --input-bam Input.bam --chip-bams "ChIP1.bam ChIP2.bam" \
+    --genome-size 2913022398
+
+# Make executable and run
+chmod +x qc_workflow.sh
+./qc_workflow.sh</code></pre>
+
+<h3>3. Most Common Operations</h3>
+
+<p>See <code>assets/quick_reference.md</code> for frequently used commands and parameters.</p>
+
+<h2>Installation</h2>
+
+<pre><code class="language-bash">uv pip install deeptools</code></pre>
+
+<h2>Core Workflows</h2>
+
+<p>deepTools workflows typically follow this pattern: <strong>QC → Normalization → Comparison/Visualization</strong></p>
+
+<h3>ChIP-seq Quality Control Workflow</h3>
+
+<p>When users request ChIP-seq QC or quality assessment:</p>
+
+<ul><li><strong>Generate workflow script</strong> using <code>scripts/workflow_generator.py chipseq_qc</code></li>
+<li><strong>Key QC steps</strong>:</li>
+</ul><p>   - Sample correlation (multiBamSummary + plotCorrelation)</p>
+<p>   - PCA analysis (plotPCA)</p>
+<p>   - Coverage assessment (plotCoverage)</p>
+<p>   - Fragment size validation (bamPEFragmentSize)</p>
+<p>   - ChIP enrichment strength (plotFingerprint)</p>
+
+<p><strong>Interpreting results:</strong></p>
+<ul><li><strong>Correlation</strong>: Replicates should cluster together with high correlation (>0.9)</li>
+<li><strong>Fingerprint</strong>: Strong ChIP shows steep rise; flat diagonal indicates poor enrichment</li>
+<li><strong>Coverage</strong>: Assess if sequencing depth is adequate for analysis</li>
+</ul>
+<p>Full workflow details in <code>references/workflows.md</code> → "ChIP-seq Quality Control Workflow"</p>
+
+<h3>ChIP-seq Complete Analysis Workflow</h3>
+
+<p>For full ChIP-seq analysis from BAM to visualizations:</p>
+
+<ul><li><strong>Generate coverage tracks</strong> with normalization (bamCoverage)</li>
+<li><strong>Create comparison tracks</strong> (bamCompare for log2 ratio)</li>
+<li><strong>Compute signal matrices</strong> around features (computeMatrix)</li>
+<li><strong>Generate visualizations</strong> (plotHeatmap, plotProfile)</li>
+<li><strong>Enrichment analysis</strong> at peaks (plotEnrichment)</li>
+</ul>
+<p>Use <code>scripts/workflow_generator.py chipseq_analysis</code> to generate template.</p>
+
+<p>Complete command sequences in <code>references/workflows.md</code> → "ChIP-seq Analysis Workflow"</p>
+
+<h3>RNA-seq Coverage Workflow</h3>
+
+<p>For strand-specific RNA-seq coverage tracks:</p>
+
+<p>Use bamCoverage with <code>--filterRNAstrand</code> to separate forward and reverse strands.</p>
+
+<p><strong>Important:</strong> NEVER use <code>--extendReads</code> for RNA-seq (would extend over splice junctions).</p>
+
+<p>Use normalization: CPM for fixed bins, RPKM for gene-level analysis.</p>
+
+<p>Template available: <code>scripts/workflow_generator.py rnaseq_coverage</code></p>
+
+<p>Details in <code>references/workflows.md</code> → "RNA-seq Coverage Workflow"</p>
+
+<h3>ATAC-seq Analysis Workflow</h3>
+
+<p>ATAC-seq requires Tn5 offset correction:</p>
+
+<ul><li><strong>Shift reads</strong> using alignmentSieve with <code>--ATACshift</code></li>
+<li><strong>Generate coverage</strong> with bamCoverage</li>
+<li><strong>Analyze fragment sizes</strong> (expect nucleosome ladder pattern)</li>
+<li><strong>Visualize at peaks</strong> if available</li>
+</ul>
+<p>Template: <code>scripts/workflow_generator.py atacseq</code></p>
+
+<p>Full workflow in <code>references/workflows.md</code> → "ATAC-seq Workflow"</p>
+
+<h2>Tool Categories and Common Tasks</h2>
+
+<h3>BAM/bigWig Processing</h3>
+
+<p><strong>Convert BAM to normalized coverage:</strong></p>
+<pre><code class="language-bash">bamCoverage --bam input.bam --outFileName output.bw \
+    --normalizeUsing RPGC --effectiveGenomeSize 2913022398 \
+    --binSize 10 --numberOfProcessors 8</code></pre>
+
+<p><strong>Compare two samples (log2 ratio):</strong></p>
+<pre><code class="language-bash">bamCompare -b1 treatment.bam -b2 control.bam -o ratio.bw \
+    --operation log2 --scaleFactorsMethod readCount</code></pre>
+
+<p><strong>Key tools:</strong> bamCoverage, bamCompare, multiBamSummary, multiBigwigSummary, correctGCBias, alignmentSieve</p>
+
+<p>Complete reference: <code>references/tools_reference.md</code> → "BAM and bigWig File Processing Tools"</p>
+
+<h3>Quality Control</h3>
+
+<p><strong>Check ChIP enrichment:</strong></p>
+<pre><code class="language-bash">plotFingerprint -b input.bam chip.bam -o fingerprint.png \
+    --extendReads 200 --ignoreDuplicates</code></pre>
+
+<p><strong>Sample correlation:</strong></p>
+<pre><code class="language-bash">multiBamSummary bins --bamfiles *.bam -o counts.npz
+plotCorrelation -in counts.npz --corMethod pearson \
+    --whatToShow heatmap -o correlation.png</code></pre>
+
+<p><strong>Key tools:</strong> plotFingerprint, plotCoverage, plotCorrelation, plotPCA, bamPEFragmentSize</p>
+
+<p>Complete reference: <code>references/tools_reference.md</code> → "Quality Control Tools"</p>
+
+<h3>Visualization</h3>
+
+<p><strong>Create heatmap around TSS:</strong></p>
+<pre><code class="language-bash"># Compute matrix
+computeMatrix reference-point -S signal.bw -R genes.bed \
+    -b 3000 -a 3000 --referencePoint TSS -o matrix.gz
+
+# Generate heatmap
+plotHeatmap -m matrix.gz -o heatmap.png \
+    --colorMap RdBu --kmeans 3</code></pre>
+
+<p><strong>Create profile plot:</strong></p>
+<pre><code class="language-bash">plotProfile -m matrix.gz -o profile.png \
+    --plotType lines --colors blue red</code></pre>
+
+<p><strong>Key tools:</strong> computeMatrix, plotHeatmap, plotProfile, plotEnrichment</p>
+
+<p>Complete reference: <code>references/tools_reference.md</code> → "Visualization Tools"</p>
+
+<h2>Normalization Methods</h2>
+
+<p>Choosing the correct normalization is critical for valid comparisons. Consult <code>references/normalization_methods.md</code> for comprehensive guidance.</p>
+
+<p><strong>Quick selection guide:</strong></p>
+
+<ul><li><strong>ChIP-seq coverage</strong>: Use RPGC or CPM</li>
+<li><strong>ChIP-seq comparison</strong>: Use bamCompare with log2 and readCount</li>
+<li><strong>RNA-seq bins</strong>: Use CPM</li>
+<li><strong>RNA-seq genes</strong>: Use RPKM (accounts for gene length)</li>
+<li><strong>ATAC-seq</strong>: Use RPGC or CPM</li>
+</ul>
+<p><strong>Normalization methods:</strong></p>
+<ul><li><strong>RPGC</strong>: 1× genome coverage (requires --effectiveGenomeSize)</li>
+<li><strong>CPM</strong>: Counts per million mapped reads</li>
+<li><strong>RPKM</strong>: Reads per kb per million (accounts for region length)</li>
+<li><strong>BPM</strong>: Bins per million</li>
+<li><strong>None</strong>: Raw counts (not recommended for comparisons)</li>
+</ul>
+<p>Full explanation: <code>references/normalization_methods.md</code></p>
+
+<h2>Effective Genome Sizes</h2>
+
+<p>RPGC normalization requires effective genome size. Common values:</p>
+
+<p>| Organism | Assembly | Size | Usage |</p>
+<p>|----------|----------|------|-------|</p>
+<p>| Human | GRCh38/hg38 | 2,913,022,398 | <code>--effectiveGenomeSize 2913022398</code> |</p>
+<p>| Mouse | GRCm38/mm10 | 2,652,783,500 | <code>--effectiveGenomeSize 2652783500</code> |</p>
+<p>| Zebrafish | GRCz11 | 1,368,780,147 | <code>--effectiveGenomeSize 1368780147</code> |</p>
+<p>| <em>Drosophila</em> | dm6 | 142,573,017 | <code>--effectiveGenomeSize 142573017</code> |</p>
+<p>| <em>C. elegans</em> | ce10/ce11 | 100,286,401 | <code>--effectiveGenomeSize 100286401</code> |</p>
+
+<p>Complete table with read-length-specific values: <code>references/effective_genome_sizes.md</code></p>
+
+<h2>Common Parameters Across Tools</h2>
+
+<p>Many deepTools commands share these options:</p>
+
+<p><strong>Performance:</strong></p>
+<ul><li><code>--numberOfProcessors, -p</code>: Enable parallel processing (always use available cores)</li>
+<li><code>--region</code>: Process specific regions for testing (e.g., <code>chr1:1-1000000</code>)</li>
+</ul>
+<p><strong>Read Filtering:</strong></p>
+<ul><li><code>--ignoreDuplicates</code>: Remove PCR duplicates (recommended for most analyses)</li>
+<li><code>--minMappingQuality</code>: Filter by alignment quality (e.g., <code>--minMappingQuality 10</code>)</li>
+<li><code>--minFragmentLength</code> / <code>--maxFragmentLength</code>: Fragment length bounds</li>
+<li><code>--samFlagInclude</code> / <code>--samFlagExclude</code>: SAM flag filtering</li>
+</ul>
+<p><strong>Read Processing:</strong></p>
+<ul><li><code>--extendReads</code>: Extend to fragment length (ChIP-seq: YES, RNA-seq: NO)</li>
+<li><code>--centerReads</code>: Center at fragment midpoint for sharper signals</li>
+</ul>
+<h2>Best Practices</h2>
+
+<h3>File Validation</h3>
+<p><strong>Always validate files first</strong> using <code>scripts/validate_files.py</code> to check:</p>
+<ul><li>File existence and readability</li>
+<li>BAM indices present (.bai files)</li>
+<li>BED format correctness</li>
+<li>File sizes reasonable</li>
+</ul>
+<h3>Analysis Strategy</h3>
+
+<ul><li><strong>Start with QC</strong>: Run correlation, coverage, and fingerprint analysis before proceeding</li>
+<li><strong>Test on small regions</strong>: Use <code>--region chr1:1-10000000</code> for parameter testing</li>
+<li><strong>Document commands</strong>: Save full command lines for reproducibility</li>
+<li><strong>Use consistent normalization</strong>: Apply same method across samples in comparisons</li>
+<li><strong>Verify genome assembly</strong>: Ensure BAM and BED files use matching genome builds</li>
+</ul>
+<h3>ChIP-seq Specific</h3>
+
+<ul><li><strong>Always extend reads</strong> for ChIP-seq: <code>--extendReads 200</code></li>
+<li><strong>Remove duplicates</strong>: Use <code>--ignoreDuplicates</code> in most cases</li>
+<li><strong>Check enrichment first</strong>: Run plotFingerprint before detailed analysis</li>
+<li><strong>GC correction</strong>: Only apply if significant bias detected; never use <code>--ignoreDuplicates</code> after GC correction</li>
+</ul>
+<h3>RNA-seq Specific</h3>
+
+<ul><li><strong>Never extend reads</strong> for RNA-seq (would span splice junctions)</li>
+<li><strong>Strand-specific</strong>: Use <code>--filterRNAstrand forward/reverse</code> for stranded libraries</li>
+<li><strong>Normalization</strong>: CPM for bins, RPKM for genes</li>
+</ul>
+<h3>ATAC-seq Specific</h3>
+
+<ul><li><strong>Apply Tn5 correction</strong>: Use alignmentSieve with <code>--ATACshift</code></li>
+<li><strong>Fragment filtering</strong>: Set appropriate min/max fragment lengths</li>
+<li><strong>Check nucleosome pattern</strong>: Fragment size plot should show ladder pattern</li>
+</ul>
+<h3>Performance Optimization</h3>
+
+<ul><li><strong>Use multiple processors</strong>: <code>--numberOfProcessors 8</code> (or available cores)</li>
+<li><strong>Increase bin size</strong> for faster processing and smaller files</li>
+<li><strong>Process chromosomes separately</strong> for memory-limited systems</li>
+<li><strong>Pre-filter BAM files</strong> using alignmentSieve to create reusable filtered files</li>
+<li><strong>Use bigWig over bedGraph</strong>: Compressed and faster to process</li>
+</ul>
+<h2>Troubleshooting</h2>
+
+<h3>Common Issues</h3>
+
+<p><strong>BAM index missing:</strong></p>
+<pre><code class="language-bash">samtools index input.bam</code></pre>
+
+<p><strong>Out of memory:</strong></p>
+<p>Process chromosomes individually using <code>--region</code>:</p>
+<pre><code class="language-bash">bamCoverage --bam input.bam -o chr1.bw --region chr1</code></pre>
+
+<p><strong>Slow processing:</strong></p>
+<p>Increase <code>--numberOfProcessors</code> and/or increase <code>--binSize</code></p>
+
+<p><strong>bigWig files too large:</strong></p>
+<p>Increase bin size: <code>--binSize 50</code> or larger</p>
+
+<h3>Validation Errors</h3>
+
+<p>Run validation script to identify issues:</p>
+<pre><code class="language-bash">python scripts/validate_files.py --bam *.bam --bed regions.bed</code></pre>
+
+<p>Common errors and solutions explained in script output.</p>
+
+<h2>Reference Documentation</h2>
+
+<p>This skill includes comprehensive reference documentation:</p>
+
+<h3>references/tools_reference.md</h3>
+<p>Complete documentation of all deepTools commands organized by category:</p>
+<ul><li>BAM and bigWig processing tools (9 tools)</li>
+<li>Quality control tools (6 tools)</li>
+<li>Visualization tools (3 tools)</li>
+<li>Miscellaneous tools (2 tools)</li>
+</ul>
+<p>Each tool includes:</p>
+<ul><li>Purpose and overview</li>
+<li>Key parameters with explanations</li>
+<li>Usage examples</li>
+<li>Important notes and best practices</li>
+</ul>
+<p><strong>Use this reference when:</strong> Users ask about specific tools, parameters, or detailed usage.</p>
+
+<h3>references/workflows.md</h3>
+<p>Complete workflow examples for common analyses:</p>
+<ul><li>ChIP-seq quality control workflow</li>
+<li>ChIP-seq complete analysis workflow</li>
+<li>RNA-seq coverage workflow</li>
+<li>ATAC-seq analysis workflow</li>
+<li>Multi-sample comparison workflow</li>
+<li>Peak region analysis workflow</li>
+<li>Troubleshooting and performance tips</li>
+</ul>
+<p><strong>Use this reference when:</strong> Users need complete analysis pipelines or workflow examples.</p>
+
+<h3>references/normalization_methods.md</h3>
+<p>Comprehensive guide to normalization methods:</p>
+<ul><li>Detailed explanation of each method (RPGC, CPM, RPKM, BPM, etc.)</li>
+<li>When to use each method</li>
+<li>Formulas and interpretation</li>
+<li>Selection guide by experiment type</li>
+<li>Common pitfalls and solutions</li>
+<li>Quick reference table</li>
+</ul>
+<p><strong>Use this reference when:</strong> Users ask about normalization, comparing samples, or which method to use.</p>
+
+<h3>references/effective_genome_sizes.md</h3>
+<p>Effective genome size values and usage:</p>
+<ul><li>Common organism values (human, mouse, fly, worm, zebrafish)</li>
+<li>Read-length-specific values</li>
+<li>Calculation methods</li>
+<li>When and how to use in commands</li>
+<li>Custom genome calculation instructions</li>
+</ul>
+<p><strong>Use this reference when:</strong> Users need genome size for RPGC normalization or GC bias correction.</p>
+
+<h2>Helper Scripts</h2>
+
+<h3>scripts/validate_files.py</h3>
+
+<p>Validates BAM, bigWig, and BED files for deepTools analysis. Checks file existence, indices, and format.</p>
+
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">python scripts/validate_files.py --bam sample1.bam sample2.bam \
+    --bed peaks.bed --bigwig signal.bw</code></pre>
+
+<p><strong>When to use:</strong> Before starting any analysis, or when troubleshooting errors.</p>
+
+<h3>scripts/workflow_generator.py</h3>
+
+<p>Generates customizable bash script templates for common deepTools workflows.</p>
+
+<p><strong>Available workflows:</strong></p>
+<ul><li><code>chipseq_qc</code>: ChIP-seq quality control</li>
+<li><code>chipseq_analysis</code>: Complete ChIP-seq analysis</li>
+<li><code>rnaseq_coverage</code>: Strand-specific RNA-seq coverage</li>
+<li><code>atacseq</code>: ATAC-seq with Tn5 correction</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash"># List workflows
+python scripts/workflow_generator.py --list
+
+# Generate workflow
+python scripts/workflow_generator.py chipseq_qc -o qc.sh \
+    --input-bam Input.bam --chip-bams "ChIP1.bam ChIP2.bam" \
+    --genome-size 2913022398 --threads 8
+
+# Run generated workflow
+chmod +x qc.sh
+./qc.sh</code></pre>
+
+<p><strong>When to use:</strong> Users request standard workflows or need template scripts to customize.</p>
+
+<h2>Assets</h2>
+
+<h3>assets/quick_reference.md</h3>
+
+<p>Quick reference card with most common commands, effective genome sizes, and typical workflow pattern.</p>
+
+<p><strong>When to use:</strong> Users need quick command examples without detailed documentation.</p>
+
+<h2>Handling User Requests</h2>
+
+<h3>For New Users</h3>
+
+<ul><li>Start with installation verification</li>
+<li>Validate input files using <code>scripts/validate_files.py</code></li>
+<li>Recommend appropriate workflow based on experiment type</li>
+<li>Generate workflow template using <code>scripts/workflow_generator.py</code></li>
+<li>Guide through customization and execution</li>
+</ul>
+<h3>For Experienced Users</h3>
+
+<ul><li>Provide specific tool commands for requested operations</li>
+<li>Reference appropriate sections in <code>references/tools_reference.md</code></li>
+<li>Suggest optimizations and best practices</li>
+<li>Offer troubleshooting for issues</li>
+</ul>
+<h3>For Specific Tasks</h3>
+
+<p><strong>"Convert BAM to bigWig":</strong></p>
+<ul><li>Use bamCoverage with appropriate normalization</li>
+<li>Recommend RPGC or CPM based on use case</li>
+<li>Provide effective genome size for organism</li>
+<li>Suggest relevant parameters (extendReads, ignoreDuplicates, binSize)</li>
+</ul>
+<p><strong>"Check ChIP quality":</strong></p>
+<ul><li>Run full QC workflow or use plotFingerprint specifically</li>
+<li>Explain interpretation of results</li>
+<li>Suggest follow-up actions based on results</li>
+</ul>
+<p><strong>"Create heatmap":</strong></p>
+<ul><li>Guide through two-step process: computeMatrix → plotHeatmap</li>
+<li>Help choose appropriate matrix mode (reference-point vs scale-regions)</li>
+<li>Suggest visualization parameters and clustering options</li>
+</ul>
+<p><strong>"Compare samples":</strong></p>
+<ul><li>Recommend bamCompare for two-sample comparison</li>
+<li>Suggest multiBamSummary + plotCorrelation for multiple samples</li>
+<li>Guide normalization method selection</li>
+</ul>
+<h3>Referencing Documentation</h3>
+
+<p>When users need detailed information:</p>
+<ul><li><strong>Tool details</strong>: Direct to specific sections in <code>references/tools_reference.md</code></li>
+<li><strong>Workflows</strong>: Use <code>references/workflows.md</code> for complete analysis pipelines</li>
+<li><strong>Normalization</strong>: Consult <code>references/normalization_methods.md</code> for method selection</li>
+<li><strong>Genome sizes</strong>: Reference <code>references/effective_genome_sizes.md</code></li>
+</ul>
+<p>Search references using grep patterns:</p>
+<pre><code class="language-bash"># Find tool documentation
+grep -A 20 "^### toolname" references/tools_reference.md
+
+# Find workflow
+grep -A 50 "^## Workflow Name" references/workflows.md
+
+# Find normalization method
+grep -A 15 "^### Method Name" references/normalization_methods.md</code></pre>
+
+<h2>Example Interactions</h2>
+
+<p><strong>User: "I need to analyze my ChIP-seq data"</strong></p>
+
+<p>Response approach:</p>
+<ul><li>Ask about files available (BAM files, peaks, genes)</li>
+<li>Validate files using validation script</li>
+<li>Generate chipseq_analysis workflow template</li>
+<li>Customize for their specific files and organism</li>
+<li>Explain each step as script runs</li>
+</ul>
+<p><strong>User: "Which normalization should I use?"</strong></p>
+
+<p>Response approach:</p>
+<ul><li>Ask about experiment type (ChIP-seq, RNA-seq, etc.)</li>
+<li>Ask about comparison goal (within-sample or between-sample)</li>
+<li>Consult <code>references/normalization_methods.md</code> selection guide</li>
+<li>Recommend appropriate method with justification</li>
+<li>Provide command example with parameters</li>
+</ul>
+<p><strong>User: "Create a heatmap around TSS"</strong></p>
+
+<p>Response approach:</p>
+<ul><li>Verify bigWig and gene BED files available</li>
+<li>Use computeMatrix with reference-point mode at TSS</li>
+<li>Generate plotHeatmap with appropriate visualization parameters</li>
+<li>Suggest clustering if dataset is large</li>
+<li>Offer profile plot as complement</li>
+</ul>
+<h2>Key Reminders</h2>
+
+<ul><li><strong>File validation first</strong>: Always validate input files before analysis</li>
+<li><strong>Normalization matters</strong>: Choose appropriate method for comparison type</li>
+<li><strong>Extend reads carefully</strong>: YES for ChIP-seq, NO for RNA-seq</li>
+<li><strong>Use all cores</strong>: Set <code>--numberOfProcessors</code> to available cores</li>
+<li><strong>Test on regions</strong>: Use <code>--region</code> for parameter testing</li>
+<li><strong>Check QC first</strong>: Run quality control before detailed analysis</li>
+<li><strong>Document everything</strong>: Save commands for reproducibility</li>
+<li><strong>Reference documentation</strong>: Use comprehensive references for detailed guidance</li></ul>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Effective Genome Sizes</h3>
+  <h1>Effective Genome Sizes</h1>
+
+<h2>Definition</h2>
+
+<p>Effective genome size refers to the length of the "mappable" genome - regions that can be uniquely mapped by sequencing reads. This metric is crucial for proper normalization in many deepTools commands.</p>
+
+<h2>Why It Matters</h2>
+
+<ul><li>Required for RPGC normalization (<code>--normalizeUsing RPGC</code>)</li>
+<li>Affects accuracy of coverage calculations</li>
+<li>Must match your data processing approach (filtered vs unfiltered reads)</li>
+</ul>
+<h2>Calculation Methods</h2>
+
+<ul><li><strong>Non-N bases</strong>: Count of non-N nucleotides in genome sequence</li>
+<li><strong>Unique mappability</strong>: Regions of specific size that can be uniquely mapped (may consider edit distance)</li>
+</ul>
+<h2>Common Organism Values</h2>
+
+<h3>Using Non-N Bases Method</h3>
+
+<p>| Organism | Assembly | Effective Size | Full Command |</p>
+<p>|----------|----------|----------------|--------------|</p>
+<p>| Human | GRCh38/hg38 | 2,913,022,398 | <code>--effectiveGenomeSize 2913022398</code> |</p>
+<p>| Human | GRCh37/hg19 | 2,864,785,220 | <code>--effectiveGenomeSize 2864785220</code> |</p>
+<p>| Mouse | GRCm39/mm39 | 2,654,621,837 | <code>--effectiveGenomeSize 2654621837</code> |</p>
+<p>| Mouse | GRCm38/mm10 | 2,652,783,500 | <code>--effectiveGenomeSize 2652783500</code> |</p>
+<p>| Zebrafish | GRCz11 | 1,368,780,147 | <code>--effectiveGenomeSize 1368780147</code> |</p>
+<p>| <em>Drosophila</em> | dm6 | 142,573,017 | <code>--effectiveGenomeSize 142573017</code> |</p>
+<p>| <em>C. elegans</em> | WBcel235/ce11 | 100,286,401 | <code>--effectiveGenomeSize 100286401</code> |</p>
+<p>| <em>C. elegans</em> | ce10 | 100,258,171 | <code>--effectiveGenomeSize 100258171</code> |</p>
+
+<h3>Human (GRCh38) by Read Length</h3>
+
+<p>For quality-filtered reads, values vary by read length:</p>
+
+<p>| Read Length | Effective Size |</p>
+<p>|-------------|----------------|</p>
+<p>| 50bp | ~2.7 billion |</p>
+<p>| 75bp | ~2.8 billion |</p>
+<p>| 100bp | ~2.8 billion |</p>
+<p>| 150bp | ~2.9 billion |</p>
+<p>| 250bp | ~2.9 billion |</p>
+
+<h3>Mouse (GRCm38) by Read Length</h3>
+
+<p>| Read Length | Effective Size |</p>
+<p>|-------------|----------------|</p>
+<p>| 50bp | ~2.3 billion |</p>
+<p>| 75bp | ~2.5 billion |</p>
+<p>| 100bp | ~2.6 billion |</p>
+
+<h2>Usage in deepTools</h2>
+
+<p>The effective genome size is most commonly used with:</p>
+
+<h3>bamCoverage with RPGC normalization</h3>
+<pre><code class="language-bash">bamCoverage --bam input.bam --outFileName output.bw \
+    --normalizeUsing RPGC \
+    --effectiveGenomeSize 2913022398</code></pre>
+
+<h3>bamCompare with RPGC normalization</h3>
+<pre><code class="language-bash">bamCompare -b1 treatment.bam -b2 control.bam \
+    --outFileName comparison.bw \
+    --scaleFactorsMethod RPGC \
+    --effectiveGenomeSize 2913022398</code></pre>
+
+<h3>computeGCBias / correctGCBias</h3>
+<pre><code class="language-bash">computeGCBias --bamfile input.bam \
+    --effectiveGenomeSize 2913022398 \
+    --genome genome.2bit \
+    --fragmentLength 200 \
+    --biasPlot bias.png</code></pre>
+
+<h2>Choosing the Right Value</h2>
+
+<p><strong>For most analyses:</strong> Use the non-N bases method value for your reference genome</p>
+
+<p><strong>For filtered data:</strong> If you apply strict quality filters or remove multimapping reads, consider using the read-length-specific values</p>
+
+<p><strong>When unsure:</strong> Use the conservative non-N bases value - it's more widely applicable</p>
+
+<h2>Common Shortcuts</h2>
+
+<p>deepTools also accepts these shorthand values in some contexts:</p>
+
+<ul><li><code>hs</code> or <code>GRCh38</code>: 2913022398</li>
+<li><code>mm</code> or <code>GRCm38</code>: 2652783500</li>
+<li><code>dm</code> or <code>dm6</code>: 142573017</li>
+<li><code>ce</code> or <code>ce10</code>: 100286401</li>
+</ul>
+<p>Check your specific deepTools version documentation for supported shortcuts.</p>
+
+<h2>Calculating Custom Values</h2>
+
+<p>For custom genomes or assemblies, calculate the non-N bases count:</p>
+
+<pre><code class="language-bash"># Using faCount (UCSC tools)
+faCount genome.fa | grep "total" | awk '{print $2-$7}'
+
+# Using seqtk
+seqtk comp genome.fa | awk '{x+=$2}END{print x}'</code></pre>
+
+<h2>References</h2>
+
+<p>For the most up-to-date effective genome sizes and detailed calculation methods, see:</p>
+<ul><li>deepTools documentation: https://deeptools.readthedocs.io/en/latest/content/feature/effectiveGenomeSize.html</li>
+<li>ENCODE documentation for reference genome details</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Normalization Methods</h3>
+  <h1>deepTools Normalization Methods</h1>
+
+<p>This document explains the various normalization methods available in deepTools and when to use each one.</p>
+
+<h2>Why Normalize?</h2>
+
+<p>Normalization is essential for:</p>
+<ul><li><strong>Comparing samples with different sequencing depths</strong></li>
+<li><strong>Accounting for library size differences</strong></li>
+<li><strong>Making coverage values interpretable across experiments</strong></li>
+<li><strong>Enabling fair comparisons between conditions</strong></li>
+</ul>
+<p>Without normalization, a sample with 100 million reads will appear to have higher coverage than a sample with 50 million reads, even if the true biological signal is identical.</p>
+
+<hr>
+
+<h2>Available Normalization Methods</h2>
+
+<h3>1. RPKM (Reads Per Kilobase per Million mapped reads)</h3>
+
+<p><strong>Formula:</strong> <code>(Number of reads) / (Length of region in kb × Total mapped reads in millions)</code></p>
+
+<p><strong>When to use:</strong></p>
+<ul><li>Comparing different genomic regions within the same sample</li>
+<li>Adjusting for both sequencing depth AND region length</li>
+<li>RNA-seq gene expression analysis</li>
+</ul>
+<p><strong>Available in:</strong> <code>bamCoverage</code></p>
+
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">bamCoverage --bam input.bam --outFileName output.bw \
+    --normalizeUsing RPKM</code></pre>
+
+<p><strong>Interpretation:</strong> RPKM of 10 means 10 reads per kilobase of feature per million mapped reads.</p>
+
+<p><strong>Pros:</strong></p>
+<ul><li>Accounts for both region length and library size</li>
+<li>Widely used and understood in genomics</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul><li>Not ideal for comparing between samples if total RNA content differs</li>
+<li>Can be misleading when comparing samples with very different compositions</li>
+</ul>
+<hr>
+
+<h3>2. CPM (Counts Per Million mapped reads)</h3>
+
+<p><strong>Formula:</strong> <code>(Number of reads) / (Total mapped reads in millions)</code></p>
+
+<p><strong>Also known as:</strong> RPM (Reads Per Million)</p>
+
+<p><strong>When to use:</strong></p>
+<ul><li>Comparing the same genomic regions across different samples</li>
+<li>When region length is constant or not relevant</li>
+<li>ChIP-seq, ATAC-seq, DNase-seq analyses</li>
+</ul>
+<p><strong>Available in:</strong> <code>bamCoverage</code>, <code>bamCompare</code></p>
+
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">bamCoverage --bam input.bam --outFileName output.bw \
+    --normalizeUsing CPM</code></pre>
+
+<p><strong>Interpretation:</strong> CPM of 5 means 5 reads per million mapped reads in that bin.</p>
+
+<p><strong>Pros:</strong></p>
+<ul><li>Simple and intuitive</li>
+<li>Good for comparing samples with different sequencing depths</li>
+<li>Appropriate when comparing fixed-size bins</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul><li>Does not account for region length</li>
+<li>Affected by highly abundant regions (e.g., rRNA in RNA-seq)</li>
+</ul>
+<hr>
+
+<h3>3. BPM (Bins Per Million mapped reads)</h3>
+
+<p><strong>Formula:</strong> <code>(Number of reads in bin) / (Sum of all reads in bins in millions)</code></p>
+
+<p><strong>Key difference from CPM:</strong> Only considers reads that fall within the analyzed bins, not all mapped reads.</p>
+
+<p><strong>When to use:</strong></p>
+<ul><li>Similar to CPM, but when you want to exclude reads outside analyzed regions</li>
+<li>Comparing specific genomic regions while ignoring background</li>
+</ul>
+<p><strong>Available in:</strong> <code>bamCoverage</code>, <code>bamCompare</code></p>
+
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">bamCoverage --bam input.bam --outFileName output.bw \
+    --normalizeUsing BPM</code></pre>
+
+<p><strong>Interpretation:</strong> BPM accounts only for reads in the binned regions.</p>
+
+<p><strong>Pros:</strong></p>
+<ul><li>Focuses normalization on analyzed regions</li>
+<li>Less affected by reads in unanalyzed areas</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul><li>Less commonly used, may be harder to compare with published data</li>
+</ul>
+<hr>
+
+<h3>4. RPGC (Reads Per Genomic Content)</h3>
+
+<p><strong>Formula:</strong> <code>(Number of reads × Scaling factor) / Effective genome size</code></p>
+
+<p><strong>Scaling factor:</strong> Calculated to achieve 1× genomic coverage (1 read per base)</p>
+
+<p><strong>When to use:</strong></p>
+<ul><li>Want comparable coverage values across samples</li>
+<li>Need interpretable absolute coverage values</li>
+<li>Comparing samples with very different total read counts</li>
+<li>ChIP-seq with spike-in normalization context</li>
+</ul>
+<p><strong>Available in:</strong> <code>bamCoverage</code>, <code>bamCompare</code></p>
+
+<p><strong>Requires:</strong> <code>--effectiveGenomeSize</code> parameter</p>
+
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">bamCoverage --bam input.bam --outFileName output.bw \
+    --normalizeUsing RPGC \
+    --effectiveGenomeSize 2913022398</code></pre>
+
+<p><strong>Interpretation:</strong> Signal value approximates the coverage depth (e.g., value of 2 ≈ 2× coverage).</p>
+
+<p><strong>Pros:</strong></p>
+<ul><li>Produces 1× normalized coverage</li>
+<li>Interpretable in terms of genomic coverage</li>
+<li>Good for comparing samples with different sequencing depths</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul><li>Requires knowing effective genome size</li>
+<li>Assumes uniform coverage (not true for ChIP-seq with peaks)</li>
+</ul>
+<hr>
+
+<h3>5. None (No Normalization)</h3>
+
+<p><strong>Formula:</strong> Raw read counts</p>
+
+<p><strong>When to use:</strong></p>
+<ul><li>Preliminary analysis</li>
+<li>When samples have identical library sizes (rare)</li>
+<li>When downstream tool will perform normalization</li>
+<li>Debugging or quality control</li>
+</ul>
+<p><strong>Available in:</strong> All tools (usually default)</p>
+
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">bamCoverage --bam input.bam --outFileName output.bw \
+    --normalizeUsing None</code></pre>
+
+<p><strong>Interpretation:</strong> Raw read counts per bin.</p>
+
+<p><strong>Pros:</strong></p>
+<ul><li>No assumptions made</li>
+<li>Useful for seeing raw data</li>
+<li>Fastest computation</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul><li>Cannot fairly compare samples with different sequencing depths</li>
+<li>Not suitable for publication figures</li>
+</ul>
+<hr>
+
+<h3>6. SES (Selective Enrichment Statistics)</h3>
+
+<p><strong>Method:</strong> Signal Extraction Scaling - more sophisticated method for comparing ChIP to control</p>
+
+<p><strong>When to use:</strong></p>
+<ul><li>ChIP-seq analysis with bamCompare</li>
+<li>Want sophisticated background correction</li>
+<li>Alternative to simple readCount scaling</li>
+</ul>
+<p><strong>Available in:</strong> <code>bamCompare</code> only</p>
+
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">bamCompare -b1 chip.bam -b2 input.bam -o output.bw \
+    --scaleFactorsMethod SES</code></pre>
+
+<p><strong>Note:</strong> SES is specifically designed for ChIP-seq data and may work better than simple read count scaling for noisy data.</p>
+
+<hr>
+
+<h3>7. readCount (Read Count Scaling)</h3>
+
+<p><strong>Method:</strong> Scale by ratio of total read counts between samples</p>
+
+<p><strong>When to use:</strong></p>
+<ul><li>Default for <code>bamCompare</code></li>
+<li>Compensating for sequencing depth differences in comparisons</li>
+<li>When you trust that total read counts reflect library size</li>
+</ul>
+<p><strong>Available in:</strong> <code>bamCompare</code></p>
+
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">bamCompare -b1 treatment.bam -b2 control.bam -o output.bw \
+    --scaleFactorsMethod readCount</code></pre>
+
+<p><strong>How it works:</strong> If sample1 has 100M reads and sample2 has 50M reads, sample2 is scaled by 2× before comparison.</p>
+
+<hr>
+
+<h2>Normalization Method Selection Guide</h2>
+
+<h3>For ChIP-seq Coverage Tracks</h3>
+
+<p><strong>Recommended:</strong> RPGC or CPM</p>
+
+<pre><code class="language-bash">bamCoverage --bam chip.bam --outFileName chip.bw \
+    --normalizeUsing RPGC \
+    --effectiveGenomeSize 2913022398 \
+    --extendReads 200 \
+    --ignoreDuplicates</code></pre>
+
+<p><strong>Reasoning:</strong> Accounts for sequencing depth differences; RPGC provides interpretable coverage values.</p>
+
+<hr>
+
+<h3>For ChIP-seq Comparisons (Treatment vs Control)</h3>
+
+<p><strong>Recommended:</strong> log2 ratio with readCount or SES scaling</p>
+
+<pre><code class="language-bash">bamCompare -b1 chip.bam -b2 input.bam -o ratio.bw \
+    --operation log2 \
+    --scaleFactorsMethod readCount \
+    --extendReads 200 \
+    --ignoreDuplicates</code></pre>
+
+<p><strong>Reasoning:</strong> Log2 ratio shows enrichment (positive) and depletion (negative); readCount adjusts for depth.</p>
+
+<hr>
+
+<h3>For RNA-seq Coverage Tracks</h3>
+
+<p><strong>Recommended:</strong> CPM or RPKM</p>
+
+<pre><code class="language-bash"># Strand-specific forward
+bamCoverage --bam rnaseq.bam --outFileName forward.bw \
+    --normalizeUsing CPM \
+    --filterRNAstrand forward
+
+# For gene-level: RPKM accounts for gene length
+bamCoverage --bam rnaseq.bam --outFileName output.bw \
+    --normalizeUsing RPKM</code></pre>
+
+<p><strong>Reasoning:</strong> CPM for comparing fixed-width bins; RPKM for genes (accounts for length).</p>
+
+<hr>
+
+<h3>For ATAC-seq</h3>
+
+<p><strong>Recommended:</strong> RPGC or CPM</p>
+
+<pre><code class="language-bash">bamCoverage --bam atac_shifted.bam --outFileName atac.bw \
+    --normalizeUsing RPGC \
+    --effectiveGenomeSize 2913022398</code></pre>
+
+<p><strong>Reasoning:</strong> Similar to ChIP-seq; want comparable coverage across samples.</p>
+
+<hr>
+
+<h3>For Sample Correlation Analysis</h3>
+
+<p><strong>Recommended:</strong> CPM or RPGC</p>
+
+<pre><code class="language-bash">multiBamSummary bins \
+    --bamfiles sample1.bam sample2.bam sample3.bam \
+    -o readCounts.npz
+
+plotCorrelation -in readCounts.npz \
+    --corMethod pearson \
+    --whatToShow heatmap \
+    -o correlation.png</code></pre>
+
+<p><strong>Note:</strong> <code>multiBamSummary</code> doesn't explicitly normalize, but correlation analysis is robust to scaling. For very different library sizes, consider normalizing BAM files first or using CPM-normalized bigWig files with <code>multiBigwigSummary</code>.</p>
+
+<hr>
+
+<h2>Advanced Normalization Considerations</h2>
+
+<h3>Spike-in Normalization</h3>
+
+<p>For experiments with spike-in controls (e.g., <em>Drosophila</em> chromatin spike-in for ChIP-seq):</p>
+
+<ul><li>Calculate scaling factors from spike-in reads</li>
+<li>Apply custom scaling factors using <code>--scaleFactor</code> parameter</li>
+</ul>
+<pre><code class="language-bash"># Calculate spike-in factor (example: 0.8)
+SCALE_FACTOR=0.8
+
+bamCoverage --bam chip.bam --outFileName chip_spikenorm.bw \
+    --scaleFactor ${SCALE_FACTOR} \
+    --extendReads 200</code></pre>
+
+<hr>
+
+<h3>Manual Scaling Factors</h3>
+
+<p>You can apply custom scaling factors:</p>
+
+<pre><code class="language-bash"># Apply 2× scaling
+bamCoverage --bam input.bam --outFileName output.bw \
+    --scaleFactor 2.0</code></pre>
+
+<hr>
+
+<h3>Chromosome Exclusion</h3>
+
+<p>Exclude specific chromosomes from normalization calculations:</p>
+
+<pre><code class="language-bash">bamCoverage --bam input.bam --outFileName output.bw \
+    --normalizeUsing RPGC \
+    --effectiveGenomeSize 2913022398 \
+    --ignoreForNormalization chrX chrY chrM</code></pre>
+
+<p><strong>When to use:</strong> Sex chromosomes in mixed-sex samples, mitochondrial DNA, or chromosomes with unusual coverage.</p>
+
+<hr>
+
+<h2>Common Pitfalls</h2>
+
+<h3>1. Using RPKM for bin-based data</h3>
+<p><strong>Problem:</strong> RPKM accounts for region length, but all bins are the same size</p>
+<p><strong>Solution:</strong> Use CPM or RPGC instead</p>
+
+<h3>2. Comparing unnormalized samples</h3>
+<p><strong>Problem:</strong> Sample with 2× sequencing depth appears to have 2× signal</p>
+<p><strong>Solution:</strong> Always normalize when comparing samples</p>
+
+<h3>3. Wrong effective genome size</h3>
+<p><strong>Problem:</strong> Using hg19 genome size for hg38 data</p>
+<p><strong>Solution:</strong> Double-check genome assembly and use correct size</p>
+
+<h3>4. Ignoring duplicates after GC correction</h3>
+<p><strong>Problem:</strong> Can introduce bias</p>
+<p><strong>Solution:</strong> Never use <code>--ignoreDuplicates</code> after <code>correctGCBias</code></p>
+
+<h3>5. Using RPGC without effective genome size</h3>
+<p><strong>Problem:</strong> Command fails</p>
+<p><strong>Solution:</strong> Always specify <code>--effectiveGenomeSize</code> with RPGC</p>
+
+<hr>
+
+<h2>Normalization for Different Comparisons</h2>
+
+<h3>Within-sample comparisons (different regions)</h3>
+<p><strong>Use:</strong> RPKM (accounts for region length)</p>
+
+<h3>Between-sample comparisons (same regions)</h3>
+<p><strong>Use:</strong> CPM, RPGC, or BPM (accounts for library size)</p>
+
+<h3>Treatment vs Control</h3>
+<p><strong>Use:</strong> bamCompare with log2 ratio and readCount/SES scaling</p>
+
+<h3>Multiple samples correlation</h3>
+<p><strong>Use:</strong> CPM or RPGC normalized bigWig files, then multiBigwigSummary</p>
+
+<hr>
+
+<h2>Quick Reference Table</h2>
+
+<p>| Method | Accounts for Depth | Accounts for Length | Best For | Command |</p>
+<p>|--------|-------------------|---------------------|----------|---------|</p>
+<p>| RPKM | ✓ | ✓ | RNA-seq genes | <code>--normalizeUsing RPKM</code> |</p>
+<p>| CPM | ✓ | ✗ | Fixed-size bins | <code>--normalizeUsing CPM</code> |</p>
+<p>| BPM | ✓ | ✗ | Specific regions | <code>--normalizeUsing BPM</code> |</p>
+<p>| RPGC | ✓ | ✗ | Interpretable coverage | <code>--normalizeUsing RPGC --effectiveGenomeSize X</code> |</p>
+<p>| None | ✗ | ✗ | Raw data | <code>--normalizeUsing None</code> |</p>
+<p>| SES | ✓ | ✗ | ChIP comparisons | <code>bamCompare --scaleFactorsMethod SES</code> |</p>
+<p>| readCount | ✓ | ✗ | ChIP comparisons | <code>bamCompare --scaleFactorsMethod readCount</code> |</p>
+
+<hr>
+
+<h2>Further Reading</h2>
+
+<p>For more details on normalization theory and best practices:</p>
+<ul><li>deepTools documentation: https://deeptools.readthedocs.io/</li>
+<li>ENCODE guidelines for ChIP-seq analysis</li>
+<li>RNA-seq normalization papers (DESeq2, TMM methods)</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Tools Reference</h3>
+  <h1>deepTools Complete Tool Reference</h1>
+
+<p>This document provides a comprehensive reference for all deepTools command-line utilities organized by category.</p>
+
+<h2>BAM and bigWig File Processing Tools</h2>
+
+<h3>multiBamSummary</h3>
+
+<p>Computes read coverages for genomic regions across multiple BAM files, outputting compressed numpy arrays for downstream correlation and PCA analysis.</p>
+
+<p><strong>Modes:</strong></p>
+<ul><li><strong>bins</strong>: Genome-wide analysis using consecutive equal-sized windows (default 10kb)</li>
+<li><strong>BED-file</strong>: Restricts analysis to user-specified genomic regions</li>
+</ul>
+<p><strong>Key Parameters:</strong></p>
+<ul><li><code>--bamfiles, -b</code>: Indexed BAM files (space-separated, required)</li>
+<li><code>--outFileName, -o</code>: Output coverage matrix file (required)</li>
+<li><code>--BED</code>: Region specification file (BED-file mode only)</li>
+<li><code>--binSize</code>: Window size in bases (default: 10,000)</li>
+<li><code>--labels</code>: Custom sample identifiers</li>
+<li><code>--minMappingQuality</code>: Quality threshold for read inclusion</li>
+<li><code>--numberOfProcessors, -p</code>: Parallel processing cores</li>
+<li><code>--extendReads</code>: Fragment size extension</li>
+<li><code>--ignoreDuplicates</code>: Remove PCR duplicates</li>
+<li><code>--outRawCounts</code>: Export tab-delimited file with coordinate columns and per-sample counts</li>
+</ul>
+<p><strong>Output:</strong> Compressed numpy array (.npz) for plotCorrelation and plotPCA</p>
+
+<p><strong>Common Usage:</strong></p>
+<pre><code class="language-bash"># Genome-wide comparison
+multiBamSummary bins --bamfiles sample1.bam sample2.bam -o results.npz
+
+# Peak region comparison
+multiBamSummary BED-file --BED peaks.bed --bamfiles sample1.bam sample2.bam -o results.npz</code></pre>
+
+<hr>
+
+<h3>multiBigwigSummary</h3>
+
+<p>Similar to multiBamSummary but operates on bigWig files instead of BAM files. Used for comparing coverage tracks across samples.</p>
+
+<p><strong>Modes:</strong></p>
+<ul><li><strong>bins</strong>: Genome-wide analysis</li>
+<li><strong>BED-file</strong>: Region-specific analysis</li>
+</ul>
+<p><strong>Key Parameters:</strong> Similar to multiBamSummary but accepts bigWig files</p>
+
+<hr>
+
+<h3>bamCoverage</h3>
+
+<p>Converts BAM alignment files into normalized coverage tracks in bigWig or bedGraph formats. Calculates coverage as number of reads per bin.</p>
+
+<p><strong>Key Parameters:</strong></p>
+<ul><li><code>--bam, -b</code>: Input BAM file (required)</li>
+<li><code>--outFileName, -o</code>: Output filename (required)</li>
+<li><code>--outFileFormat, -of</code>: Output type (bigwig or bedgraph)</li>
+<li><code>--normalizeUsing</code>: Normalization method</li>
+</ul><p>  - <strong>RPKM</strong>: Reads Per Kilobase per Million mapped reads</p>
+<p>  - <strong>CPM</strong>: Counts Per Million mapped reads</p>
+<p>  - <strong>BPM</strong>: Bins Per Million mapped reads</p>
+<p>  - <strong>RPGC</strong>: Reads per genomic content (requires --effectiveGenomeSize)</p>
+<p>  - <strong>None</strong>: No normalization (default)</p>
+<ul><li><code>--effectiveGenomeSize</code>: Mappable genome size (required for RPGC)</li>
+<li><code>--binSize</code>: Resolution in base pairs (default: 50)</li>
+<li><code>--extendReads, -e</code>: Extend reads to fragment length (recommended for ChIP-seq, NOT for RNA-seq)</li>
+<li><code>--centerReads</code>: Center reads at fragment length for sharper signals</li>
+<li><code>--ignoreDuplicates</code>: Count identical reads only once</li>
+<li><code>--minMappingQuality</code>: Filter reads below quality threshold</li>
+<li><code>--minFragmentLength / --maxFragmentLength</code>: Fragment length filtering</li>
+<li><code>--smoothLength</code>: Window averaging for noise reduction</li>
+<li><code>--MNase</code>: Analyze MNase-seq data for nucleosome positioning</li>
+<li><code>--Offset</code>: Position-specific offsets (useful for RiboSeq, GROseq)</li>
+<li><code>--filterRNAstrand</code>: Separate forward/reverse strand reads</li>
+<li><code>--ignoreForNormalization</code>: Exclude chromosomes from normalization (e.g., sex chromosomes)</li>
+<li><code>--numberOfProcessors, -p</code>: Parallel processing</li>
+</ul>
+<p><strong>Important Notes:</strong></p>
+<ul><li>For RNA-seq: Do NOT use --extendReads (would extend over splice junctions)</li>
+<li>For ChIP-seq: Use --extendReads with smaller bin sizes</li>
+<li>Never apply --ignoreDuplicates after GC bias correction</li>
+</ul>
+<p><strong>Common Usage:</strong></p>
+<pre><code class="language-bash"># Basic coverage with RPKM normalization
+bamCoverage --bam input.bam --outFileName coverage.bw --normalizeUsing RPKM
+
+# ChIP-seq with extension
+bamCoverage --bam chip.bam --outFileName chip_coverage.bw \
+    --binSize 10 --extendReads 200 --ignoreDuplicates
+
+# Strand-specific RNA-seq
+bamCoverage --bam rnaseq.bam --outFileName forward.bw \
+    --filterRNAstrand forward</code></pre>
+
+<hr>
+
+<h3>bamCompare</h3>
+
+<p>Compares two BAM files by generating bigWig or bedGraph files, normalizing for sequencing depth differences. Processes genome in equal-sized bins and performs per-bin calculations.</p>
+
+<p><strong>Comparison Methods:</strong></p>
+<ul><li><strong>log2</strong> (default): Log2 ratio of samples</li>
+<li><strong>ratio</strong>: Direct ratio calculation</li>
+<li><strong>subtract</strong>: Difference between files</li>
+<li><strong>add</strong>: Sum of samples</li>
+<li><strong>mean</strong>: Average across samples</li>
+<li><strong>reciprocal_ratio</strong>: Negative inverse for ratios < 0</li>
+<li><strong>first/second</strong>: Output scaled signal from single file</li>
+</ul>
+<p><strong>Normalization Methods:</strong></p>
+<ul><li><strong>readCount</strong> (default): Compensates for sequencing depth</li>
+<li><strong>SES</strong>: Selective enrichment statistics</li>
+<li><strong>RPKM</strong>: Reads per kilobase per million</li>
+<li><strong>CPM</strong>: Counts per million</li>
+<li><strong>BPM</strong>: Bins per million</li>
+<li><strong>RPGC</strong>: Reads per genomic content (requires --effectiveGenomeSize)</li>
+</ul>
+<p><strong>Key Parameters:</strong></p>
+<ul><li><code>--bamfile1, -b1</code>: First BAM file (required)</li>
+<li><code>--bamfile2, -b2</code>: Second BAM file (required)</li>
+<li><code>--outFileName, -o</code>: Output filename (required)</li>
+<li><code>--outFileFormat</code>: bigwig or bedgraph</li>
+<li><code>--operation</code>: Comparison method (see above)</li>
+<li><code>--scaleFactorsMethod</code>: Normalization method (see above)</li>
+<li><code>--binSize</code>: Bin width for output (default: 50bp)</li>
+<li><code>--pseudocount</code>: Avoid division by zero (default: 1)</li>
+<li><code>--extendReads</code>: Extend reads to fragment length</li>
+<li><code>--ignoreDuplicates</code>: Count identical reads once</li>
+<li><code>--minMappingQuality</code>: Quality threshold</li>
+<li><code>--numberOfProcessors, -p</code>: Parallelization</li>
+</ul>
+<p><strong>Common Usage:</strong></p>
+<pre><code class="language-bash"># Log2 ratio of treatment vs control
+bamCompare -b1 treatment.bam -b2 control.bam -o log2ratio.bw
+
+# Subtract control from treatment
+bamCompare -b1 treatment.bam -b2 control.bam -o difference.bw \
+    --operation subtract --scaleFactorsMethod readCount</code></pre>
+
+<hr>
+
+<h3>correctGCBias / computeGCBias</h3>
+
+<p><strong>computeGCBias:</strong> Identifies GC-content bias from sequencing and PCR amplification.</p>
+
+<p><strong>correctGCBias:</strong> Corrects BAM files for GC bias detected by computeGCBias.</p>
+
+<p><strong>Key Parameters (computeGCBias):</strong></p>
+<ul><li><code>--bamfile, -b</code>: Input BAM file</li>
+<li><code>--effectiveGenomeSize</code>: Mappable genome size</li>
+<li><code>--genome, -g</code>: Reference genome in 2bit format</li>
+<li><code>--fragmentLength, -l</code>: Fragment length (for single-end)</li>
+<li><code>--biasPlot</code>: Output diagnostic plot</li>
+</ul>
+<p><strong>Key Parameters (correctGCBias):</strong></p>
+<ul><li><code>--bamfile, -b</code>: Input BAM file</li>
+<li><code>--effectiveGenomeSize</code>: Mappable genome size</li>
+<li><code>--genome, -g</code>: Reference genome in 2bit format</li>
+<li><code>--GCbiasFrequenciesFile</code>: Frequencies from computeGCBias</li>
+<li><code>--correctedFile, -o</code>: Output corrected BAM</li>
+</ul>
+<p><strong>Important:</strong> Never use --ignoreDuplicates after GC bias correction</p>
+
+<hr>
+
+<h3>alignmentSieve</h3>
+
+<p>Filters BAM files by various quality metrics on-the-fly. Useful for creating filtered BAM files for specific analyses.</p>
+
+<p><strong>Key Parameters:</strong></p>
+<ul><li><code>--bam, -b</code>: Input BAM file</li>
+<li><code>--outFile, -o</code>: Output BAM file</li>
+<li><code>--minMappingQuality</code>: Minimum mapping quality</li>
+<li><code>--ignoreDuplicates</code>: Remove duplicates</li>
+<li><code>--minFragmentLength / --maxFragmentLength</code>: Fragment length filters</li>
+<li><code>--samFlagInclude / --samFlagExclude</code>: SAM flag filtering</li>
+<li><code>--shift</code>: Shift reads (e.g., for ATACseq Tn5 correction)</li>
+<li><code>--ATACshift</code>: Automatically shift for ATAC-seq data</li>
+</ul>
+<hr>
+
+<h3>computeMatrix</h3>
+
+<p>Calculates scores per genomic region and prepares matrices for plotHeatmap and plotProfile. Processes bigWig score files and BED/GTF region files.</p>
+
+<p><strong>Modes:</strong></p>
+<ul><li><strong>reference-point</strong>: Signal distribution relative to specific position (TSS, TES, or center)</li>
+<li><strong>scale-regions</strong>: Signal across regions standardized to uniform lengths</li>
+</ul>
+<p><strong>Key Parameters:</strong></p>
+<ul><li><code>-R</code>: Region file(s) in BED/GTF format (required)</li>
+<li><code>-S</code>: BigWig score file(s) (required)</li>
+<li><code>-o</code>: Output matrix file (required)</li>
+<li><code>-b</code>: Upstream distance from reference point</li>
+<li><code>-a</code>: Downstream distance from reference point</li>
+<li><code>-m</code>: Region body length (scale-regions only)</li>
+<li><code>-bs, --binSize</code>: Bin size for averaging scores</li>
+<li><code>--skipZeros</code>: Skip regions with all zeros</li>
+<li><code>--minThreshold / --maxThreshold</code>: Filter by signal intensity</li>
+<li><code>--sortRegions</code>: ascending, descending, keep, no</li>
+<li><code>--sortUsing</code>: mean, median, max, min, sum, region_length</li>
+<li><code>-p, --numberOfProcessors</code>: Parallel processing</li>
+<li><code>--averageTypeBins</code>: Statistical method (mean, median, min, max, sum, std)</li>
+</ul>
+<p><strong>Output Options:</strong></p>
+<ul><li><code>--outFileNameMatrix</code>: Export tab-delimited data</li>
+<li><code>--outFileSortedRegions</code>: Save filtered/sorted BED file</li>
+</ul>
+<p><strong>Common Usage:</strong></p>
+<pre><code class="language-bash"># TSS analysis
+computeMatrix reference-point -S signal.bw -R genes.bed \
+    -o matrix.gz -b 2000 -a 2000 --referencePoint TSS
+
+# Scaled gene body
+computeMatrix scale-regions -S signal.bw -R genes.bed \
+    -o matrix.gz -b 1000 -a 1000 -m 3000</code></pre>
+
+<hr>
+
+<h2>Quality Control Tools</h2>
+
+<h3>plotFingerprint</h3>
+
+<p>Quality control tool primarily for ChIP-seq experiments. Assesses whether antibody enrichment was successful. Generates cumulative read coverage profiles to distinguish signal from noise.</p>
+
+<p><strong>Key Parameters:</strong></p>
+<ul><li><code>--bamfiles, -b</code>: Indexed BAM files (required)</li>
+<li><code>--plotFile, -plot, -o</code>: Output image filename (required)</li>
+<li><code>--extendReads, -e</code>: Extend reads to fragment length</li>
+<li><code>--ignoreDuplicates</code>: Count identical reads once</li>
+<li><code>--minMappingQuality</code>: Mapping quality filter</li>
+<li><code>--centerReads</code>: Center reads at fragment length</li>
+<li><code>--minFragmentLength / --maxFragmentLength</code>: Fragment filters</li>
+<li><code>--outRawCounts</code>: Save per-bin read counts</li>
+<li><code>--outQualityMetrics</code>: Output QC metrics (Jensen-Shannon distance)</li>
+<li><code>--labels</code>: Custom sample names</li>
+<li><code>--numberOfProcessors, -p</code>: Parallel processing</li>
+</ul>
+<p><strong>Interpretation:</strong></p>
+<ul><li>Ideal control: Straight diagonal line</li>
+<li>Strong ChIP: Steep rise towards highest rank (concentrated reads in few bins)</li>
+<li>Weak enrichment: Flatter curve approaching diagonal</li>
+</ul>
+<p><strong>Common Usage:</strong></p>
+<pre><code class="language-bash">plotFingerprint -b input.bam chip1.bam chip2.bam \
+    --labels Input ChIP1 ChIP2 -o fingerprint.png \
+    --extendReads 200 --ignoreDuplicates</code></pre>
+
+<hr>
+
+<h3>plotCoverage</h3>
+
+<p>Visualizes average read distribution across the genome. Shows genome coverage and helps determine if sequencing depth is adequate.</p>
+
+<p><strong>Key Parameters:</strong></p>
+<ul><li><code>--bamfiles, -b</code>: BAM files to analyze (required)</li>
+<li><code>--plotFile, -o</code>: Output plot filename (required)</li>
+<li><code>--ignoreDuplicates</code>: Remove PCR duplicates</li>
+<li><code>--minMappingQuality</code>: Quality threshold</li>
+<li><code>--outRawCounts</code>: Save underlying data</li>
+<li><code>--labels</code>: Sample names</li>
+<li><code>--numberOfSamples</code>: Number of positions to sample (default: 1,000,000)</li>
+</ul>
+<hr>
+
+<h3>bamPEFragmentSize</h3>
+
+<p>Determines fragment length distribution for paired-end sequencing data. Essential QC to verify expected fragment sizes from library preparation.</p>
+
+<p><strong>Key Parameters:</strong></p>
+<ul><li><code>--bamfiles, -b</code>: BAM files (required)</li>
+<li><code>--histogram, -hist</code>: Output histogram filename (required)</li>
+<li><code>--plotTitle, -T</code>: Plot title</li>
+<li><code>--maxFragmentLength</code>: Maximum length to consider (default: 1000)</li>
+<li><code>--logScale</code>: Use logarithmic Y-axis</li>
+<li><code>--outRawFragmentLengths</code>: Save raw fragment lengths</li>
+</ul>
+<hr>
+
+<h3>plotCorrelation</h3>
+
+<p>Analyzes sample correlations from multiBamSummary or multiBigwigSummary outputs. Shows how similar different samples are.</p>
+
+<p><strong>Correlation Methods:</strong></p>
+<ul><li><strong>Pearson</strong>: Measures metric differences; sensitive to outliers; appropriate for normally distributed data</li>
+<li><strong>Spearman</strong>: Rank-based; less influenced by outliers; better for non-normal distributions</li>
+</ul>
+<p><strong>Visualization Options:</strong></p>
+<ul><li><strong>heatmap</strong>: Color intensity with hierarchical clustering (complete linkage)</li>
+<li><strong>scatterplot</strong>: Pairwise scatter plots with correlation coefficients</li>
+</ul>
+<p><strong>Key Parameters:</strong></p>
+<ul><li><code>--corData, -in</code>: Input matrix from multiBamSummary/multiBigwigSummary (required)</li>
+<li><code>--corMethod</code>: pearson or spearman (required)</li>
+<li><code>--whatToShow</code>: heatmap or scatterplot (required)</li>
+<li><code>--plotFile, -o</code>: Output filename (required)</li>
+<li><code>--skipZeros</code>: Exclude zero-value regions</li>
+<li><code>--removeOutliers</code>: Use median absolute deviation (MAD) filtering</li>
+<li><code>--outFileCorMatrix</code>: Export correlation matrix</li>
+<li><code>--labels</code>: Custom sample names</li>
+<li><code>--plotTitle</code>: Plot title</li>
+<li><code>--colorMap</code>: Color scheme (50+ options)</li>
+<li><code>--plotNumbers</code>: Display correlation values on heatmap</li>
+</ul>
+<p><strong>Common Usage:</strong></p>
+<pre><code class="language-bash"># Heatmap with Pearson correlation
+plotCorrelation -in readCounts.npz --corMethod pearson \
+    --whatToShow heatmap -o correlation_heatmap.png --plotNumbers
+
+# Scatterplot with Spearman correlation
+plotCorrelation -in readCounts.npz --corMethod spearman \
+    --whatToShow scatterplot -o correlation_scatter.png</code></pre>
+
+<hr>
+
+<h3>plotPCA</h3>
+
+<p>Generates principal component analysis plots from multiBamSummary or multiBigwigSummary output. Displays sample relationships in reduced dimensionality.</p>
+
+<p><strong>Key Parameters:</strong></p>
+<ul><li><code>--corData, -in</code>: Coverage file from multiBamSummary/multiBigwigSummary (required)</li>
+<li><code>--plotFile, -o</code>: Output image (png, eps, pdf, svg) (required)</li>
+<li><code>--outFileNameData</code>: Export PCA data (loadings/rotation and eigenvalues)</li>
+<li><code>--labels, -l</code>: Custom sample labels</li>
+<li><code>--plotTitle, -T</code>: Plot title</li>
+<li><code>--plotHeight / --plotWidth</code>: Dimensions in centimeters</li>
+<li><code>--colors</code>: Custom symbol colors</li>
+<li><code>--markers</code>: Symbol shapes</li>
+<li><code>--transpose</code>: Perform PCA on transposed matrix (rows=samples)</li>
+<li><code>--ntop</code>: Use top N variable rows (default: 1000)</li>
+<li><code>--PCs</code>: Components to plot (default: 1 2)</li>
+<li><code>--log2</code>: Log2-transform data before analysis</li>
+<li><code>--rowCenter</code>: Center each row at 0</li>
+</ul>
+<p><strong>Common Usage:</strong></p>
+<pre><code class="language-bash">plotPCA -in readCounts.npz -o PCA_plot.png \
+    -T "PCA of read counts" --transpose</code></pre>
+
+<hr>
+
+<h2>Visualization Tools</h2>
+
+<h3>plotHeatmap</h3>
+
+<p>Creates genomic region heatmaps from computeMatrix output. Generates publication-quality visualizations.</p>
+
+<p><strong>Key Parameters:</strong></p>
+<ul><li><code>--matrixFile, -m</code>: Matrix from computeMatrix (required)</li>
+<li><code>--outFileName, -o</code>: Output image (png, eps, pdf, svg) (required)</li>
+<li><code>--outFileSortedRegions</code>: Save regions after filtering</li>
+<li><code>--outFileNameMatrix</code>: Export matrix values</li>
+<li><code>--interpolationMethod</code>: auto, nearest, bilinear, bicubic, gaussian</li>
+</ul><p>  - Default: nearest (≤1000 columns), bilinear (>1000 columns)</p>
+<ul><li><code>--dpi</code>: Figure resolution</li>
+</ul>
+<p><strong>Clustering:</strong></p>
+<ul><li><code>--kmeans</code>: k-means clustering</li>
+<li><code>--hclust</code>: Hierarchical clustering (slower for >1000 regions)</li>
+<li><code>--silhouette</code>: Calculate cluster quality metrics</li>
+</ul>
+<p><strong>Visual Customization:</strong></p>
+<ul><li><code>--heatmapHeight / --heatmapWidth</code>: Dimensions (3-100 cm)</li>
+<li><code>--whatToShow</code>: plot, heatmap, colorbar (combinations)</li>
+<li><code>--alpha</code>: Transparency (0-1)</li>
+<li><code>--colorMap</code>: 50+ color schemes</li>
+<li><code>--colorList</code>: Custom gradient colors</li>
+<li><code>--zMin / --zMax</code>: Intensity scale limits</li>
+<li><code>--boxAroundHeatmaps</code>: yes/no (default: yes)</li>
+</ul>
+<p><strong>Labels:</strong></p>
+<ul><li><code>--xAxisLabel / --yAxisLabel</code>: Axis labels</li>
+<li><code>--regionsLabel</code>: Region set identifiers</li>
+<li><code>--samplesLabel</code>: Sample names</li>
+<li><code>--refPointLabel</code>: Reference point label</li>
+<li><code>--startLabel / --endLabel</code>: Region boundary labels</li>
+</ul>
+<p><strong>Common Usage:</strong></p>
+<pre><code class="language-bash"># Basic heatmap
+plotHeatmap -m matrix.gz -o heatmap.png
+
+# With clustering and custom colors
+plotHeatmap -m matrix.gz -o heatmap.png \
+    --kmeans 3 --colorMap RdBu --zMin -3 --zMax 3</code></pre>
+
+<hr>
+
+<h3>plotProfile</h3>
+
+<p>Generates profile plots showing scores across genomic regions using computeMatrix output.</p>
+
+<p><strong>Key Parameters:</strong></p>
+<ul><li><code>--matrixFile, -m</code>: Matrix from computeMatrix (required)</li>
+<li><code>--outFileName, -o</code>: Output image (png, eps, pdf, svg) (required)</li>
+<li><code>--plotType</code>: lines, fill, se, std, overlapped_lines, heatmap</li>
+<li><code>--colors</code>: Color palette (names or hex codes)</li>
+<li><code>--plotHeight / --plotWidth</code>: Dimensions in centimeters</li>
+<li><code>--yMin / --yMax</code>: Y-axis range</li>
+<li><code>--averageType</code>: mean, median, min, max, std, sum</li>
+</ul>
+<p><strong>Clustering:</strong></p>
+<ul><li><code>--kmeans</code>: k-means clustering</li>
+<li><code>--hclust</code>: Hierarchical clustering</li>
+<li><code>--silhouette</code>: Cluster quality metrics</li>
+</ul>
+<p><strong>Labels:</strong></p>
+<ul><li><code>--plotTitle</code>: Main heading</li>
+<li><code>--regionsLabel</code>: Region set identifiers</li>
+<li><code>--samplesLabel</code>: Sample names</li>
+<li><code>--startLabel / --endLabel</code>: Region boundary labels (scale-regions mode)</li>
+</ul>
+<p><strong>Output Options:</strong></p>
+<ul><li><code>--outFileNameData</code>: Export data as tab-separated values</li>
+<li><code>--outFileSortedRegions</code>: Save filtered/sorted regions as BED</li>
+</ul>
+<p><strong>Common Usage:</strong></p>
+<pre><code class="language-bash"># Line plot
+plotProfile -m matrix.gz -o profile.png --plotType lines
+
+# With standard error shading
+plotProfile -m matrix.gz -o profile.png --plotType se \
+    --colors blue red green</code></pre>
+
+<hr>
+
+<h3>plotEnrichment</h3>
+
+<p>Calculates and visualizes signal enrichment across genomic regions. Measures percentage of alignments overlapping region groups. Useful for FRiP (Fragment in Peaks) scores.</p>
+
+<p><strong>Key Parameters:</strong></p>
+<ul><li><code>--bamfiles, -b</code>: Indexed BAM files (required)</li>
+<li><code>--BED</code>: Region files in BED/GTF format (required)</li>
+<li><code>--plotFile, -o</code>: Output visualization (png, pdf, eps, svg)</li>
+<li><code>--labels, -l</code>: Custom sample identifiers</li>
+<li><code>--outRawCounts</code>: Export numerical data</li>
+<li><code>--perSample</code>: Group by sample instead of feature (default)</li>
+<li><code>--regionLabels</code>: Custom region names</li>
+</ul>
+<p><strong>Read Processing:</strong></p>
+<ul><li><code>--minFragmentLength / --maxFragmentLength</code>: Fragment filters</li>
+<li><code>--minMappingQuality</code>: Quality threshold</li>
+<li><code>--samFlagInclude / --samFlagExclude</code>: SAM flag filters</li>
+<li><code>--ignoreDuplicates</code>: Remove duplicates</li>
+<li><code>--centerReads</code>: Center reads for sharper signal</li>
+</ul>
+<p><strong>Common Usage:</strong></p>
+<pre><code class="language-bash">plotEnrichment -b Input.bam H3K4me3.bam \
+    --BED peaks_up.bed peaks_down.bed \
+    --regionLabels "Up regulated" "Down regulated" \
+    -o enrichment.png</code></pre>
+
+<hr>
+
+<h2>Miscellaneous Tools</h2>
+
+<h3>computeMatrixOperations</h3>
+
+<p>Advanced matrix manipulation tool for combining or subsetting matrices from computeMatrix. Enables complex multi-sample, multi-region analyses.</p>
+
+<p><strong>Operations:</strong></p>
+<ul><li><code>cbind</code>: Combine matrices column-wise</li>
+<li><code>rbind</code>: Combine matrices row-wise</li>
+<li><code>subset</code>: Extract specific samples or regions</li>
+<li><code>filterStrand</code>: Keep only regions on specific strand</li>
+<li><code>filterValues</code>: Apply signal intensity filters</li>
+<li><code>sort</code>: Order regions by various criteria</li>
+<li><code>dataRange</code>: Report min/max values</li>
+</ul>
+<p><strong>Common Usage:</strong></p>
+<pre><code class="language-bash"># Combine matrices
+computeMatrixOperations cbind -m matrix1.gz matrix2.gz -o combined.gz
+
+# Extract specific samples
+computeMatrixOperations subset -m matrix.gz --samples 0 2 -o subset.gz</code></pre>
+
+<hr>
+
+<h3>estimateReadFiltering</h3>
+
+<p>Predicts the impact of various filtering parameters without actually filtering. Helps optimize filtering strategies before running full analyses.</p>
+
+<p><strong>Key Parameters:</strong></p>
+<ul><li><code>--bamfiles, -b</code>: BAM files to analyze</li>
+<li><code>--sampleSize</code>: Number of reads to sample (default: 100,000)</li>
+<li><code>--binSize</code>: Bin size for analysis</li>
+<li><code>--distanceBetweenBins</code>: Spacing between sampled bins</li>
+</ul>
+<p><strong>Filtration Options to Test:</strong></p>
+<ul><li><code>--minMappingQuality</code>: Test quality thresholds</li>
+<li><code>--ignoreDuplicates</code>: Assess duplicate impact</li>
+<li><code>--minFragmentLength / --maxFragmentLength</code>: Test fragment filters</li>
+</ul>
+<hr>
+
+<h2>Common Parameters Across Tools</h2>
+
+<p>Many deepTools commands share these filtering and performance options:</p>
+
+<p><strong>Read Filtering:</strong></p>
+<ul><li><code>--ignoreDuplicates</code>: Remove PCR duplicates</li>
+<li><code>--minMappingQuality</code>: Filter by alignment confidence</li>
+<li><code>--samFlagInclude / --samFlagExclude</code>: SAM format filtering</li>
+<li><code>--minFragmentLength / --maxFragmentLength</code>: Fragment length bounds</li>
+</ul>
+<p><strong>Performance:</strong></p>
+<ul><li><code>--numberOfProcessors, -p</code>: Enable parallel processing</li>
+<li><code>--region</code>: Process specific genomic regions (chr:start-end)</li>
+</ul>
+<p><strong>Read Processing:</strong></p>
+<ul><li><code>--extendReads</code>: Extend to fragment length</li>
+<li><code>--centerReads</code>: Center at fragment midpoint</li>
+<li><code>--ignoreDuplicates</code>: Count unique reads only</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Workflows</h3>
+  <h1>deepTools Common Workflows</h1>
+
+<p>This document provides complete workflow examples for common deepTools analyses.</p>
+
+<h2>ChIP-seq Quality Control Workflow</h2>
+
+<p>Complete quality control assessment for ChIP-seq experiments.</p>
+
+<h3>Step 1: Initial Correlation Assessment</h3>
+
+<p>Compare replicates and samples to verify experimental quality:</p>
+
+<pre><code class="language-bash"># Generate coverage matrix across genome
+multiBamSummary bins \
+    --bamfiles Input1.bam Input2.bam ChIP1.bam ChIP2.bam \
+    --labels Input_rep1 Input_rep2 ChIP_rep1 ChIP_rep2 \
+    -o readCounts.npz \
+    --numberOfProcessors 8
+
+# Create correlation heatmap
+plotCorrelation \
+    -in readCounts.npz \
+    --corMethod pearson \
+    --whatToShow heatmap \
+    --plotFile correlation_heatmap.png \
+    --plotNumbers
+
+# Generate PCA plot
+plotPCA \
+    -in readCounts.npz \
+    -o PCA_plot.png \
+    -T "PCA of ChIP-seq samples"</code></pre>
+
+<p><strong>Expected Results:</strong></p>
+<ul><li>Replicates should cluster together</li>
+<li>Input samples should be distinct from ChIP samples</li>
+</ul>
+<hr>
+
+<h3>Step 2: Coverage and Depth Assessment</h3>
+
+<pre><code class="language-bash"># Check sequencing depth and coverage
+plotCoverage \
+    --bamfiles Input1.bam ChIP1.bam ChIP2.bam \
+    --labels Input ChIP_rep1 ChIP_rep2 \
+    --plotFile coverage.png \
+    --ignoreDuplicates \
+    --numberOfProcessors 8</code></pre>
+
+<p><strong>Interpretation:</strong> Assess whether sequencing depth is adequate for downstream analysis.</p>
+
+<hr>
+
+<h3>Step 3: Fragment Size Validation (Paired-end)</h3>
+
+<pre><code class="language-bash"># Verify expected fragment sizes
+bamPEFragmentSize \
+    --bamfiles Input1.bam ChIP1.bam ChIP2.bam \
+    --histogram fragmentSizes.png \
+    --plotTitle "Fragment Size Distribution"</code></pre>
+
+<p><strong>Expected Results:</strong> Fragment sizes should match library preparation protocols (typically 200-600bp for ChIP-seq).</p>
+
+<hr>
+
+<h3>Step 4: GC Bias Detection and Correction</h3>
+
+<pre><code class="language-bash"># Compute GC bias
+computeGCBias \
+    --bamfile ChIP1.bam \
+    --effectiveGenomeSize 2913022398 \
+    --genome genome.2bit \
+    --fragmentLength 200 \
+    --biasPlot GCbias.png \
+    --frequenciesFile freq.txt
+
+# If bias detected, correct it
+correctGCBias \
+    --bamfile ChIP1.bam \
+    --effectiveGenomeSize 2913022398 \
+    --genome genome.2bit \
+    --GCbiasFrequenciesFile freq.txt \
+    --correctedFile ChIP1_GCcorrected.bam</code></pre>
+
+<p><strong>Note:</strong> Only correct if significant bias is observed. Do NOT use <code>--ignoreDuplicates</code> with GC-corrected files.</p>
+
+<hr>
+
+<h3>Step 5: ChIP Signal Strength Assessment</h3>
+
+<pre><code class="language-bash"># Evaluate ChIP enrichment quality
+plotFingerprint \
+    --bamfiles Input1.bam ChIP1.bam ChIP2.bam \
+    --labels Input ChIP_rep1 ChIP_rep2 \
+    --plotFile fingerprint.png \
+    --extendReads 200 \
+    --ignoreDuplicates \
+    --numberOfProcessors 8 \
+    --outQualityMetrics fingerprint_metrics.txt</code></pre>
+
+<p><strong>Interpretation:</strong></p>
+<ul><li>Strong ChIP: Steep rise in cumulative curve</li>
+<li>Weak enrichment: Curve close to diagonal (input-like)</li>
+</ul>
+<hr>
+
+<h2>ChIP-seq Analysis Workflow</h2>
+
+<p>Complete workflow from BAM files to publication-quality visualizations.</p>
+
+<h3>Step 1: Generate Normalized Coverage Tracks</h3>
+
+<pre><code class="language-bash"># Input control
+bamCoverage \
+    --bam Input.bam \
+    --outFileName Input_coverage.bw \
+    --normalizeUsing RPGC \
+    --effectiveGenomeSize 2913022398 \
+    --binSize 10 \
+    --extendReads 200 \
+    --ignoreDuplicates \
+    --numberOfProcessors 8
+
+# ChIP sample
+bamCoverage \
+    --bam ChIP.bam \
+    --outFileName ChIP_coverage.bw \
+    --normalizeUsing RPGC \
+    --effectiveGenomeSize 2913022398 \
+    --binSize 10 \
+    --extendReads 200 \
+    --ignoreDuplicates \
+    --numberOfProcessors 8</code></pre>
+
+<hr>
+
+<h3>Step 2: Create Log2 Ratio Track</h3>
+
+<pre><code class="language-bash"># Compare ChIP to Input
+bamCompare \
+    --bamfile1 ChIP.bam \
+    --bamfile2 Input.bam \
+    --outFileName ChIP_vs_Input_log2ratio.bw \
+    --operation log2 \
+    --scaleFactorsMethod readCount \
+    --binSize 10 \
+    --extendReads 200 \
+    --ignoreDuplicates \
+    --numberOfProcessors 8</code></pre>
+
+<p><strong>Result:</strong> Log2 ratio track showing enrichment (positive values) and depletion (negative values).</p>
+
+<hr>
+
+<h3>Step 3: Compute Matrix Around TSS</h3>
+
+<pre><code class="language-bash"># Prepare data for heatmap/profile around transcription start sites
+computeMatrix reference-point \
+    --referencePoint TSS \
+    --scoreFileName ChIP_coverage.bw \
+    --regionsFileName genes.bed \
+    --beforeRegionStartLength 3000 \
+    --afterRegionStartLength 3000 \
+    --binSize 10 \
+    --sortRegions descend \
+    --sortUsing mean \
+    --outFileName matrix_TSS.gz \
+    --outFileNameMatrix matrix_TSS.tab \
+    --numberOfProcessors 8</code></pre>
+
+<hr>
+
+<h3>Step 4: Generate Heatmap</h3>
+
+<pre><code class="language-bash"># Create heatmap around TSS
+plotHeatmap \
+    --matrixFile matrix_TSS.gz \
+    --outFileName heatmap_TSS.png \
+    --colorMap RdBu \
+    --whatToShow 'plot, heatmap and colorbar' \
+    --zMin -3 --zMax 3 \
+    --yAxisLabel "Genes" \
+    --xAxisLabel "Distance from TSS (bp)" \
+    --refPointLabel "TSS" \
+    --heatmapHeight 15 \
+    --kmeans 3</code></pre>
+
+<hr>
+
+<h3>Step 5: Generate Profile Plot</h3>
+
+<pre><code class="language-bash"># Create meta-profile around TSS
+plotProfile \
+    --matrixFile matrix_TSS.gz \
+    --outFileName profile_TSS.png \
+    --plotType lines \
+    --perGroup \
+    --colors blue \
+    --plotTitle "ChIP-seq signal around TSS" \
+    --yAxisLabel "Average signal" \
+    --xAxisLabel "Distance from TSS (bp)" \
+    --refPointLabel "TSS"</code></pre>
+
+<hr>
+
+<h3>Step 6: Enrichment at Peaks</h3>
+
+<pre><code class="language-bash"># Calculate enrichment in peak regions
+plotEnrichment \
+    --bamfiles Input.bam ChIP.bam \
+    --BED peaks.bed \
+    --labels Input ChIP \
+    --plotFile enrichment.png \
+    --outRawCounts enrichment_counts.tab \
+    --extendReads 200 \
+    --ignoreDuplicates</code></pre>
+
+<hr>
+
+<h2>RNA-seq Coverage Workflow</h2>
+
+<p>Generate strand-specific coverage tracks for RNA-seq data.</p>
+
+<h3>Forward Strand</h3>
+
+<pre><code class="language-bash">bamCoverage \
+    --bam rnaseq.bam \
+    --outFileName forward_coverage.bw \
+    --filterRNAstrand forward \
+    --normalizeUsing CPM \
+    --binSize 1 \
+    --numberOfProcessors 8</code></pre>
+
+<h3>Reverse Strand</h3>
+
+<pre><code class="language-bash">bamCoverage \
+    --bam rnaseq.bam \
+    --outFileName reverse_coverage.bw \
+    --filterRNAstrand reverse \
+    --normalizeUsing CPM \
+    --binSize 1 \
+    --numberOfProcessors 8</code></pre>
+
+<p><strong>Important:</strong> Do NOT use <code>--extendReads</code> for RNA-seq (would extend over splice junctions).</p>
+
+<hr>
+
+<h2>Multi-Sample Comparison Workflow</h2>
+
+<p>Compare multiple ChIP-seq samples (e.g., different conditions or time points).</p>
+
+<h3>Step 1: Generate Coverage Files</h3>
+
+<pre><code class="language-bash"># For each sample
+for sample in Control_ChIP Treated_ChIP; do
+    bamCoverage \
+        --bam ${sample}.bam \
+        --outFileName ${sample}.bw \
+        --normalizeUsing RPGC \
+        --effectiveGenomeSize 2913022398 \
+        --binSize 10 \
+        --extendReads 200 \
+        --ignoreDuplicates \
+        --numberOfProcessors 8
+done</code></pre>
+
+<hr>
+
+<h3>Step 2: Compute Multi-Sample Matrix</h3>
+
+<pre><code class="language-bash">computeMatrix scale-regions \
+    --scoreFileName Control_ChIP.bw Treated_ChIP.bw \
+    --regionsFileName genes.bed \
+    --beforeRegionStartLength 1000 \
+    --afterRegionStartLength 1000 \
+    --regionBodyLength 3000 \
+    --binSize 10 \
+    --sortRegions descend \
+    --sortUsing mean \
+    --outFileName matrix_multi.gz \
+    --numberOfProcessors 8</code></pre>
+
+<hr>
+
+<h3>Step 3: Multi-Sample Heatmap</h3>
+
+<pre><code class="language-bash">plotHeatmap \
+    --matrixFile matrix_multi.gz \
+    --outFileName heatmap_comparison.png \
+    --colorMap Blues \
+    --whatToShow 'plot, heatmap and colorbar' \
+    --samplesLabel Control Treated \
+    --yAxisLabel "Genes" \
+    --heatmapHeight 15 \
+    --kmeans 4</code></pre>
+
+<hr>
+
+<h3>Step 4: Multi-Sample Profile</h3>
+
+<pre><code class="language-bash">plotProfile \
+    --matrixFile matrix_multi.gz \
+    --outFileName profile_comparison.png \
+    --plotType lines \
+    --perGroup \
+    --colors blue red \
+    --samplesLabel Control Treated \
+    --plotTitle "ChIP-seq signal comparison" \
+    --startLabel "TSS" \
+    --endLabel "TES"</code></pre>
+
+<hr>
+
+<h2>ATAC-seq Workflow</h2>
+
+<p>Specialized workflow for ATAC-seq data with Tn5 offset correction.</p>
+
+<h3>Step 1: Shift Reads for Tn5 Correction</h3>
+
+<pre><code class="language-bash">alignmentSieve \
+    --bam atacseq.bam \
+    --outFile atacseq_shifted.bam \
+    --ATACshift \
+    --minFragmentLength 38 \
+    --maxFragmentLength 2000 \
+    --ignoreDuplicates</code></pre>
+
+<hr>
+
+<h3>Step 2: Generate Coverage Track</h3>
+
+<pre><code class="language-bash">bamCoverage \
+    --bam atacseq_shifted.bam \
+    --outFileName atacseq_coverage.bw \
+    --normalizeUsing RPGC \
+    --effectiveGenomeSize 2913022398 \
+    --binSize 1 \
+    --numberOfProcessors 8</code></pre>
+
+<hr>
+
+<h3>Step 3: Fragment Size Analysis</h3>
+
+<pre><code class="language-bash">bamPEFragmentSize \
+    --bamfiles atacseq.bam \
+    --histogram fragmentSizes_atac.png \
+    --maxFragmentLength 1000</code></pre>
+
+<p><strong>Expected Pattern:</strong> Nucleosome ladder with peaks at ~50bp (nucleosome-free), ~200bp (mono-nucleosome), ~400bp (di-nucleosome).</p>
+
+<hr>
+
+<h2>Peak Region Analysis Workflow</h2>
+
+<p>Analyze ChIP-seq signal specifically at peak regions.</p>
+
+<h3>Step 1: Matrix at Peaks</h3>
+
+<pre><code class="language-bash">computeMatrix reference-point \
+    --referencePoint center \
+    --scoreFileName ChIP_coverage.bw \
+    --regionsFileName peaks.bed \
+    --beforeRegionStartLength 2000 \
+    --afterRegionStartLength 2000 \
+    --binSize 10 \
+    --outFileName matrix_peaks.gz \
+    --numberOfProcessors 8</code></pre>
+
+<hr>
+
+<h3>Step 2: Heatmap at Peaks</h3>
+
+<pre><code class="language-bash">plotHeatmap \
+    --matrixFile matrix_peaks.gz \
+    --outFileName heatmap_peaks.png \
+    --colorMap YlOrRd \
+    --refPointLabel "Peak Center" \
+    --heatmapHeight 15 \
+    --sortUsing max</code></pre>
+
+<hr>
+
+<h2>Troubleshooting Common Issues</h2>
+
+<h3>Issue: Out of Memory</h3>
+<p><strong>Solution:</strong> Use <code>--region</code> parameter to process chromosomes individually:</p>
+<pre><code class="language-bash">bamCoverage --bam input.bam -o chr1.bw --region chr1</code></pre>
+
+<h3>Issue: BAM Index Missing</h3>
+<p><strong>Solution:</strong> Index BAM files before running deepTools:</p>
+<pre><code class="language-bash">samtools index input.bam</code></pre>
+
+<h3>Issue: Slow Processing</h3>
+<p><strong>Solution:</strong> Increase <code>--numberOfProcessors</code>:</p>
+<pre><code class="language-bash"># Use 8 cores instead of default
+--numberOfProcessors 8</code></pre>
+
+<h3>Issue: bigWig Files Too Large</h3>
+<p><strong>Solution:</strong> Increase bin size:</p>
+<pre><code class="language-bash">--binSize 50  # or larger (default is 10-50)</code></pre>
+
+<hr>
+
+<h2>Performance Tips</h2>
+
+<ul><li><strong>Use multiple processors:</strong> Always set <code>--numberOfProcessors</code> to available cores</li>
+<li><strong>Process regions:</strong> Use <code>--region</code> for testing or memory-limited environments</li>
+<li><strong>Adjust bin size:</strong> Larger bins = faster processing and smaller files</li>
+<li><strong>Pre-filter BAM files:</strong> Use <code>alignmentSieve</code> to create filtered BAM files once, then reuse</li>
+<li><strong>Use bigWig over bedGraph:</strong> bigWig format is compressed and faster to process</li>
+</ul>
+<hr>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Always check QC first:</strong> Run correlation, coverage, and fingerprint analysis before proceeding</li>
+<li><strong>Document parameters:</strong> Save command lines for reproducibility</li>
+<li><strong>Use consistent normalization:</strong> Apply same normalization method across samples in a comparison</li>
+<li><strong>Verify reference genome match:</strong> Ensure BAM files and region files use same genome build</li>
+<li><strong>Check strand orientation:</strong> For RNA-seq, verify correct strand orientation</li>
+<li><strong>Test on small regions first:</strong> Use <code>--region chr1:1-1000000</code> for testing parameters</li>
+<li><strong>Keep intermediate files:</strong> Save matrices for regenerating plots with different settings</li>
+</ul>
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

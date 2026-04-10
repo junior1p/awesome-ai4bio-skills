@@ -1,0 +1,3015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dask — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="active">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / Dask</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>Dask</h1>
+    <p class="description">Distributed computing for larger-than-RAM pandas/NumPy workflows. Use when you need to scale existing pandas/NumPy code beyond memory or across clusters. Best for parallel file processing, distributed</p>
+    <h1>Dask</h1>
+
+<h2>Overview</h2>
+
+<p>Dask is a Python library for parallel and distributed computing that enables three critical capabilities:</p>
+<ul><li><strong>Larger-than-memory execution</strong> on single machines for data exceeding available RAM</li>
+<li><strong>Parallel processing</strong> for improved computational speed across multiple cores</li>
+<li><strong>Distributed computation</strong> supporting terabyte-scale datasets across multiple machines</li>
+</ul>
+<p>Dask scales from laptops (processing ~100 GiB) to clusters (processing ~100 TiB) while maintaining familiar Python APIs.</p>
+
+<h2>When to Use This Skill</h2>
+
+<p>This skill should be used when:</p>
+<ul><li>Process datasets that exceed available RAM</li>
+<li>Scale pandas or NumPy operations to larger datasets</li>
+<li>Parallelize computations for performance improvements</li>
+<li>Process multiple files efficiently (CSVs, Parquet, JSON, text logs)</li>
+<li>Build custom parallel workflows with task dependencies</li>
+<li>Distribute workloads across multiple cores or machines</li>
+</ul>
+<h2>Core Capabilities</h2>
+
+<p>Dask provides five main components, each suited to different use cases:</p>
+
+<h3>1. DataFrames - Parallel Pandas Operations</h3>
+
+<p><strong>Purpose</strong>: Scale pandas operations to larger datasets through parallel processing.</p>
+
+<p><strong>When to Use</strong>:</p>
+<ul><li>Tabular data exceeds available RAM</li>
+<li>Need to process multiple CSV/Parquet files together</li>
+<li>Pandas operations are slow and need parallelization</li>
+<li>Scaling from pandas prototype to production</li>
+</ul>
+<p><strong>Reference Documentation</strong>: For comprehensive guidance on Dask DataFrames, refer to <code>references/dataframes.md</code> which includes:</p>
+<ul><li>Reading data (single files, multiple files, glob patterns)</li>
+<li>Common operations (filtering, groupby, joins, aggregations)</li>
+<li>Custom operations with <code>map_partitions</code></li>
+<li>Performance optimization tips</li>
+<li>Common patterns (ETL, time series, multi-file processing)</li>
+</ul>
+<p><strong>Quick Example</strong>:</p>
+<pre><code class="language-python">import dask.dataframe as dd
+
+# Read multiple files as single DataFrame
+ddf = dd.read_csv('data/2024-*.csv')
+
+# Operations are lazy until compute()
+filtered = ddf[ddf['value'] &gt; 100]
+result = filtered.groupby('category').mean().compute()</code></pre>
+
+<p><strong>Key Points</strong>:</p>
+<ul><li>Operations are lazy (build task graph) until <code>.compute()</code> called</li>
+<li>Use <code>map_partitions</code> for efficient custom operations</li>
+<li>Convert to DataFrame early when working with structured data from other sources</li>
+</ul>
+<h3>2. Arrays - Parallel NumPy Operations</h3>
+
+<p><strong>Purpose</strong>: Extend NumPy capabilities to datasets larger than memory using blocked algorithms.</p>
+
+<p><strong>When to Use</strong>:</p>
+<ul><li>Arrays exceed available RAM</li>
+<li>NumPy operations need parallelization</li>
+<li>Working with scientific datasets (HDF5, Zarr, NetCDF)</li>
+<li>Need parallel linear algebra or array operations</li>
+</ul>
+<p><strong>Reference Documentation</strong>: For comprehensive guidance on Dask Arrays, refer to <code>references/arrays.md</code> which includes:</p>
+<ul><li>Creating arrays (from NumPy, random, from disk)</li>
+<li>Chunking strategies and optimization</li>
+<li>Common operations (arithmetic, reductions, linear algebra)</li>
+<li>Custom operations with <code>map_blocks</code></li>
+<li>Integration with HDF5, Zarr, and XArray</li>
+</ul>
+<p><strong>Quick Example</strong>:</p>
+<pre><code class="language-python">import dask.array as da
+
+# Create large array with chunks
+x = da.random.random((100000, 100000), chunks=(10000, 10000))
+
+# Operations are lazy
+y = x + 100
+z = y.mean(axis=0)
+
+# Compute result
+result = z.compute()</code></pre>
+
+<p><strong>Key Points</strong>:</p>
+<ul><li>Chunk size is critical (aim for ~100 MB per chunk)</li>
+<li>Operations work on chunks in parallel</li>
+<li>Rechunk data when needed for efficient operations</li>
+<li>Use <code>map_blocks</code> for operations not available in Dask</li>
+</ul>
+<h3>3. Bags - Parallel Processing of Unstructured Data</h3>
+
+<p><strong>Purpose</strong>: Process unstructured or semi-structured data (text, JSON, logs) with functional operations.</p>
+
+<p><strong>When to Use</strong>:</p>
+<ul><li>Processing text files, logs, or JSON records</li>
+<li>Data cleaning and ETL before structured analysis</li>
+<li>Working with Python objects that don't fit array/dataframe formats</li>
+<li>Need memory-efficient streaming processing</li>
+</ul>
+<p><strong>Reference Documentation</strong>: For comprehensive guidance on Dask Bags, refer to <code>references/bags.md</code> which includes:</p>
+<ul><li>Reading text and JSON files</li>
+<li>Functional operations (map, filter, fold, groupby)</li>
+<li>Converting to DataFrames</li>
+<li>Common patterns (log analysis, JSON processing, text processing)</li>
+<li>Performance considerations</li>
+</ul>
+<p><strong>Quick Example</strong>:</p>
+<pre><code class="language-python">import dask.bag as db
+import json
+
+# Read and parse JSON files
+bag = db.read_text('logs/*.json').map(json.loads)
+
+# Filter and transform
+valid = bag.filter(lambda x: x['status'] == 'valid')
+processed = valid.map(lambda x: {'id': x['id'], 'value': x['value']})
+
+# Convert to DataFrame for analysis
+ddf = processed.to_dataframe()</code></pre>
+
+<p><strong>Key Points</strong>:</p>
+<ul><li>Use for initial data cleaning, then convert to DataFrame/Array</li>
+<li>Use <code>foldby</code> instead of <code>groupby</code> for better performance</li>
+<li>Operations are streaming and memory-efficient</li>
+<li>Convert to structured formats (DataFrame) for complex operations</li>
+</ul>
+<h3>4. Futures - Task-Based Parallelization</h3>
+
+<p><strong>Purpose</strong>: Build custom parallel workflows with fine-grained control over task execution and dependencies.</p>
+
+<p><strong>When to Use</strong>:</p>
+<ul><li>Building dynamic, evolving workflows</li>
+<li>Need immediate task execution (not lazy)</li>
+<li>Computations depend on runtime conditions</li>
+<li>Implementing custom parallel algorithms</li>
+<li>Need stateful computations</li>
+</ul>
+<p><strong>Reference Documentation</strong>: For comprehensive guidance on Dask Futures, refer to <code>references/futures.md</code> which includes:</p>
+<ul><li>Setting up distributed client</li>
+<li>Submitting tasks and working with futures</li>
+<li>Task dependencies and data movement</li>
+<li>Advanced coordination (queues, locks, events, actors)</li>
+<li>Common patterns (parameter sweeps, dynamic tasks, iterative algorithms)</li>
+</ul>
+<p><strong>Quick Example</strong>:</p>
+<pre><code class="language-python">from dask.distributed import Client
+
+client = Client()  # Create local cluster
+
+# Submit tasks (executes immediately)
+def process(x):
+    return x ** 2
+
+futures = client.map(process, range(100))
+
+# Gather results
+results = client.gather(futures)
+
+client.close()</code></pre>
+
+<p><strong>Key Points</strong>:</p>
+<ul><li>Requires distributed client (even for single machine)</li>
+<li>Tasks execute immediately when submitted</li>
+<li>Pre-scatter large data to avoid repeated transfers</li>
+<li>~1ms overhead per task (not suitable for millions of tiny tasks)</li>
+<li>Use actors for stateful workflows</li>
+</ul>
+<h3>5. Schedulers - Execution Backends</h3>
+
+<p><strong>Purpose</strong>: Control how and where Dask tasks execute (threads, processes, distributed).</p>
+
+<p><strong>When to Choose Scheduler</strong>:</p>
+<ul><li><strong>Threads</strong> (default): NumPy/Pandas operations, GIL-releasing libraries, shared memory benefit</li>
+<li><strong>Processes</strong>: Pure Python code, text processing, GIL-bound operations</li>
+<li><strong>Synchronous</strong>: Debugging with pdb, profiling, understanding errors</li>
+<li><strong>Distributed</strong>: Need dashboard, multi-machine clusters, advanced features</li>
+</ul>
+<p><strong>Reference Documentation</strong>: For comprehensive guidance on Dask Schedulers, refer to <code>references/schedulers.md</code> which includes:</p>
+<ul><li>Detailed scheduler descriptions and characteristics</li>
+<li>Configuration methods (global, context manager, per-compute)</li>
+<li>Performance considerations and overhead</li>
+<li>Common patterns and troubleshooting</li>
+<li>Thread configuration for optimal performance</li>
+</ul>
+<p><strong>Quick Example</strong>:</p>
+<pre><code class="language-python">import dask
+import dask.dataframe as dd
+
+# Use threads for DataFrame (default, good for numeric)
+ddf = dd.read_csv('data.csv')
+result1 = ddf.mean().compute()  # Uses threads
+
+# Use processes for Python-heavy work
+import dask.bag as db
+bag = db.read_text('logs/*.txt')
+result2 = bag.map(python_function).compute(scheduler='processes')
+
+# Use synchronous for debugging
+dask.config.set(scheduler='synchronous')
+result3 = problematic_computation.compute()  # Can use pdb
+
+# Use distributed for monitoring and scaling
+from dask.distributed import Client
+client = Client()
+result4 = computation.compute()  # Uses distributed with dashboard</code></pre>
+
+<p><strong>Key Points</strong>:</p>
+<ul><li>Threads: Lowest overhead (~10 µs/task), best for numeric work</li>
+<li>Processes: Avoids GIL (~10 ms/task), best for Python work</li>
+<li>Distributed: Monitoring dashboard (~1 ms/task), scales to clusters</li>
+<li>Can switch schedulers per computation or globally</li>
+</ul>
+<h2>Best Practices</h2>
+
+<p>For comprehensive performance optimization guidance, memory management strategies, and common pitfalls to avoid, refer to <code>references/best-practices.md</code>. Key principles include:</p>
+
+<h3>Start with Simpler Solutions</h3>
+<p>Before using Dask, explore:</p>
+<ul><li>Better algorithms</li>
+<li>Efficient file formats (Parquet instead of CSV)</li>
+<li>Compiled code (Numba, Cython)</li>
+<li>Data sampling</li>
+</ul>
+<h3>Critical Performance Rules</h3>
+
+<p><strong>1. Don't Load Data Locally Then Hand to Dask</strong></p>
+<pre><code class="language-python"># Wrong: Loads all data in memory first
+import pandas as pd
+df = pd.read_csv('large.csv')
+ddf = dd.from_pandas(df, npartitions=10)
+
+# Correct: Let Dask handle loading
+import dask.dataframe as dd
+ddf = dd.read_csv('large.csv')</code></pre>
+
+<p><strong>2. Avoid Repeated compute() Calls</strong></p>
+<pre><code class="language-python"># Wrong: Each compute is separate
+for item in items:
+    result = dask_computation(item).compute()
+
+# Correct: Single compute for all
+computations = [dask_computation(item) for item in items]
+results = dask.compute(*computations)</code></pre>
+
+<p><strong>3. Don't Build Excessively Large Task Graphs</strong></p>
+<ul><li>Increase chunk sizes if millions of tasks</li>
+<li>Use <code>map_partitions</code>/<code>map_blocks</code> to fuse operations</li>
+<li>Check task graph size: <code>len(ddf.__dask_graph__())</code></li>
+</ul>
+<p><strong>4. Choose Appropriate Chunk Sizes</strong></p>
+<ul><li>Target: ~100 MB per chunk (or 10 chunks per core in worker memory)</li>
+<li>Too large: Memory overflow</li>
+<li>Too small: Scheduling overhead</li>
+</ul>
+<p><strong>5. Use the Dashboard</strong></p>
+<pre><code class="language-python">from dask.distributed import Client
+client = Client()
+print(client.dashboard_link)  # Monitor performance, identify bottlenecks</code></pre>
+
+<h2>Common Workflow Patterns</h2>
+
+<h3>ETL Pipeline</h3>
+<pre><code class="language-python">import dask.dataframe as dd
+
+# Extract: Read data
+ddf = dd.read_csv('raw_data/*.csv')
+
+# Transform: Clean and process
+ddf = ddf[ddf['status'] == 'valid']
+ddf['amount'] = ddf['amount'].astype('float64')
+ddf = ddf.dropna(subset=['important_col'])
+
+# Load: Aggregate and save
+summary = ddf.groupby('category').agg({'amount': ['sum', 'mean']})
+summary.to_parquet('output/summary.parquet')</code></pre>
+
+<h3>Unstructured to Structured Pipeline</h3>
+<pre><code class="language-python">import dask.bag as db
+import json
+
+# Start with Bag for unstructured data
+bag = db.read_text('logs/*.json').map(json.loads)
+bag = bag.filter(lambda x: x['status'] == 'valid')
+
+# Convert to DataFrame for structured analysis
+ddf = bag.to_dataframe()
+result = ddf.groupby('category').mean().compute()</code></pre>
+
+<h3>Large-Scale Array Computation</h3>
+<pre><code class="language-python">import dask.array as da
+
+# Load or create large array
+x = da.from_zarr('large_dataset.zarr')
+
+# Process in chunks
+normalized = (x - x.mean()) / x.std()
+
+# Save result
+da.to_zarr(normalized, 'normalized.zarr')</code></pre>
+
+<h3>Custom Parallel Workflow</h3>
+<pre><code class="language-python">from dask.distributed import Client
+
+client = Client()
+
+# Scatter large dataset once
+data = client.scatter(large_dataset)
+
+# Process in parallel with dependencies
+futures = []
+for param in parameters:
+    future = client.submit(process, data, param)
+    futures.append(future)
+
+# Gather results
+results = client.gather(futures)</code></pre>
+
+<h2>Selecting the Right Component</h2>
+
+<p>Use this decision guide to choose the appropriate Dask component:</p>
+
+<p><strong>Data Type</strong>:</p>
+<ul><li>Tabular data → <strong>DataFrames</strong></li>
+<li>Numeric arrays → <strong>Arrays</strong></li>
+<li>Text/JSON/logs → <strong>Bags</strong> (then convert to DataFrame)</li>
+<li>Custom Python objects → <strong>Bags</strong> or <strong>Futures</strong></li>
+</ul>
+<p><strong>Operation Type</strong>:</p>
+<ul><li>Standard pandas operations → <strong>DataFrames</strong></li>
+<li>Standard NumPy operations → <strong>Arrays</strong></li>
+<li>Custom parallel tasks → <strong>Futures</strong></li>
+<li>Text processing/ETL → <strong>Bags</strong></li>
+</ul>
+<p><strong>Control Level</strong>:</p>
+<ul><li>High-level, automatic → <strong>DataFrames/Arrays</strong></li>
+<li>Low-level, manual → <strong>Futures</strong></li>
+</ul>
+<p><strong>Workflow Type</strong>:</p>
+<ul><li>Static computation graph → <strong>DataFrames/Arrays/Bags</strong></li>
+<li>Dynamic, evolving → <strong>Futures</strong></li>
+</ul>
+<h2>Integration Considerations</h2>
+
+<h3>File Formats</h3>
+<ul><li><strong>Efficient</strong>: Parquet, HDF5, Zarr (columnar, compressed, parallel-friendly)</li>
+<li><strong>Compatible but slower</strong>: CSV (use for initial ingestion only)</li>
+<li><strong>For Arrays</strong>: HDF5, Zarr, NetCDF</li>
+</ul>
+<h3>Conversion Between Collections</h3>
+<pre><code class="language-python"># Bag → DataFrame
+ddf = bag.to_dataframe()
+
+# DataFrame → Array (for numeric data)
+arr = ddf.to_dask_array(lengths=True)
+
+# Array → DataFrame
+ddf = dd.from_dask_array(arr, columns=['col1', 'col2'])</code></pre>
+
+<h3>With Other Libraries</h3>
+<ul><li><strong>XArray</strong>: Wraps Dask arrays with labeled dimensions (geospatial, imaging)</li>
+<li><strong>Dask-ML</strong>: Machine learning with scikit-learn compatible APIs</li>
+<li><strong>Distributed</strong>: Advanced cluster management and monitoring</li>
+</ul>
+<h2>Debugging and Development</h2>
+
+<h3>Iterative Development Workflow</h3>
+
+<ul><li><strong>Test on small data with synchronous scheduler</strong>:</li>
+</ul><pre><code class="language-python">dask.config.set(scheduler='synchronous')
+result = computation.compute()  # Can use pdb, easy debugging</code></pre>
+
+<ul><li><strong>Validate with threads on sample</strong>:</li>
+</ul><pre><code class="language-python">sample = ddf.head(1000)  # Small sample
+# Test logic, then scale to full dataset</code></pre>
+
+<ul><li><strong>Scale with distributed for monitoring</strong>:</li>
+</ul><pre><code class="language-python">from dask.distributed import Client
+client = Client()
+print(client.dashboard_link)  # Monitor performance
+result = computation.compute()</code></pre>
+
+<h3>Common Issues</h3>
+
+<p><strong>Memory Errors</strong>:</p>
+<ul><li>Decrease chunk sizes</li>
+<li>Use <code>persist()</code> strategically and delete when done</li>
+<li>Check for memory leaks in custom functions</li>
+</ul>
+<p><strong>Slow Start</strong>:</p>
+<ul><li>Task graph too large (increase chunk sizes)</li>
+<li>Use <code>map_partitions</code> or <code>map_blocks</code> to reduce tasks</li>
+</ul>
+<p><strong>Poor Parallelization</strong>:</p>
+<ul><li>Chunks too large (increase number of partitions)</li>
+<li>Using threads with Python code (switch to processes)</li>
+<li>Data dependencies preventing parallelism</li>
+</ul>
+<h2>Reference Files</h2>
+
+<p>All reference documentation files can be read as needed for detailed information:</p>
+
+<ul><li><code>references/dataframes.md</code> - Complete Dask DataFrame guide</li>
+<li><code>references/arrays.md</code> - Complete Dask Array guide</li>
+<li><code>references/bags.md</code> - Complete Dask Bag guide</li>
+<li><code>references/futures.md</code> - Complete Dask Futures and distributed computing guide</li>
+<li><code>references/schedulers.md</code> - Complete scheduler selection and configuration guide</li>
+<li><code>references/best-practices.md</code> - Comprehensive performance optimization and troubleshooting</li>
+</ul>
+<p>Load these files when users need detailed information about specific Dask components, operations, or patterns beyond the quick guidance provided here.</p>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Arrays</h3>
+  <h1>Dask Arrays</h1>
+
+<h2>Overview</h2>
+
+<p>Dask Array implements NumPy's ndarray interface using blocked algorithms. It coordinates many NumPy arrays arranged into a grid to enable computation on datasets larger than available memory, utilizing parallelism across multiple cores.</p>
+
+<h2>Core Concept</h2>
+
+<p>A Dask Array is divided into chunks (blocks):</p>
+<ul><li>Each chunk is a regular NumPy array</li>
+<li>Operations are applied to each chunk in parallel</li>
+<li>Results are combined automatically</li>
+<li>Enables out-of-core computation (data larger than RAM)</li>
+</ul>
+<h2>Key Capabilities</h2>
+
+<h3>What Dask Arrays Support</h3>
+
+<p><strong>Mathematical Operations</strong>:</p>
+<ul><li>Arithmetic operations (+, -, *, /)</li>
+<li>Scalar functions (exponentials, logarithms, trigonometric)</li>
+<li>Element-wise operations</li>
+</ul>
+<p><strong>Reductions</strong>:</p>
+<ul><li><code>sum()</code>, <code>mean()</code>, <code>std()</code>, <code>var()</code></li>
+<li>Reductions along specified axes</li>
+<li><code>min()</code>, <code>max()</code>, <code>argmin()</code>, <code>argmax()</code></li>
+</ul>
+<p><strong>Linear Algebra</strong>:</p>
+<ul><li>Tensor contractions</li>
+<li>Dot products and matrix multiplication</li>
+<li>Some decompositions (SVD, QR)</li>
+</ul>
+<p><strong>Data Manipulation</strong>:</p>
+<ul><li>Transposition</li>
+<li>Slicing (standard and fancy indexing)</li>
+<li>Reshaping</li>
+<li>Concatenation and stacking</li>
+</ul>
+<p><strong>Array Protocols</strong>:</p>
+<ul><li>Universal functions (ufuncs)</li>
+<li>NumPy protocols for interoperability</li>
+</ul>
+<h2>When to Use Dask Arrays</h2>
+
+<p><strong>Use Dask Arrays When</strong>:</p>
+<ul><li>Arrays exceed available RAM</li>
+<li>Computation can be parallelized across chunks</li>
+<li>Working with NumPy-style numerical operations</li>
+<li>Need to scale NumPy code to larger datasets</li>
+</ul>
+<p><strong>Stick with NumPy When</strong>:</p>
+<ul><li>Arrays fit comfortably in memory</li>
+<li>Operations require global views of data</li>
+<li>Using specialized functions not available in Dask</li>
+<li>Performance is adequate with NumPy alone</li>
+</ul>
+<h2>Important Limitations</h2>
+
+<p>Dask Arrays intentionally don't implement certain NumPy features:</p>
+
+<p><strong>Not Implemented</strong>:</p>
+<ul><li>Most <code>np.linalg</code> functions (only basic operations available)</li>
+<li>Operations difficult to parallelize (like full sorting)</li>
+<li>Memory-inefficient operations (converting to lists, iterating via loops)</li>
+<li>Many specialized functions (driven by community needs)</li>
+</ul>
+<p><strong>Workarounds</strong>: For unsupported operations, consider using <code>map_blocks</code> with custom NumPy code.</p>
+
+<h2>Creating Dask Arrays</h2>
+
+<h3>From NumPy Arrays</h3>
+<pre><code class="language-python">import dask.array as da
+import numpy as np
+
+# Create from NumPy array with specified chunks
+x = np.arange(10000)
+dx = da.from_array(x, chunks=1000)  # Creates 10 chunks of 1000 elements each</code></pre>
+
+<h3>Random Arrays</h3>
+<pre><code class="language-python"># Create random array with specified chunks
+x = da.random.random((10000, 10000), chunks=(1000, 1000))
+
+# Other random functions
+x = da.random.normal(10, 0.1, size=(10000, 10000), chunks=(1000, 1000))</code></pre>
+
+<h3>Zeros, Ones, and Empty</h3>
+<pre><code class="language-python"># Create arrays filled with constants
+zeros = da.zeros((10000, 10000), chunks=(1000, 1000))
+ones = da.ones((10000, 10000), chunks=(1000, 1000))
+empty = da.empty((10000, 10000), chunks=(1000, 1000))</code></pre>
+
+<h3>From Functions</h3>
+<pre><code class="language-python"># Create array from function
+def create_block(block_id):
+    return np.random.random((1000, 1000)) * block_id[0]
+
+x = da.from_delayed(
+    [[dask.delayed(create_block)((i, j)) for j in range(10)] for i in range(10)],
+    shape=(10000, 10000),
+    dtype=float
+)</code></pre>
+
+<h3>From Disk</h3>
+<pre><code class="language-python"># Load from HDF5
+import h5py
+f = h5py.File('myfile.hdf5', mode='r')
+x = da.from_array(f['/data'], chunks=(1000, 1000))
+
+# Load from Zarr
+import zarr
+z = zarr.open('myfile.zarr', mode='r')
+x = da.from_array(z, chunks=(1000, 1000))</code></pre>
+
+<h2>Common Operations</h2>
+
+<h3>Arithmetic Operations</h3>
+<pre><code class="language-python">import dask.array as da
+
+x = da.random.random((10000, 10000), chunks=(1000, 1000))
+y = da.random.random((10000, 10000), chunks=(1000, 1000))
+
+# Element-wise operations (lazy)
+z = x + y
+z = x * y
+z = da.exp(x)
+z = da.log(y)
+
+# Compute result
+result = z.compute()</code></pre>
+
+<h3>Reductions</h3>
+<pre><code class="language-python"># Reductions along axes
+total = x.sum().compute()
+mean = x.mean().compute()
+std = x.std().compute()
+
+# Reduction along specific axis
+row_means = x.mean(axis=1).compute()
+col_sums = x.sum(axis=0).compute()</code></pre>
+
+<h3>Slicing and Indexing</h3>
+<pre><code class="language-python"># Standard slicing (returns Dask Array)
+subset = x[1000:5000, 2000:8000]
+
+# Fancy indexing
+indices = [0, 5, 10, 15]
+selected = x[indices, :]
+
+# Boolean indexing
+mask = x &gt; 0.5
+filtered = x[mask]</code></pre>
+
+<h3>Matrix Operations</h3>
+<pre><code class="language-python"># Matrix multiplication
+A = da.random.random((10000, 5000), chunks=(1000, 1000))
+B = da.random.random((5000, 8000), chunks=(1000, 1000))
+C = da.matmul(A, B)
+result = C.compute()
+
+# Dot product
+dot_product = da.dot(A, B)
+
+# Transpose
+AT = A.T</code></pre>
+
+<h3>Linear Algebra</h3>
+<pre><code class="language-python"># SVD (Singular Value Decomposition)
+U, s, Vt = da.linalg.svd(A)
+U_computed, s_computed, Vt_computed = dask.compute(U, s, Vt)
+
+# QR decomposition
+Q, R = da.linalg.qr(A)
+Q_computed, R_computed = dask.compute(Q, R)
+
+# Note: Only some linalg operations are available</code></pre>
+
+<h3>Reshaping and Manipulation</h3>
+<pre><code class="language-python"># Reshape
+x = da.random.random((10000, 10000), chunks=(1000, 1000))
+reshaped = x.reshape(5000, 20000)
+
+# Transpose
+transposed = x.T
+
+# Concatenate
+x1 = da.random.random((5000, 10000), chunks=(1000, 1000))
+x2 = da.random.random((5000, 10000), chunks=(1000, 1000))
+combined = da.concatenate([x1, x2], axis=0)
+
+# Stack
+stacked = da.stack([x1, x2], axis=0)</code></pre>
+
+<h2>Chunking Strategy</h2>
+
+<p>Chunking is critical for Dask Array performance.</p>
+
+<h3>Chunk Size Guidelines</h3>
+
+<p><strong>Good Chunk Sizes</strong>:</p>
+<ul><li>Each chunk: ~10-100 MB (compressed)</li>
+<li>~1 million elements per chunk for numeric data</li>
+<li>Balance between parallelism and overhead</li>
+</ul>
+<p><strong>Example Calculation</strong>:</p>
+<pre><code class="language-python"># For float64 data (8 bytes per element)
+# Target 100 MB chunks: 100 MB / 8 bytes = 12.5M elements
+
+# For 2D array (10000, 10000):
+x = da.random.random((10000, 10000), chunks=(1000, 1000))  # ~8 MB per chunk</code></pre>
+
+<h3>Viewing Chunk Structure</h3>
+<pre><code class="language-python"># Check chunks
+print(x.chunks)  # ((1000, 1000, ...), (1000, 1000, ...))
+
+# Number of chunks
+print(x.npartitions)
+
+# Chunk sizes in bytes
+print(x.nbytes / x.npartitions)</code></pre>
+
+<h3>Rechunking</h3>
+<pre><code class="language-python"># Change chunk sizes
+x = da.random.random((10000, 10000), chunks=(500, 500))
+x_rechunked = x.rechunk((2000, 2000))
+
+# Rechunk specific dimension
+x_rechunked = x.rechunk({0: 2000, 1: 'auto'})</code></pre>
+
+<h2>Custom Operations with map_blocks</h2>
+
+<p>For operations not available in Dask, use <code>map_blocks</code>:</p>
+
+<pre><code class="language-python">import dask.array as da
+import numpy as np
+
+def custom_function(block):
+    # Apply custom NumPy operation
+    return np.fft.fft2(block)
+
+x = da.random.random((10000, 10000), chunks=(1000, 1000))
+result = da.map_blocks(custom_function, x, dtype=x.dtype)
+
+# Compute
+output = result.compute()</code></pre>
+
+<h3>map_blocks with Different Output Shape</h3>
+<pre><code class="language-python">def reduction_function(block):
+    # Returns scalar for each block
+    return np.array([block.mean()])
+
+result = da.map_blocks(
+    reduction_function,
+    x,
+    dtype='float64',
+    drop_axis=[0, 1],  # Output has no axes from input
+    new_axis=0,        # Output has new axis
+    chunks=(1,)        # One element per block
+)</code></pre>
+
+<h2>Lazy Evaluation and Computation</h2>
+
+<h3>Lazy Operations</h3>
+<pre><code class="language-python"># All operations are lazy (instant, no computation)
+x = da.random.random((10000, 10000), chunks=(1000, 1000))
+y = x + 100
+z = y.mean(axis=0)
+result = z * 2
+
+# Nothing computed yet, just task graph built</code></pre>
+
+<h3>Triggering Computation</h3>
+<pre><code class="language-python"># Compute single result
+final = result.compute()
+
+# Compute multiple results efficiently
+result1, result2 = dask.compute(operation1, operation2)</code></pre>
+
+<h3>Persist in Memory</h3>
+<pre><code class="language-python"># Keep intermediate results in memory
+x_cached = x.persist()
+
+# Reuse cached results
+y1 = (x_cached + 10).compute()
+y2 = (x_cached * 2).compute()</code></pre>
+
+<h2>Saving Results</h2>
+
+<h3>To NumPy</h3>
+<pre><code class="language-python"># Convert to NumPy (loads all in memory)
+numpy_array = dask_array.compute()</code></pre>
+
+<h3>To Disk</h3>
+<pre><code class="language-python"># Save to HDF5
+import h5py
+with h5py.File('output.hdf5', mode='w') as f:
+    dset = f.create_dataset('/data', shape=x.shape, dtype=x.dtype)
+    da.store(x, dset)
+
+# Save to Zarr
+import zarr
+z = zarr.open('output.zarr', mode='w', shape=x.shape, dtype=x.dtype, chunks=x.chunks)
+da.store(x, z)</code></pre>
+
+<h2>Performance Considerations</h2>
+
+<h3>Efficient Operations</h3>
+<ul><li>Element-wise operations: Very efficient</li>
+<li>Reductions with parallelizable operations: Efficient</li>
+<li>Slicing along chunk boundaries: Efficient</li>
+<li>Matrix operations with good chunk alignment: Efficient</li>
+</ul>
+<h3>Expensive Operations</h3>
+<ul><li>Slicing across many chunks: Requires data movement</li>
+<li>Operations requiring global sorting: Not well supported</li>
+<li>Extremely irregular access patterns: Poor performance</li>
+<li>Operations with poor chunk alignment: Requires rechunking</li>
+</ul>
+<h3>Optimization Tips</h3>
+
+<p><strong>1. Choose Good Chunk Sizes</strong></p>
+<pre><code class="language-python"># Aim for balanced chunks
+# Good: ~100 MB per chunk
+x = da.random.random((100000, 10000), chunks=(10000, 10000))</code></pre>
+
+<p><strong>2. Align Chunks for Operations</strong></p>
+<pre><code class="language-python"># Make sure chunks align for operations
+x = da.random.random((10000, 10000), chunks=(1000, 1000))
+y = da.random.random((10000, 10000), chunks=(1000, 1000))  # Aligned
+z = x + y  # Efficient</code></pre>
+
+<p><strong>3. Use Appropriate Scheduler</strong></p>
+<pre><code class="language-python"># Arrays work well with threaded scheduler (default)
+# Shared memory access is efficient
+result = x.compute()  # Uses threads by default</code></pre>
+
+<p><strong>4. Minimize Data Transfer</strong></p>
+<pre><code class="language-python"># Better: Compute on each chunk, then transfer results
+means = x.mean(axis=1).compute()  # Transfers less data
+
+# Worse: Transfer all data then compute
+x_numpy = x.compute()
+means = x_numpy.mean(axis=1)  # Transfers more data</code></pre>
+
+<h2>Common Patterns</h2>
+
+<h3>Image Processing</h3>
+<pre><code class="language-python">import dask.array as da
+
+# Load large image stack
+images = da.from_zarr('images.zarr')
+
+# Apply filtering
+def apply_gaussian(block):
+    from scipy.ndimage import gaussian_filter
+    return gaussian_filter(block, sigma=2)
+
+filtered = da.map_blocks(apply_gaussian, images, dtype=images.dtype)
+
+# Compute statistics
+mean_intensity = filtered.mean().compute()</code></pre>
+
+<h3>Scientific Computing</h3>
+<pre><code class="language-python"># Large-scale numerical simulation
+x = da.random.random((100000, 100000), chunks=(10000, 10000))
+
+# Apply iterative computation
+for i in range(num_iterations):
+    x = da.exp(-x) * da.sin(x)
+    x = x.persist()  # Keep in memory for next iteration
+
+# Final result
+result = x.compute()</code></pre>
+
+<h3>Data Analysis</h3>
+<pre><code class="language-python"># Load large dataset
+data = da.from_zarr('measurements.zarr')
+
+# Compute statistics
+mean = data.mean(axis=0)
+std = data.std(axis=0)
+normalized = (data - mean) / std
+
+# Save normalized data
+da.to_zarr(normalized, 'normalized.zarr')</code></pre>
+
+<h2>Integration with Other Tools</h2>
+
+<h3>XArray</h3>
+<pre><code class="language-python">import xarray as xr
+import dask.array as da
+
+# XArray wraps Dask arrays with labeled dimensions
+data = da.random.random((1000, 2000, 3000), chunks=(100, 200, 300))
+dataset = xr.DataArray(
+    data,
+    dims=['time', 'y', 'x'],
+    coords={'time': range(1000), 'y': range(2000), 'x': range(3000)}
+)</code></pre>
+
+<h3>Scikit-learn (via Dask-ML)</h3>
+<pre><code class="language-python"># Some scikit-learn compatible operations
+from dask_ml.preprocessing import StandardScaler
+
+X = da.random.random((10000, 100), chunks=(1000, 100))
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)</code></pre>
+
+<h2>Debugging Tips</h2>
+
+<h3>Visualize Task Graph</h3>
+<pre><code class="language-python"># Visualize computation graph (for small arrays)
+x = da.random.random((100, 100), chunks=(10, 10))
+y = x + 1
+y.visualize(filename='graph.png')</code></pre>
+
+<h3>Check Array Properties</h3>
+<pre><code class="language-python"># Inspect before computing
+print(f"Shape: {x.shape}")
+print(f"Dtype: {x.dtype}")
+print(f"Chunks: {x.chunks}")
+print(f"Number of tasks: {len(x.__dask_graph__())}")</code></pre>
+
+<h3>Test on Small Arrays First</h3>
+<pre><code class="language-python"># Test logic on small array
+small_x = da.random.random((100, 100), chunks=(50, 50))
+result_small = computation(small_x).compute()
+
+# Validate, then scale
+large_x = da.random.random((100000, 100000), chunks=(10000, 10000))
+result_large = computation(large_x).compute()</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Bags</h3>
+  <h1>Dask Bags</h1>
+
+<h2>Overview</h2>
+
+<p>Dask Bag implements functional operations including <code>map</code>, <code>filter</code>, <code>fold</code>, and <code>groupby</code> on generic Python objects. It processes data in parallel while maintaining a small memory footprint through Python iterators. Bags function as "a parallel version of PyToolz or a Pythonic version of the PySpark RDD."</p>
+
+<h2>Core Concept</h2>
+
+<p>A Dask Bag is a collection of Python objects distributed across partitions:</p>
+<ul><li>Each partition contains generic Python objects</li>
+<li>Operations use functional programming patterns</li>
+<li>Processing uses streaming/iterators for memory efficiency</li>
+<li>Ideal for unstructured or semi-structured data</li>
+</ul>
+<h2>Key Capabilities</h2>
+
+<h3>Functional Operations</h3>
+<ul><li><code>map</code>: Transform each element</li>
+<li><code>filter</code>: Select elements based on condition</li>
+<li><code>fold</code>: Reduce elements with combining function</li>
+<li><code>groupby</code>: Group elements by key</li>
+<li><code>pluck</code>: Extract fields from records</li>
+<li><code>flatten</code>: Flatten nested structures</li>
+</ul>
+<h3>Use Cases</h3>
+<ul><li>Text processing and log analysis</li>
+<li>JSON record processing</li>
+<li>ETL on unstructured data</li>
+<li>Data cleaning before structured analysis</li>
+</ul>
+<h2>When to Use Dask Bags</h2>
+
+<p><strong>Use Bags When</strong>:</p>
+<ul><li>Working with general Python objects requiring flexible computation</li>
+<li>Data doesn't fit structured array or tabular formats</li>
+<li>Processing text, JSON, or custom Python objects</li>
+<li>Initial data cleaning and ETL is needed</li>
+<li>Memory-efficient streaming is important</li>
+</ul>
+<p><strong>Use Other Collections When</strong>:</p>
+<ul><li>Data is structured (use DataFrames instead)</li>
+<li>Numeric computing (use Arrays instead)</li>
+<li>Operations require complex groupby or shuffles (use DataFrames)</li>
+</ul>
+<p><strong>Key Recommendation</strong>: Use Bag to clean and process data, then transform it into an array or DataFrame before embarking on more complex operations that require shuffle steps.</p>
+
+<h2>Important Limitations</h2>
+
+<p>Bags sacrifice performance for generality:</p>
+<ul><li>Rely on multiprocessing scheduling (not threads)</li>
+<li>Remain immutable (create new bags for changes)</li>
+<li>Operate slower than array/DataFrame equivalents</li>
+<li>Handle <code>groupby</code> inefficiently (use <code>foldby</code> when possible)</li>
+<li>Operations requiring substantial inter-worker communication are slow</li>
+</ul>
+<h2>Creating Bags</h2>
+
+<h3>From Sequences</h3>
+<pre><code class="language-python">import dask.bag as db
+
+# From Python list
+bag = db.from_sequence([1, 2, 3, 4, 5], partition_size=2)
+
+# From range
+bag = db.from_sequence(range(10000), partition_size=1000)</code></pre>
+
+<h3>From Text Files</h3>
+<pre><code class="language-python"># Single file
+bag = db.read_text('data.txt')
+
+# Multiple files with glob
+bag = db.read_text('data/*.txt')
+
+# With encoding
+bag = db.read_text('data/*.txt', encoding='utf-8')
+
+# Custom line processing
+bag = db.read_text('logs/*.log', blocksize='64MB')</code></pre>
+
+<h3>From Delayed Objects</h3>
+<pre><code class="language-python">import dask
+
+@dask.delayed
+def load_data(filename):
+    with open(filename) as f:
+        return [line.strip() for line in f]
+
+files = ['file1.txt', 'file2.txt', 'file3.txt']
+partitions = [load_data(f) for f in files]
+bag = db.from_delayed(partitions)</code></pre>
+
+<h3>From Custom Sources</h3>
+<pre><code class="language-python"># From any iterable-producing function
+def read_json_files():
+    import json
+    for filename in glob.glob('data/*.json'):
+        with open(filename) as f:
+            yield json.load(f)
+
+# Create bag from generator
+bag = db.from_sequence(read_json_files(), partition_size=10)</code></pre>
+
+<h2>Common Operations</h2>
+
+<h3>Map (Transform)</h3>
+<pre><code class="language-python">import dask.bag as db
+
+bag = db.read_text('data/*.json')
+
+# Parse JSON
+import json
+parsed = bag.map(json.loads)
+
+# Extract field
+values = parsed.map(lambda x: x['value'])
+
+# Complex transformation
+def process_record(record):
+    return {
+        'id': record['id'],
+        'value': record['value'] * 2,
+        'category': record.get('category', 'unknown')
+    }
+
+processed = parsed.map(process_record)</code></pre>
+
+<h3>Filter</h3>
+<pre><code class="language-python"># Filter by condition
+valid = parsed.filter(lambda x: x['status'] == 'valid')
+
+# Multiple conditions
+filtered = parsed.filter(lambda x: x['value'] &gt; 100 and x['year'] == 2024)
+
+# Filter with custom function
+def is_valid_record(record):
+    return record.get('status') == 'valid' and record.get('value') is not None
+
+valid_records = parsed.filter(is_valid_record)</code></pre>
+
+<h3>Pluck (Extract Fields)</h3>
+<pre><code class="language-python"># Extract single field
+ids = parsed.pluck('id')
+
+# Extract multiple fields (creates tuples)
+key_pairs = parsed.pluck(['id', 'value'])</code></pre>
+
+<h3>Flatten</h3>
+<pre><code class="language-python"># Flatten nested lists
+nested = db.from_sequence([[1, 2], [3, 4], [5, 6]])
+flat = nested.flatten()  # [1, 2, 3, 4, 5, 6]
+
+# Flatten after map
+bag = db.read_text('data/*.txt')
+words = bag.map(str.split).flatten()  # All words from all files</code></pre>
+
+<h3>GroupBy (Expensive)</h3>
+<pre><code class="language-python"># Group by key (requires shuffle)
+grouped = parsed.groupby(lambda x: x['category'])
+
+# Aggregate after grouping
+counts = grouped.map(lambda key_items: (key_items[0], len(list(key_items[1]))))
+result = counts.compute()</code></pre>
+
+<h3>FoldBy (Preferred for Aggregations)</h3>
+<pre><code class="language-python"># FoldBy is more efficient than groupby for aggregations
+def add(acc, item):
+    return acc + item['value']
+
+def combine(acc1, acc2):
+    return acc1 + acc2
+
+# Sum values by category
+sums = parsed.foldby(
+    key='category',
+    binop=add,
+    initial=0,
+    combine=combine
+)
+
+result = sums.compute()</code></pre>
+
+<h3>Reductions</h3>
+<pre><code class="language-python"># Count elements
+count = bag.count().compute()
+
+# Get all distinct values (requires memory)
+distinct = bag.distinct().compute()
+
+# Take first n elements
+first_ten = bag.take(10)
+
+# Fold/reduce
+total = bag.fold(
+    lambda acc, x: acc + x['value'],
+    initial=0,
+    combine=lambda a, b: a + b
+).compute()</code></pre>
+
+<h2>Converting to Other Collections</h2>
+
+<h3>To DataFrame</h3>
+<pre><code class="language-python">import dask.bag as db
+import dask.dataframe as dd
+
+# Bag of dictionaries
+bag = db.read_text('data/*.json').map(json.loads)
+
+# Convert to DataFrame
+ddf = bag.to_dataframe()
+
+# With explicit columns
+ddf = bag.to_dataframe(meta={'id': int, 'value': float, 'category': str})</code></pre>
+
+<h3>To List/Compute</h3>
+<pre><code class="language-python"># Compute to Python list (loads all in memory)
+result = bag.compute()
+
+# Take sample
+sample = bag.take(100)</code></pre>
+
+<h2>Common Patterns</h2>
+
+<h3>JSON Processing</h3>
+<pre><code class="language-python">import dask.bag as db
+import json
+
+# Read and parse JSON files
+bag = db.read_text('logs/*.json')
+parsed = bag.map(json.loads)
+
+# Filter valid records
+valid = parsed.filter(lambda x: x.get('status') == 'success')
+
+# Extract relevant fields
+processed = valid.map(lambda x: {
+    'user_id': x['user']['id'],
+    'timestamp': x['timestamp'],
+    'value': x['metrics']['value']
+})
+
+# Convert to DataFrame for analysis
+ddf = processed.to_dataframe()
+
+# Analyze
+summary = ddf.groupby('user_id')['value'].mean().compute()</code></pre>
+
+<h3>Log Analysis</h3>
+<pre><code class="language-python"># Read log files
+logs = db.read_text('logs/*.log')
+
+# Parse log lines
+def parse_log_line(line):
+    parts = line.split(' ')
+    return {
+        'timestamp': parts[0],
+        'level': parts[1],
+        'message': ' '.join(parts[2:])
+    }
+
+parsed_logs = logs.map(parse_log_line)
+
+# Filter errors
+errors = parsed_logs.filter(lambda x: x['level'] == 'ERROR')
+
+# Count by message pattern
+error_counts = errors.foldby(
+    key='message',
+    binop=lambda acc, x: acc + 1,
+    initial=0,
+    combine=lambda a, b: a + b
+)
+
+result = error_counts.compute()</code></pre>
+
+<h3>Text Processing</h3>
+<pre><code class="language-python"># Read text files
+text = db.read_text('documents/*.txt')
+
+# Split into words
+words = text.map(str.lower).map(str.split).flatten()
+
+# Count word frequencies
+def increment(acc, word):
+    return acc + 1
+
+def combine_counts(a, b):
+    return a + b
+
+word_counts = words.foldby(
+    key=lambda word: word,
+    binop=increment,
+    initial=0,
+    combine=combine_counts
+)
+
+# Get top words
+top_words = word_counts.compute()
+sorted_words = sorted(top_words, key=lambda x: x[1], reverse=True)[:100]</code></pre>
+
+<h3>Data Cleaning Pipeline</h3>
+<pre><code class="language-python">import dask.bag as db
+import json
+
+# Read raw data
+raw = db.read_text('raw_data/*.json').map(json.loads)
+
+# Validation function
+def is_valid(record):
+    required_fields = ['id', 'timestamp', 'value']
+    return all(field in record for field in required_fields)
+
+# Cleaning function
+def clean_record(record):
+    return {
+        'id': int(record['id']),
+        'timestamp': record['timestamp'],
+        'value': float(record['value']),
+        'category': record.get('category', 'unknown'),
+        'tags': record.get('tags', [])
+    }
+
+# Pipeline
+cleaned = (raw
+    .filter(is_valid)
+    .map(clean_record)
+    .filter(lambda x: x['value'] &gt; 0)
+)
+
+# Convert to DataFrame
+ddf = cleaned.to_dataframe()
+
+# Save cleaned data
+ddf.to_parquet('cleaned_data/')</code></pre>
+
+<h2>Performance Considerations</h2>
+
+<h3>Efficient Operations</h3>
+<ul><li>Map, filter, pluck: Very efficient (streaming)</li>
+<li>Flatten: Efficient</li>
+<li>FoldBy with good key distribution: Reasonable</li>
+<li>Take and head: Efficient (only processes needed partitions)</li>
+</ul>
+<h3>Expensive Operations</h3>
+<ul><li>GroupBy: Requires shuffle, can be slow</li>
+<li>Distinct: Requires collecting all unique values</li>
+<li>Operations requiring full data materialization</li>
+</ul>
+<h3>Optimization Tips</h3>
+
+<p><strong>1. Use FoldBy Instead of GroupBy</strong></p>
+<pre><code class="language-python"># Better: Use foldby for aggregations
+result = bag.foldby(key='category', binop=add, initial=0, combine=sum)
+
+# Worse: GroupBy then reduce
+result = bag.groupby('category').map(lambda x: (x[0], sum(x[1])))</code></pre>
+
+<p><strong>2. Convert to DataFrame Early</strong></p>
+<pre><code class="language-python"># For structured operations, convert to DataFrame
+bag = db.read_text('data/*.json').map(json.loads)
+bag = bag.filter(lambda x: x['status'] == 'valid')
+ddf = bag.to_dataframe()  # Now use efficient DataFrame operations</code></pre>
+
+<p><strong>3. Control Partition Size</strong></p>
+<pre><code class="language-python"># Balance between too many and too few partitions
+bag = db.read_text('data/*.txt', blocksize='64MB')  # Reasonable partition size</code></pre>
+
+<p><strong>4. Use Lazy Evaluation</strong></p>
+<pre><code class="language-python"># Chain operations before computing
+result = (bag
+    .map(process1)
+    .filter(condition)
+    .map(process2)
+    .compute()  # Single compute at the end
+)</code></pre>
+
+<h2>Debugging Tips</h2>
+
+<h3>Inspect Partitions</h3>
+<pre><code class="language-python"># Get number of partitions
+print(bag.npartitions)
+
+# Take sample
+sample = bag.take(10)
+print(sample)</code></pre>
+
+<h3>Validate on Small Data</h3>
+<pre><code class="language-python"># Test logic on small subset
+small_bag = db.from_sequence(sample_data, partition_size=10)
+result = process_pipeline(small_bag).compute()
+# Validate results, then scale</code></pre>
+
+<h3>Check Intermediate Results</h3>
+<pre><code class="language-python"># Compute intermediate steps to debug
+step1 = bag.map(parse).take(5)
+print("After parsing:", step1)
+
+step2 = bag.map(parse).filter(validate).take(5)
+print("After filtering:", step2)</code></pre>
+
+<h2>Memory Management</h2>
+
+<p>Bags are designed for memory-efficient processing:</p>
+
+<pre><code class="language-python"># Streaming processing - doesn't load all in memory
+bag = db.read_text('huge_file.txt')  # Lazy
+processed = bag.map(process_line)     # Still lazy
+result = processed.compute()          # Processes in chunks</code></pre>
+
+<p>For very large results, avoid computing to memory:</p>
+
+<pre><code class="language-python"># Don't compute huge results to memory
+# result = bag.compute()  # Could overflow memory
+
+# Instead, convert and save to disk
+ddf = bag.to_dataframe()
+ddf.to_parquet('output/')</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Best Practices</h3>
+  <h1>Dask Best Practices</h1>
+
+<h2>Performance Optimization Principles</h2>
+
+<h3>Start with Simpler Solutions First</h3>
+
+<p>Before implementing parallel computing with Dask, explore these alternatives:</p>
+<ul><li>Better algorithms for the specific problem</li>
+<li>Efficient file formats (Parquet, HDF5, Zarr instead of CSV)</li>
+<li>Compiled code via Numba or Cython</li>
+<li>Data sampling for development and testing</li>
+</ul>
+<p>These alternatives often provide better returns than distributed systems and should be exhausted before scaling to parallel computing.</p>
+
+<h3>Chunk Size Strategy</h3>
+
+<p><strong>Critical Rule</strong>: Chunks should be small enough that many fit in a worker's available memory at once.</p>
+
+<p><strong>Recommended Target</strong>: Size chunks so workers can hold 10 chunks per core without exceeding available memory.</p>
+
+<p><strong>Why It Matters</strong>:</p>
+<ul><li>Too large chunks: Memory overflow and inefficient parallelization</li>
+<li>Too small chunks: Excessive scheduling overhead</li>
+</ul>
+<p><strong>Example Calculation</strong>:</p>
+<ul><li>8 cores with 32 GB RAM</li>
+<li>Target: ~400 MB per chunk (32 GB / 8 cores / 10 chunks)</li>
+</ul>
+<h3>Monitor with the Dashboard</h3>
+
+<p>The Dask dashboard provides essential visibility into:</p>
+<ul><li>Worker states and resource utilization</li>
+<li>Task progress and bottlenecks</li>
+<li>Memory usage patterns</li>
+<li>Performance characteristics</li>
+</ul>
+<p>Access the dashboard to understand what's actually slow in parallel workloads rather than guessing at optimizations.</p>
+
+<h2>Critical Pitfalls to Avoid</h2>
+
+<h3>1. Don't Create Large Objects Locally Before Dask</h3>
+
+<p><strong>Wrong Approach</strong>:</p>
+<pre><code class="language-python">import pandas as pd
+import dask.dataframe as dd
+
+# Loads entire dataset into memory first
+df = pd.read_csv('large_file.csv')
+ddf = dd.from_pandas(df, npartitions=10)</code></pre>
+
+<p><strong>Correct Approach</strong>:</p>
+<pre><code class="language-python">import dask.dataframe as dd
+
+# Let Dask handle the loading
+ddf = dd.read_csv('large_file.csv')</code></pre>
+
+<p><strong>Why</strong>: Loading data with pandas or NumPy first forces the scheduler to serialize and embed those objects in task graphs, defeating the purpose of parallel computing.</p>
+
+<p><strong>Key Principle</strong>: Use Dask methods to load data and use Dask to control the results.</p>
+
+<h3>2. Avoid Repeated compute() Calls</h3>
+
+<p><strong>Wrong Approach</strong>:</p>
+<pre><code class="language-python">results = []
+for item in items:
+    result = dask_computation(item).compute()  # Each compute is separate
+    results.append(result)</code></pre>
+
+<p><strong>Correct Approach</strong>:</p>
+<pre><code class="language-python">computations = [dask_computation(item) for item in items]
+results = dask.compute(*computations)  # Single compute for all</code></pre>
+
+<p><strong>Why</strong>: Calling compute in loops prevents Dask from:</p>
+<ul><li>Parallelizing different computations</li>
+<li>Sharing intermediate results</li>
+<li>Optimizing the overall task graph</li>
+</ul>
+<h3>3. Don't Build Excessively Large Task Graphs</h3>
+
+<p><strong>Symptoms</strong>:</p>
+<ul><li>Millions of tasks in a single computation</li>
+<li>Severe scheduling overhead</li>
+<li>Long delays before computation starts</li>
+</ul>
+<p><strong>Solutions</strong>:</p>
+<ul><li>Increase chunk sizes to reduce number of tasks</li>
+<li>Use <code>map_partitions</code> or <code>map_blocks</code> to fuse operations</li>
+<li>Break computations into smaller pieces with intermediate persists</li>
+<li>Consider whether the problem truly requires distributed computing</li>
+</ul>
+<p><strong>Example Using map_partitions</strong>:</p>
+<pre><code class="language-python"># Instead of applying function to each row
+ddf['result'] = ddf.apply(complex_function, axis=1)  # Many tasks
+
+# Apply to entire partitions at once
+ddf = ddf.map_partitions(lambda df: df.assign(result=complex_function(df)))</code></pre>
+
+<h2>Infrastructure Considerations</h2>
+
+<h3>Scheduler Selection</h3>
+
+<p><strong>Use Threads For</strong>:</p>
+<ul><li>Numeric work with GIL-releasing libraries (NumPy, Pandas, scikit-learn)</li>
+<li>Operations that benefit from shared memory</li>
+<li>Single-machine workloads with array/dataframe operations</li>
+</ul>
+<p><strong>Use Processes For</strong>:</p>
+<ul><li>Text processing and Python collection operations</li>
+<li>Pure Python code that's GIL-bound</li>
+<li>Operations that need process isolation</li>
+</ul>
+<p><strong>Use Distributed Scheduler For</strong>:</p>
+<ul><li>Multi-machine clusters</li>
+<li>Need for diagnostic dashboard</li>
+<li>Asynchronous APIs</li>
+<li>Better data locality handling</li>
+</ul>
+<h3>Thread Configuration</h3>
+
+<p><strong>Recommendation</strong>: Aim for roughly 4 threads per process on numeric workloads.</p>
+
+<p><strong>Rationale</strong>:</p>
+<ul><li>Balance between parallelism and overhead</li>
+<li>Allows efficient use of CPU cores</li>
+<li>Reduces context switching costs</li>
+</ul>
+<h3>Memory Management</h3>
+
+<p><strong>Persist Strategically</strong>:</p>
+<pre><code class="language-python"># Persist intermediate results that are reused
+intermediate = expensive_computation(data).persist()
+result1 = intermediate.operation1().compute()
+result2 = intermediate.operation2().compute()</code></pre>
+
+<p><strong>Clear Memory When Done</strong>:</p>
+<pre><code class="language-python"># Explicitly delete large objects
+del intermediate</code></pre>
+
+<h2>Data Loading Best Practices</h2>
+
+<h3>Use Appropriate File Formats</h3>
+
+<p><strong>For Tabular Data</strong>:</p>
+<ul><li>Parquet: Columnar, compressed, fast filtering</li>
+<li>CSV: Only for small data or initial ingestion</li>
+</ul>
+<p><strong>For Array Data</strong>:</p>
+<ul><li>HDF5: Good for numeric arrays</li>
+<li>Zarr: Cloud-native, parallel-friendly</li>
+<li>NetCDF: Scientific data with metadata</li>
+</ul>
+<h3>Optimize Data Ingestion</h3>
+
+<p><strong>Read Multiple Files Efficiently</strong>:</p>
+<pre><code class="language-python"># Use glob patterns to read multiple files in parallel
+ddf = dd.read_parquet('data/year=2024/month=*/day=*.parquet')</code></pre>
+
+<p><strong>Specify Useful Columns Early</strong>:</p>
+<pre><code class="language-python"># Only read needed columns
+ddf = dd.read_parquet('data.parquet', columns=['col1', 'col2', 'col3'])</code></pre>
+
+<h2>Common Patterns and Solutions</h2>
+
+<h3>Pattern: Embarrassingly Parallel Problems</h3>
+
+<p>For independent computations, use Futures:</p>
+<pre><code class="language-python">from dask.distributed import Client
+
+client = Client()
+futures = [client.submit(func, arg) for arg in args]
+results = client.gather(futures)</code></pre>
+
+<h3>Pattern: Data Preprocessing Pipeline</h3>
+
+<p>Use Bags for initial ETL, then convert to structured formats:</p>
+<pre><code class="language-python">import dask.bag as db
+
+# Process raw JSON
+bag = db.read_text('logs/*.json').map(json.loads)
+bag = bag.filter(lambda x: x['status'] == 'success')
+
+# Convert to DataFrame for analysis
+ddf = bag.to_dataframe()</code></pre>
+
+<h3>Pattern: Iterative Algorithms</h3>
+
+<p>Persist data between iterations:</p>
+<pre><code class="language-python">data = dd.read_parquet('data.parquet')
+data = data.persist()  # Keep in memory across iterations
+
+for iteration in range(num_iterations):
+    data = update_function(data)
+    data = data.persist()  # Persist updated version</code></pre>
+
+<h2>Debugging Tips</h2>
+
+<h3>Use Single-Threaded Scheduler</h3>
+
+<p>For debugging with pdb or detailed error inspection:</p>
+<pre><code class="language-python">import dask
+
+dask.config.set(scheduler='synchronous')
+result = computation.compute()  # Runs in single thread for debugging</code></pre>
+
+<h3>Check Task Graph Size</h3>
+
+<p>Before computing, check the number of tasks:</p>
+<pre><code class="language-python">print(len(ddf.__dask_graph__()))  # Should be reasonable, not millions</code></pre>
+
+<h3>Validate on Small Data First</h3>
+
+<p>Test logic on small subset before scaling:</p>
+<pre><code class="language-python"># Test on first partition
+sample = ddf.head(1000)
+# Validate results
+# Then scale to full dataset</code></pre>
+
+<h2>Performance Troubleshooting</h2>
+
+<h3>Symptom: Slow Computation Start</h3>
+
+<p><strong>Likely Cause</strong>: Task graph is too large</p>
+<p><strong>Solution</strong>: Increase chunk sizes or use map_partitions</p>
+
+<h3>Symptom: Memory Errors</h3>
+
+<p><strong>Likely Causes</strong>:</p>
+<ul><li>Chunks too large</li>
+<li>Too many intermediate results</li>
+<li>Memory leaks in user functions</li>
+</ul>
+<p><strong>Solutions</strong>:</p>
+<ul><li>Decrease chunk sizes</li>
+<li>Use persist() strategically and delete when done</li>
+<li>Profile user functions for memory issues</li>
+</ul>
+<h3>Symptom: Poor Parallelization</h3>
+
+<p><strong>Likely Causes</strong>:</p>
+<ul><li>Data dependencies preventing parallelism</li>
+<li>Chunks too large (not enough tasks)</li>
+<li>GIL contention with threads on Python code</li>
+</ul>
+<p><strong>Solutions</strong>:</p>
+<ul><li>Restructure computation to reduce dependencies</li>
+<li>Increase number of partitions</li>
+<li>Switch to multiprocessing scheduler for Python code</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Dataframes</h3>
+  <h1>Dask DataFrames</h1>
+
+<h2>Overview</h2>
+
+<p>Dask DataFrames enable parallel processing of large tabular data by distributing work across multiple pandas DataFrames. As described in the documentation, "Dask DataFrames are a collection of many pandas DataFrames" with identical APIs, making the transition from pandas straightforward.</p>
+
+<h2>Core Concept</h2>
+
+<p>A Dask DataFrame is divided into multiple pandas DataFrames (partitions) along the index:</p>
+<ul><li>Each partition is a regular pandas DataFrame</li>
+<li>Operations are applied to each partition in parallel</li>
+<li>Results are combined automatically</li>
+</ul>
+<h2>Key Capabilities</h2>
+
+<h3>Scale</h3>
+<ul><li>Process 100 GiB on a laptop</li>
+<li>Process 100 TiB on a cluster</li>
+<li>Handle datasets exceeding available RAM</li>
+</ul>
+<h3>Compatibility</h3>
+<ul><li>Implements most of the pandas API</li>
+<li>Easy transition from pandas code</li>
+<li>Works with familiar operations</li>
+</ul>
+<h2>When to Use Dask DataFrames</h2>
+
+<p><strong>Use Dask When</strong>:</p>
+<ul><li>Dataset exceeds available RAM</li>
+<li>Computations require significant time and pandas optimization hasn't helped</li>
+<li>Need to scale from prototype (pandas) to production (larger data)</li>
+<li>Working with multiple files that should be processed together</li>
+</ul>
+<p><strong>Stick with Pandas When</strong>:</p>
+<ul><li>Data fits comfortably in memory</li>
+<li>Computations complete in subseconds</li>
+<li>Simple operations without custom <code>.apply()</code> functions</li>
+<li>Iterative development and exploration</li>
+</ul>
+<h2>Reading Data</h2>
+
+<p>Dask mirrors pandas reading syntax with added support for multiple files:</p>
+
+<h3>Single File</h3>
+<pre><code class="language-python">import dask.dataframe as dd
+
+# Read single file
+ddf = dd.read_csv('data.csv')
+ddf = dd.read_parquet('data.parquet')</code></pre>
+
+<h3>Multiple Files</h3>
+<pre><code class="language-python"># Read multiple files using glob patterns
+ddf = dd.read_csv('data/*.csv')
+ddf = dd.read_parquet('s3://mybucket/data/*.parquet')
+
+# Read with path structure
+ddf = dd.read_parquet('data/year=*/month=*/day=*.parquet')</code></pre>
+
+<h3>Optimizations</h3>
+<pre><code class="language-python"># Specify columns to read (reduces memory)
+ddf = dd.read_parquet('data.parquet', columns=['col1', 'col2'])
+
+# Control partitioning
+ddf = dd.read_csv('data.csv', blocksize='64MB')  # Creates 64MB partitions</code></pre>
+
+<h2>Common Operations</h2>
+
+<p>All operations are lazy until <code>.compute()</code> is called.</p>
+
+<h3>Filtering</h3>
+<pre><code class="language-python"># Same as pandas
+filtered = ddf[ddf['column'] &gt; 100]
+filtered = ddf.query('column &gt; 100')</code></pre>
+
+<h3>Column Operations</h3>
+<pre><code class="language-python"># Add columns
+ddf['new_column'] = ddf['col1'] + ddf['col2']
+
+# Select columns
+subset = ddf[['col1', 'col2', 'col3']]
+
+# Drop columns
+ddf = ddf.drop(columns=['unnecessary_col'])</code></pre>
+
+<h3>Aggregations</h3>
+<pre><code class="language-python"># Standard aggregations work as expected
+mean = ddf['column'].mean().compute()
+sum_total = ddf['column'].sum().compute()
+counts = ddf['category'].value_counts().compute()</code></pre>
+
+<h3>GroupBy</h3>
+<pre><code class="language-python"># GroupBy operations (may require shuffle)
+grouped = ddf.groupby('category')['value'].mean().compute()
+
+# Multiple aggregations
+agg_result = ddf.groupby('category').agg({
+    'value': ['mean', 'sum', 'count'],
+    'amount': 'sum'
+}).compute()</code></pre>
+
+<h3>Joins and Merges</h3>
+<pre><code class="language-python"># Merge DataFrames
+merged = dd.merge(ddf1, ddf2, on='key', how='left')
+
+# Join on index
+joined = ddf1.join(ddf2, on='key')</code></pre>
+
+<h3>Sorting</h3>
+<pre><code class="language-python"># Sorting (expensive operation, requires data movement)
+sorted_ddf = ddf.sort_values('column')
+result = sorted_ddf.compute()</code></pre>
+
+<h2>Custom Operations</h2>
+
+<h3>Apply Functions</h3>
+
+<p><strong>To Partitions (Efficient)</strong>:</p>
+<pre><code class="language-python"># Apply function to entire partitions
+def custom_partition_function(partition_df):
+    # partition_df is a pandas DataFrame
+    return partition_df.assign(new_col=partition_df['col1'] * 2)
+
+ddf = ddf.map_partitions(custom_partition_function)</code></pre>
+
+<p><strong>To Rows (Less Efficient)</strong>:</p>
+<pre><code class="language-python"># Apply to each row (creates many tasks)
+ddf['result'] = ddf.apply(lambda row: custom_function(row), axis=1, meta=('result', 'float'))</code></pre>
+
+<p><strong>Note</strong>: Always prefer <code>map_partitions</code> over row-wise <code>apply</code> for better performance.</p>
+
+<h3>Meta Parameter</h3>
+
+<p>When Dask can't infer output structure, specify the <code>meta</code> parameter:</p>
+<pre><code class="language-python"># For apply operations
+ddf['new'] = ddf.apply(func, axis=1, meta=('new', 'float64'))
+
+# For map_partitions
+ddf = ddf.map_partitions(func, meta=pd.DataFrame({
+    'col1': pd.Series(dtype='float64'),
+    'col2': pd.Series(dtype='int64')
+}))</code></pre>
+
+<h2>Lazy Evaluation and Computation</h2>
+
+<h3>Lazy Operations</h3>
+<pre><code class="language-python"># These operations are lazy (instant, no computation)
+filtered = ddf[ddf['value'] &gt; 100]
+aggregated = filtered.groupby('category').mean()
+final = aggregated[aggregated['value'] &lt; 500]
+
+# Nothing has computed yet</code></pre>
+
+<h3>Triggering Computation</h3>
+<pre><code class="language-python"># Compute single result
+result = final.compute()
+
+# Compute multiple results efficiently
+result1, result2, result3 = dask.compute(
+    operation1,
+    operation2,
+    operation3
+)</code></pre>
+
+<h3>Persist in Memory</h3>
+<pre><code class="language-python"># Keep results in distributed memory for reuse
+ddf_cached = ddf.persist()
+
+# Now multiple operations on ddf_cached won't recompute
+result1 = ddf_cached.mean().compute()
+result2 = ddf_cached.sum().compute()</code></pre>
+
+<h2>Index Management</h2>
+
+<h3>Setting Index</h3>
+<pre><code class="language-python"># Set index (required for efficient joins and certain operations)
+ddf = ddf.set_index('timestamp', sorted=True)</code></pre>
+
+<h3>Index Properties</h3>
+<ul><li>Sorted index enables efficient filtering and joins</li>
+<li>Index determines partitioning</li>
+<li>Some operations perform better with appropriate index</li>
+</ul>
+<h2>Writing Results</h2>
+
+<h3>To Files</h3>
+<pre><code class="language-python"># Write to multiple files (one per partition)
+ddf.to_parquet('output/data.parquet')
+ddf.to_csv('output/data-*.csv')
+
+# Write to single file (forces computation and concatenation)
+ddf.compute().to_csv('output/single_file.csv')</code></pre>
+
+<h3>To Memory (Pandas)</h3>
+<pre><code class="language-python"># Convert to pandas (loads all data in memory)
+pdf = ddf.compute()</code></pre>
+
+<h2>Performance Considerations</h2>
+
+<h3>Efficient Operations</h3>
+<ul><li>Column selection and filtering: Very efficient</li>
+<li>Simple aggregations (sum, mean, count): Efficient</li>
+<li>Row-wise operations on partitions: Efficient with <code>map_partitions</code></li>
+</ul>
+<h3>Expensive Operations</h3>
+<ul><li>Sorting: Requires data shuffle across workers</li>
+<li>GroupBy with many groups: May require shuffle</li>
+<li>Complex joins: Depends on data distribution</li>
+<li>Row-wise apply: Creates many tasks</li>
+</ul>
+<h3>Optimization Tips</h3>
+
+<p><strong>1. Select Columns Early</strong></p>
+<pre><code class="language-python"># Better: Read only needed columns
+ddf = dd.read_parquet('data.parquet', columns=['col1', 'col2'])</code></pre>
+
+<p><strong>2. Filter Before GroupBy</strong></p>
+<pre><code class="language-python"># Better: Reduce data before expensive operations
+result = ddf[ddf['year'] == 2024].groupby('category').sum().compute()</code></pre>
+
+<p><strong>3. Use Efficient File Formats</strong></p>
+<pre><code class="language-python"># Use Parquet instead of CSV for better performance
+ddf.to_parquet('data.parquet')  # Faster, smaller, columnar</code></pre>
+
+<p><strong>4. Repartition Appropriately</strong></p>
+<pre><code class="language-python"># If partitions are too small
+ddf = ddf.repartition(npartitions=10)
+
+# If partitions are too large
+ddf = ddf.repartition(partition_size='100MB')</code></pre>
+
+<h2>Common Patterns</h2>
+
+<h3>ETL Pipeline</h3>
+<pre><code class="language-python">import dask.dataframe as dd
+
+# Read data
+ddf = dd.read_csv('raw_data/*.csv')
+
+# Transform
+ddf = ddf[ddf['status'] == 'valid']
+ddf['amount'] = ddf['amount'].astype('float64')
+ddf = ddf.dropna(subset=['important_col'])
+
+# Aggregate
+summary = ddf.groupby('category').agg({
+    'amount': ['sum', 'mean'],
+    'quantity': 'count'
+})
+
+# Write results
+summary.to_parquet('output/summary.parquet')</code></pre>
+
+<h3>Time Series Analysis</h3>
+<pre><code class="language-python"># Read time series data
+ddf = dd.read_parquet('timeseries/*.parquet')
+
+# Set timestamp index
+ddf = ddf.set_index('timestamp', sorted=True)
+
+# Resample (if available in Dask version)
+hourly = ddf.resample('1H').mean()
+
+# Compute statistics
+result = hourly.compute()</code></pre>
+
+<h3>Combining Multiple Files</h3>
+<pre><code class="language-python"># Read multiple files as single DataFrame
+ddf = dd.read_csv('data/2024-*.csv')
+
+# Process combined data
+result = ddf.groupby('category')['value'].sum().compute()</code></pre>
+
+<h2>Limitations and Differences from Pandas</h2>
+
+<h3>Not All Pandas Features Available</h3>
+<p>Some pandas operations are not implemented in Dask:</p>
+<ul><li>Some string methods</li>
+<li>Certain window functions</li>
+<li>Some specialized statistical functions</li>
+</ul>
+<h3>Partitioning Matters</h3>
+<ul><li>Operations within partitions are efficient</li>
+<li>Cross-partition operations may be expensive</li>
+<li>Index-based operations benefit from sorted index</li>
+</ul>
+<h3>Lazy Evaluation</h3>
+<ul><li>Operations don't execute until <code>.compute()</code></li>
+<li>Need to be aware of computation triggers</li>
+<li>Can't inspect intermediate results without computing</li>
+</ul>
+<h2>Debugging Tips</h2>
+
+<h3>Inspect Partitions</h3>
+<pre><code class="language-python"># Get number of partitions
+print(ddf.npartitions)
+
+# Compute single partition
+first_partition = ddf.get_partition(0).compute()
+
+# View first few rows (computes first partition)
+print(ddf.head())</code></pre>
+
+<h3>Validate Operations on Small Data</h3>
+<pre><code class="language-python"># Test on small sample first
+sample = ddf.head(1000)
+# Validate logic works
+# Then scale to full dataset
+result = ddf.compute()</code></pre>
+
+<h3>Check Dtypes</h3>
+<pre><code class="language-python"># Verify data types are correct
+print(ddf.dtypes)</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Futures</h3>
+  <h1>Dask Futures</h1>
+
+<h2>Overview</h2>
+
+<p>Dask futures extend Python's <code>concurrent.futures</code> interface, enabling immediate (non-lazy) task execution. Unlike delayed computations (used in DataFrames, Arrays, and Bags), futures provide more flexibility in situations where computations may evolve over time or require dynamic workflow construction.</p>
+
+<h2>Core Concept</h2>
+
+<p>Futures represent real-time task execution:</p>
+<ul><li>Tasks execute immediately when submitted (not lazy)</li>
+<li>Each future represents a remote computation result</li>
+<li>Automatic dependency tracking between futures</li>
+<li>Enables dynamic, evolving workflows</li>
+<li>Direct control over task scheduling and data placement</li>
+</ul>
+<h2>Key Capabilities</h2>
+
+<h3>Real-Time Execution</h3>
+<ul><li>Tasks run immediately when submitted</li>
+<li>No need for explicit <code>.compute()</code> call</li>
+<li>Get results with <code>.result()</code> method</li>
+</ul>
+<h3>Automatic Dependency Management</h3>
+<p>When you submit tasks with future inputs, Dask automatically handles dependency tracking. Once all input futures have completed, they will be moved onto a single worker for efficient computation.</p>
+
+<h3>Dynamic Workflows</h3>
+<p>Build computations that evolve based on intermediate results:</p>
+<ul><li>Submit new tasks based on previous results</li>
+<li>Conditional execution paths</li>
+<li>Iterative algorithms with varying structure</li>
+</ul>
+<h2>When to Use Futures</h2>
+
+<p><strong>Use Futures When</strong>:</p>
+<ul><li>Building dynamic, evolving workflows</li>
+<li>Need immediate task execution (not lazy)</li>
+<li>Computations depend on runtime conditions</li>
+<li>Require fine control over task placement</li>
+<li>Implementing custom parallel algorithms</li>
+<li>Need stateful computations (with actors)</li>
+</ul>
+<p><strong>Use Other Collections When</strong>:</p>
+<ul><li>Static, predefined computation graphs (use delayed, DataFrames, Arrays)</li>
+<li>Simple data parallelism on large collections (use Bags, DataFrames)</li>
+<li>Standard array/dataframe operations suffice</li>
+</ul>
+<h2>Setting Up Client</h2>
+
+<p>Futures require a distributed client:</p>
+
+<pre><code class="language-python">from dask.distributed import Client
+
+# Local cluster (on single machine)
+client = Client()
+
+# Or specify resources
+client = Client(n_workers=4, threads_per_worker=2)
+
+# Or connect to existing cluster
+client = Client('scheduler-address:8786')</code></pre>
+
+<h2>Submitting Tasks</h2>
+
+<h3>Basic Submit</h3>
+<pre><code class="language-python">from dask.distributed import Client
+
+client = Client()
+
+# Submit single task
+def add(x, y):
+    return x + y
+
+future = client.submit(add, 1, 2)
+
+# Get result
+result = future.result()  # Blocks until complete
+print(result)  # 3</code></pre>
+
+<h3>Multiple Tasks</h3>
+<pre><code class="language-python"># Submit multiple independent tasks
+futures = []
+for i in range(10):
+    future = client.submit(add, i, i)
+    futures.append(future)
+
+# Gather results
+results = client.gather(futures)  # Efficient parallel gathering</code></pre>
+
+<h3>Map Over Inputs</h3>
+<pre><code class="language-python"># Apply function to multiple inputs
+def square(x):
+    return x ** 2
+
+# Submit batch of tasks
+futures = client.map(square, range(100))
+
+# Gather results
+results = client.gather(futures)</code></pre>
+
+<p><strong>Note</strong>: Each task carries ~1ms overhead, making <code>map</code> less suitable for millions of tiny tasks. For massive datasets, use Bags or DataFrames instead.</p>
+
+<h2>Working with Futures</h2>
+
+<h3>Check Status</h3>
+<pre><code class="language-python">future = client.submit(expensive_function, arg)
+
+# Check if complete
+print(future.done())  # False or True
+
+# Check status
+print(future.status)  # 'pending', 'running', 'finished', or 'error'</code></pre>
+
+<h3>Non-Blocking Result Retrieval</h3>
+<pre><code class="language-python"># Non-blocking check
+if future.done():
+    result = future.result()
+else:
+    print("Still computing...")
+
+# Or use callbacks
+def handle_result(future):
+    print(f"Result: {future.result()}")
+
+future.add_done_callback(handle_result)</code></pre>
+
+<h3>Error Handling</h3>
+<pre><code class="language-python">def might_fail(x):
+    if x &lt; 0:
+        raise ValueError("Negative value")
+    return x ** 2
+
+future = client.submit(might_fail, -5)
+
+try:
+    result = future.result()
+except ValueError as e:
+    print(f"Task failed: {e}")</code></pre>
+
+<h2>Task Dependencies</h2>
+
+<h3>Automatic Dependency Tracking</h3>
+<pre><code class="language-python"># Submit task
+future1 = client.submit(add, 1, 2)
+
+# Use future as input (creates dependency)
+future2 = client.submit(add, future1, 10)  # Depends on future1
+
+# Chain dependencies
+future3 = client.submit(add, future2, 100)  # Depends on future2
+
+# Get final result
+result = future3.result()  # 113</code></pre>
+
+<h3>Complex Dependencies</h3>
+<pre><code class="language-python"># Multiple dependencies
+a = client.submit(func1, x)
+b = client.submit(func2, y)
+c = client.submit(func3, a, b)  # Depends on both a and b
+
+result = c.result()</code></pre>
+
+<h2>Data Movement Optimization</h2>
+
+<h3>Scatter Data</h3>
+<p>Pre-scatter important data to avoid repeated transfers:</p>
+
+<pre><code class="language-python"># Upload data to cluster once
+large_dataset = client.scatter(big_data)  # Returns future
+
+# Use scattered data in multiple tasks
+futures = [client.submit(process, large_dataset, i) for i in range(100)]
+
+# Each task uses the same scattered data without re-transfer
+results = client.gather(futures)</code></pre>
+
+<h3>Efficient Gathering</h3>
+<p>Use <code>client.gather()</code> for concurrent result collection:</p>
+
+<pre><code class="language-python"># Better: Gather all at once (parallel)
+results = client.gather(futures)
+
+# Worse: Sequential result retrieval
+results = [f.result() for f in futures]</code></pre>
+
+<h2>Fire-and-Forget</h2>
+
+<p>For side-effect tasks without needing the result:</p>
+
+<pre><code class="language-python">from dask.distributed import fire_and_forget
+
+def log_to_database(data):
+    # Write to database, no return value needed
+    database.write(data)
+
+# Submit without keeping reference
+future = client.submit(log_to_database, data)
+fire_and_forget(future)
+
+# Dask won't abandon this computation even without active future reference</code></pre>
+
+<h2>Performance Characteristics</h2>
+
+<h3>Task Overhead</h3>
+<ul><li>~1ms overhead per task</li>
+<li>Good for: Thousands of tasks</li>
+<li>Not suitable for: Millions of tiny tasks</li>
+</ul>
+<h3>Worker-to-Worker Communication</h3>
+<ul><li>Direct worker-to-worker data transfer</li>
+<li>Roundtrip latency: ~1ms</li>
+<li>Efficient for task dependencies</li>
+</ul>
+<h3>Memory Management</h3>
+<p>Dask tracks active futures locally. When a future is garbage collected by your local Python session, Dask will feel free to delete that data.</p>
+
+<p><strong>Keep References</strong>:</p>
+<pre><code class="language-python"># Keep reference to prevent deletion
+important_result = client.submit(expensive_calc, data)
+
+# Use result multiple times
+future1 = client.submit(process1, important_result)
+future2 = client.submit(process2, important_result)</code></pre>
+
+<h2>Advanced Coordination</h2>
+
+<h3>Distributed Primitives</h3>
+
+<p><strong>Queues</strong>:</p>
+<pre><code class="language-python">from dask.distributed import Queue
+
+queue = Queue()
+
+def producer():
+    for i in range(10):
+        queue.put(i)
+
+def consumer():
+    results = []
+    for _ in range(10):
+        results.append(queue.get())
+    return results
+
+# Submit tasks
+client.submit(producer)
+result_future = client.submit(consumer)
+results = result_future.result()</code></pre>
+
+<p><strong>Locks</strong>:</p>
+<pre><code class="language-python">from dask.distributed import Lock
+
+lock = Lock()
+
+def critical_section():
+    with lock:
+        # Only one task executes this at a time
+        shared_resource.update()</code></pre>
+
+<p><strong>Events</strong>:</p>
+<pre><code class="language-python">from dask.distributed import Event
+
+event = Event()
+
+def waiter():
+    event.wait()  # Blocks until event is set
+    return "Event occurred"
+
+def setter():
+    time.sleep(5)
+    event.set()
+
+# Start both tasks
+wait_future = client.submit(waiter)
+set_future = client.submit(setter)
+
+result = wait_future.result()  # Waits for setter to complete</code></pre>
+
+<p><strong>Variables</strong>:</p>
+<pre><code class="language-python">from dask.distributed import Variable
+
+var = Variable('my-var')
+
+# Set value
+var.set(42)
+
+# Get value from tasks
+def reader():
+    return var.get()
+
+future = client.submit(reader)
+print(future.result())  # 42</code></pre>
+
+<h2>Actors</h2>
+
+<p>For stateful, rapidly-changing workflows, actors enable worker-to-worker roundtrip latency around 1ms while bypassing scheduler coordination.</p>
+
+<h3>Creating Actors</h3>
+<pre><code class="language-python">from dask.distributed import Client
+
+client = Client()
+
+class Counter:
+    def __init__(self):
+        self.count = 0
+
+    def increment(self):
+        self.count += 1
+        return self.count
+
+    def get_count(self):
+        return self.count
+
+# Create actor on worker
+counter = client.submit(Counter, actor=True).result()
+
+# Call methods
+future1 = counter.increment()
+future2 = counter.increment()
+result = counter.get_count().result()
+print(result)  # 2</code></pre>
+
+<h3>Actor Use Cases</h3>
+<ul><li>Stateful services (databases, caches)</li>
+<li>Rapidly changing state</li>
+<li>Complex coordination patterns</li>
+<li>Real-time streaming applications</li>
+</ul>
+<h2>Common Patterns</h2>
+
+<h3>Embarrassingly Parallel Tasks</h3>
+<pre><code class="language-python">from dask.distributed import Client
+
+client = Client()
+
+def process_item(item):
+    # Independent computation
+    return expensive_computation(item)
+
+# Process many items in parallel
+items = range(1000)
+futures = client.map(process_item, items)
+
+# Gather all results
+results = client.gather(futures)</code></pre>
+
+<h3>Dynamic Task Submission</h3>
+<pre><code class="language-python">def recursive_compute(data, depth):
+    if depth == 0:
+        return process(data)
+
+    # Split and recurse
+    left, right = split(data)
+    left_future = client.submit(recursive_compute, left, depth - 1)
+    right_future = client.submit(recursive_compute, right, depth - 1)
+
+    # Combine results
+    return combine(left_future.result(), right_future.result())
+
+# Start computation
+result_future = client.submit(recursive_compute, initial_data, 5)
+result = result_future.result()</code></pre>
+
+<h3>Parameter Sweep</h3>
+<pre><code class="language-python">from itertools import product
+
+def run_simulation(param1, param2, param3):
+    # Run simulation with parameters
+    return simulate(param1, param2, param3)
+
+# Generate parameter combinations
+params = product(range(10), range(10), range(10))
+
+# Submit all combinations
+futures = [client.submit(run_simulation, p1, p2, p3) for p1, p2, p3 in params]
+
+# Gather results as they complete
+from dask.distributed import as_completed
+
+for future in as_completed(futures):
+    result = future.result()
+    process_result(result)</code></pre>
+
+<h3>Pipeline with Dependencies</h3>
+<pre><code class="language-python"># Stage 1: Load data
+load_futures = [client.submit(load_data, file) for file in files]
+
+# Stage 2: Process (depends on stage 1)
+process_futures = [client.submit(process, f) for f in load_futures]
+
+# Stage 3: Aggregate (depends on stage 2)
+agg_future = client.submit(aggregate, process_futures)
+
+# Get final result
+result = agg_future.result()</code></pre>
+
+<h3>Iterative Algorithm</h3>
+<pre><code class="language-python"># Initialize
+state = client.scatter(initial_state)
+
+# Iterate
+for iteration in range(num_iterations):
+    # Compute update based on current state
+    state = client.submit(update_function, state)
+
+    # Check convergence
+    converged = client.submit(check_convergence, state)
+    if converged.result():
+        break
+
+# Get final state
+final_state = state.result()</code></pre>
+
+<h2>Best Practices</h2>
+
+<h3>1. Pre-scatter Large Data</h3>
+<pre><code class="language-python"># Upload once, use many times
+large_data = client.scatter(big_dataset)
+futures = [client.submit(process, large_data, i) for i in range(100)]</code></pre>
+
+<h3>2. Use Gather for Bulk Retrieval</h3>
+<pre><code class="language-python"># Efficient: Parallel gathering
+results = client.gather(futures)
+
+# Inefficient: Sequential
+results = [f.result() for f in futures]</code></pre>
+
+<h3>3. Manage Memory with References</h3>
+<pre><code class="language-python"># Keep important futures
+important = client.submit(expensive_calc, data)
+
+# Use multiple times
+f1 = client.submit(use_result, important)
+f2 = client.submit(use_result, important)
+
+# Clean up when done
+del important</code></pre>
+
+<h3>4. Handle Errors Appropriately</h3>
+<pre><code class="language-python">futures = client.map(might_fail, inputs)
+
+# Check for errors
+results = []
+errors = []
+for future in as_completed(futures):
+    try:
+        results.append(future.result())
+    except Exception as e:
+        errors.append(e)</code></pre>
+
+<h3>5. Use as_completed for Progressive Processing</h3>
+<pre><code class="language-python">from dask.distributed import as_completed
+
+futures = client.map(process, items)
+
+# Process results as they arrive
+for future in as_completed(futures):
+    result = future.result()
+    handle_result(result)</code></pre>
+
+<h2>Debugging Tips</h2>
+
+<h3>Monitor Dashboard</h3>
+<p>View the Dask dashboard to see:</p>
+<ul><li>Task progress</li>
+<li>Worker utilization</li>
+<li>Memory usage</li>
+<li>Task dependencies</li>
+</ul>
+<h3>Check Task Status</h3>
+<pre><code class="language-python"># Inspect future
+print(future.status)
+print(future.done())
+
+# Get traceback on error
+try:
+    future.result()
+except Exception:
+    print(future.traceback())</code></pre>
+
+<h3>Profile Tasks</h3>
+<pre><code class="language-python"># Get performance data
+client.profile(filename='profile.html')</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Schedulers</h3>
+  <h1>Dask Schedulers</h1>
+
+<h2>Overview</h2>
+
+<p>Dask provides multiple task schedulers, each suited to different workloads. The scheduler determines how tasks are executed: sequentially, in parallel threads, in parallel processes, or distributed across a cluster.</p>
+
+<h2>Scheduler Types</h2>
+
+<h3>Single-Machine Schedulers</h3>
+
+<h4>1. Local Threads (Default)</h4>
+
+<p><strong>Description</strong>: The threaded scheduler executes computations with a local <code>concurrent.futures.ThreadPoolExecutor</code>.</p>
+
+<p><strong>When to Use</strong>:</p>
+<ul><li>Numeric computations in NumPy, Pandas, scikit-learn</li>
+<li>Libraries that release the GIL (Global Interpreter Lock)</li>
+<li>Operations benefit from shared memory access</li>
+<li>Default for Dask Arrays and DataFrames</li>
+</ul>
+<p><strong>Characteristics</strong>:</p>
+<ul><li>Low overhead</li>
+<li>Shared memory between threads</li>
+<li>Best for GIL-releasing operations</li>
+<li>Poor for pure Python code (GIL contention)</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-python">import dask.array as da
+
+# Uses threads by default
+x = da.random.random((10000, 10000), chunks=(1000, 1000))
+result = x.mean().compute()  # Computed with threads</code></pre>
+
+<p><strong>Explicit Configuration</strong>:</p>
+<pre><code class="language-python">import dask
+
+# Set globally
+dask.config.set(scheduler='threads')
+
+# Or per-compute
+result = x.mean().compute(scheduler='threads')</code></pre>
+
+<h4>2. Local Processes</h4>
+
+<p><strong>Description</strong>: Multiprocessing scheduler that uses <code>concurrent.futures.ProcessPoolExecutor</code>.</p>
+
+<p><strong>When to Use</strong>:</p>
+<ul><li>Pure Python code with GIL contention</li>
+<li>Text processing and Python collections</li>
+<li>Operations that benefit from process isolation</li>
+<li>CPU-bound Python code</li>
+</ul>
+<p><strong>Characteristics</strong>:</p>
+<ul><li>Bypasses GIL limitations</li>
+<li>Incurs data transfer costs between processes</li>
+<li>Higher overhead than threads</li>
+<li>Ideal for linear workflows with small inputs/outputs</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-python">import dask.bag as db
+
+# Good for Python object processing
+bag = db.read_text('data/*.txt')
+result = bag.map(complex_python_function).compute(scheduler='processes')</code></pre>
+
+<p><strong>Explicit Configuration</strong>:</p>
+<pre><code class="language-python">import dask
+
+# Set globally
+dask.config.set(scheduler='processes')
+
+# Or per-compute
+result = computation.compute(scheduler='processes')</code></pre>
+
+<p><strong>Limitations</strong>:</p>
+<ul><li>Data must be serializable (pickle)</li>
+<li>Overhead from process creation</li>
+<li>Memory overhead from data copying</li>
+</ul>
+<h4>3. Single Thread (Synchronous)</h4>
+
+<p><strong>Description</strong>: The single-threaded synchronous scheduler executes all computations in the local thread with no parallelism at all.</p>
+
+<p><strong>When to Use</strong>:</p>
+<ul><li>Debugging with pdb</li>
+<li>Profiling with standard Python tools</li>
+<li>Understanding errors in detail</li>
+<li>Development and testing</li>
+</ul>
+<p><strong>Characteristics</strong>:</p>
+<ul><li>No parallelism</li>
+<li>Easy debugging</li>
+<li>No overhead</li>
+<li>Deterministic execution</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-python">import dask
+
+# Enable for debugging
+dask.config.set(scheduler='synchronous')
+
+# Now can use pdb
+result = computation.compute()  # Runs in single thread</code></pre>
+
+<p><strong>Debugging with IPython</strong>:</p>
+<pre><code class="language-python"># In IPython/Jupyter
+%pdb on
+
+dask.config.set(scheduler='synchronous')
+result = problematic_computation.compute()  # Drops into debugger on error</code></pre>
+
+<h3>Distributed Schedulers</h3>
+
+<h4>4. Local Distributed</h4>
+
+<p><strong>Description</strong>: Despite its name, this scheduler runs effectively on personal machines using the distributed scheduler infrastructure.</p>
+
+<p><strong>When to Use</strong>:</p>
+<ul><li>Need diagnostic dashboard</li>
+<li>Asynchronous APIs</li>
+<li>Better data locality handling than multiprocessing</li>
+<li>Development before scaling to cluster</li>
+<li>Want distributed features on single machine</li>
+</ul>
+<p><strong>Characteristics</strong>:</p>
+<ul><li>Provides dashboard for monitoring</li>
+<li>Better memory management</li>
+<li>More overhead than threads/processes</li>
+<li>Can scale to cluster later</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<pre><code class="language-python">from dask.distributed import Client
+import dask.dataframe as dd
+
+# Create local cluster
+client = Client()  # Automatically uses all cores
+
+# Use distributed scheduler
+ddf = dd.read_csv('data.csv')
+result = ddf.groupby('category').mean().compute()
+
+# View dashboard
+print(client.dashboard_link)
+
+# Clean up
+client.close()</code></pre>
+
+<p><strong>Configuration Options</strong>:</p>
+<pre><code class="language-python"># Control resources
+client = Client(
+    n_workers=4,
+    threads_per_worker=2,
+    memory_limit='4GB'
+)</code></pre>
+
+<h4>5. Cluster Distributed</h4>
+
+<p><strong>Description</strong>: For scaling across multiple machines using the distributed scheduler.</p>
+
+<p><strong>When to Use</strong>:</p>
+<ul><li>Data exceeds single machine capacity</li>
+<li>Need computational power beyond one machine</li>
+<li>Production deployments</li>
+<li>Cluster computing environments (HPC, cloud)</li>
+</ul>
+<p><strong>Characteristics</strong>:</p>
+<ul><li>Scales to hundreds of machines</li>
+<li>Requires cluster setup</li>
+<li>Network communication overhead</li>
+<li>Advanced features (adaptive scaling, task prioritization)</li>
+</ul>
+<p><strong>Example with Dask-Jobqueue (HPC)</strong>:</p>
+<pre><code class="language-python">from dask_jobqueue import SLURMCluster
+from dask.distributed import Client
+
+# Create cluster on HPC with SLURM
+cluster = SLURMCluster(
+    cores=24,
+    memory='100GB',
+    walltime='02:00:00',
+    queue='regular'
+)
+
+# Scale to 10 jobs
+cluster.scale(jobs=10)
+
+# Connect client
+client = Client(cluster)
+
+# Run computation
+result = computation.compute()
+
+client.close()</code></pre>
+
+<p><strong>Example with Dask on Kubernetes</strong>:</p>
+<pre><code class="language-python">from dask_kubernetes import KubeCluster
+from dask.distributed import Client
+
+cluster = KubeCluster()
+cluster.scale(20)  # 20 workers
+
+client = Client(cluster)
+result = computation.compute()
+
+client.close()</code></pre>
+
+<h2>Scheduler Configuration</h2>
+
+<h3>Global Configuration</h3>
+
+<pre><code class="language-python">import dask
+
+# Set scheduler globally for session
+dask.config.set(scheduler='threads')
+dask.config.set(scheduler='processes')
+dask.config.set(scheduler='synchronous')</code></pre>
+
+<h3>Context Manager</h3>
+
+<pre><code class="language-python">import dask
+
+# Temporarily use different scheduler
+with dask.config.set(scheduler='processes'):
+    result = computation.compute()
+
+# Back to default scheduler
+result2 = computation2.compute()</code></pre>
+
+<h3>Per-Compute</h3>
+
+<pre><code class="language-python"># Specify scheduler per compute call
+result = computation.compute(scheduler='threads')
+result = computation.compute(scheduler='processes')
+result = computation.compute(scheduler='synchronous')</code></pre>
+
+<h3>Distributed Client</h3>
+
+<pre><code class="language-python">from dask.distributed import Client
+
+# Using client automatically sets distributed scheduler
+client = Client()
+
+# All computations use distributed scheduler
+result = computation.compute()
+
+client.close()</code></pre>
+
+<h2>Choosing the Right Scheduler</h2>
+
+<h3>Decision Matrix</h3>
+
+<p>| Workload Type | Recommended Scheduler | Rationale |</p>
+<p>|--------------|----------------------|-----------|</p>
+<p>| NumPy/Pandas operations | Threads (default) | GIL-releasing, shared memory |</p>
+<p>| Pure Python objects | Processes | Avoids GIL contention |</p>
+<p>| Text/log processing | Processes | Python-heavy operations |</p>
+<p>| Debugging | Synchronous | Easy debugging, deterministic |</p>
+<p>| Need dashboard | Local Distributed | Monitoring and diagnostics |</p>
+<p>| Multi-machine | Cluster Distributed | Exceeds single machine capacity |</p>
+<p>| Small data, quick tasks | Threads | Lowest overhead |</p>
+<p>| Large data, single machine | Local Distributed | Better memory management |</p>
+
+<h3>Performance Considerations</h3>
+
+<p><strong>Threads</strong>:</p>
+<ul><li>Overhead: ~10 µs per task</li>
+<li>Best for: Numeric operations</li>
+<li>Memory: Shared</li>
+<li>GIL: Affected by GIL</li>
+</ul>
+<p><strong>Processes</strong>:</p>
+<ul><li>Overhead: ~10 ms per task</li>
+<li>Best for: Python operations</li>
+<li>Memory: Copied between processes</li>
+<li>GIL: Not affected</li>
+</ul>
+<p><strong>Synchronous</strong>:</p>
+<ul><li>Overhead: ~1 µs per task</li>
+<li>Best for: Debugging</li>
+<li>Memory: No parallelism</li>
+<li>GIL: Not relevant</li>
+</ul>
+<p><strong>Distributed</strong>:</p>
+<ul><li>Overhead: ~1 ms per task</li>
+<li>Best for: Complex workflows, monitoring</li>
+<li>Memory: Managed by scheduler</li>
+<li>GIL: Workers can use threads or processes</li>
+</ul>
+<h2>Thread Configuration for Distributed Scheduler</h2>
+
+<h3>Setting Thread Count</h3>
+
+<pre><code class="language-python">from dask.distributed import Client
+
+# Control thread/worker configuration
+client = Client(
+    n_workers=4,           # Number of worker processes
+    threads_per_worker=2   # Threads per worker process
+)</code></pre>
+
+<h3>Recommended Configuration</h3>
+
+<p><strong>For Numeric Workloads</strong>:</p>
+<ul><li>Aim for roughly 4 threads per process</li>
+<li>Balance between parallelism and overhead</li>
+<li>Example: 8 cores → 2 workers with 4 threads each</li>
+</ul>
+<p><strong>For Python Workloads</strong>:</p>
+<ul><li>Use more workers with fewer threads</li>
+<li>Example: 8 cores → 8 workers with 1 thread each</li>
+</ul>
+<h3>Environment Variables</h3>
+
+<pre><code class="language-bash"># Set thread count via environment
+export DASK_NUM_WORKERS=4
+export DASK_THREADS_PER_WORKER=2
+
+# Or via config file</code></pre>
+
+<h2>Common Patterns</h2>
+
+<h3>Development to Production</h3>
+
+<pre><code class="language-python"># Development: Use local distributed for testing
+from dask.distributed import Client
+client = Client(processes=False)  # In-process for debugging
+
+# Production: Scale to cluster
+from dask.distributed import Client
+client = Client('scheduler-address:8786')</code></pre>
+
+<h3>Mixed Workloads</h3>
+
+<pre><code class="language-python">import dask
+import dask.dataframe as dd
+
+# Use threads for DataFrame operations
+ddf = dd.read_parquet('data.parquet')
+result1 = ddf.mean().compute(scheduler='threads')
+
+# Use processes for Python code
+import dask.bag as db
+bag = db.read_text('logs/*.txt')
+result2 = bag.map(parse_log).compute(scheduler='processes')</code></pre>
+
+<h3>Debugging Workflow</h3>
+
+<pre><code class="language-python">import dask
+
+# Step 1: Debug with synchronous scheduler
+dask.config.set(scheduler='synchronous')
+result = problematic_computation.compute()
+
+# Step 2: Test with threads
+dask.config.set(scheduler='threads')
+result = computation.compute()
+
+# Step 3: Scale with distributed
+from dask.distributed import Client
+client = Client()
+result = computation.compute()</code></pre>
+
+<h2>Monitoring and Diagnostics</h2>
+
+<h3>Dashboard Access (Distributed Only)</h3>
+
+<pre><code class="language-python">from dask.distributed import Client
+
+client = Client()
+
+# Get dashboard URL
+print(client.dashboard_link)
+# Opens dashboard in browser showing:
+# - Task progress
+# - Worker status
+# - Memory usage
+# - Task stream
+# - Resource utilization</code></pre>
+
+<h3>Performance Profiling</h3>
+
+<pre><code class="language-python"># Profile computation
+from dask.distributed import Client
+
+client = Client()
+result = computation.compute()
+
+# Get performance report
+client.profile(filename='profile.html')</code></pre>
+
+<h3>Resource Monitoring</h3>
+
+<pre><code class="language-python"># Check worker info
+client.scheduler_info()
+
+# Get current tasks
+client.who_has()
+
+# Memory usage
+client.run(lambda: psutil.virtual_memory().percent)</code></pre>
+
+<h2>Advanced Configuration</h2>
+
+<h3>Custom Executors</h3>
+
+<pre><code class="language-python">from concurrent.futures import ThreadPoolExecutor
+import dask
+
+# Use custom thread pool
+with ThreadPoolExecutor(max_workers=4) as executor:
+    dask.config.set(pool=executor)
+    result = computation.compute(scheduler='threads')</code></pre>
+
+<h3>Adaptive Scaling (Distributed)</h3>
+
+<pre><code class="language-python">from dask.distributed import Client
+
+client = Client()
+
+# Enable adaptive scaling
+client.cluster.adapt(minimum=2, maximum=10)
+
+# Cluster scales based on workload
+result = computation.compute()</code></pre>
+
+<h3>Worker Plugins</h3>
+
+<pre><code class="language-python">from dask.distributed import Client, WorkerPlugin
+
+class CustomPlugin(WorkerPlugin):
+    def setup(self, worker):
+        # Initialize worker-specific resources
+        worker.custom_resource = initialize_resource()
+
+client = Client()
+client.register_worker_plugin(CustomPlugin())</code></pre>
+
+<h2>Troubleshooting</h2>
+
+<h3>Slow Performance with Threads</h3>
+<p><strong>Problem</strong>: Pure Python code slow with threaded scheduler</p>
+<p><strong>Solution</strong>: Switch to processes or distributed scheduler</p>
+
+<h3>Memory Errors with Processes</h3>
+<p><strong>Problem</strong>: Data too large to pickle/copy between processes</p>
+<p><strong>Solution</strong>: Use threaded or distributed scheduler</p>
+
+<h3>Debugging Difficult</h3>
+<p><strong>Problem</strong>: Can't use pdb with parallel schedulers</p>
+<p><strong>Solution</strong>: Use synchronous scheduler for debugging</p>
+
+<h3>Task Overhead High</h3>
+<p><strong>Problem</strong>: Many tiny tasks causing overhead</p>
+<p><strong>Solution</strong>: Use threaded scheduler (lowest overhead) or increase chunk sizes</p>
+
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

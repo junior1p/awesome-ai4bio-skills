@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adaptyv Bio Foundry API — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="active">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / Adaptyv Bio Foundry API</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>Adaptyv Bio Foundry API</h1>
+    <p class="description">"How to use the Adaptyv Bio Foundry API and Python SDK for protein experiment design, submission, and results retrieval. Use this skill whenever the user mentions Adaptyv, Foundry API, protein binding</p>
+    <h1>Adaptyv Bio Foundry API</h1>
+
+<p>Adaptyv Bio is a cloud lab that turns protein sequences into experimental data. Users submit amino acid sequences via API or UI; Adaptyv's automated lab runs assays (binding, thermostability, expression, fluorescence) and delivers results in ~21 days.</p>
+
+<h2>Quick Start</h2>
+
+<p><strong>Base URL:</strong> <code>https://foundry-api-public.adaptyvbio.com/api/v1</code></p>
+
+<p><strong>Authentication:</strong> Bearer token in the <code>Authorization</code> header. Tokens are obtained from <a href="https://foundry.adaptyvbio.com/">foundry.adaptyvbio.com</a> sidebar.</p>
+
+<p>When writing code, always read the API key from the environment variable <code>ADAPTYV_API_KEY</code> or from a <code>.env</code> file — never hardcode tokens. Check for a <code>.env</code> file in the project root first; if one exists, use a library like <code>python-dotenv</code> to load it.</p>
+
+<pre><code class="language-bash">export FOUNDRY_API_TOKEN="abs0_..."
+curl https://foundry-api-public.adaptyvbio.com/api/v1/targets?limit=3 \
+  -H "Authorization: Bearer $FOUNDRY_API_TOKEN"</code></pre>
+
+<p>Every request except <code>GET /openapi.json</code> requires authentication. Store tokens in environment variables or <code>.env</code> files — never commit them to source control.</p>
+
+<h2>Python SDK</h2>
+
+<p>Install: <code>uv add adaptyv-sdk</code> (falls back to <code>uv pip install adaptyv-sdk</code> if no <code>pyproject.toml</code> exists)</p>
+
+<p><strong>Environment variables</strong> (set in shell or <code>.env</code> file):</p>
+<pre><code class="language-bash">ADAPTYV_API_KEY=your_api_key
+ADAPTYV_API_URL=https://foundry-api-public.adaptyvbio.com/api/v1</code></pre>
+
+<h3>Decorator Pattern</h3>
+
+<pre><code class="language-python">from adaptyv import lab
+
+@lab.experiment(target="PD-L1", experiment_type="screening", method="bli")
+def design_binders():
+    return {"design_a": "MVKVGVNG...", "design_b": "MKVLVAG..."}
+
+result = design_binders()
+print(f"Experiment: {result.experiment_url}")</code></pre>
+
+<h3>Client Pattern</h3>
+
+<pre><code class="language-python">from adaptyv import FoundryClient
+
+client = FoundryClient(api_key="...", base_url="https://foundry-api-public.adaptyvbio.com/api/v1")
+
+# Browse targets
+targets = client.targets.list(search="EGFR", selfservice_only=True)
+
+# Estimate cost
+estimate = client.experiments.cost_estimate({
+    "experiment_spec": {
+        "experiment_type": "screening",
+        "method": "bli",
+        "target_id": "target-uuid",
+        "sequences": {"seq1": "EVQLVESGGGLVQ..."},
+        "n_replicates": 3
+    }
+})
+
+# Create and submit
+exp = client.experiments.create({...})
+client.experiments.submit(exp.experiment_id)
+
+# Later: retrieve results
+results = client.experiments.get_results(exp.experiment_id)</code></pre>
+
+<h2>Experiment Types</h2>
+
+<p>| Type | Method | Measures | Requires Target |</p>
+<p>|---|---|---|---|</p>
+<p>| <code>affinity</code> | <code>bli</code> or <code>spr</code> | KD, kon, koff kinetics | Yes |</p>
+<p>| <code>screening</code> | <code>bli</code> or <code>spr</code> | Yes/no binding | Yes |</p>
+<p>| <code>thermostability</code> | — | Melting temperature (Tm) | No |</p>
+<p>| <code>expression</code> | — | Expression yield | No |</p>
+<p>| <code>fluorescence</code> | — | Fluorescence intensity | No |</p>
+
+<h2>Experiment Lifecycle</h2>
+
+<pre><code>Draft → WaitingForConfirmation → QuoteSent → WaitingForMaterials → InQueue → InProduction → DataAnalysis → InReview → Done</code></pre>
+
+<p>| Status | Who Acts | Description |</p>
+<p>|---|---|---|</p>
+<p>| <code>Draft</code> | You | Editable, no cost commitment |</p>
+<p>| <code>WaitingForConfirmation</code> | Adaptyv | Under review, quote being prepared |</p>
+<p>| <code>QuoteSent</code> | You | Review and confirm the quote |</p>
+<p>| <code>WaitingForMaterials</code> | Adaptyv | Gene fragments and target ordered |</p>
+<p>| <code>InQueue</code> | Adaptyv | Materials arrived, queued for lab |</p>
+<p>| <code>InProduction</code> | Adaptyv | Assay running |</p>
+<p>| <code>DataAnalysis</code> | Adaptyv | Raw data processing and QC |</p>
+<p>| <code>InReview</code> | Adaptyv | Final validation |</p>
+<p>| <code>Done</code> | You | Results available |</p>
+<p>| <code>Canceled</code> | Either | Experiment canceled |</p>
+
+<p>The <code>results_status</code> field on an experiment tracks: <code>none</code>, <code>partial</code>, or <code>all</code>.</p>
+
+<h2>Common Workflows</h2>
+
+<h3>1. Submit a Binding Screen (Step by Step)</h3>
+
+<pre><code class="language-python"># 1. Find a target
+targets = client.targets.list(search="EGFR", selfservice_only=True)
+target_id = targets.items[0].id
+
+# 2. Preview cost
+estimate = client.experiments.cost_estimate({
+    "experiment_spec": {
+        "experiment_type": "screening",
+        "method": "bli",
+        "target_id": target_id,
+        "sequences": {"seq1": "EVQLVESGGGLVQ...", "seq2": "MKVLVAG..."},
+        "n_replicates": 3
+    }
+})
+
+# 3. Create experiment (starts as Draft)
+exp = client.experiments.create({
+    "name": "EGFR binder screen batch 1",
+    "experiment_spec": {
+        "experiment_type": "screening",
+        "method": "bli",
+        "target_id": target_id,
+        "sequences": {"seq1": "EVQLVESGGGLVQ...", "seq2": "MKVLVAG..."},
+        "n_replicates": 3
+    }
+})
+
+# 4. Submit for review
+client.experiments.submit(exp.experiment_id)
+
+# 5. Poll or use webhooks until Done
+# 6. Retrieve results
+results = client.experiments.get_results(exp.experiment_id)</code></pre>
+
+<h3>2. Automated Pipeline (Skip Draft + Auto-Accept Quote)</h3>
+
+<pre><code class="language-python">exp = client.experiments.create({
+    "name": "Auto pipeline run",
+    "experiment_spec": {...},
+    "skip_draft": True,
+    "auto_accept_quote": True,
+    "webhook_url": "https://my-server.com/webhook"
+})
+# Webhook fires on each status transition; poll or wait for Done</code></pre>
+
+<h3>3. Using Webhooks</h3>
+
+<p>Pass <code>webhook_url</code> when creating an experiment. Adaptyv POSTs to that URL on every status transition with the experiment ID, previous status, and new status.</p>
+
+<h2>Sequences</h2>
+
+<ul><li>Simple format: <code>{"seq1": "EVQLVESGGGLVQPGGSLRLSCAAS"}</code></li>
+<li>Rich format: <code>{"seq1": {"aa_string": "EVQLVESGGGLVQ...", "control": false, "metadata": {"type": "scfv"}}}</code></li>
+<li>Multi-chain: use colon separator — <code>"MVLS:EVQL"</code></li>
+<li>Valid amino acids: A, C, D, E, F, G, H, I, K, L, M, N, P, Q, R, S, T, V, W, Y (case-insensitive, stored uppercase)</li>
+<li>Sequences can only be added to experiments in <code>Draft</code> status</li>
+</ul>
+<h2>Filtering, Sorting, and Pagination</h2>
+
+<p>All list endpoints support pagination (<code>limit</code> 1-100, default 50; <code>offset</code>), search (free-text on name fields), and sorting.</p>
+
+<p><strong>Filtering</strong> uses s-expression syntax via the <code>filter</code> query parameter:</p>
+<ul><li>Comparison: <code>eq(field,value)</code>, <code>neq</code>, <code>gt</code>, <code>gte</code>, <code>lt</code>, <code>lte</code>, <code>contains(field,substring)</code></li>
+<li>Range/set: <code>between(field,lo,hi)</code>, <code>in(field,v1,v2,...)</code></li>
+<li>Logic: <code>and(expr1,expr2,...)</code>, <code>or(...)</code>, <code>not(expr)</code></li>
+<li>Null: <code>is_null(field)</code>, <code>is_not_null(field)</code></li>
+<li>JSONB: <code>at(field,key)</code> — e.g., <code>eq(at(metadata,score),42)</code></li>
+<li>Cast: <code>float()</code>, <code>int()</code>, <code>text()</code>, <code>timestamp()</code>, <code>date()</code></li>
+</ul>
+<p><strong>Sorting</strong> uses <code>asc(field)</code> or <code>desc(field)</code>, comma-separated (max 8):</p>
+<pre><code>sort=desc(created_at),asc(name)</code></pre>
+
+<p><strong>Example:</strong> <code>filter=and(gte(created_at,2026-01-01),eq(status,done))</code></p>
+
+<h2>Error Handling</h2>
+
+<p>All errors return:</p>
+<pre><code class="language-json">{
+  "error": "Human-readable description",
+  "request_id": "req_019462a4-b1c2-7def-8901-23456789abcd"
+}</code></pre>
+<p>The <code>request_id</code> is also in the <code>x-request-id</code> response header — include it when contacting support.</p>
+
+<h2>Token Management</h2>
+
+<p>Tokens use Biscuit-based cryptographic attenuation. You can create restricted tokens scoped by organization, resource type, actions (read/create/update), and expiry via <code>POST /tokens/attenuate</code>. Revoking a token (<code>POST /tokens/revoke</code>) revokes it and all its descendants.</p>
+
+<h2>Detailed API Reference</h2>
+
+<p>For the full list of all 32 endpoints with request/response schemas, read <code>references/api-endpoints.md</code>.</p>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Api Endpoints</h3>
+  <h1>Adaptyv Bio Foundry API — Complete Endpoint Reference</h1>
+
+<p>Base URL: <code>https://foundry-api-public.adaptyvbio.com/api/v1</code></p>
+<p>OpenAPI spec: <code>GET /openapi.json</code></p>
+
+<h2>Table of Contents</h2>
+
+<ul><li><a href="#experiments">Experiments</a></li>
+<li><a href="#sequences">Sequences</a></li>
+<li><a href="#results">Results</a></li>
+<li><a href="#targets">Targets</a></li>
+<li><a href="#quotes">Quotes</a></li>
+<li><a href="#tokens">Tokens</a></li>
+<li><a href="#updates">Updates</a></li>
+<li><a href="#feedback">Feedback</a></li>
+</ul>
+<hr>
+
+<h2>Experiments</h2>
+
+<h3>POST /experiments — Create experiment</h3>
+
+<p>Creates a new experiment. Starts in <code>Draft</code> status by default.</p>
+
+<p><strong>Request body:</strong></p>
+
+<p>| Field | Type | Required | Description |</p>
+<p>|---|---|---|---|</p>
+<p>| <code>name</code> | string | Yes | Human-readable name |</p>
+<p>| <code>experiment_spec</code> | ExperimentSpec | Yes | Experiment definition (see below) |</p>
+<p>| <code>skip_draft</code> | boolean | No (default false) | Bypass Draft, go straight to WaitingForConfirmation |</p>
+<p>| <code>auto_accept_quote</code> | boolean | No (default false) | Auto-accept quote and create invoice |</p>
+<p>| <code>webhook_url</code> | string/null | No | URL for status-change POST notifications |</p>
+
+<p><strong>ExperimentSpec:</strong></p>
+
+<p>| Field | Type | Required | Description |</p>
+<p>|---|---|---|---|</p>
+<p>| <code>experiment_type</code> | string | Yes | <code>affinity</code>, <code>screening</code>, <code>thermostability</code>, <code>fluorescence</code>, or <code>expression</code> |</p>
+<p>| <code>method</code> | string | Required for binding types | <code>bli</code> or <code>spr</code> |</p>
+<p>| <code>target_id</code> | uuid | Required for binding types | Target UUID from catalog |</p>
+<p>| <code>sequences</code> | object | Yes | Map of name → amino acid string or rich object |</p>
+<p>| <code>n_replicates</code> | integer | Recommended (default 3) | Technical replicates (min 1) |</p>
+<p>| <code>antigen_concentrations</code> | number[] | No (affinity only) | Defaults to <code>[1000.0, 316.2, 100.0, 31.6, 0.0]</code> nM |</p>
+<p>| <code>parameters</code> | object | No | Experiment-specific settings |</p>
+
+<p><strong>Field requirements by experiment type:</strong></p>
+
+<p>| Field | Affinity | Screening | Thermostability | Fluorescence | Expression |</p>
+<p>|---|---|---|---|---|---|</p>
+<p>| <code>experiment_type</code> | required | required | required | required | required |</p>
+<p>| <code>method</code> | required | required | — | — | — |</p>
+<p>| <code>target_id</code> | required | required | — | — | — |</p>
+<p>| <code>sequences</code> | required | required | required | required | required |</p>
+<p>| <code>n_replicates</code> | recommended | recommended | optional | optional | optional |</p>
+<p>| <code>antigen_concentrations</code> | optional | — | — | — | — |</p>
+
+<p><strong>Response (201):</strong></p>
+
+<p>| Field | Type | Description |</p>
+<p>|---|---|---|</p>
+<p>| <code>experiment_id</code> | string | UUID of new experiment |</p>
+<p>| <code>error</code> | string/null | Error message if validation fails |</p>
+<p>| <code>stripe_hosted_invoice_url</code> | string/null | Present when <code>auto_accept_quote</code> created an invoice |</p>
+<p>| <code>stripe_invoice_id</code> | string/null | Stripe invoice ID |</p>
+
+<p><strong>Status codes:</strong> 201, 400, 401, 403, 404</p>
+
+<hr>
+
+<h3>GET /experiments — List experiments</h3>
+
+<p>Lists experiments accessible to caller, sorted by creation date (newest first).</p>
+
+<p><strong>Query params:</strong> <code>limit</code>, <code>offset</code>, <code>filter</code>, <code>search</code>, <code>sort</code></p>
+
+<p><strong>Response item:</strong></p>
+
+<p>| Field | Type | Description |</p>
+<p>|---|---|---|</p>
+<p>| <code>id</code> | uuid | Unique identifier |</p>
+<p>| <code>code</code> | string | e.g., "EXP-2024-001" |</p>
+<p>| <code>name</code> | string/null | Human-readable name |</p>
+<p>| <code>status</code> | ExperimentStatus | Current lifecycle status |</p>
+<p>| <code>experiment_type</code> | ExperimentType | affinity/screening/thermostability/fluorescence/expression |</p>
+<p>| <code>results_status</code> | ResultsStatus | none/partial/all |</p>
+<p>| <code>created_at</code> | datetime | ISO 8601 |</p>
+<p>| <code>experiment_url</code> | string | URL to Foundry portal |</p>
+<p>| <code>stripe_invoice_url</code> | string/null | Invoice URL |</p>
+<p>| <code>stripe_quote_url</code> | string/null | Quote URL |</p>
+
+<p><strong>Status codes:</strong> 200, 401</p>
+
+<hr>
+
+<h3>GET /experiments/{experiment_id} — Get experiment</h3>
+
+<p>Returns full metadata for a single experiment.</p>
+
+<p><strong>Path param:</strong> <code>experiment_id</code> (uuid)</p>
+
+<p><strong>Response:</strong></p>
+
+<p>| Field | Type | Description |</p>
+<p>|---|---|---|</p>
+<p>| <code>id</code> | uuid | Unique identifier |</p>
+<p>| <code>code</code> | string | Experiment code |</p>
+<p>| <code>status</code> | ExperimentStatus | Current status |</p>
+<p>| <code>experiment_spec</code> | ExperimentSpec | Full experiment definition |</p>
+<p>| <code>results_status</code> | ResultsStatus | none/partial/all |</p>
+<p>| <code>created_at</code> | datetime | ISO 8601 |</p>
+<p>| <code>experiment_url</code> | string | Portal URL |</p>
+<p>| <code>costs</code> | object | Cost breakdown |</p>
+
+<p><strong>Status codes:</strong> 200, 401, 404, 500</p>
+
+<hr>
+
+<h3>PATCH /experiments/{experiment_id} — Update experiment</h3>
+
+<p>Modify an existing experiment. Draft experiments allow full edits; after quote generation, only <code>name</code>, <code>description</code>, and <code>webhook_url</code> are editable.</p>
+
+<p><strong>Path param:</strong> <code>experiment_id</code> (uuid)</p>
+
+<p><strong>Request body:</strong> All fields optional — only provided fields are updated.</p>
+
+<p><strong>Status codes:</strong> 200, 400, 401, 404, 409</p>
+
+<hr>
+
+<h3>POST /experiments/{experiment_id}/submit — Submit experiment</h3>
+
+<p>Submits a draft experiment for review. Advances from <code>Draft</code> to <code>WaitingForConfirmation</code>.</p>
+
+<p><strong>Path param:</strong> <code>experiment_id</code> (uuid)</p>
+
+<p><strong>Response:</strong></p>
+
+<p>| Field | Type | Description |</p>
+<p>|---|---|---|</p>
+<p>| <code>experiment_id</code> | string | Experiment UUID |</p>
+
+<p><strong>Status codes:</strong> 200, 401, 403, 404, 409, 500</p>
+
+<hr>
+
+<h3>POST /experiments/cost-estimate — Estimate cost</h3>
+
+<p>Calculates cost without creating an experiment.</p>
+
+<p><strong>Request body:</strong></p>
+<pre><code class="language-json">{
+  "experiment_spec": {
+    "experiment_type": "screening",
+    "method": "bli",
+    "target_id": "...",
+    "sequences": {"seq1": "MKTL..."},
+    "n_replicates": 3
+  }
+}</code></pre>
+
+<p><strong>Response:</strong></p>
+
+<p>| Field | Type | Description |</p>
+<p>|---|---|---|</p>
+<p>| <code>pricing_version</code> | string | e.g., "v1_2026-01-20" |</p>
+<p>| <code>assay</code> | object | Per-type costs with base and replicate pricing |</p>
+<p>| <code>materials</code> | object | Target material costs (binding experiments) |</p>
+<p>| <code>total_cents</code> | integer | Sum in USD cents |</p>
+
+<p>All prices exclude VAT; taxes calculated at invoicing. Targets without self-service pricing return incomplete estimates.</p>
+
+<p><strong>Status codes:</strong> 200, 400, 401</p>
+
+<hr>
+
+<h3>GET /experiments/{experiment_id}/quote — Get quote</h3>
+
+<p>Returns quote metadata (totals, currency, status, expiration).</p>
+
+<p><strong>Path param:</strong> <code>experiment_id</code> (uuid)</p>
+
+<p><strong>Response:</strong></p>
+
+<p>| Field | Type | Description |</p>
+<p>|---|---|---|</p>
+<p>| <code>experiment_id</code> | string | Experiment UUID |</p>
+<p>| <code>stripe_quote_url</code> | string | Stripe quote URL |</p>
+<p>| <code>amount_total</code> | int64 | Total in smallest currency unit |</p>
+<p>| <code>amount_subtotal</code> | int64 | Subtotal |</p>
+<p>| <code>currency</code> | string | ISO currency code (e.g., "usd") |</p>
+<p>| <code>status</code> | string | Quote status |</p>
+<p>| <code>expires_at</code> | datetime/null | Expiration time |</p>
+
+<p><strong>Status codes:</strong> 200, 401, 403, 404, 500</p>
+
+<hr>
+
+<h3>GET /experiments/{experiment_id}/quote/pdf — Get quote PDF</h3>
+
+<p>Returns the quote as a PDF file (<code>application/pdf</code>).</p>
+
+<p><strong>Path param:</strong> <code>experiment_id</code> (uuid)</p>
+
+<p><strong>Status codes:</strong> 200, 401, 403, 404, 500</p>
+
+<hr>
+
+<h3>POST /experiments/{experiment_id}/quote/confirm — Accept quote (by experiment)</h3>
+
+<p>Accepts Stripe quote, creates draft invoice, transitions to <code>WaitingForMaterials</code>.</p>
+
+<p><strong>Path param:</strong> <code>experiment_id</code> (uuid)</p>
+
+<p><strong>Request body:</strong></p>
+
+<p>| Field | Type | Required | Description |</p>
+<p>|---|---|---|---|</p>
+<p>| <code>purchase_order_number</code> | string/null | No | PO number for your records |</p>
+<p>| <code>notes</code> | string/null | No | Reserved |</p>
+
+<p><strong>Response:</strong></p>
+
+<p>| Field | Type | Description |</p>
+<p>|---|---|---|</p>
+<p>| <code>id</code> | string | Quote ID |</p>
+<p>| <code>status</code> | StripeQuoteStatus | New status |</p>
+<p>| <code>hosted_invoice_url</code> | string/null | Stripe payment URL |</p>
+<p>| <code>invoice_id</code> | string/null | Generated invoice ID |</p>
+
+<p><strong>Status codes:</strong> 200, 401, 403, 404, 409</p>
+
+<hr>
+
+<h3>GET /experiments/{experiment_id}/invoice — Get invoice</h3>
+
+<p>Returns invoice metadata including hosted payment URL.</p>
+
+<p><strong>Path param:</strong> <code>experiment_id</code> (uuid)</p>
+
+<p><strong>Status codes:</strong> 200, 401, 403, 404, 500</p>
+
+<hr>
+
+<h3>GET /experiments/{experiment_id}/results — List results for experiment</h3>
+
+<p>Returns all analysis results for a specific experiment.</p>
+
+<p><strong>Path param:</strong> <code>experiment_id</code> (uuid)</p>
+<p><strong>Query params:</strong> <code>limit</code>, <code>offset</code>, <code>filter</code>, <code>sort</code></p>
+
+<p><strong>Status codes:</strong> 200, 400, 401, 403, 404</p>
+
+<hr>
+
+<h3>GET /experiments/{experiment_id}/sequences — List sequences for experiment</h3>
+
+<p>Returns all sequences for a specific experiment, sorted newest first.</p>
+
+<p><strong>Path param:</strong> <code>experiment_id</code> (uuid)</p>
+<p><strong>Query params:</strong> <code>limit</code>, <code>offset</code>, <code>search</code>, <code>sort</code></p>
+
+<p><strong>Status codes:</strong> 200, 400, 401, 403, 404</p>
+
+<hr>
+
+<h3>GET /experiments/{experiment_id}/updates — List experiment updates</h3>
+
+<p>Returns updates for one experiment, oldest first. Types: <code>status_change</code>, <code>progress</code>, <code>error</code>.</p>
+
+<p><strong>Path param:</strong> <code>experiment_id</code> (uuid)</p>
+<p><strong>Query params:</strong> <code>limit</code>, <code>offset</code>, <code>filter</code>, <code>sort</code></p>
+
+<p>Filter example: <code>filter=eq(type,status_change)</code></p>
+
+<hr>
+
+<h2>Sequences</h2>
+
+<h3>GET /sequences — List sequences</h3>
+
+<p>Returns sequences from all experiments, sorted newest first.</p>
+
+<p><strong>Query params:</strong> <code>limit</code>, <code>offset</code>, <code>search</code>, <code>sort</code>, <code>experiment_id</code> (filter by experiment UUID)</p>
+
+<p><strong>Response item:</strong></p>
+
+<p>| Field | Type | Description |</p>
+<p>|---|---|---|</p>
+<p>| <code>id</code> | uuid | Unique identifier |</p>
+<p>| <code>name</code> | string/null | Optional name |</p>
+<p>| <code>aa_preview</code> | string/null | Truncated preview (first 50 chars) |</p>
+<p>| <code>length</code> | int32 | Sequence length in amino acids |</p>
+<p>| <code>experiment_id</code> | uuid | Parent experiment |</p>
+<p>| <code>experiment_code</code> | string | Human-readable experiment code |</p>
+<p>| <code>is_control</code> | boolean | Whether this is a control |</p>
+<p>| <code>created_at</code> | datetime | Creation timestamp |</p>
+
+<p><strong>Status codes:</strong> 200, 401</p>
+
+<hr>
+
+<h3>GET /sequences/{sequence_id} — Get sequence</h3>
+
+<p>Returns full details including complete amino acid string.</p>
+
+<p><strong>Path param:</strong> <code>sequence_id</code> (uuid)</p>
+
+<p><strong>Response:</strong></p>
+
+<p>| Field | Type | Description |</p>
+<p>|---|---|---|</p>
+<p>| <code>id</code> | uuid | Unique identifier |</p>
+<p>| <code>aa_string</code> | string/null | Complete amino acid sequence |</p>
+<p>| <code>length</code> | int32 | Length in amino acids |</p>
+<p>| <code>is_control</code> | boolean | Control flag |</p>
+<p>| <code>metadata</code> | object | Sequence-level annotations |</p>
+<p>| <code>experiment</code> | object | Parent experiment reference |</p>
+<p>| <code>created_at</code> | datetime | Creation timestamp |</p>
+
+<p><strong>Status codes:</strong> 200, 401, 403, 404, 500</p>
+
+<hr>
+
+<h3>POST /sequences — Add sequences to experiment</h3>
+
+<p>Appends sequences to a <strong>Draft</strong> experiment identified by its human-readable code.</p>
+
+<p><strong>Request body:</strong></p>
+
+<p>| Field | Type | Required | Description |</p>
+<p>|---|---|---|---|</p>
+<p>| <code>experiment_code</code> | string | Yes | e.g., "PROJ-001" |</p>
+<p>| <code>sequences</code> | array | Yes | Array of sequence entries |</p>
+
+<p><strong>Each sequence entry:</strong></p>
+
+<p>| Field | Type | Required | Description |</p>
+<p>|---|---|---|---|</p>
+<p>| <code>aa_string</code> | string | Yes | Amino acid sequence |</p>
+<p>| <code>name</code> | string | No | Human-readable name |</p>
+<p>| <code>control</code> | boolean | No | Whether this is a control |</p>
+<p>| <code>metadata</code> | object | No | Annotations |</p>
+
+<p><strong>Response (201):</strong></p>
+
+<p>| Field | Type | Description |</p>
+<p>|---|---|---|</p>
+<p>| <code>added_count</code> | int32 | Number of sequences added |</p>
+<p>| <code>experiment_id</code> | string | Experiment UUID |</p>
+<p>| <code>experiment_code</code> | string | Experiment code |</p>
+<p>| <code>sequence_ids</code> | array | IDs of added sequences |</p>
+
+<p><strong>Status codes:</strong> 201, 400, 404, 409 (experiment not in Draft), 500</p>
+
+<hr>
+
+<h2>Results</h2>
+
+<h3>GET /results — List results</h3>
+
+<p>Lists completed analysis results, sorted newest first. Results appear when <code>results_status</code> reaches <code>partial</code> or <code>all</code>.</p>
+
+<p><strong>Query params:</strong> <code>limit</code>, <code>offset</code>, <code>filter</code>, <code>search</code>, <code>sort</code></p>
+
+<p><strong>Response item:</strong></p>
+
+<p>| Field | Type | Description |</p>
+<p>|---|---|---|</p>
+<p>| <code>id</code> | uuid | Result identifier |</p>
+<p>| <code>title</code> | string | Human-readable title |</p>
+<p>| <code>experiment_id</code> | uuid | Associated experiment |</p>
+<p>| <code>result_type</code> | string | e.g., "affinity", "thermostability" |</p>
+<p>| <code>summary</code> | array | Key results (type-specific, see below) |</p>
+<p>| <code>metadata</code> | object | Extended metadata (e.g., instrument info) |</p>
+<p>| <code>data_package_url</code> | string/null | Download URL for raw data package |</p>
+<p>| <code>created_at</code> | datetime | When result was generated |</p>
+
+<p><strong>AffinityResult summary fields:</strong> <code>kd_mean</code>, <code>kd_std</code>, <code>kon_mean</code>, <code>kon_log_std</code>, <code>koff_mean</code>, <code>koff_std</code>, <code>replicates</code> (array with per-replicate <code>kd</code>, <code>kon</code>, <code>koff</code>, <code>binding_strength</code>, <code>kon_method</code>, <code>koff_method</code>, <code>replicate</code> index), <code>sequence</code>, <code>target_id</code></p>
+
+<p><strong>ThermostabilityResult summary fields:</strong> Tm values and melting curves</p>
+
+<p><strong>Status codes:</strong> 200, 401</p>
+
+<hr>
+
+<h3>GET /results/{result_id} — Get result</h3>
+
+<p>Returns detailed result data including full summary array.</p>
+
+<p><strong>Path param:</strong> <code>result_id</code> (uuid)</p>
+
+<p><strong>Status codes:</strong> 200, 401, 403, 404, 500</p>
+
+<hr>
+
+<h2>Targets</h2>
+
+<h3>GET /targets — List targets</h3>
+
+<p>Lists validated antigens available for experiments.</p>
+
+<p><strong>Query params:</strong></p>
+
+<p>| Parameter | Type | Description |</p>
+<p>|---|---|---|</p>
+<p>| <code>limit</code> | int | Max items (1-100, default 50) |</p>
+<p>| <code>offset</code> | int | Skip count |</p>
+<p>| <code>search</code> | string | Free-text search on product name |</p>
+<p>| <code>sort</code> | string | Sort expression |</p>
+<p>| <code>selfservice_only</code> | boolean | Only targets with self-service pricing |</p>
+<p>| <code>show_conjugated</code> | boolean | Include conjugated targets (default: unconjugated only) |</p>
+<p>| <code>detailed</code> | boolean | Populate <code>details</code> block with enrichment data |</p>
+
+<p><strong>Response item:</strong></p>
+
+<p>| Field | Type | Description |</p>
+<p>|---|---|---|</p>
+<p>| <code>id</code> | uuid | Target UUID (use as <code>experiment_spec.target_id</code>) |</p>
+<p>| <code>name</code> | string | Target name |</p>
+<p>| <code>vendor_name</code> | string | Vendor name |</p>
+<p>| <code>catalog_number</code> | string | Vendor catalog/SKU number |</p>
+<p>| <code>url</code> | string | Target URL |</p>
+<p>| <code>pricing</code> | object/null | Self-service pricing (null = custom quote required) |</p>
+<p>| <code>details</code> | object/null | Enrichment data (gene names, structures, sequence, bioactivity) |</p>
+
+<p><strong>Status codes:</strong> 200, 401</p>
+
+<hr>
+
+<h3>GET /targets/{target_id} — Get target</h3>
+
+<p>Returns catalog record for a single target.</p>
+
+<p><strong>Path param:</strong> <code>target_id</code> (uuid)</p>
+
+<p><strong>Status codes:</strong> 200, 400, 401, 403, 404, 500</p>
+
+<hr>
+
+<h3>POST /targets/request-custom — Submit custom target request</h3>
+
+<p>Submit a new custom target for staff review. At least one of <code>sequence</code> or <code>pdb_id</code> must be provided.</p>
+
+<p><strong>Request body:</strong></p>
+
+<p>| Field | Type | Required | Description |</p>
+<p>|---|---|---|---|</p>
+<p>| <code>name</code> | string | Yes | Display name |</p>
+<p>| <code>product_id</code> | string | Yes | Must be unique within organization |</p>
+<p>| <code>sequence</code> | string/null | At least one | Amino acid sequence |</p>
+<p>| <code>pdb_id</code> | string/null | At least one | PDB identifier |</p>
+<p>| <code>pdb_file</code> | string/null | No | PDB file content |</p>
+<p>| <code>molecular_weight</code> | number/null | No | Weight in kDa |</p>
+<p>| <code>note</code> | string/null | No | Additional notes |</p>
+
+<p><strong>Status codes:</strong> 201, 400, 401, 403, 500</p>
+
+<hr>
+
+<h3>GET /targets/request-custom — List custom target requests</h3>
+
+<p>Returns custom target requests for your organization, sorted newest first.</p>
+
+<p><strong>Query params:</strong> <code>limit</code>, <code>offset</code>, <code>filter</code>, <code>sort</code></p>
+
+<p>Filter example: <code>filter=eq(status,pending_review)</code></p>
+
+<hr>
+
+<h3>GET /targets/request-custom/{request_id} — Get custom target request</h3>
+
+<p><strong>Path param:</strong> <code>request_id</code> (uuid)</p>
+
+<p><strong>Response:</strong></p>
+
+<p>| Field | Type | Description |</p>
+<p>|---|---|---|</p>
+<p>| <code>id</code> | uuid | Request identifier |</p>
+<p>| <code>name</code> | string | Target name |</p>
+<p>| <code>product_id</code> | string | Your product ID |</p>
+<p>| <code>status</code> | string | e.g., "pending_review" |</p>
+<p>| <code>material_id</code> | string/null | Linked catalog ID if approved |</p>
+<p>| <code>molecular_weight</code> | number/null | Weight in kDa |</p>
+<p>| <code>note</code> | string/null | User notes |</p>
+<p>| <code>created_at</code> | datetime | Created |</p>
+<p>| <code>updated_at</code> | datetime | Last updated |</p>
+
+<p><strong>Status codes:</strong> 200, 401, 403, 404, 500</p>
+
+<hr>
+
+<h2>Quotes</h2>
+
+<h3>GET /quotes — List quotes</h3>
+
+<p>Returns all quotes for caller's organization.</p>
+
+<p><strong>Query params:</strong> <code>limit</code>, <code>offset</code>, <code>filter</code>, <code>sort</code></p>
+
+<p><strong>Response item:</strong></p>
+
+<p>| Field | Type | Description |</p>
+<p>|---|---|---|</p>
+<p>| <code>id</code> | string | Quote identifier |</p>
+<p>| <code>quote_number</code> | string | Human-readable quote number |</p>
+<p>| <code>organization_id</code> | uuid | Organization |</p>
+<p>| <code>amount_cents</code> | int | Amount in cents |</p>
+<p>| <code>currency</code> | string | ISO 4217 code |</p>
+<p>| <code>status</code> | StripeQuoteStatus | Quote status |</p>
+<p>| <code>valid_until</code> | datetime | Expiration |</p>
+<p>| <code>created_at</code> | datetime | Creation timestamp |</p>
+
+<hr>
+
+<h3>GET /quotes/{quote_id} — Get quote</h3>
+
+<p>Returns full quote document with itemized pricing.</p>
+
+<p><strong>Path param:</strong> <code>quote_id</code> (string, e.g., "qt_1Abc2DefGhi")</p>
+
+<p><strong>Response:</strong></p>
+
+<p>| Field | Type | Description |</p>
+<p>|---|---|---|</p>
+<p>| <code>id</code> | string | Quote identifier |</p>
+<p>| <code>quote_number</code> | string | Reference number |</p>
+<p>| <code>organization_id</code> | uuid | Organization |</p>
+<p>| <code>organization_name</code> | string | Organization name |</p>
+<p>| <code>line_items</code> | array | Itemized pricing |</p>
+<p>| <code>subtotal_cents</code> | int | Subtotal in cents |</p>
+<p>| <code>tax_cents</code> | int | Tax in cents |</p>
+<p>| <code>total_cents</code> | int | Total in cents |</p>
+<p>| <code>currency</code> | string | ISO 4217 |</p>
+<p>| <code>status</code> | StripeQuoteStatus | Current status |</p>
+<p>| <code>valid_until</code> | datetime | Expiration |</p>
+<p>| <code>notes</code> | string | Special pricing info |</p>
+<p>| <code>terms_and_conditions</code> | string | Terms |</p>
+<p>| <code>stripe_quote_url</code> | string | Stripe URL |</p>
+<p>| <code>created_at</code> | datetime | Created |</p>
+
+<p><strong>Status codes:</strong> 200, 401, 403, 404, 500</p>
+
+<hr>
+
+<h3>POST /quotes/{quote_id}/confirm — Accept quote</h3>
+
+<p>Finalizes quote, creates draft invoice, advances experiment to <code>WaitingForMaterials</code>.</p>
+
+<p><strong>Path param:</strong> <code>quote_id</code> (string)</p>
+
+<p><strong>Request body:</strong></p>
+
+<p>| Field | Type | Required | Description |</p>
+<p>|---|---|---|---|</p>
+<p>| <code>purchase_order_number</code> | string/null | No | PO number |</p>
+<p>| <code>notes</code> | string/null | No | Reserved |</p>
+
+<p><strong>Response:</strong> <code>id</code>, <code>status</code>, <code>hosted_invoice_url</code>, <code>invoice_id</code></p>
+
+<p><strong>Status codes:</strong> 200, 403, 404, 409, 500</p>
+
+<hr>
+
+<h3>POST /quotes/{quote_id}/reject — Reject quote</h3>
+
+<p>Cancels quote; linked experiment reverts to <code>Draft</code>.</p>
+
+<p><strong>Path param:</strong> <code>quote_id</code> (string)</p>
+
+<p><strong>Request body:</strong></p>
+
+<p>| Field | Type | Required | Description |</p>
+<p>|---|---|---|---|</p>
+<p>| <code>reason</code> | QuoteRejectionReason | Yes | Primary reason |</p>
+<p>| <code>feedback</code> | string/null | No | Additional feedback |</p>
+
+<p><strong>Response:</strong> <code>id</code>, <code>status</code> (canceled)</p>
+
+<p><strong>Status codes:</strong> 200, 403, 404, 409, 500</p>
+
+<hr>
+
+<h2>Tokens</h2>
+
+<h3>GET /tokens — List tokens</h3>
+
+<p>Returns all tokens (root and attenuated) the caller owns.</p>
+
+<p><strong>Query params:</strong> <code>limit</code>, <code>offset</code></p>
+
+<p><strong>Response item:</strong></p>
+
+<p>| Field | Type | Description |</p>
+<p>|---|---|---|</p>
+<p>| <code>id</code> | string | Token identifier |</p>
+<p>| <code>name</code> | string | Human-readable label |</p>
+<p>| <code>kind</code> | string | "root" or "attenuated" |</p>
+<p>| <code>created_at</code> | datetime | Created |</p>
+<p>| <code>expires_at</code> | datetime/null | Expiration (null = no expiry) |</p>
+<p>| <code>revoked_at</code> | datetime/null | Revocation timestamp |</p>
+<p>| <code>parent_token_id</code> | string/null | Parent (null for root) |</p>
+<p>| <code>root_token_id</code> | string/null | Root of derivation tree |</p>
+<p>| <code>attenuation_spec</code> | object/null | Restrictions (null for root) |</p>
+
+<hr>
+
+<h3>POST /tokens/attenuate — Attenuate token</h3>
+
+<p>Creates a restricted version of an existing token using Biscuit cryptographic attenuation.</p>
+
+<p><strong>Request body:</strong></p>
+
+<p>| Field | Type | Required | Description |</p>
+<p>|---|---|---|---|</p>
+<p>| <code>token</code> | string | Yes | Existing token (<code>abs0_{slug}{biscuit_base64}</code>) |</p>
+<p>| <code>attenuation</code> | AttenuationSpec | Yes | Restrictions to apply |</p>
+<p>| <code>name</code> | string | Yes | Human-readable label |</p>
+<p>| <code>attenuated_parent_token_id</code> | uuid/null | No | Parent ID for chained attenuation |</p>
+
+<p><strong>Restriction types:</strong> Organization, Resource (experiments/results), Action (read/create/update), Expiry</p>
+
+<p><strong>Response (201):</strong> <code>id</code> (database ID), <code>token</code> (new attenuated token string)</p>
+
+<p><strong>Status codes:</strong> 201, 400, 401, 403</p>
+
+<hr>
+
+<h3>POST /tokens/revoke — Revoke token and lineage</h3>
+
+<p>Revokes the calling token's root and all attenuated descendants. Idempotent.</p>
+
+<p><strong>Response:</strong></p>
+
+<p>| Field | Type | Description |</p>
+<p>|---|---|---|</p>
+<p>| <code>token_id</code> | string | Root token ID revoked |</p>
+<p>| <code>revoked_at</code> | datetime | Revocation timestamp |</p>
+<p>| <code>children_revoked</code> | int64 | Child tokens newly revoked |</p>
+
+<p><strong>Status codes:</strong> 200, 403, 404</p>
+
+<hr>
+
+<h2>Updates</h2>
+
+<h3>GET /updates — List updates</h3>
+
+<p>Returns the experiment update feed (newest first): status changes, progress, errors.</p>
+
+<p><strong>Query params:</strong> <code>limit</code>, <code>offset</code>, <code>filter</code>, <code>sort</code></p>
+
+<p><strong>Filter examples:</strong></p>
+<ul><li><code>filter=eq(experiment_id,<uuid>)</code></li>
+<li><code>filter=in(experiment_id,uuid1,uuid2)</code></li>
+<li><code>filter=eq(type,status_change)</code></li>
+</ul>
+<p><strong>Response item:</strong></p>
+
+<p>| Field | Type | Description |</p>
+<p>|---|---|---|</p>
+<p>| <code>id</code> | string | Update identifier |</p>
+<p>| <code>experiment_id</code> | uuid | Associated experiment |</p>
+<p>| <code>experiment_code</code> | string | Human-readable code |</p>
+<p>| <code>name</code> | string | Update description |</p>
+<p>| <code>timestamp</code> | datetime | When the update occurred |</p>
+
+<hr>
+
+<h2>Feedback</h2>
+
+<h3>POST /feedback/submit — Submit feedback</h3>
+
+<p>For bug reports, feature requests, or general feedback.</p>
+
+<p><strong>Request body:</strong></p>
+
+<p>| Field | Type | Required | Description |</p>
+<p>|---|---|---|---|</p>
+<p>| <code>request_uuid</code> | uuid | Yes | UUID from the problematic API request |</p>
+<p>| <code>feedback_type</code> | FeedbackType | Yes | <code>feature_request</code>, <code>feedback</code>, or <code>bug_report</code> |</p>
+<p>| <code>title</code> | string/null | No | Short title |</p>
+<p>| <code>json_body</code> | object/null | At least one | Structured error details |</p>
+<p>| <code>human_note</code> | string/null | At least one | Free-form description |</p>
+
+<p><strong>Response (201):</strong> <code>reference</code> (feedback reference), <code>message</code> (confirmation)</p>
+
+<p><strong>Status codes:</strong> 201, 400, 401, 500</p>
+
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arboreto — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="active">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / Arboreto</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>Arboreto</h1>
+    <p class="description">Infer gene regulatory networks (GRNs) from gene expression data using scalable algorithms (GRNBoost2, GENIE3). Use when analyzing transcriptomics data (bulk RNA-seq, single-cell RNA-seq) to identify t</p>
+    <h1>Arboreto</h1>
+
+<h2>Overview</h2>
+
+<p>Arboreto is a computational library for inferring gene regulatory networks (GRNs) from gene expression data using parallelized algorithms that scale from single machines to multi-node clusters.</p>
+
+<p><strong>Core capability</strong>: Identify which transcription factors (TFs) regulate which target genes based on expression patterns across observations (cells, samples, conditions).</p>
+
+<h2>Quick Start</h2>
+
+<p>Install arboreto:</p>
+<pre><code class="language-bash">uv pip install arboreto</code></pre>
+
+<p>Basic GRN inference:</p>
+<pre><code class="language-python">import pandas as pd
+from arboreto.algo import grnboost2
+
+if __name__ == '__main__':
+    # Load expression data (genes as columns)
+    expression_matrix = pd.read_csv('expression_data.tsv', sep='\t')
+
+    # Infer regulatory network
+    network = grnboost2(expression_data=expression_matrix)
+
+    # Save results (TF, target, importance)
+    network.to_csv('network.tsv', sep='\t', index=False, header=False)</code></pre>
+
+<p><strong>Critical</strong>: Always use <code>if __name__ == '__main__':</code> guard because Dask spawns new processes.</p>
+
+<h2>Core Capabilities</h2>
+
+<h3>1. Basic GRN Inference</h3>
+
+<p>For standard GRN inference workflows including:</p>
+<ul><li>Input data preparation (Pandas DataFrame or NumPy array)</li>
+<li>Running inference with GRNBoost2 or GENIE3</li>
+<li>Filtering by transcription factors</li>
+<li>Output format and interpretation</li>
+</ul>
+<p><strong>See</strong>: <code>references/basic_inference.md</code></p>
+
+<p><strong>Use the ready-to-run script</strong>: <code>scripts/basic_grn_inference.py</code> for standard inference tasks:</p>
+<pre><code class="language-bash">python scripts/basic_grn_inference.py expression_data.tsv output_network.tsv --tf-file tfs.txt --seed 777</code></pre>
+
+<h3>2. Algorithm Selection</h3>
+
+<p>Arboreto provides two algorithms:</p>
+
+<p><strong>GRNBoost2 (Recommended)</strong>:</p>
+<ul><li>Fast gradient boosting-based inference</li>
+<li>Optimized for large datasets (10k+ observations)</li>
+<li>Default choice for most analyses</li>
+</ul>
+<p><strong>GENIE3</strong>:</p>
+<ul><li>Random Forest-based inference</li>
+<li>Original multiple regression approach</li>
+<li>Use for comparison or validation</li>
+</ul>
+<p>Quick comparison:</p>
+<pre><code class="language-python">from arboreto.algo import grnboost2, genie3
+
+# Fast, recommended
+network_grnboost = grnboost2(expression_data=matrix)
+
+# Classic algorithm
+network_genie3 = genie3(expression_data=matrix)</code></pre>
+
+<p><strong>For detailed algorithm comparison, parameters, and selection guidance</strong>: <code>references/algorithms.md</code></p>
+
+<h3>3. Distributed Computing</h3>
+
+<p>Scale inference from local multi-core to cluster environments:</p>
+
+<p><strong>Local (default)</strong> - Uses all available cores automatically:</p>
+<pre><code class="language-python">network = grnboost2(expression_data=matrix)</code></pre>
+
+<p><strong>Custom local client</strong> - Control resources:</p>
+<pre><code class="language-python">from distributed import LocalCluster, Client
+
+local_cluster = LocalCluster(n_workers=10, memory_limit='8GB')
+client = Client(local_cluster)
+
+network = grnboost2(expression_data=matrix, client_or_address=client)
+
+client.close()
+local_cluster.close()</code></pre>
+
+<p><strong>Cluster computing</strong> - Connect to remote Dask scheduler:</p>
+<pre><code class="language-python">from distributed import Client
+
+client = Client('tcp://scheduler:8786')
+network = grnboost2(expression_data=matrix, client_or_address=client)</code></pre>
+
+<p><strong>For cluster setup, performance optimization, and large-scale workflows</strong>: <code>references/distributed_computing.md</code></p>
+
+<h2>Installation</h2>
+
+<pre><code class="language-bash">uv pip install arboreto</code></pre>
+
+<p><strong>Dependencies</strong>: scipy, scikit-learn, numpy, pandas, dask, distributed</p>
+
+<h2>Common Use Cases</h2>
+
+<h3>Single-Cell RNA-seq Analysis</h3>
+<pre><code class="language-python">import pandas as pd
+from arboreto.algo import grnboost2
+
+if __name__ == '__main__':
+    # Load single-cell expression matrix (cells x genes)
+    sc_data = pd.read_csv('scrna_counts.tsv', sep='\t')
+
+    # Infer cell-type-specific regulatory network
+    network = grnboost2(expression_data=sc_data, seed=42)
+
+    # Filter high-confidence links
+    high_confidence = network[network['importance'] &gt; 0.5]
+    high_confidence.to_csv('grn_high_confidence.tsv', sep='\t', index=False)</code></pre>
+
+<h3>Bulk RNA-seq with TF Filtering</h3>
+<pre><code class="language-python">from arboreto.utils import load_tf_names
+from arboreto.algo import grnboost2
+
+if __name__ == '__main__':
+    # Load data
+    expression_data = pd.read_csv('rnaseq_tpm.tsv', sep='\t')
+    tf_names = load_tf_names('human_tfs.txt')
+
+    # Infer with TF restriction
+    network = grnboost2(
+        expression_data=expression_data,
+        tf_names=tf_names,
+        seed=123
+    )
+
+    network.to_csv('tf_target_network.tsv', sep='\t', index=False)</code></pre>
+
+<h3>Comparative Analysis (Multiple Conditions)</h3>
+<pre><code class="language-python">from arboreto.algo import grnboost2
+
+if __name__ == '__main__':
+    # Infer networks for different conditions
+    conditions = ['control', 'treatment_24h', 'treatment_48h']
+
+    for condition in conditions:
+        data = pd.read_csv(f'{condition}_expression.tsv', sep='\t')
+        network = grnboost2(expression_data=data, seed=42)
+        network.to_csv(f'{condition}_network.tsv', sep='\t', index=False)</code></pre>
+
+<h2>Output Interpretation</h2>
+
+<p>Arboreto returns a DataFrame with regulatory links:</p>
+
+<p>| Column | Description |</p>
+<p>|--------|-------------|</p>
+<p>| <code>TF</code> | Transcription factor (regulator) |</p>
+<p>| <code>target</code> | Target gene |</p>
+<p>| <code>importance</code> | Regulatory importance score (higher = stronger) |</p>
+
+<p><strong>Filtering strategy</strong>:</p>
+<ul><li>Top N links per target gene</li>
+<li>Importance threshold (e.g., > 0.5)</li>
+<li>Statistical significance testing (permutation tests)</li>
+</ul>
+<h2>Integration with pySCENIC</h2>
+
+<p>Arboreto is a core component of the SCENIC pipeline for single-cell regulatory network analysis:</p>
+
+<pre><code class="language-python"># Step 1: Use arboreto for GRN inference
+from arboreto.algo import grnboost2
+network = grnboost2(expression_data=sc_data, tf_names=tf_list)
+
+# Step 2: Use pySCENIC for regulon identification and activity scoring
+# (See pySCENIC documentation for downstream analysis)</code></pre>
+
+<h2>Reproducibility</h2>
+
+<p>Always set a seed for reproducible results:</p>
+<pre><code class="language-python">network = grnboost2(expression_data=matrix, seed=777)</code></pre>
+
+<p>Run multiple seeds for robustness analysis:</p>
+<pre><code class="language-python">from distributed import LocalCluster, Client
+
+if __name__ == '__main__':
+    client = Client(LocalCluster())
+
+    seeds = [42, 123, 777]
+    networks = []
+
+    for seed in seeds:
+        net = grnboost2(expression_data=matrix, client_or_address=client, seed=seed)
+        networks.append(net)
+
+    # Combine networks and filter consensus links
+    consensus = analyze_consensus(networks)</code></pre>
+
+<h2>Troubleshooting</h2>
+
+<p><strong>Memory errors</strong>: Reduce dataset size by filtering low-variance genes or use distributed computing</p>
+
+<p><strong>Slow performance</strong>: Use GRNBoost2 instead of GENIE3, enable distributed client, filter TF list</p>
+
+<p><strong>Dask errors</strong>: Ensure <code>if __name__ == '__main__':</code> guard is present in scripts</p>
+
+<p><strong>Empty results</strong>: Check data format (genes as columns), verify TF names match gene names</p>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Algorithms</h3>
+  <h1>GRN Inference Algorithms</h1>
+
+<p>Arboreto provides two algorithms for gene regulatory network (GRN) inference, both based on the multiple regression approach.</p>
+
+<h2>Algorithm Overview</h2>
+
+<p>Both algorithms follow the same inference strategy:</p>
+<ul><li>For each target gene in the dataset, train a regression model</li>
+<li>Identify the most important features (potential regulators) from the model</li>
+<li>Emit these features as candidate regulators with importance scores</li>
+</ul>
+<p>The key difference is <strong>computational efficiency</strong> and the underlying regression method.</p>
+
+<h2>GRNBoost2 (Recommended)</h2>
+
+<p><strong>Purpose</strong>: Fast GRN inference for large-scale datasets using gradient boosting.</p>
+
+<h3>When to Use</h3>
+<ul><li><strong>Large datasets</strong>: Tens of thousands of observations (e.g., single-cell RNA-seq)</li>
+<li><strong>Time-constrained analysis</strong>: Need faster results than GENIE3</li>
+<li><strong>Default choice</strong>: GRNBoost2 is the flagship algorithm and recommended for most use cases</li>
+</ul>
+<h3>Technical Details</h3>
+<ul><li><strong>Method</strong>: Stochastic gradient boosting with early-stopping regularization</li>
+<li><strong>Performance</strong>: Significantly faster than GENIE3 on large datasets</li>
+<li><strong>Output</strong>: Same format as GENIE3 (TF-target-importance triplets)</li>
+</ul>
+<h3>Usage</h3>
+<pre><code class="language-python">from arboreto.algo import grnboost2
+
+network = grnboost2(
+    expression_data=expression_matrix,
+    tf_names=tf_names,
+    seed=42  # For reproducibility
+)</code></pre>
+
+<h3>Parameters</h3>
+<pre><code class="language-python">grnboost2(
+    expression_data,           # Required: pandas DataFrame or numpy array
+    gene_names=None,           # Required for numpy arrays
+    tf_names='all',            # List of TF names or 'all'
+    verbose=False,             # Print progress messages
+    client_or_address='local', # Dask client or scheduler address
+    seed=None                  # Random seed for reproducibility
+)</code></pre>
+
+<h2>GENIE3</h2>
+
+<p><strong>Purpose</strong>: Classic Random Forest-based GRN inference, serving as the conceptual blueprint.</p>
+
+<h3>When to Use</h3>
+<ul><li><strong>Smaller datasets</strong>: When dataset size allows for longer computation</li>
+<li><strong>Comparison studies</strong>: When comparing with published GENIE3 results</li>
+<li><strong>Validation</strong>: To validate GRNBoost2 results</li>
+</ul>
+<h3>Technical Details</h3>
+<ul><li><strong>Method</strong>: Random Forest or ExtraTrees regression</li>
+<li><strong>Foundation</strong>: Original multiple regression GRN inference strategy</li>
+<li><strong>Trade-off</strong>: More computationally expensive but well-established</li>
+</ul>
+<h3>Usage</h3>
+<pre><code class="language-python">from arboreto.algo import genie3
+
+network = genie3(
+    expression_data=expression_matrix,
+    tf_names=tf_names,
+    seed=42
+)</code></pre>
+
+<h3>Parameters</h3>
+<pre><code class="language-python">genie3(
+    expression_data,           # Required: pandas DataFrame or numpy array
+    gene_names=None,           # Required for numpy arrays
+    tf_names='all',            # List of TF names or 'all'
+    verbose=False,             # Print progress messages
+    client_or_address='local', # Dask client or scheduler address
+    seed=None                  # Random seed for reproducibility
+)</code></pre>
+
+<h2>Algorithm Comparison</h2>
+
+<p>| Feature | GRNBoost2 | GENIE3 |</p>
+<p>|---------|-----------|--------|</p>
+<p>| <strong>Speed</strong> | Fast (optimized for large data) | Slower |</p>
+<p>| <strong>Method</strong> | Gradient boosting | Random Forest |</p>
+<p>| <strong>Best for</strong> | Large-scale data (10k+ observations) | Small-medium datasets |</p>
+<p>| <strong>Output format</strong> | Same | Same |</p>
+<p>| <strong>Inference strategy</strong> | Multiple regression | Multiple regression |</p>
+<p>| <strong>Recommended</strong> | Yes (default choice) | For comparison/validation |</p>
+
+<h2>Advanced: Custom Regressor Parameters</h2>
+
+<p>For advanced users, pass custom scikit-learn regressor parameters:</p>
+
+<pre><code class="language-python">from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
+
+# Custom GRNBoost2 parameters
+custom_grnboost2 = grnboost2(
+    expression_data=expression_matrix,
+    regressor_type='GBM',
+    regressor_kwargs={
+        'n_estimators': 100,
+        'max_depth': 5,
+        'learning_rate': 0.1
+    }
+)
+
+# Custom GENIE3 parameters
+custom_genie3 = genie3(
+    expression_data=expression_matrix,
+    regressor_type='RF',
+    regressor_kwargs={
+        'n_estimators': 1000,
+        'max_features': 'sqrt'
+    }
+)</code></pre>
+
+<h2>Choosing the Right Algorithm</h2>
+
+<p><strong>Decision guide</strong>:</p>
+
+<ul><li><strong>Start with GRNBoost2</strong> - It's faster and handles large datasets better</li>
+<li><strong>Use GENIE3 if</strong>:</li>
+</ul><p>   - Comparing with existing GENIE3 publications</p>
+<p>   - Dataset is small-medium sized</p>
+<p>   - Validating GRNBoost2 results</p>
+
+<p>Both algorithms produce comparable regulatory networks with the same output format, making them interchangeable for most analyses.</p>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Basic Inference</h3>
+  <h1>Basic GRN Inference with Arboreto</h1>
+
+<h2>Input Data Requirements</h2>
+
+<p>Arboreto requires gene expression data in one of two formats:</p>
+
+<h3>Pandas DataFrame (Recommended)</h3>
+<ul><li><strong>Rows</strong>: Observations (cells, samples, conditions)</li>
+<li><strong>Columns</strong>: Genes (with gene names as column headers)</li>
+<li><strong>Format</strong>: Numeric expression values</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-python">import pandas as pd
+
+# Load expression matrix with genes as columns
+expression_matrix = pd.read_csv('expression_data.tsv', sep='\t')
+# Columns: ['gene1', 'gene2', 'gene3', ...]
+# Rows: observation data</code></pre>
+
+<h3>NumPy Array</h3>
+<ul><li><strong>Shape</strong>: (observations, genes)</li>
+<li><strong>Requirement</strong>: Separately provide gene names list matching column order</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-python">import numpy as np
+
+expression_matrix = np.genfromtxt('expression_data.tsv', delimiter='\t', skip_header=1)
+with open('expression_data.tsv') as f:
+    gene_names = [gene.strip() for gene in f.readline().split('\t')]
+
+assert expression_matrix.shape[1] == len(gene_names)</code></pre>
+
+<h2>Transcription Factors (TFs)</h2>
+
+<p>Optionally provide a list of transcription factor names to restrict regulatory inference:</p>
+
+<pre><code class="language-python">from arboreto.utils import load_tf_names
+
+# Load from file (one TF per line)
+tf_names = load_tf_names('transcription_factors.txt')
+
+# Or define directly
+tf_names = ['TF1', 'TF2', 'TF3']</code></pre>
+
+<p>If not provided, all genes are considered potential regulators.</p>
+
+<h2>Basic Inference Workflow</h2>
+
+<h3>Using Pandas DataFrame</h3>
+
+<pre><code class="language-python">import pandas as pd
+from arboreto.utils import load_tf_names
+from arboreto.algo import grnboost2
+
+if __name__ == '__main__':
+    # Load expression data
+    expression_matrix = pd.read_csv('expression_data.tsv', sep='\t')
+
+    # Load transcription factors (optional)
+    tf_names = load_tf_names('tf_list.txt')
+
+    # Run GRN inference
+    network = grnboost2(
+        expression_data=expression_matrix,
+        tf_names=tf_names  # Optional
+    )
+
+    # Save results
+    network.to_csv('network_output.tsv', sep='\t', index=False, header=False)</code></pre>
+
+<p><strong>Critical</strong>: The <code>if __name__ == '__main__':</code> guard is required because Dask spawns new processes internally.</p>
+
+<h3>Using NumPy Array</h3>
+
+<pre><code class="language-python">import numpy as np
+from arboreto.algo import grnboost2
+
+if __name__ == '__main__':
+    # Load expression matrix
+    expression_matrix = np.genfromtxt('expression_data.tsv', delimiter='\t', skip_header=1)
+
+    # Extract gene names from header
+    with open('expression_data.tsv') as f:
+        gene_names = [gene.strip() for gene in f.readline().split('\t')]
+
+    # Verify dimensions match
+    assert expression_matrix.shape[1] == len(gene_names)
+
+    # Run inference with explicit gene names
+    network = grnboost2(
+        expression_data=expression_matrix,
+        gene_names=gene_names,
+        tf_names=tf_names
+    )
+
+    network.to_csv('network_output.tsv', sep='\t', index=False, header=False)</code></pre>
+
+<h2>Output Format</h2>
+
+<p>Arboreto returns a Pandas DataFrame with three columns:</p>
+
+<p>| Column | Description |</p>
+<p>|--------|-------------|</p>
+<p>| <code>TF</code> | Transcription factor (regulator) gene name |</p>
+<p>| <code>target</code> | Target gene name |</p>
+<p>| <code>importance</code> | Regulatory importance score (higher = stronger regulation) |</p>
+
+<p>Example output:</p>
+<pre><code>TF1    gene5    0.856
+TF2    gene12   0.743
+TF1    gene8    0.621</code></pre>
+
+<h2>Setting Random Seed</h2>
+
+<p>For reproducible results, provide a seed parameter:</p>
+
+<pre><code class="language-python">network = grnboost2(
+    expression_data=expression_matrix,
+    tf_names=tf_names,
+    seed=777
+)</code></pre>
+
+<h2>Algorithm Selection</h2>
+
+<p>Use <code>grnboost2()</code> for most cases (faster, handles large datasets):</p>
+<pre><code class="language-python">from arboreto.algo import grnboost2
+network = grnboost2(expression_data=expression_matrix)</code></pre>
+
+<p>Use <code>genie3()</code> for comparison or specific requirements:</p>
+<pre><code class="language-python">from arboreto.algo import genie3
+network = genie3(expression_data=expression_matrix)</code></pre>
+
+<p>See <code>references/algorithms.md</code> for detailed algorithm comparison.</p>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Distributed Computing</h3>
+  <h1>Distributed Computing with Arboreto</h1>
+
+<p>Arboreto leverages Dask for parallelized computation, enabling efficient GRN inference from single-machine multi-core processing to multi-node cluster environments.</p>
+
+<h2>Computation Architecture</h2>
+
+<p>GRN inference is inherently parallelizable:</p>
+<ul><li>Each target gene's regression model can be trained independently</li>
+<li>Arboreto represents computation as a Dask task graph</li>
+<li>Tasks are distributed across available computational resources</li>
+</ul>
+<h2>Local Multi-Core Processing (Default)</h2>
+
+<p>By default, arboreto uses all available CPU cores on the local machine:</p>
+
+<pre><code class="language-python">from arboreto.algo import grnboost2
+
+# Automatically uses all local cores
+network = grnboost2(expression_data=expression_matrix, tf_names=tf_names)</code></pre>
+
+<p>This is sufficient for most use cases and requires no additional configuration.</p>
+
+<h2>Custom Local Dask Client</h2>
+
+<p>For fine-grained control over local resources, create a custom Dask client:</p>
+
+<pre><code class="language-python">from distributed import LocalCluster, Client
+from arboreto.algo import grnboost2
+
+if __name__ == '__main__':
+    # Configure local cluster
+    local_cluster = LocalCluster(
+        n_workers=10,              # Number of worker processes
+        threads_per_worker=1,       # Threads per worker
+        memory_limit='8GB'          # Memory limit per worker
+    )
+
+    # Create client
+    custom_client = Client(local_cluster)
+
+    # Run inference with custom client
+    network = grnboost2(
+        expression_data=expression_matrix,
+        tf_names=tf_names,
+        client_or_address=custom_client
+    )
+
+    # Clean up
+    custom_client.close()
+    local_cluster.close()</code></pre>
+
+<h3>Benefits of Custom Client</h3>
+<ul><li><strong>Resource control</strong>: Limit CPU and memory usage</li>
+<li><strong>Multiple runs</strong>: Reuse same client for different parameter sets</li>
+<li><strong>Monitoring</strong>: Access Dask dashboard for performance insights</li>
+</ul>
+<h2>Multiple Inference Runs with Same Client</h2>
+
+<p>Reuse a single Dask client for multiple inference runs with different parameters:</p>
+
+<pre><code class="language-python">from distributed import LocalCluster, Client
+from arboreto.algo import grnboost2
+
+if __name__ == '__main__':
+    # Initialize client once
+    local_cluster = LocalCluster(n_workers=8, threads_per_worker=1)
+    client = Client(local_cluster)
+
+    # Run multiple inferences
+    network_seed1 = grnboost2(
+        expression_data=expression_matrix,
+        tf_names=tf_names,
+        client_or_address=client,
+        seed=666
+    )
+
+    network_seed2 = grnboost2(
+        expression_data=expression_matrix,
+        tf_names=tf_names,
+        client_or_address=client,
+        seed=777
+    )
+
+    # Different algorithms with same client
+    from arboreto.algo import genie3
+    network_genie3 = genie3(
+        expression_data=expression_matrix,
+        tf_names=tf_names,
+        client_or_address=client
+    )
+
+    # Clean up once
+    client.close()
+    local_cluster.close()</code></pre>
+
+<h2>Distributed Cluster Computing</h2>
+
+<p>For very large datasets, connect to a remote Dask distributed scheduler running on a cluster:</p>
+
+<h3>Step 1: Set Up Dask Scheduler (on cluster head node)</h3>
+<pre><code class="language-bash">dask-scheduler
+# Output: Scheduler at tcp://10.118.224.134:8786</code></pre>
+
+<h3>Step 2: Start Dask Workers (on cluster compute nodes)</h3>
+<pre><code class="language-bash">dask-worker tcp://10.118.224.134:8786</code></pre>
+
+<h3>Step 3: Connect from Client</h3>
+<pre><code class="language-python">from distributed import Client
+from arboreto.algo import grnboost2
+
+if __name__ == '__main__':
+    # Connect to remote scheduler
+    scheduler_address = 'tcp://10.118.224.134:8786'
+    cluster_client = Client(scheduler_address)
+
+    # Run inference on cluster
+    network = grnboost2(
+        expression_data=expression_matrix,
+        tf_names=tf_names,
+        client_or_address=cluster_client
+    )
+
+    cluster_client.close()</code></pre>
+
+<h3>Cluster Configuration Best Practices</h3>
+
+<p><strong>Worker configuration</strong>:</p>
+<pre><code class="language-bash">dask-worker tcp://scheduler:8786 \
+    --nprocs 4 \              # Number of processes per node
+    --nthreads 1 \            # Threads per process
+    --memory-limit 16GB       # Memory per process</code></pre>
+
+<p><strong>For large-scale inference</strong>:</p>
+<ul><li>Use more workers with moderate memory rather than fewer workers with large memory</li>
+<li>Set <code>threads_per_worker=1</code> to avoid GIL contention in scikit-learn</li>
+<li>Monitor memory usage to prevent workers from being killed</li>
+</ul>
+<h2>Monitoring and Debugging</h2>
+
+<h3>Dask Dashboard</h3>
+
+<p>Access the Dask dashboard for real-time monitoring:</p>
+
+<pre><code class="language-python">from distributed import Client
+
+client = Client()  # Prints dashboard URL
+# Dashboard available at: http://localhost:8787/status</code></pre>
+
+<p>The dashboard shows:</p>
+<ul><li><strong>Task progress</strong>: Number of tasks completed/pending</li>
+<li><strong>Resource usage</strong>: CPU, memory per worker</li>
+<li><strong>Task stream</strong>: Real-time visualization of computation</li>
+<li><strong>Performance</strong>: Bottleneck identification</li>
+</ul>
+<h3>Verbose Output</h3>
+
+<p>Enable verbose logging to track inference progress:</p>
+
+<pre><code class="language-python">network = grnboost2(
+    expression_data=expression_matrix,
+    tf_names=tf_names,
+    verbose=True
+)</code></pre>
+
+<h2>Performance Optimization Tips</h2>
+
+<h3>1. Data Format</h3>
+<ul><li><strong>Use Pandas DataFrame when possible</strong>: More efficient than NumPy for Dask operations</li>
+<li><strong>Reduce data size</strong>: Filter low-variance genes before inference</li>
+</ul>
+<h3>2. Worker Configuration</h3>
+<ul><li><strong>CPU-bound tasks</strong>: Set <code>threads_per_worker=1</code>, increase <code>n_workers</code></li>
+<li><strong>Memory-bound tasks</strong>: Increase <code>memory_limit</code> per worker</li>
+</ul>
+<h3>3. Cluster Setup</h3>
+<ul><li><strong>Network</strong>: Ensure high-bandwidth, low-latency network between nodes</li>
+<li><strong>Storage</strong>: Use shared filesystem or object storage for large datasets</li>
+<li><strong>Scheduling</strong>: Allocate dedicated nodes to avoid resource contention</li>
+</ul>
+<h3>4. Transcription Factor Filtering</h3>
+<ul><li><strong>Limit TF list</strong>: Providing specific TF names reduces computation</li>
+</ul><pre><code class="language-python"># Full search (slow)
+network = grnboost2(expression_data=matrix)
+
+# Filtered search (faster)
+network = grnboost2(expression_data=matrix, tf_names=known_tfs)</code></pre>
+
+<h2>Example: Large-Scale Single-Cell Analysis</h2>
+
+<p>Complete workflow for processing single-cell RNA-seq data on a cluster:</p>
+
+<pre><code class="language-python">from distributed import Client
+from arboreto.algo import grnboost2
+import pandas as pd
+
+if __name__ == '__main__':
+    # Connect to cluster
+    client = Client('tcp://cluster-scheduler:8786')
+
+    # Load large single-cell dataset (50,000 cells x 20,000 genes)
+    expression_data = pd.read_csv('scrnaseq_data.tsv', sep='\t')
+
+    # Load cell-type-specific TFs
+    tf_names = pd.read_csv('tf_list.txt', header=None)[0].tolist()
+
+    # Run distributed inference
+    network = grnboost2(
+        expression_data=expression_data,
+        tf_names=tf_names,
+        client_or_address=client,
+        verbose=True,
+        seed=42
+    )
+
+    # Save results
+    network.to_csv('grn_results.tsv', sep='\t', index=False)
+
+    client.close()</code></pre>
+
+<p>This approach enables analysis of datasets that would be impractical on a single machine.</p>
+
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

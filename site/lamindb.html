@@ -1,0 +1,3480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LaminDB — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="active">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / LaminDB</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>LaminDB</h1>
+    <p class="description">This skill should be used when working with LaminDB, an open-source data framework for biology that makes data queryable, traceable, reproducible, and FAIR. Use when managing biological datasets (scRN</p>
+    <h1>LaminDB</h1>
+
+<h2>Overview</h2>
+
+<p>LaminDB is an open-source data framework for biology designed to make data queryable, traceable, reproducible, and FAIR (Findable, Accessible, Interoperable, Reusable). It provides a unified platform that combines lakehouse architecture, lineage tracking, feature stores, biological ontologies, LIMS (Laboratory Information Management System), and ELN (Electronic Lab Notebook) capabilities through a single Python API.</p>
+
+<p><strong>Core Value Proposition:</strong></p>
+<ul><li><strong>Queryability</strong>: Search and filter datasets by metadata, features, and ontology terms</li>
+<li><strong>Traceability</strong>: Automatic lineage tracking from raw data through analysis to results</li>
+<li><strong>Reproducibility</strong>: Version control for data, code, and environment</li>
+<li><strong>FAIR Compliance</strong>: Standardized annotations using biological ontologies</li>
+</ul>
+<h2>When to Use This Skill</h2>
+
+<p>Use this skill when:</p>
+
+<ul><li><strong>Managing biological datasets</strong>: scRNA-seq, bulk RNA-seq, spatial transcriptomics, flow cytometry, multi-modal data, EHR data</li>
+<li><strong>Tracking computational workflows</strong>: Notebooks, scripts, pipeline execution (Nextflow, Snakemake, Redun)</li>
+<li><strong>Curating and validating data</strong>: Schema validation, standardization, ontology-based annotation</li>
+<li><strong>Working with biological ontologies</strong>: Genes, proteins, cell types, tissues, diseases, pathways (via Bionty)</li>
+<li><strong>Building data lakehouses</strong>: Unified query interface across multiple datasets</li>
+<li><strong>Ensuring reproducibility</strong>: Automatic versioning, lineage tracking, environment capture</li>
+<li><strong>Integrating ML pipelines</strong>: Connecting with Weights & Biases, MLflow, HuggingFace, scVI-tools</li>
+<li><strong>Deploying data infrastructure</strong>: Setting up local or cloud-based data management systems</li>
+<li><strong>Collaborating on datasets</strong>: Sharing curated, annotated data with standardized metadata</li>
+</ul>
+<h2>Core Capabilities</h2>
+
+<p>LaminDB provides six interconnected capability areas, each documented in detail in the references folder.</p>
+
+<h3>1. Core Concepts and Data Lineage</h3>
+
+<p><strong>Core entities:</strong></p>
+<ul><li><strong>Artifacts</strong>: Versioned datasets (DataFrame, AnnData, Parquet, Zarr, etc.)</li>
+<li><strong>Records</strong>: Experimental entities (samples, perturbations, instruments)</li>
+<li><strong>Runs & Transforms</strong>: Computational lineage tracking (what code produced what data)</li>
+<li><strong>Features</strong>: Typed metadata fields for annotation and querying</li>
+</ul>
+<p><strong>Key workflows:</strong></p>
+<ul><li>Create and version artifacts from files or Python objects</li>
+<li>Track notebook/script execution with <code>ln.track()</code> and <code>ln.finish()</code></li>
+<li>Annotate artifacts with typed features</li>
+<li>Visualize data lineage graphs with <code>artifact.view_lineage()</code></li>
+<li>Query by provenance (find all outputs from specific code/inputs)</li>
+</ul>
+<p><strong>Reference:</strong> <code>references/core-concepts.md</code> - Read this for detailed information on artifacts, records, runs, transforms, features, versioning, and lineage tracking.</p>
+
+<h3>2. Data Management and Querying</h3>
+
+<p><strong>Query capabilities:</strong></p>
+<ul><li>Registry exploration and lookup with auto-complete</li>
+<li>Single record retrieval with <code>get()</code>, <code>one()</code>, <code>one_or_none()</code></li>
+<li>Filtering with comparison operators (<code>__gt</code>, <code>__lte</code>, <code>__contains</code>, <code>__startswith</code>)</li>
+<li>Feature-based queries (query by annotated metadata)</li>
+<li>Cross-registry traversal with double-underscore syntax</li>
+<li>Full-text search across registries</li>
+<li>Advanced logical queries with Q objects (AND, OR, NOT)</li>
+<li>Streaming large datasets without loading into memory</li>
+</ul>
+<p><strong>Key workflows:</strong></p>
+<ul><li>Browse artifacts with filters and ordering</li>
+<li>Query by features, creation date, creator, size, etc.</li>
+<li>Stream large files in chunks or with array slicing</li>
+<li>Organize data with hierarchical keys</li>
+<li>Group artifacts into collections</li>
+</ul>
+<p><strong>Reference:</strong> <code>references/data-management.md</code> - Read this for comprehensive query patterns, filtering examples, streaming strategies, and data organization best practices.</p>
+
+<h3>3. Annotation and Validation</h3>
+
+<p><strong>Curation process:</strong></p>
+<ul><li><strong>Validation</strong>: Confirm datasets match desired schemas</li>
+<li><strong>Standardization</strong>: Fix typos, map synonyms to canonical terms</li>
+<li><strong>Annotation</strong>: Link datasets to metadata entities for queryability</li>
+</ul>
+<p><strong>Schema types:</strong></p>
+<ul><li><strong>Flexible schemas</strong>: Validate only known columns, allow additional metadata</li>
+<li><strong>Minimal required schemas</strong>: Specify essential columns, permit extras</li>
+<li><strong>Strict schemas</strong>: Complete control over structure and values</li>
+</ul>
+<p><strong>Supported data types:</strong></p>
+<ul><li>DataFrames (Parquet, CSV)</li>
+<li>AnnData (single-cell genomics)</li>
+<li>MuData (multi-modal)</li>
+<li>SpatialData (spatial transcriptomics)</li>
+<li>TileDB-SOMA (scalable arrays)</li>
+</ul>
+<p><strong>Key workflows:</strong></p>
+<ul><li>Define features and schemas for data validation</li>
+<li>Use <code>DataFrameCurator</code> or <code>AnnDataCurator</code> for validation</li>
+<li>Standardize values with <code>.cat.standardize()</code></li>
+<li>Map to ontologies with <code>.cat.add_ontology()</code></li>
+<li>Save curated artifacts with schema linkage</li>
+<li>Query validated datasets by features</li>
+</ul>
+<p><strong>Reference:</strong> <code>references/annotation-validation.md</code> - Read this for detailed curation workflows, schema design patterns, handling validation errors, and best practices.</p>
+
+<h3>4. Biological Ontologies</h3>
+
+<p><strong>Available ontologies (via Bionty):</strong></p>
+<ul><li>Genes (Ensembl), Proteins (UniProt)</li>
+<li>Cell types (CL), Cell lines (CLO)</li>
+<li>Tissues (Uberon), Diseases (Mondo, DOID)</li>
+<li>Phenotypes (HPO), Pathways (GO)</li>
+<li>Experimental factors (EFO), Developmental stages</li>
+<li>Organisms (NCBItaxon), Drugs (DrugBank)</li>
+</ul>
+<p><strong>Key workflows:</strong></p>
+<ul><li>Import public ontologies with <code>bt.CellType.import_source()</code></li>
+<li>Search ontologies with keyword or exact matching</li>
+<li>Standardize terms using synonym mapping</li>
+<li>Explore hierarchical relationships (parents, children, ancestors)</li>
+<li>Validate data against ontology terms</li>
+<li>Annotate datasets with ontology records</li>
+<li>Create custom terms and hierarchies</li>
+<li>Handle multi-organism contexts (human, mouse, etc.)</li>
+</ul>
+<p><strong>Reference:</strong> <code>references/ontologies.md</code> - Read this for comprehensive ontology operations, standardization strategies, hierarchy navigation, and annotation workflows.</p>
+
+<h3>5. Integrations</h3>
+
+<p><strong>Workflow managers:</strong></p>
+<ul><li>Nextflow: Track pipeline processes and outputs</li>
+<li>Snakemake: Integrate into Snakemake rules</li>
+<li>Redun: Combine with Redun task tracking</li>
+</ul>
+<p><strong>MLOps platforms:</strong></p>
+<ul><li>Weights & Biases: Link experiments with data artifacts</li>
+<li>MLflow: Track models and experiments</li>
+<li>HuggingFace: Track model fine-tuning</li>
+<li>scVI-tools: Single-cell analysis workflows</li>
+</ul>
+<p><strong>Storage systems:</strong></p>
+<ul><li>Local filesystem, AWS S3, Google Cloud Storage</li>
+<li>S3-compatible (MinIO, Cloudflare R2)</li>
+<li>HTTP/HTTPS endpoints (read-only)</li>
+<li>HuggingFace datasets</li>
+</ul>
+<p><strong>Array stores:</strong></p>
+<ul><li>TileDB-SOMA (with cellxgene support)</li>
+<li>DuckDB for SQL queries on Parquet files</li>
+</ul>
+<p><strong>Visualization:</strong></p>
+<ul><li>Vitessce for interactive spatial/single-cell visualization</li>
+</ul>
+<p><strong>Version control:</strong></p>
+<ul><li>Git integration for source code tracking</li>
+</ul>
+<p><strong>Reference:</strong> <code>references/integrations.md</code> - Read this for integration patterns, code examples, and troubleshooting for third-party systems.</p>
+
+<h3>6. Setup and Deployment</h3>
+
+<p><strong>Installation:</strong></p>
+<ul><li>Basic: <code>uv pip install lamindb</code></li>
+<li>With extras: <code>uv pip install 'lamindb[gcp,zarr,fcs]'</code></li>
+<li>Modules: bionty, wetlab, clinical</li>
+</ul>
+<p><strong>Instance types:</strong></p>
+<ul><li>Local SQLite (development)</li>
+<li>Cloud storage + SQLite (small teams)</li>
+<li>Cloud storage + PostgreSQL (production)</li>
+</ul>
+<p><strong>Storage options:</strong></p>
+<ul><li>Local filesystem</li>
+<li>AWS S3 with configurable regions and permissions</li>
+<li>Google Cloud Storage</li>
+<li>S3-compatible endpoints (MinIO, Cloudflare R2)</li>
+</ul>
+<p><strong>Configuration:</strong></p>
+<ul><li>Cache management for cloud files</li>
+<li>Multi-user system configurations</li>
+<li>Git repository sync</li>
+<li>Environment variables</li>
+</ul>
+<p><strong>Deployment patterns:</strong></p>
+<ul><li>Local dev → Cloud production migration</li>
+<li>Multi-region deployments</li>
+<li>Shared storage with personal instances</li>
+</ul>
+<p><strong>Reference:</strong> <code>references/setup-deployment.md</code> - Read this for detailed installation, configuration, storage setup, database management, security best practices, and troubleshooting.</p>
+
+<h2>Common Use Case Workflows</h2>
+
+<h3>Use Case 1: Single-Cell RNA-seq Analysis with Ontology Validation</h3>
+
+<pre><code class="language-python">import lamindb as ln
+import bionty as bt
+import anndata as ad
+
+# Start tracking
+ln.track(params={"analysis": "scRNA-seq QC and annotation"})
+
+# Import cell type ontology
+bt.CellType.import_source()
+
+# Load data
+adata = ad.read_h5ad("raw_counts.h5ad")
+
+# Validate and standardize cell types
+adata.obs["cell_type"] = bt.CellType.standardize(adata.obs["cell_type"])
+
+# Curate with schema
+curator = ln.curators.AnnDataCurator(adata, schema)
+curator.validate()
+artifact = curator.save_artifact(key="scrna/validated.h5ad")
+
+# Link ontology annotations
+cell_types = bt.CellType.from_values(adata.obs.cell_type)
+artifact.feature_sets.add_ontology(cell_types)
+
+ln.finish()</code></pre>
+
+<h3>Use Case 2: Building a Queryable Data Lakehouse</h3>
+
+<pre><code class="language-python">import lamindb as ln
+
+# Register multiple experiments
+for i, file in enumerate(data_files):
+    artifact = ln.Artifact.from_anndata(
+        ad.read_h5ad(file),
+        key=f"scrna/batch_{i}.h5ad",
+        description=f"scRNA-seq batch {i}"
+    ).save()
+
+    # Annotate with features
+    artifact.features.add_values({
+        "batch": i,
+        "tissue": tissues[i],
+        "condition": conditions[i]
+    })
+
+# Query across all experiments
+immune_datasets = ln.Artifact.filter(
+    key__startswith="scrna/",
+    tissue="PBMC",
+    condition="treated"
+).to_dataframe()
+
+# Load specific datasets
+for artifact in immune_datasets:
+    adata = artifact.load()
+    # Analyze</code></pre>
+
+<h3>Use Case 3: ML Pipeline with W&B Integration</h3>
+
+<pre><code class="language-python">import lamindb as ln
+import wandb
+
+# Initialize both systems
+wandb.init(project="drug-response", name="exp-42")
+ln.track(params={"model": "random_forest", "n_estimators": 100})
+
+# Load training data from LaminDB
+train_artifact = ln.Artifact.get(key="datasets/train.parquet")
+train_data = train_artifact.load()
+
+# Train model
+model = train_model(train_data)
+
+# Log to W&amp;B
+wandb.log({"accuracy": 0.95})
+
+# Save model in LaminDB with W&amp;B linkage
+import joblib
+joblib.dump(model, "model.pkl")
+model_artifact = ln.Artifact("model.pkl", key="models/exp-42.pkl").save()
+model_artifact.features.add_values({"wandb_run_id": wandb.run.id})
+
+ln.finish()
+wandb.finish()</code></pre>
+
+<h3>Use Case 4: Nextflow Pipeline Integration</h3>
+
+<pre><code class="language-python"># In Nextflow process script
+import lamindb as ln
+
+ln.track()
+
+# Load input artifact
+input_artifact = ln.Artifact.get(key="raw/batch_${batch_id}.fastq.gz")
+input_path = input_artifact.cache()
+
+# Process (alignment, quantification, etc.)
+# ... Nextflow process logic ...
+
+# Save output
+output_artifact = ln.Artifact(
+    "counts.csv",
+    key="processed/batch_${batch_id}_counts.csv"
+).save()
+
+ln.finish()</code></pre>
+
+<h2>Getting Started Checklist</h2>
+
+<p>To start using LaminDB effectively:</p>
+
+<ul><li><strong>Installation & Setup</strong> (<code>references/setup-deployment.md</code>)</li>
+</ul><p>   - Install LaminDB and required extras</p>
+<p>   - Authenticate with <code>lamin login</code></p>
+<p>   - Initialize instance with <code>lamin init --storage ...</code></p>
+
+<ul><li><strong>Learn Core Concepts</strong> (<code>references/core-concepts.md</code>)</li>
+</ul><p>   - Understand Artifacts, Records, Runs, Transforms</p>
+<p>   - Practice creating and retrieving artifacts</p>
+<p>   - Implement <code>ln.track()</code> and <code>ln.finish()</code> in workflows</p>
+
+<ul><li><strong>Master Querying</strong> (<code>references/data-management.md</code>)</li>
+</ul><p>   - Practice filtering and searching registries</p>
+<p>   - Learn feature-based queries</p>
+<p>   - Experiment with streaming large files</p>
+
+<ul><li><strong>Set Up Validation</strong> (<code>references/annotation-validation.md</code>)</li>
+</ul><p>   - Define features relevant to research domain</p>
+<p>   - Create schemas for data types</p>
+<p>   - Practice curation workflows</p>
+
+<ul><li><strong>Integrate Ontologies</strong> (<code>references/ontologies.md</code>)</li>
+</ul><p>   - Import relevant biological ontologies (genes, cell types, etc.)</p>
+<p>   - Validate existing annotations</p>
+<p>   - Standardize metadata with ontology terms</p>
+
+<ul><li><strong>Connect Tools</strong> (<code>references/integrations.md</code>)</li>
+</ul><p>   - Integrate with existing workflow managers</p>
+<p>   - Link ML platforms for experiment tracking</p>
+<p>   - Configure cloud storage and compute</p>
+
+<h2>Key Principles</h2>
+
+<p>Follow these principles when working with LaminDB:</p>
+
+<ul><li><strong>Track everything</strong>: Use <code>ln.track()</code> at the start of every analysis for automatic lineage capture</li>
+</ul>
+<ul><li><strong>Validate early</strong>: Define schemas and validate data before extensive analysis</li>
+</ul>
+<ul><li><strong>Use ontologies</strong>: Leverage public biological ontologies for standardized annotations</li>
+</ul>
+<ul><li><strong>Organize with keys</strong>: Structure artifact keys hierarchically (e.g., <code>project/experiment/batch/file.h5ad</code>)</li>
+</ul>
+<ul><li><strong>Query metadata first</strong>: Filter and search before loading large files</li>
+</ul>
+<ul><li><strong>Version, don't duplicate</strong>: Use built-in versioning instead of creating new keys for modifications</li>
+</ul>
+<ul><li><strong>Annotate with features</strong>: Define typed features for queryable metadata</li>
+</ul>
+<ul><li><strong>Document thoroughly</strong>: Add descriptions to artifacts, schemas, and transforms</li>
+</ul>
+<ul><li><strong>Leverage lineage</strong>: Use <code>view_lineage()</code> to understand data provenance</li>
+</ul>
+<ul><li><strong>Start local, scale cloud</strong>: Develop locally with SQLite, deploy to cloud with PostgreSQL</li>
+</ul>
+<h2>Reference Files</h2>
+
+<p>This skill includes comprehensive reference documentation organized by capability:</p>
+
+<ul><li><strong><code>references/core-concepts.md</code></strong> - Artifacts, records, runs, transforms, features, versioning, lineage</li>
+<li><strong><code>references/data-management.md</code></strong> - Querying, filtering, searching, streaming, organizing data</li>
+<li><strong><code>references/annotation-validation.md</code></strong> - Schema design, curation workflows, validation strategies</li>
+<li><strong><code>references/ontologies.md</code></strong> - Biological ontology management, standardization, hierarchies</li>
+<li><strong><code>references/integrations.md</code></strong> - Workflow managers, MLOps platforms, storage systems, tools</li>
+<li><strong><code>references/setup-deployment.md</code></strong> - Installation, configuration, deployment, troubleshooting</li>
+</ul>
+<p>Read the relevant reference file(s) based on the specific LaminDB capability needed for the task at hand.</p>
+
+<h2>Additional Resources</h2>
+
+<ul><li><strong>Official Documentation</strong>: https://docs.lamin.ai</li>
+<li><strong>API Reference</strong>: https://docs.lamin.ai/api</li>
+<li><strong>GitHub Repository</strong>: https://github.com/laminlabs/lamindb</li>
+<li><strong>Tutorial</strong>: https://docs.lamin.ai/tutorial</li>
+<li><strong>FAQ</strong>: https://docs.lamin.ai/faq</li></ul>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Annotation Validation</h3>
+  <h1>LaminDB Annotation & Validation</h1>
+
+<p>This document covers data curation, validation, schema management, and annotation best practices in LaminDB.</p>
+
+<h2>Overview</h2>
+
+<p>LaminDB's curation process ensures datasets are both validated and queryable through three essential steps:</p>
+
+<ul><li><strong>Validation</strong>: Confirming datasets match desired schemas</li>
+<li><strong>Standardization</strong>: Fixing inconsistencies like typos and mapping synonyms</li>
+<li><strong>Annotation</strong>: Linking datasets to metadata entities for queryability</li>
+</ul>
+<h2>Schema Design</h2>
+
+<p>Schemas define expected data structure, types, and validation rules. LaminDB supports three main schema approaches:</p>
+
+<h3>1. Flexible Schema</h3>
+
+<p>Validates only columns matching Feature registry names, allowing additional metadata:</p>
+
+<pre><code class="language-python">import lamindb as ln
+
+# Create flexible schema
+schema = ln.Schema(
+    name="valid_features",
+    itype=ln.Feature  # Validates against Feature registry
+).save()
+
+# Any column matching a Feature name will be validated
+# Additional columns are permitted but not validated</code></pre>
+
+<h3>2. Minimal Required Schema</h3>
+
+<p>Specifies essential columns while permitting extra metadata:</p>
+
+<pre><code class="language-python"># Define required features
+required_features = [
+    ln.Feature.get(name="cell_type"),
+    ln.Feature.get(name="tissue"),
+    ln.Feature.get(name="donor_id")
+]
+
+# Create schema with required features
+schema = ln.Schema(
+    name="minimal_immune_schema",
+    features=required_features,
+    flexible=True  # Allows additional columns
+).save()</code></pre>
+
+<h3>3. Strict Schema</h3>
+
+<p>Enforces complete control over data structure:</p>
+
+<pre><code class="language-python"># Define all allowed features
+all_features = [
+    ln.Feature.get(name="cell_type"),
+    ln.Feature.get(name="tissue"),
+    ln.Feature.get(name="donor_id"),
+    ln.Feature.get(name="disease")
+]
+
+# Create strict schema
+schema = ln.Schema(
+    name="strict_immune_schema",
+    features=all_features,
+    flexible=False  # No additional columns allowed
+).save()</code></pre>
+
+<h2>DataFrame Curation Workflow</h2>
+
+<p>The typical curation process involves six key steps:</p>
+
+<h3>Step 1-2: Load Data and Establish Registries</h3>
+
+<pre><code class="language-python">import pandas as pd
+import lamindb as ln
+
+# Load data
+df = pd.read_csv("experiment.csv")
+
+# Define and save features
+ln.Feature(name="cell_type", dtype=str).save()
+ln.Feature(name="tissue", dtype=str).save()
+ln.Feature(name="gene_count", dtype=int).save()
+ln.Feature(name="experiment_date", dtype="date").save()
+
+# Populate valid values (if using controlled vocabulary)
+import bionty as bt
+bt.CellType.import_source()
+bt.Tissue.import_source()</code></pre>
+
+<h3>Step 3: Create Schema</h3>
+
+<pre><code class="language-python"># Link features to schema
+features = [
+    ln.Feature.get(name="cell_type"),
+    ln.Feature.get(name="tissue"),
+    ln.Feature.get(name="gene_count"),
+    ln.Feature.get(name="experiment_date")
+]
+
+schema = ln.Schema(
+    name="experiment_schema",
+    features=features,
+    flexible=True
+).save()</code></pre>
+
+<h3>Step 4: Initialize Curator and Validate</h3>
+
+<pre><code class="language-python"># Initialize curator
+curator = ln.curators.DataFrameCurator(df, schema)
+
+# Validate dataset
+validation = curator.validate()
+
+# Check validation results
+if validation:
+    print("✓ Validation passed")
+else:
+    print("✗ Validation failed")
+    curator.non_validated  # See problematic fields</code></pre>
+
+<h3>Step 5: Fix Validation Issues</h3>
+
+<h4>Standardize Values</h4>
+
+<pre><code class="language-python"># Fix typos and synonyms in categorical columns
+curator.cat.standardize("cell_type")
+curator.cat.standardize("tissue")
+
+# View standardization mapping
+curator.cat.inspect_standardize("cell_type")</code></pre>
+
+<h4>Map to Ontologies</h4>
+
+<pre><code class="language-python"># Map values to ontology terms
+curator.cat.add_ontology("cell_type", bt.CellType)
+curator.cat.add_ontology("tissue", bt.Tissue)
+
+# Look up public ontologies for unmapped terms
+curator.cat.lookup(public=True).cell_type  # Interactive lookup</code></pre>
+
+<h4>Add New Terms</h4>
+
+<pre><code class="language-python"># Add new valid terms to registry
+curator.cat.add_new_from("cell_type")
+
+# Or manually create records
+new_cell_type = bt.CellType(name="my_novel_cell_type").save()</code></pre>
+
+<h4>Rename Columns</h4>
+
+<pre><code class="language-python"># Rename columns to match feature names
+df = df.rename(columns={"celltype": "cell_type"})
+
+# Re-initialize curator with fixed DataFrame
+curator = ln.curators.DataFrameCurator(df, schema)</code></pre>
+
+<h3>Step 6: Save Curated Artifact</h3>
+
+<pre><code class="language-python"># Save with schema linkage
+artifact = curator.save_artifact(
+    key="experiments/curated_data.parquet",
+    description="Validated and annotated experimental data"
+)
+
+# Verify artifact has schema
+artifact.schema  # Returns the schema object
+artifact.describe()  # Shows validation status</code></pre>
+
+<h2>AnnData Curation</h2>
+
+<p>For composite structures like AnnData, use "slots" to validate different components:</p>
+
+<h3>Defining AnnData Schemas</h3>
+
+<pre><code class="language-python"># Create schemas for different slots
+obs_schema = ln.Schema(
+    name="cell_metadata",
+    features=[
+        ln.Feature.get(name="cell_type"),
+        ln.Feature.get(name="tissue"),
+        ln.Feature.get(name="donor_id")
+    ]
+).save()
+
+var_schema = ln.Schema(
+    name="gene_ids",
+    features=[ln.Feature.get(name="ensembl_gene_id")]
+).save()
+
+# Create composite AnnData schema
+anndata_schema = ln.Schema(
+    name="scrna_schema",
+    otype="AnnData",
+    slots={
+        "obs": obs_schema,
+        "var.T": var_schema  # .T indicates transposition
+    }
+).save()</code></pre>
+
+<h3>Curating AnnData Objects</h3>
+
+<pre><code class="language-python">import anndata as ad
+
+# Load AnnData
+adata = ad.read_h5ad("data.h5ad")
+
+# Initialize curator
+curator = ln.curators.AnnDataCurator(adata, anndata_schema)
+
+# Validate all slots
+validation = curator.validate()
+
+# Fix issues by slot
+curator.cat.standardize("obs", "cell_type")
+curator.cat.add_ontology("obs", "cell_type", bt.CellType)
+curator.cat.standardize("var.T", "ensembl_gene_id")
+
+# Save curated artifact
+artifact = curator.save_artifact(
+    key="scrna/validated_data.h5ad",
+    description="Curated single-cell RNA-seq data"
+)</code></pre>
+
+<h2>MuData Curation</h2>
+
+<p>MuData supports multi-modal data through modality-specific slots:</p>
+
+<pre><code class="language-python"># Define schemas for each modality
+rna_obs_schema = ln.Schema(name="rna_obs_schema", features=[...]).save()
+protein_obs_schema = ln.Schema(name="protein_obs_schema", features=[...]).save()
+
+# Create MuData schema
+mudata_schema = ln.Schema(
+    name="multimodal_schema",
+    otype="MuData",
+    slots={
+        "rna:obs": rna_obs_schema,
+        "protein:obs": protein_obs_schema
+    }
+).save()
+
+# Curate
+curator = ln.curators.MuDataCurator(mdata, mudata_schema)
+curator.validate()</code></pre>
+
+<h2>SpatialData Curation</h2>
+
+<p>For spatial transcriptomics data:</p>
+
+<pre><code class="language-python"># Define spatial schema
+spatial_schema = ln.Schema(
+    name="spatial_schema",
+    otype="SpatialData",
+    slots={
+        "tables:cell_metadata.obs": cell_schema,
+        "attrs:bio": bio_metadata_schema
+    }
+).save()
+
+# Curate
+curator = ln.curators.SpatialDataCurator(sdata, spatial_schema)
+curator.validate()</code></pre>
+
+<h2>TileDB-SOMA Curation</h2>
+
+<p>For scalable array-backed data:</p>
+
+<pre><code class="language-python"># Define SOMA schema
+soma_schema = ln.Schema(
+    name="soma_schema",
+    otype="tiledbsoma",
+    slots={
+        "obs": obs_schema,
+        "ms:RNA.T": var_schema  # measurement:modality.T
+    }
+).save()
+
+# Curate
+curator = ln.curators.TileDBSOMACurator(soma_exp, soma_schema)
+curator.validate()</code></pre>
+
+<h2>Feature Validation</h2>
+
+<h3>Data Type Validation</h3>
+
+<pre><code class="language-python"># Define typed features
+ln.Feature(name="age", dtype=int).save()
+ln.Feature(name="weight", dtype=float).save()
+ln.Feature(name="is_treated", dtype=bool).save()
+ln.Feature(name="collection_date", dtype="date").save()
+
+# Coerce types during validation
+ln.Feature(name="age_str", dtype=int, coerce_dtype=True).save()  # Auto-convert strings to int</code></pre>
+
+<h3>Value Validation</h3>
+
+<pre><code class="language-python"># Validate against allowed values
+cell_type_feature = ln.Feature(name="cell_type", dtype=str).save()
+
+# Link to registry for controlled vocabulary
+cell_type_feature.link_to_registry(bt.CellType)
+
+# Now validation checks against CellType registry
+curator = ln.curators.DataFrameCurator(df, schema)
+curator.validate()  # Errors if cell_type values not in registry</code></pre>
+
+<h2>Standardization Strategies</h2>
+
+<h3>Using Public Ontologies</h3>
+
+<pre><code class="language-python"># Look up standardized terms from public sources
+curator.cat.lookup(public=True).cell_type
+
+# Returns auto-complete object with public ontology terms
+# User can select correct term interactively</code></pre>
+
+<h3>Synonym Mapping</h3>
+
+<pre><code class="language-python"># Add synonyms to records
+t_cell = bt.CellType.get(name="T cell")
+t_cell.add_synonym("T lymphocyte")
+t_cell.add_synonym("T-cell")
+
+# Now standardization maps synonyms automatically
+curator.cat.standardize("cell_type")
+# "T lymphocyte" → "T cell"
+# "T-cell" → "T cell"</code></pre>
+
+<h3>Custom Standardization</h3>
+
+<pre><code class="language-python"># Manual mapping
+mapping = {
+    "TCell": "T cell",
+    "t cell": "T cell",
+    "T-cells": "T cell"
+}
+
+# Apply mapping
+df["cell_type"] = df["cell_type"].map(lambda x: mapping.get(x, x))</code></pre>
+
+<h2>Handling Validation Errors</h2>
+
+<h3>Common Issues and Solutions</h3>
+
+<p><strong>Issue: Column not in schema</strong></p>
+<pre><code class="language-python"># Solution 1: Rename column
+df = df.rename(columns={"old_name": "feature_name"})
+
+# Solution 2: Add feature to schema
+new_feature = ln.Feature(name="new_column", dtype=str).save()
+schema.features.add(new_feature)</code></pre>
+
+<p><strong>Issue: Invalid values</strong></p>
+<pre><code class="language-python"># Solution 1: Standardize
+curator.cat.standardize("column_name")
+
+# Solution 2: Add new valid values
+curator.cat.add_new_from("column_name")
+
+# Solution 3: Map to ontology
+curator.cat.add_ontology("column_name", bt.Registry)</code></pre>
+
+<p><strong>Issue: Data type mismatch</strong></p>
+<pre><code class="language-python"># Solution 1: Convert data type
+df["column"] = df["column"].astype(int)
+
+# Solution 2: Enable coercion in feature
+feature = ln.Feature.get(name="column")
+feature.coerce_dtype = True
+feature.save()</code></pre>
+
+<h2>Schema Versioning</h2>
+
+<p>Schemas can be versioned like other records:</p>
+
+<pre><code class="language-python"># Create initial schema
+schema_v1 = ln.Schema(name="experiment_schema", features=[...]).save()
+
+# Update schema with new features
+schema_v2 = ln.Schema(
+    name="experiment_schema",
+    features=[...],  # Updated list
+    version="2"
+).save()
+
+# Link artifacts to specific schema versions
+artifact.schema = schema_v2
+artifact.save()</code></pre>
+
+<h2>Querying Validated Data</h2>
+
+<p>Once data is validated and annotated, it becomes queryable:</p>
+
+<pre><code class="language-python"># Find all validated artifacts
+ln.Artifact.filter(is_valid=True).to_dataframe()
+
+# Find artifacts with specific schema
+ln.Artifact.filter(schema=schema).to_dataframe()
+
+# Query by annotated features
+ln.Artifact.filter(cell_type="T cell", tissue="blood").to_dataframe()
+
+# Include features in results
+ln.Artifact.filter(is_valid=True).to_dataframe(include="features")</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Define features first</strong>: Create Feature registry before curation</li>
+<li><strong>Use public ontologies</strong>: Leverage bt.lookup(public=True) for standardization</li>
+<li><strong>Start flexible</strong>: Use flexible schemas initially, tighten as understanding grows</li>
+<li><strong>Document slots</strong>: Clearly specify transposition (.T) in composite schemas</li>
+<li><strong>Standardize early</strong>: Fix typos and synonyms before validation</li>
+<li><strong>Validate incrementally</strong>: Check each slot separately for composite structures</li>
+<li><strong>Version schemas</strong>: Track schema changes over time</li>
+<li><strong>Add synonyms</strong>: Register common variations to simplify future curation</li>
+<li><strong>Coerce types cautiously</strong>: Enable dtype coercion only when safe</li>
+<li><strong>Test on samples</strong>: Validate small subsets before full dataset curation</li>
+</ul>
+<h2>Advanced: Custom Validators</h2>
+
+<p>Create custom validation logic:</p>
+
+<pre><code class="language-python">def validate_gene_expression(df):
+    """Custom validator for gene expression values."""
+    # Check non-negative
+    if (df &lt; 0).any().any():
+        return False, "Negative expression values found"
+
+    # Check reasonable range
+    if (df &gt; 1e6).any().any():
+        return False, "Unreasonably high expression values"
+
+    return True, "Valid"
+
+# Apply during curation
+is_valid, message = validate_gene_expression(df)
+if not is_valid:
+    print(f"Validation failed: {message}")</code></pre>
+
+<h2>Tracking Curation Provenance</h2>
+
+<pre><code class="language-python"># Curated artifacts track curation lineage
+ln.track()  # Start tracking
+
+# Perform curation
+curator = ln.curators.DataFrameCurator(df, schema)
+curator.validate()
+curator.cat.standardize("cell_type")
+artifact = curator.save_artifact(key="curated.parquet")
+
+ln.finish()  # Complete tracking
+
+# View curation lineage
+artifact.run.describe()  # Shows curation transform
+artifact.view_lineage()  # Visualizes curation process</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Core Concepts</h3>
+  <h1>LaminDB Core Concepts</h1>
+
+<p>This document covers the fundamental concepts and building blocks of LaminDB: Artifacts, Records, Runs, Transforms, Features, and data lineage tracking.</p>
+
+<h2>Artifacts</h2>
+
+<p>Artifacts represent datasets in various formats (DataFrames, AnnData, SpatialData, Parquet, Zarr, etc.). They serve as the primary data objects in LaminDB.</p>
+
+<h3>Creating and Saving Artifacts</h3>
+
+<p><strong>From file:</strong></p>
+<pre><code class="language-python">import lamindb as ln
+
+# Save a file as artifact
+ln.Artifact("sample.fasta", key="sample.fasta").save()
+
+# With description
+artifact = ln.Artifact(
+    "data/analysis.h5ad",
+    key="experiments/scrna_batch1.h5ad",
+    description="Single-cell RNA-seq batch 1"
+).save()</code></pre>
+
+<p><strong>From DataFrame:</strong></p>
+<pre><code class="language-python">import pandas as pd
+
+df = pd.read_csv("data.csv")
+artifact = ln.Artifact.from_dataframe(
+    df,
+    key="datasets/processed_data.parquet",
+    description="Processed experimental data"
+).save()</code></pre>
+
+<p><strong>From AnnData:</strong></p>
+<pre><code class="language-python">import anndata as ad
+
+adata = ad.read_h5ad("data.h5ad")
+artifact = ln.Artifact.from_anndata(
+    adata,
+    key="scrna/experiment1.h5ad",
+    description="scRNA-seq data with QC"
+).save()</code></pre>
+
+<h3>Retrieving Artifacts</h3>
+
+<pre><code class="language-python"># By key
+artifact = ln.Artifact.get(key="sample.fasta")
+
+# By UID
+artifact = ln.Artifact.get("aRt1Fact0uid000")
+
+# By filter
+artifact = ln.Artifact.filter(suffix=".h5ad").first()</code></pre>
+
+<h3>Accessing Artifact Content</h3>
+
+<pre><code class="language-python"># Get cached local path
+local_path = artifact.cache()
+
+# Load into memory
+data = artifact.load()  # Returns DataFrame, AnnData, etc.
+
+# Streaming access (for large files)
+with artifact.open() as f:
+    # Read incrementally
+    chunk = f.read(1000)</code></pre>
+
+<h3>Artifact Metadata</h3>
+
+<pre><code class="language-python"># View all metadata
+artifact.describe()
+
+# Access specific metadata
+artifact.size          # File size in bytes
+artifact.suffix        # File extension
+artifact.created_at    # Timestamp
+artifact.created_by    # User who created it
+artifact.run          # Associated run
+artifact.transform    # Associated transform
+artifact.version      # Version string</code></pre>
+
+<h2>Records</h2>
+
+<p>Records represent experimental entities: samples, perturbations, instruments, cell lines, and any other metadata entities. They support hierarchical relationships through type definitions.</p>
+
+<h3>Creating Records</h3>
+
+<pre><code class="language-python"># Define a type
+sample_type = ln.Record(name="Sample", is_type=True).save()
+
+# Create instances of that type
+ln.Record(name="P53mutant1", type=sample_type).save()
+ln.Record(name="P53mutant2", type=sample_type).save()
+ln.Record(name="WT-control", type=sample_type).save()</code></pre>
+
+<h3>Searching Records</h3>
+
+<pre><code class="language-python"># Text search
+ln.Record.search("p53").to_dataframe()
+
+# Filter by fields
+ln.Record.filter(type=sample_type).to_dataframe()
+
+# Get specific record
+record = ln.Record.get(name="P53mutant1")</code></pre>
+
+<h3>Hierarchical Relationships</h3>
+
+<pre><code class="language-python"># Establish parent-child relationships
+parent_record = ln.Record.get(name="P53mutant1")
+child_record = ln.Record(name="P53mutant1-replicate1", type=sample_type).save()
+child_record.parents.add(parent_record)
+
+# Query relationships
+parent_record.children.to_dataframe()
+child_record.parents.to_dataframe()</code></pre>
+
+<h2>Runs & Transforms</h2>
+
+<p>These capture computational lineage. A <strong>Transform</strong> represents a reusable analysis step (notebook, script, or function), while a <strong>Run</strong> documents a specific execution instance.</p>
+
+<h3>Basic Tracking Workflow</h3>
+
+<pre><code class="language-python">import lamindb as ln
+
+# Start tracking (beginning of notebook/script)
+ln.track()
+
+# Your analysis code
+data = ln.Artifact.get(key="input.csv").load()
+# ... perform analysis ...
+result.to_csv("output.csv")
+artifact = ln.Artifact("output.csv", key="output.csv").save()
+
+# Finish tracking (end of notebook/script)
+ln.finish()</code></pre>
+
+<h3>Tracking with Parameters</h3>
+
+<pre><code class="language-python">ln.track(params={
+    "learning_rate": 0.01,
+    "batch_size": 32,
+    "epochs": 100,
+    "downsample": True
+})
+
+# Query runs by parameters
+ln.Run.filter(params__learning_rate=0.01).to_dataframe()
+ln.Run.filter(params__downsample=True).to_dataframe()</code></pre>
+
+<h3>Tracking with Projects</h3>
+
+<pre><code class="language-python"># Associate with project
+ln.track(project="Cancer Drug Screen 2025")
+
+# Query by project
+project = ln.Project.get(name="Cancer Drug Screen 2025")
+ln.Artifact.filter(projects=project).to_dataframe()
+ln.Run.filter(project=project).to_dataframe()</code></pre>
+
+<h3>Function-Level Tracking</h3>
+
+<p>Use the <code>@ln.tracked()</code> decorator for fine-grained lineage:</p>
+
+<pre><code class="language-python">@ln.tracked()
+def preprocess_data(input_key: str, output_key: str, normalize: bool = True) -&gt; None:
+    """Preprocess raw data and save result."""
+    # Load input (automatically tracked)
+    artifact = ln.Artifact.get(key=input_key)
+    data = artifact.load()
+
+    # Process
+    if normalize:
+        data = (data - data.mean()) / data.std()
+
+    # Save output (automatically tracked)
+    ln.Artifact.from_dataframe(data, key=output_key).save()
+
+# Each call creates a separate Transform and Run
+preprocess_data("raw/batch1.csv", "processed/batch1.csv", normalize=True)
+preprocess_data("raw/batch2.csv", "processed/batch2.csv", normalize=False)</code></pre>
+
+<h3>Accessing Lineage Information</h3>
+
+<pre><code class="language-python"># From artifact to run
+artifact = ln.Artifact.get(key="output.csv")
+run = artifact.run
+transform = run.transform
+
+# View details
+run.describe()          # Run metadata
+transform.describe()    # Transform metadata
+
+# Access inputs
+run.inputs.to_dataframe()
+
+# Visualize lineage graph
+artifact.view_lineage()</code></pre>
+
+<h2>Features</h2>
+
+<p>Features define typed metadata fields for validation and querying. They enable structured annotation and searching.</p>
+
+<h3>Defining Features</h3>
+
+<pre><code class="language-python">from datetime import date
+
+# Numeric feature
+ln.Feature(name="gc_content", dtype=float).save()
+ln.Feature(name="read_count", dtype=int).save()
+
+# Date feature
+ln.Feature(name="experiment_date", dtype=date).save()
+
+# Categorical feature
+ln.Feature(name="cell_type", dtype=str).save()
+ln.Feature(name="treatment", dtype=str).save()</code></pre>
+
+<h3>Annotating Artifacts with Features</h3>
+
+<pre><code class="language-python"># Single values
+artifact.features.add_values({
+    "gc_content": 0.55,
+    "experiment_date": "2025-10-31"
+})
+
+# Using feature registry records
+gc_content_feature = ln.Feature.get(name="gc_content")
+artifact.features.add(gc_content_feature)</code></pre>
+
+<h3>Querying by Features</h3>
+
+<pre><code class="language-python"># Filter by feature value
+ln.Artifact.filter(gc_content=0.55).to_dataframe()
+ln.Artifact.filter(experiment_date="2025-10-31").to_dataframe()
+
+# Comparison operators
+ln.Artifact.filter(read_count__gt=1000000).to_dataframe()
+ln.Artifact.filter(gc_content__gte=0.5, gc_content__lte=0.6).to_dataframe()
+
+# Check for presence of annotation
+ln.Artifact.filter(cell_type__isnull=False).to_dataframe()
+
+# Include features in output
+ln.Artifact.filter(treatment="DMSO").to_dataframe(include="features")</code></pre>
+
+<h3>Nested Dictionary Features</h3>
+
+<p>For complex metadata stored as dictionaries:</p>
+
+<pre><code class="language-python"># Access nested values
+ln.Artifact.filter(study_metadata__detail1="123").to_dataframe()
+ln.Artifact.filter(study_metadata__assay__type="RNA-seq").to_dataframe()</code></pre>
+
+<h2>Data Lineage Tracking</h2>
+
+<p>LaminDB automatically captures execution context and relationships between data, code, and runs.</p>
+
+<h3>What Gets Tracked</h3>
+
+<ul><li><strong>Source code</strong>: Script/notebook content and git commit</li>
+<li><strong>Environment</strong>: Python packages and versions</li>
+<li><strong>Input artifacts</strong>: Data loaded during execution</li>
+<li><strong>Output artifacts</strong>: Data created during execution</li>
+<li><strong>Execution metadata</strong>: Timestamps, user, parameters</li>
+<li><strong>Computational dependencies</strong>: Transform relationships</li>
+</ul>
+<h3>Viewing Lineage</h3>
+
+<pre><code class="language-python"># Visualize full lineage graph
+artifact.view_lineage()
+
+# View captured metadata
+artifact.describe()
+
+# Access related entities
+artifact.run              # The run that created it
+artifact.run.transform    # The transform (code) used
+artifact.run.inputs       # Input artifacts
+artifact.run.report       # Execution report</code></pre>
+
+<h3>Querying Lineage</h3>
+
+<pre><code class="language-python"># Find all outputs from a transform
+transform = ln.Transform.get(name="preprocessing.py")
+ln.Artifact.filter(transform=transform).to_dataframe()
+
+# Find all artifacts from a specific user
+user = ln.User.get(handle="researcher123")
+ln.Artifact.filter(created_by=user).to_dataframe()
+
+# Find artifacts using specific inputs
+input_artifact = ln.Artifact.get(key="raw/data.csv")
+runs = ln.Run.filter(inputs=input_artifact)
+ln.Artifact.filter(run__in=runs).to_dataframe()</code></pre>
+
+<h2>Versioning</h2>
+
+<p>LaminDB manages artifact versioning automatically when source data or code changes.</p>
+
+<h3>Automatic Versioning</h3>
+
+<pre><code class="language-python"># First version
+artifact_v1 = ln.Artifact("data.csv", key="experiment/data.csv").save()
+
+# Modify and save again - creates new version
+# (modify data.csv)
+artifact_v2 = ln.Artifact("data.csv", key="experiment/data.csv").save()</code></pre>
+
+<h3>Working with Versions</h3>
+
+<pre><code class="language-python"># Get latest version (default)
+artifact = ln.Artifact.get(key="experiment/data.csv")
+
+# View all versions
+artifact.versions.to_dataframe()
+
+# Get specific version
+artifact_v1 = artifact.versions.filter(version="1").first()
+
+# Compare versions
+v1_data = artifact_v1.load()
+v2_data = artifact.load()</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Use meaningful keys</strong>: Structure keys hierarchically (e.g., <code>project/experiment/sample.h5ad</code>)</li>
+<li><strong>Add descriptions</strong>: Help future users understand artifact contents</li>
+<li><strong>Track consistently</strong>: Call <code>ln.track()</code> at the start of every analysis</li>
+<li><strong>Define features upfront</strong>: Create feature registry before annotation</li>
+<li><strong>Use typed features</strong>: Specify dtypes for better validation</li>
+<li><strong>Leverage versioning</strong>: Don't create new keys for minor changes</li>
+<li><strong>Document transforms</strong>: Add docstrings to tracked functions</li>
+<li><strong>Set projects</strong>: Group related work for easier organization and access control</li>
+<li><strong>Query efficiently</strong>: Use filters before loading large datasets</li>
+<li><strong>Visualize lineage</strong>: Use <code>view_lineage()</code> to understand data provenance</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Data Management</h3>
+  <h1>LaminDB Data Management</h1>
+
+<p>This document covers querying, searching, filtering, and streaming data in LaminDB, as well as best practices for organizing and accessing datasets.</p>
+
+<h2>Registry Overview</h2>
+
+<p>View available registries and their contents:</p>
+
+<pre><code class="language-python">import lamindb as ln
+
+# View all registries across modules
+ln.view()
+
+# View latest 100 artifacts
+ln.Artifact.to_dataframe()
+
+# View other registries
+ln.Transform.to_dataframe()
+ln.Run.to_dataframe()
+ln.User.to_dataframe()</code></pre>
+
+<h2>Lookup for Quick Access</h2>
+
+<p>For registries with fewer than 100k records, <code>Lookup</code> objects enable convenient auto-complete:</p>
+
+<pre><code class="language-python"># Create lookup
+records = ln.Record.lookup()
+
+# Access by name (auto-complete enabled in IDEs)
+experiment_1 = records.experiment_1
+sample_a = records.sample_a
+
+# Works with biological ontologies too
+import bionty as bt
+cell_types = bt.CellType.lookup()
+t_cell = cell_types.t_cell</code></pre>
+
+<h2>Retrieving Single Records</h2>
+
+<h3>Using get()</h3>
+
+<p>Retrieve exactly one record (errors if zero or multiple matches):</p>
+
+<pre><code class="language-python"># By UID
+artifact = ln.Artifact.get("aRt1Fact0uid000")
+
+# By field
+artifact = ln.Artifact.get(key="data/experiment.h5ad")
+user = ln.User.get(handle="researcher123")
+
+# By ontology ID (for bionty)
+cell_type = bt.CellType.get(ontology_id="CL:0000084")</code></pre>
+
+<h3>Using one() and one_or_none()</h3>
+
+<pre><code class="language-python"># Get exactly one from QuerySet (errors if 0 or &gt;1)
+artifact = ln.Artifact.filter(key="data.csv").one()
+
+# Get one or None (errors if &gt;1)
+artifact = ln.Artifact.filter(key="maybe_data.csv").one_or_none()
+
+# Get first match
+artifact = ln.Artifact.filter(suffix=".h5ad").first()</code></pre>
+
+<h2>Filtering Data</h2>
+
+<p>The <code>filter()</code> method returns a QuerySet for flexible retrieval:</p>
+
+<pre><code class="language-python"># Basic filtering
+artifacts = ln.Artifact.filter(suffix=".h5ad")
+artifacts.to_dataframe()
+
+# Multiple conditions (AND logic)
+artifacts = ln.Artifact.filter(
+    suffix=".h5ad",
+    created_by=user
+)
+
+# Comparison operators
+ln.Artifact.filter(size__gt=1e6).to_dataframe()           # Greater than
+ln.Artifact.filter(size__gte=1e6).to_dataframe()          # Greater than or equal
+ln.Artifact.filter(size__lt=1e9).to_dataframe()           # Less than
+ln.Artifact.filter(size__lte=1e9).to_dataframe()          # Less than or equal
+
+# Range queries
+ln.Artifact.filter(size__gte=1e6, size__lte=1e9).to_dataframe()</code></pre>
+
+<h2>Text and String Queries</h2>
+
+<pre><code class="language-python"># Exact match
+ln.Artifact.filter(description="Experiment 1").to_dataframe()
+
+# Contains (case-sensitive)
+ln.Artifact.filter(description__contains="RNA").to_dataframe()
+
+# Case-insensitive contains
+ln.Artifact.filter(description__icontains="rna").to_dataframe()
+
+# Starts with
+ln.Artifact.filter(key__startswith="experiments/").to_dataframe()
+
+# Ends with
+ln.Artifact.filter(key__endswith=".csv").to_dataframe()
+
+# IN list
+ln.Artifact.filter(suffix__in=[".h5ad", ".csv", ".parquet"]).to_dataframe()</code></pre>
+
+<h2>Feature-Based Queries</h2>
+
+<p>Query artifacts by their annotated features:</p>
+
+<pre><code class="language-python"># Filter by feature value
+ln.Artifact.filter(cell_type="T cell").to_dataframe()
+ln.Artifact.filter(treatment="DMSO").to_dataframe()
+
+# Include features in output
+ln.Artifact.filter(treatment="DMSO").to_dataframe(include="features")
+
+# Nested dictionary access
+ln.Artifact.filter(study_metadata__assay="RNA-seq").to_dataframe()
+ln.Artifact.filter(study_metadata__detail1="123").to_dataframe()
+
+# Check annotation status
+ln.Artifact.filter(cell_type__isnull=False).to_dataframe()  # Has annotation
+ln.Artifact.filter(treatment__isnull=True).to_dataframe()    # Missing annotation</code></pre>
+
+<h2>Traversing Related Registries</h2>
+
+<p>Django's double-underscore syntax enables queries across related tables:</p>
+
+<pre><code class="language-python"># Find artifacts by creator handle
+ln.Artifact.filter(created_by__handle="researcher123").to_dataframe()
+ln.Artifact.filter(created_by__handle__startswith="test").to_dataframe()
+
+# Find artifacts by transform name
+ln.Artifact.filter(transform__name="preprocess.py").to_dataframe()
+
+# Find artifacts measuring specific genes
+ln.Artifact.filter(feature_sets__genes__symbol="CD8A").to_dataframe()
+ln.Artifact.filter(feature_sets__genes__ensembl_gene_id="ENSG00000153563").to_dataframe()
+
+# Find runs with specific parameters
+ln.Run.filter(params__learning_rate=0.01).to_dataframe()
+ln.Run.filter(params__downsample=True).to_dataframe()
+
+# Find artifacts from specific project
+project = ln.Project.get(name="Cancer Study")
+ln.Artifact.filter(projects=project).to_dataframe()</code></pre>
+
+<h2>Ordering Results</h2>
+
+<pre><code class="language-python"># Order by field (ascending)
+ln.Artifact.filter(suffix=".h5ad").order_by("created_at").to_dataframe()
+
+# Order descending
+ln.Artifact.filter(suffix=".h5ad").order_by("-created_at").to_dataframe()
+
+# Multiple order fields
+ln.Artifact.order_by("-created_at", "size").to_dataframe()</code></pre>
+
+<h2>Advanced Logical Queries</h2>
+
+<h3>OR Logic</h3>
+
+<pre><code class="language-python">from lamindb import Q
+
+# OR condition
+artifacts = ln.Artifact.filter(
+    Q(suffix=".jpg") | Q(suffix=".png")
+).to_dataframe()
+
+# Complex OR with multiple conditions
+artifacts = ln.Artifact.filter(
+    Q(suffix=".h5ad", size__gt=1e6) | Q(suffix=".csv", size__lt=1e3)
+).to_dataframe()</code></pre>
+
+<h3>NOT Logic</h3>
+
+<pre><code class="language-python"># Exclude condition
+artifacts = ln.Artifact.filter(
+    ~Q(suffix=".tmp")
+).to_dataframe()
+
+# Complex exclusion
+artifacts = ln.Artifact.filter(
+    ~Q(created_by__handle="testuser")
+).to_dataframe()</code></pre>
+
+<h3>Combining AND, OR, NOT</h3>
+
+<pre><code class="language-python"># Complex query
+artifacts = ln.Artifact.filter(
+    (Q(suffix=".h5ad") | Q(suffix=".csv")) &amp;
+    Q(size__gt=1e6) &amp;
+    ~Q(created_by__handle__startswith="test")
+).to_dataframe()</code></pre>
+
+<h2>Search Functionality</h2>
+
+<p>Full-text search across registry fields:</p>
+
+<pre><code class="language-python"># Basic search
+ln.Artifact.search("iris").to_dataframe()
+ln.User.search("smith").to_dataframe()
+
+# Search in specific registry
+bt.CellType.search("T cell").to_dataframe()
+bt.Gene.search("CD8").to_dataframe()</code></pre>
+
+<h2>Working with QuerySets</h2>
+
+<p>QuerySets are lazy - they don't hit the database until evaluated:</p>
+
+<pre><code class="language-python"># Create query (no database hit)
+qs = ln.Artifact.filter(suffix=".h5ad")
+
+# Evaluate in different ways
+df = qs.to_dataframe()        # As pandas DataFrame
+list_records = list(qs)       # As Python list
+count = qs.count()            # Count only
+exists = qs.exists()          # Boolean check
+
+# Iteration
+for artifact in qs:
+    print(artifact.key, artifact.size)
+
+# Slicing
+first_10 = qs[:10]
+next_10 = qs[10:20]</code></pre>
+
+<h2>Chaining Filters</h2>
+
+<pre><code class="language-python"># Build query incrementally
+qs = ln.Artifact.filter(suffix=".h5ad")
+qs = qs.filter(size__gt=1e6)
+qs = qs.filter(created_at__year=2025)
+qs = qs.order_by("-created_at")
+
+# Execute
+results = qs.to_dataframe()</code></pre>
+
+<h2>Streaming Large Datasets</h2>
+
+<p>For datasets too large to fit in memory, use streaming access:</p>
+
+<h3>Streaming Files</h3>
+
+<pre><code class="language-python"># Open file stream
+artifact = ln.Artifact.get(key="large_file.csv")
+
+with artifact.open() as f:
+    # Read in chunks
+    chunk = f.read(10000)  # Read 10KB
+    # Process chunk</code></pre>
+
+<h3>Array Slicing</h3>
+
+<p>For array-based formats (Zarr, HDF5, AnnData):</p>
+
+<pre><code class="language-python"># Get backing file without loading
+artifact = ln.Artifact.get(key="large_data.h5ad")
+adata = artifact.backed()  # Returns backed AnnData
+
+# Slice specific portions
+subset = adata[:1000, :]  # First 1000 cells
+genes_of_interest = adata[:, ["CD4", "CD8A", "CD8B"]]
+
+# Stream batches
+for i in range(0, adata.n_obs, 1000):
+    batch = adata[i:i+1000, :]
+    # Process batch</code></pre>
+
+<h3>Iterator Access</h3>
+
+<pre><code class="language-python"># Process large collections incrementally
+artifacts = ln.Artifact.filter(suffix=".fastq.gz")
+
+for artifact in artifacts.iterator(chunk_size=10):
+    # Process 10 at a time
+    path = artifact.cache()
+    # Analyze file</code></pre>
+
+<h2>Aggregation and Statistics</h2>
+
+<pre><code class="language-python"># Count records
+ln.Artifact.filter(suffix=".h5ad").count()
+
+# Distinct values
+ln.Artifact.values_list("suffix", flat=True).distinct()
+
+# Aggregation (requires Django ORM knowledge)
+from django.db.models import Sum, Avg, Max, Min
+
+# Total size of all artifacts
+ln.Artifact.aggregate(Sum("size"))
+
+# Average artifact size by suffix
+ln.Artifact.values("suffix").annotate(avg_size=Avg("size"))</code></pre>
+
+<h2>Caching and Performance</h2>
+
+<pre><code class="language-python"># Check cache location
+ln.settings.cache_dir
+
+# Configure cache
+lamin cache set /path/to/cache
+
+# Clear cache for specific artifact
+artifact.delete_cache()
+
+# Get cached path (downloads if needed)
+path = artifact.cache()
+
+# Check if cached
+if artifact.is_cached():
+    path = artifact.cache()</code></pre>
+
+<h2>Organizing Data with Keys</h2>
+
+<p>Best practices for structuring keys:</p>
+
+<pre><code class="language-python"># Hierarchical organization
+ln.Artifact("data.h5ad", key="project/experiment/batch1/data.h5ad").save()
+ln.Artifact("data.h5ad", key="scrna/2025/oct/sample_001.h5ad").save()
+
+# Browse by prefix
+ln.Artifact.filter(key__startswith="scrna/2025/oct/").to_dataframe()
+
+# Version in key (alternative to built-in versioning)
+ln.Artifact("data.h5ad", key="data/processed/v1/final.h5ad").save()
+ln.Artifact("data.h5ad", key="data/processed/v2/final.h5ad").save()</code></pre>
+
+<h2>Collections</h2>
+
+<p>Group related artifacts into collections:</p>
+
+<pre><code class="language-python"># Create collection
+collection = ln.Collection(
+    [artifact1, artifact2, artifact3],
+    name="scRNA-seq batch 1-3",
+    description="Complete dataset across three batches"
+).save()
+
+# Access collection members
+for artifact in collection.artifacts:
+    print(artifact.key)
+
+# Query collections
+ln.Collection.filter(name__contains="batch").to_dataframe()</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Use filters before loading</strong>: Query metadata before accessing file contents</li>
+<li><strong>Leverage QuerySets</strong>: Build queries incrementally for complex conditions</li>
+<li><strong>Stream large files</strong>: Don't load entire datasets into memory unnecessarily</li>
+<li><strong>Structure keys hierarchically</strong>: Makes browsing and filtering easier</li>
+<li><strong>Use search for discovery</strong>: When you don't know exact field values</li>
+<li><strong>Cache strategically</strong>: Configure cache location based on storage capacity</li>
+<li><strong>Index features</strong>: Define features upfront for efficient feature-based queries</li>
+<li><strong>Use collections</strong>: Group related artifacts for dataset-level operations</li>
+<li><strong>Order results</strong>: Sort by creation date or other fields for consistent retrieval</li>
+<li><strong>Check existence</strong>: Use <code>exists()</code> or <code>one_or_none()</code> to avoid errors</li>
+</ul>
+<h2>Common Query Patterns</h2>
+
+<pre><code class="language-python"># Recent artifacts
+ln.Artifact.order_by("-created_at")[:10].to_dataframe()
+
+# My artifacts
+me = ln.setup.settings.user
+ln.Artifact.filter(created_by=me).to_dataframe()
+
+# Large files
+ln.Artifact.filter(size__gt=1e9).order_by("-size").to_dataframe()
+
+# This month's data
+from datetime import datetime
+ln.Artifact.filter(
+    created_at__year=2025,
+    created_at__month=10
+).to_dataframe()
+
+# Validated datasets with specific features
+ln.Artifact.filter(
+    is_valid=True,
+    cell_type__isnull=False
+).to_dataframe(include="features")</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Integrations</h3>
+  <h1>LaminDB Integrations</h1>
+
+<p>This document covers LaminDB integrations with workflow managers, MLOps platforms, visualization tools, and other third-party systems.</p>
+
+<h2>Overview</h2>
+
+<p>LaminDB supports extensive integrations across data storage, computational workflows, machine learning platforms, and visualization tools, enabling seamless incorporation into existing data science and bioinformatics pipelines.</p>
+
+<h2>Data Storage Integrations</h2>
+
+<h3>Local Filesystem</h3>
+
+<pre><code class="language-python">import lamindb as ln
+
+# Initialize with local storage
+lamin init --storage ./mydata
+
+# Save artifacts to local storage
+artifact = ln.Artifact("data.csv", key="local/data.csv").save()
+
+# Load from local storage
+data = artifact.load()</code></pre>
+
+<h3>AWS S3</h3>
+
+<pre><code class="language-python"># Initialize with S3 storage
+lamin init --storage s3://my-bucket/path \
+  --db postgresql://user:pwd@host:port/db
+
+# Artifacts automatically sync to S3
+artifact = ln.Artifact("data.csv", key="experiments/data.csv").save()
+
+# Transparent S3 access
+data = artifact.load()  # Downloads from S3 if not cached</code></pre>
+
+<h3>S3-Compatible Services</h3>
+
+<p>Support for MinIO, Cloudflare R2, and other S3-compatible endpoints:</p>
+
+<pre><code class="language-python"># Initialize with custom S3 endpoint
+lamin init --storage 's3://bucket?endpoint_url=http://minio.example.com:9000'
+
+# Configure credentials
+export AWS_ACCESS_KEY_ID=minioadmin
+export AWS_SECRET_ACCESS_KEY=minioadmin</code></pre>
+
+<h3>Google Cloud Storage</h3>
+
+<pre><code class="language-python"># Install GCP extras
+pip install 'lamindb[gcp]'
+
+# Initialize with GCS
+lamin init --storage gs://my-bucket/path \
+  --db postgresql://user:pwd@host:port/db
+
+# Artifacts sync to GCS
+artifact = ln.Artifact("data.csv", key="experiments/data.csv").save()</code></pre>
+
+<h3>HTTP/HTTPS (Read-Only)</h3>
+
+<pre><code class="language-python"># Access remote files without copying
+artifact = ln.Artifact(
+    "https://example.com/data.csv",
+    key="remote/data.csv"
+).save()
+
+# Stream remote content
+with artifact.open() as f:
+    data = f.read()</code></pre>
+
+<h3>HuggingFace Datasets</h3>
+
+<pre><code class="language-python"># Access HuggingFace datasets
+from datasets import load_dataset
+
+dataset = load_dataset("squad", split="train")
+
+# Register as LaminDB artifact
+artifact = ln.Artifact.from_dataframe(
+    dataset.to_pandas(),
+    key="hf/squad_train.parquet",
+    description="SQuAD training data from HuggingFace"
+).save()</code></pre>
+
+<h2>Workflow Manager Integrations</h2>
+
+<h3>Nextflow</h3>
+
+<p>Track Nextflow pipeline execution and outputs:</p>
+
+<pre><code class="language-python"># In your Nextflow process script
+import lamindb as ln
+
+# Initialize tracking
+ln.track()
+
+# Your Nextflow process logic
+input_artifact = ln.Artifact.get(key="${input_key}")
+data = input_artifact.load()
+
+# Process data
+result = process_data(data)
+
+# Save output
+output_artifact = ln.Artifact.from_dataframe(
+    result,
+    key="${output_key}"
+).save()
+
+ln.finish()</code></pre>
+
+<p><strong>Nextflow config example:</strong></p>
+<pre><code class="language-nextflow">process ANALYZE {
+    input:
+    val input_key
+
+    output:
+    path "result.csv"
+
+    script:
+    """
+    #!/usr/bin/env python
+    import lamindb as ln
+    ln.track()
+    artifact = ln.Artifact.get(key="${input_key}")
+    # Process and save
+    ln.finish()
+    """
+}</code></pre>
+
+<h3>Snakemake</h3>
+
+<p>Integrate LaminDB into Snakemake workflows:</p>
+
+<pre><code class="language-python"># In Snakemake rule
+rule process_data:
+    input:
+        "data/input.csv"
+    output:
+        "data/output.csv"
+    run:
+        import lamindb as ln
+
+        ln.track()
+
+        # Load input artifact
+        artifact = ln.Artifact.get(key="inputs/data.csv")
+        data = artifact.load()
+
+        # Process
+        result = analyze(data)
+
+        # Save output
+        result.to_csv(output[0])
+        ln.Artifact(output[0], key="outputs/result.csv").save()
+
+        ln.finish()</code></pre>
+
+<h3>Redun</h3>
+
+<p>Track Redun task execution:</p>
+
+<pre><code class="language-python">from redun import task
+import lamindb as ln
+
+@task()
+@ln.tracked()
+def process_dataset(input_key: str, output_key: str):
+    """Redun task with LaminDB tracking."""
+    # Load input
+    artifact = ln.Artifact.get(key=input_key)
+    data = artifact.load()
+
+    # Process
+    result = transform(data)
+
+    # Save output
+    ln.Artifact.from_dataframe(result, key=output_key).save()
+
+    return output_key
+
+# Redun automatically tracks lineage alongside LaminDB</code></pre>
+
+<h2>MLOps Platform Integrations</h2>
+
+<h3>Weights & Biases (W&B)</h3>
+
+<p>Combine W&B experiment tracking with LaminDB data management:</p>
+
+<pre><code class="language-python">import wandb
+import lamindb as ln
+
+# Initialize both
+wandb.init(project="my-project", name="experiment-1")
+ln.track(params={"learning_rate": 0.01, "batch_size": 32})
+
+# Load training data
+train_artifact = ln.Artifact.get(key="datasets/train.parquet")
+train_data = train_artifact.load()
+
+# Train model
+model = train_model(train_data)
+
+# Log to W&amp;B
+wandb.log({"accuracy": 0.95, "loss": 0.05})
+
+# Save model in LaminDB
+import joblib
+joblib.dump(model, "model.pkl")
+model_artifact = ln.Artifact(
+    "model.pkl",
+    key="models/experiment-1.pkl",
+    description=f"Model from W&amp;B run {wandb.run.id}"
+).save()
+
+# Link W&amp;B run ID
+model_artifact.features.add_values({"wandb_run_id": wandb.run.id})
+
+ln.finish()
+wandb.finish()</code></pre>
+
+<h3>MLflow</h3>
+
+<p>Integrate MLflow model tracking with LaminDB:</p>
+
+<pre><code class="language-python">import mlflow
+import lamindb as ln
+
+# Start runs
+mlflow.start_run()
+ln.track()
+
+# Log parameters to both
+params = {"max_depth": 5, "n_estimators": 100}
+mlflow.log_params(params)
+ln.context.params = params
+
+# Load data from LaminDB
+data_artifact = ln.Artifact.get(key="datasets/features.parquet")
+X = data_artifact.load()
+
+# Train and log model
+model = train_model(X)
+mlflow.sklearn.log_model(model, "model")
+
+# Save to LaminDB
+import joblib
+joblib.dump(model, "model.pkl")
+model_artifact = ln.Artifact(
+    "model.pkl",
+    key=f"models/{mlflow.active_run().info.run_id}.pkl"
+).save()
+
+mlflow.end_run()
+ln.finish()</code></pre>
+
+<h3>HuggingFace Transformers</h3>
+
+<p>Track model fine-tuning with LaminDB:</p>
+
+<pre><code class="language-python">from transformers import Trainer, TrainingArguments
+import lamindb as ln
+
+ln.track(params={"model": "bert-base", "epochs": 3})
+
+# Load training data
+train_artifact = ln.Artifact.get(key="datasets/train_tokenized.parquet")
+train_dataset = train_artifact.load()
+
+# Configure trainer
+training_args = TrainingArguments(
+    output_dir="./results",
+    num_train_epochs=3,
+)
+
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=train_dataset,
+)
+
+# Train
+trainer.train()
+
+# Save model to LaminDB
+trainer.save_model("./model")
+model_artifact = ln.Artifact(
+    "./model",
+    key="models/bert_finetuned",
+    description="BERT fine-tuned on custom dataset"
+).save()
+
+ln.finish()</code></pre>
+
+<h3>scVI-tools</h3>
+
+<p>Single-cell analysis with scVI and LaminDB:</p>
+
+<pre><code class="language-python">import scvi
+import lamindb as ln
+
+ln.track()
+
+# Load data
+adata_artifact = ln.Artifact.get(key="scrna/raw_counts.h5ad")
+adata = adata_artifact.load()
+
+# Setup scVI
+scvi.model.SCVI.setup_anndata(adata, layer="counts")
+
+# Train model
+model = scvi.model.SCVI(adata)
+model.train()
+
+# Save latent representation
+adata.obsm["X_scvi"] = model.get_latent_representation()
+
+# Save results
+result_artifact = ln.Artifact.from_anndata(
+    adata,
+    key="scrna/scvi_latent.h5ad",
+    description="scVI latent representation"
+).save()
+
+ln.finish()</code></pre>
+
+<h2>Array Store Integrations</h2>
+
+<h3>TileDB-SOMA</h3>
+
+<p>Scalable array storage with cellxgene support:</p>
+
+<pre><code class="language-python">import tiledbsoma as soma
+import lamindb as ln
+
+# Create SOMA experiment
+uri = "tiledb://my-namespace/experiment"
+
+with soma.Experiment.create(uri) as exp:
+    # Add measurements
+    exp.add_new_collection("RNA")
+
+    # Register in LaminDB
+    artifact = ln.Artifact(
+        uri,
+        key="cellxgene/experiment.soma",
+        description="TileDB-SOMA experiment"
+    ).save()
+
+# Query with SOMA
+with soma.Experiment.open(uri) as exp:
+    obs = exp.obs.read().to_pandas()</code></pre>
+
+<h3>DuckDB</h3>
+
+<p>Query artifacts with DuckDB:</p>
+
+<pre><code class="language-python">import duckdb
+import lamindb as ln
+
+# Get artifact
+artifact = ln.Artifact.get(key="datasets/large_data.parquet")
+
+# Query with DuckDB (without loading full file)
+path = artifact.cache()
+result = duckdb.query(f"""
+    SELECT cell_type, COUNT(*) as count
+    FROM read_parquet('{path}')
+    GROUP BY cell_type
+    ORDER BY count DESC
+""").to_df()
+
+# Save query result
+result_artifact = ln.Artifact.from_dataframe(
+    result,
+    key="analysis/cell_type_counts.parquet"
+).save()</code></pre>
+
+<h2>Visualization Integrations</h2>
+
+<h3>Vitessce</h3>
+
+<p>Create interactive visualizations:</p>
+
+<pre><code class="language-python">from vitessce import VitessceConfig
+import lamindb as ln
+
+# Load spatial data
+artifact = ln.Artifact.get(key="spatial/visium_slide.h5ad")
+adata = artifact.load()
+
+# Create Vitessce configuration
+vc = VitessceConfig.from_object(adata)
+
+# Save configuration
+import json
+config_file = "vitessce_config.json"
+with open(config_file, "w") as f:
+    json.dump(vc.to_dict(), f)
+
+# Register configuration
+config_artifact = ln.Artifact(
+    config_file,
+    key="visualizations/spatial_config.json",
+    description="Vitessce visualization config"
+).save()</code></pre>
+
+<h2>Schema Module Integrations</h2>
+
+<h3>Bionty (Biological Ontologies)</h3>
+
+<pre><code class="language-python">import bionty as bt
+
+# Import biological ontologies
+bt.CellType.import_source()
+bt.Gene.import_source(organism="human")
+
+# Use in data curation
+cell_types = bt.CellType.from_values(adata.obs.cell_type)</code></pre>
+
+<h3>WetLab</h3>
+
+<p>Track wet lab experiments:</p>
+
+<pre><code class="language-python"># Install wetlab module
+pip install 'lamindb[wetlab]'
+
+# Use wetlab registries
+import lamindb_wetlab as wetlab
+
+# Track experiments, samples, protocols
+experiment = wetlab.Experiment(name="RNA-seq batch 1").save()</code></pre>
+
+<h3>Clinical Data (OMOP)</h3>
+
+<pre><code class="language-python"># Install clinical module
+pip install 'lamindb[clinical]'
+
+# Use OMOP common data model
+import lamindb_clinical as clinical
+
+# Track clinical data
+patient = clinical.Patient(patient_id="P001").save()</code></pre>
+
+<h2>Git Integration</h2>
+
+<h3>Sync with Git Repositories</h3>
+
+<pre><code class="language-python"># Configure git sync
+export LAMINDB_SYNC_GIT_REPO=https://github.com/user/repo.git
+
+# Or programmatically
+ln.settings.sync_git_repo = "https://github.com/user/repo.git"
+
+# Set development directory
+lamin settings set dev-dir .
+
+# Scripts tracked with git commits
+ln.track()  # Automatically captures git commit hash
+# ... your code ...
+ln.finish()
+
+# View git information
+transform = ln.Transform.get(name="analysis.py")
+transform.source_code  # Shows code at git commit
+transform.hash        # Git commit hash</code></pre>
+
+<h2>Enterprise Integrations</h2>
+
+<h3>Benchling</h3>
+
+<p>Sync with Benchling registries (requires team/enterprise plan):</p>
+
+<pre><code class="language-python"># Configure Benchling connection (contact LaminDB team)
+# Syncs schemas and data from Benchling registries
+
+# Access synced Benchling data
+# Details available through enterprise support</code></pre>
+
+<h2>Custom Integration Patterns</h2>
+
+<h3>REST API Integration</h3>
+
+<pre><code class="language-python">import requests
+import lamindb as ln
+
+ln.track()
+
+# Fetch from API
+response = requests.get("https://api.example.com/data")
+data = response.json()
+
+# Convert to DataFrame
+import pandas as pd
+df = pd.DataFrame(data)
+
+# Save to LaminDB
+artifact = ln.Artifact.from_dataframe(
+    df,
+    key="api/fetched_data.parquet",
+    description="Data fetched from external API"
+).save()
+
+artifact.features.add_values({"api_url": response.url})
+
+ln.finish()</code></pre>
+
+<h3>Database Integration</h3>
+
+<pre><code class="language-python">import sqlalchemy as sa
+import lamindb as ln
+
+ln.track()
+
+# Connect to external database
+engine = sa.create_engine("postgresql://user:pwd@host:port/db")
+
+# Query data
+query = "SELECT * FROM experiments WHERE date &gt; '2025-01-01'"
+df = pd.read_sql(query, engine)
+
+# Save to LaminDB
+artifact = ln.Artifact.from_dataframe(
+    df,
+    key="external_db/experiments_2025.parquet",
+    description="Experiments from external database"
+).save()
+
+ln.finish()</code></pre>
+
+<h2>Croissant Metadata</h2>
+
+<p>Export datasets with Croissant metadata format:</p>
+
+<pre><code class="language-python"># Create artifact with rich metadata
+artifact = ln.Artifact.from_dataframe(
+    df,
+    key="datasets/published_data.parquet",
+    description="Published dataset with Croissant metadata"
+).save()
+
+# Export Croissant metadata (requires additional configuration)
+# Enables dataset discovery and interoperability</code></pre>
+
+<h2>Best Practices for Integrations</h2>
+
+<ul><li><strong>Track consistently</strong>: Use <code>ln.track()</code> in all integrated workflows</li>
+<li><strong>Link IDs</strong>: Store external system IDs (W&B run ID, MLflow experiment ID) as features</li>
+<li><strong>Centralize data</strong>: Use LaminDB as single source of truth for data artifacts</li>
+<li><strong>Sync parameters</strong>: Log parameters to both LaminDB and ML platforms</li>
+<li><strong>Version together</strong>: Keep code (git), data (LaminDB), and experiments (ML platform) in sync</li>
+<li><strong>Cache strategically</strong>: Configure appropriate cache locations for cloud storage</li>
+<li><strong>Use feature sets</strong>: Link ontology terms from Bionty to artifacts</li>
+<li><strong>Document integrations</strong>: Add descriptions explaining integration context</li>
+<li><strong>Test incrementally</strong>: Verify integration with small datasets first</li>
+<li><strong>Monitor lineage</strong>: Use <code>view_lineage()</code> to ensure integration tracking works</li>
+</ul>
+<h2>Troubleshooting Common Issues</h2>
+
+<p><strong>Issue: S3 credentials not found</strong></p>
+<pre><code class="language-bash">export AWS_ACCESS_KEY_ID=your_key
+export AWS_SECRET_ACCESS_KEY=your_secret
+export AWS_DEFAULT_REGION=us-east-1</code></pre>
+
+<p><strong>Issue: GCS authentication failure</strong></p>
+<pre><code class="language-bash">gcloud auth application-default login
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json</code></pre>
+
+<p><strong>Issue: Git sync not working</strong></p>
+<pre><code class="language-bash"># Ensure git repo is set
+lamin settings get sync-git-repo
+
+# Ensure you're in git repo
+git status
+
+# Commit changes before tracking
+git add .
+git commit -m "Update analysis"
+ln.track()</code></pre>
+
+<p><strong>Issue: MLflow artifacts not syncing</strong></p>
+<pre><code class="language-python"># Save explicitly to both systems
+mlflow.log_artifact("model.pkl")
+ln.Artifact("model.pkl", key="models/model.pkl").save()</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Ontologies</h3>
+  <h1>LaminDB Ontology Management</h1>
+
+<p>This document covers biological ontology management in LaminDB through the Bionty plugin, including accessing, searching, and annotating data with standardized biological terms.</p>
+
+<h2>Overview</h2>
+
+<p>LaminDB integrates the <code>bionty</code> plugin to manage standardized biological ontologies, enabling consistent metadata curation and data annotation across research projects. Bionty provides access to 20+ curated biological ontologies covering genes, proteins, cell types, tissues, diseases, and more.</p>
+
+<h2>Available Ontologies</h2>
+
+<p>LaminDB provides access to multiple curated ontology sources:</p>
+
+<p>| Registry | Ontology Source | Description |</p>
+<p>|----------|----------------|-------------|</p>
+<p>| <strong>Gene</strong> | Ensembl | Genes across organisms (human, mouse, etc.) |</p>
+<p>| <strong>Protein</strong> | UniProt | Protein sequences and annotations |</p>
+<p>| <strong>CellType</strong> | Cell Ontology (CL) | Standardized cell type classifications |</p>
+<p>| <strong>CellLine</strong> | Cell Line Ontology (CLO) | Cell line annotations |</p>
+<p>| <strong>Tissue</strong> | Uberon | Anatomical structures and tissues |</p>
+<p>| <strong>Disease</strong> | Mondo, DOID | Disease classifications |</p>
+<p>| <strong>Phenotype</strong> | Human Phenotype Ontology (HPO) | Phenotypic abnormalities |</p>
+<p>| <strong>Pathway</strong> | Gene Ontology (GO) | Biological pathways and processes |</p>
+<p>| <strong>ExperimentalFactor</strong> | Experimental Factor Ontology (EFO) | Experimental variables |</p>
+<p>| <strong>DevelopmentalStage</strong> | Various | Developmental stages across organisms |</p>
+<p>| <strong>Ethnicity</strong> | HANCESTRO | Human ancestry ontology |</p>
+<p>| <strong>Drug</strong> | DrugBank | Drug compounds |</p>
+<p>| <strong>Organism</strong> | NCBItaxon | Taxonomic classifications |</p>
+
+<h2>Installation and Import</h2>
+
+<pre><code class="language-python"># Install bionty (included with lamindb)
+pip install lamindb
+
+# Import
+import lamindb as ln
+import bionty as bt</code></pre>
+
+<h2>Importing Public Ontologies</h2>
+
+<p>Populate your registry with a public ontology source:</p>
+
+<pre><code class="language-python"># Import Cell Ontology
+bt.CellType.import_source()
+
+# Import organism-specific genes
+bt.Gene.import_source(organism="human")
+bt.Gene.import_source(organism="mouse")
+
+# Import tissues
+bt.Tissue.import_source()
+
+# Import diseases
+bt.Disease.import_source(source="mondo")  # Mondo Disease Ontology
+bt.Disease.import_source(source="doid")   # Disease Ontology</code></pre>
+
+<h2>Searching and Accessing Records</h2>
+
+<h3>Keyword Search</h3>
+
+<pre><code class="language-python"># Search cell types
+bt.CellType.search("T cell").to_dataframe()
+bt.CellType.search("gamma-delta").to_dataframe()
+
+# Search genes
+bt.Gene.search("CD8").to_dataframe()
+bt.Gene.search("TP53").to_dataframe()
+
+# Search diseases
+bt.Disease.search("cancer").to_dataframe()
+
+# Search tissues
+bt.Tissue.search("brain").to_dataframe()</code></pre>
+
+<h3>Auto-Complete Lookup</h3>
+
+<p>For registries with fewer than 100k records:</p>
+
+<pre><code class="language-python"># Create lookup object
+cell_types = bt.CellType.lookup()
+
+# Access by name (auto-complete in IDEs)
+t_cell = cell_types.t_cell
+hsc = cell_types.hematopoietic_stem_cell
+
+# Similarly for other registries
+genes = bt.Gene.lookup()
+cd8a = genes.cd8a</code></pre>
+
+<h3>Exact Field Matching</h3>
+
+<pre><code class="language-python"># By ontology ID
+cell_type = bt.CellType.get(ontology_id="CL:0000798")
+disease = bt.Disease.get(ontology_id="MONDO:0004992")
+
+# By name
+cell_type = bt.CellType.get(name="T cell")
+gene = bt.Gene.get(symbol="CD8A")
+
+# By Ensembl ID
+gene = bt.Gene.get(ensembl_gene_id="ENSG00000153563")</code></pre>
+
+<h2>Ontological Hierarchies</h2>
+
+<h3>Exploring Relationships</h3>
+
+<pre><code class="language-python"># Get a cell type
+gdt_cell = bt.CellType.get(ontology_id="CL:0000798")  # gamma-delta T cell
+
+# View direct parents
+gdt_cell.parents.to_dataframe()
+
+# View all ancestors recursively
+ancestors = []
+current = gdt_cell
+while current.parents.exists():
+    parent = current.parents.first()
+    ancestors.append(parent)
+    current = parent
+
+# View direct children
+gdt_cell.children.to_dataframe()
+
+# View all descendants recursively
+gdt_cell.query_children().to_dataframe()</code></pre>
+
+<h3>Visualizing Hierarchies</h3>
+
+<pre><code class="language-python"># Visualize parent hierarchy
+gdt_cell.view_parents()
+
+# Include children in visualization
+gdt_cell.view_parents(with_children=True)
+
+# Get all related terms for visualization
+t_cell = bt.CellType.get(name="T cell")
+t_cell.view_parents(with_children=True)  # Shows T cell subtypes</code></pre>
+
+<h2>Standardizing and Validating Data</h2>
+
+<h3>Validation</h3>
+
+<p>Check if terms exist in the ontology:</p>
+
+<pre><code class="language-python"># Validate cell types
+bt.CellType.validate(["T cell", "B cell", "invalid_cell"])
+# Returns: [True, True, False]
+
+# Validate genes
+bt.Gene.validate(["CD8A", "TP53", "FAKEGENE"], organism="human")
+# Returns: [True, True, False]
+
+# Check which terms are invalid
+terms = ["T cell", "fat cell", "neuron", "invalid_term"]
+invalid = [t for t, valid in zip(terms, bt.CellType.validate(terms)) if not valid]
+print(f"Invalid terms: {invalid}")</code></pre>
+
+<h3>Standardization with Synonyms</h3>
+
+<p>Convert non-standard terms to validated names:</p>
+
+<pre><code class="language-python"># Standardize cell type names
+bt.CellType.standardize(["fat cell", "blood forming stem cell"])
+# Returns: ['adipocyte', 'hematopoietic stem cell']
+
+# Standardize genes
+bt.Gene.standardize(["BRCA-1", "p53"], organism="human")
+# Returns: ['BRCA1', 'TP53']
+
+# Handle mixed valid/invalid terms
+terms = ["T cell", "T lymphocyte", "invalid"]
+standardized = bt.CellType.standardize(terms)
+# Returns standardized names where possible</code></pre>
+
+<h3>Loading Validated Records</h3>
+
+<pre><code class="language-python"># Load records from values (including synonyms)
+records = bt.CellType.from_values(["fat cell", "blood forming stem cell"])
+
+# Returns list of CellType records
+for record in records:
+    print(record.name, record.ontology_id)
+
+# Use with gene symbols
+genes = bt.Gene.from_values(["CD8A", "CD8B"], organism="human")</code></pre>
+
+<h2>Annotating Datasets</h2>
+
+<h3>Annotating AnnData</h3>
+
+<pre><code class="language-python">import anndata as ad
+import lamindb as ln
+
+# Load example data
+adata = ad.read_h5ad("data.h5ad")
+
+# Validate and retrieve matching records
+cell_types = bt.CellType.from_values(adata.obs.cell_type)
+
+# Create artifact with annotations
+artifact = ln.Artifact.from_anndata(
+    adata,
+    key="scrna/annotated_data.h5ad",
+    description="scRNA-seq data with validated cell type annotations"
+).save()
+
+# Link ontology records to artifact
+artifact.feature_sets.add_ontology(cell_types)</code></pre>
+
+<h3>Annotating DataFrames</h3>
+
+<pre><code class="language-python">import pandas as pd
+
+# Create DataFrame with biological entities
+df = pd.DataFrame({
+    "cell_type": ["T cell", "B cell", "NK cell"],
+    "tissue": ["blood", "spleen", "liver"],
+    "disease": ["healthy", "lymphoma", "healthy"]
+})
+
+# Validate and standardize
+df["cell_type"] = bt.CellType.standardize(df["cell_type"])
+df["tissue"] = bt.Tissue.standardize(df["tissue"])
+
+# Create artifact
+artifact = ln.Artifact.from_dataframe(
+    df,
+    key="metadata/sample_info.parquet"
+).save()
+
+# Link ontology records
+cell_type_records = bt.CellType.from_values(df["cell_type"])
+tissue_records = bt.Tissue.from_values(df["tissue"])
+
+artifact.feature_sets.add_ontology(cell_type_records)
+artifact.feature_sets.add_ontology(tissue_records)</code></pre>
+
+<h2>Managing Custom Terms and Hierarchies</h2>
+
+<h3>Adding Custom Terms</h3>
+
+<pre><code class="language-python"># Register new term not in public ontology
+my_celltype = bt.CellType(name="my_novel_T_cell_subtype").save()
+
+# Establish parent-child relationship
+parent = bt.CellType.get(name="T cell")
+my_celltype.parents.add(parent)
+
+# Verify relationship
+my_celltype.parents.to_dataframe()
+parent.children.to_dataframe()  # Should include my_celltype</code></pre>
+
+<h3>Adding Synonyms</h3>
+
+<pre><code class="language-python"># Add synonyms for standardization
+hsc = bt.CellType.get(name="hematopoietic stem cell")
+hsc.add_synonym("HSC")
+hsc.add_synonym("blood stem cell")
+hsc.add_synonym("hematopoietic progenitor")
+
+# Set abbreviation
+hsc.set_abbr("HSC")
+
+# Now standardization works with synonyms
+bt.CellType.standardize(["HSC", "blood stem cell"])
+# Returns: ['hematopoietic stem cell', 'hematopoietic stem cell']</code></pre>
+
+<h3>Creating Custom Hierarchies</h3>
+
+<pre><code class="language-python"># Build custom cell type hierarchy
+immune_cell = bt.CellType.get(name="immune cell")
+
+# Add custom subtypes
+my_subtype1 = bt.CellType(name="custom_immune_subtype_1").save()
+my_subtype2 = bt.CellType(name="custom_immune_subtype_2").save()
+
+# Link to parent
+my_subtype1.parents.add(immune_cell)
+my_subtype2.parents.add(immune_cell)
+
+# Create sub-subtypes
+my_subsubtype = bt.CellType(name="custom_sub_subtype").save()
+my_subsubtype.parents.add(my_subtype1)
+
+# Visualize custom hierarchy
+immune_cell.view_parents(with_children=True)</code></pre>
+
+<h2>Multi-Organism Support</h2>
+
+<p>For organism-aware registries like Gene:</p>
+
+<pre><code class="language-python"># Set global organism
+bt.settings.organism = "human"
+
+# Validate human genes
+bt.Gene.validate(["TCF7", "CD8A"], organism="human")
+
+# Load genes for specific organism
+human_genes = bt.Gene.from_values(["CD8A", "TP53"], organism="human")
+mouse_genes = bt.Gene.from_values(["Cd8a", "Trp53"], organism="mouse")
+
+# Search organism-specific genes
+bt.Gene.search("CD8", organism="human").to_dataframe()
+bt.Gene.search("Cd8", organism="mouse").to_dataframe()
+
+# Switch organism context
+bt.settings.organism = "mouse"
+genes = bt.Gene.from_source(symbol="Ap5b1")</code></pre>
+
+<h2>Public Ontology Lookup</h2>
+
+<p>Access terms from public ontologies without importing:</p>
+
+<pre><code class="language-python"># Interactive lookup in public sources
+cell_types_public = bt.CellType.lookup(public=True)
+
+# Access public terms
+hepatocyte = cell_types_public.hepatocyte
+
+# Import specific term
+hepatocyte_local = bt.CellType.from_source(name="hepatocyte")
+
+# Or import by ontology ID
+specific_cell = bt.CellType.from_source(ontology_id="CL:0000182")</code></pre>
+
+<h2>Version Tracking</h2>
+
+<p>LaminDB automatically tracks ontology versions:</p>
+
+<pre><code class="language-python"># View current source versions
+bt.Source.filter(currently_used=True).to_dataframe()
+
+# Check which source a record derives from
+cell_type = bt.CellType.get(name="hepatocyte")
+cell_type.source  # Returns Source metadata
+
+# View source details
+source = cell_type.source
+print(source.name)        # e.g., "cl"
+print(source.version)     # e.g., "2023-05-18"
+print(source.url)         # Ontology URL</code></pre>
+
+<h2>Ontology Integration Workflows</h2>
+
+<h3>Workflow 1: Validate Existing Data</h3>
+
+<pre><code class="language-python"># Load data with biological annotations
+adata = ad.read_h5ad("uncurated_data.h5ad")
+
+# Validate cell types
+validation = bt.CellType.validate(adata.obs.cell_type)
+
+# Identify invalid terms
+invalid_idx = [i for i, v in enumerate(validation) if not v]
+invalid_terms = adata.obs.cell_type.iloc[invalid_idx].unique()
+print(f"Invalid cell types: {invalid_terms}")
+
+# Fix invalid terms manually or with standardization
+adata.obs["cell_type"] = bt.CellType.standardize(adata.obs.cell_type)
+
+# Re-validate
+validation = bt.CellType.validate(adata.obs.cell_type)
+assert all(validation), "All terms should now be valid"</code></pre>
+
+<h3>Workflow 2: Curate and Annotate</h3>
+
+<pre><code class="language-python">import lamindb as ln
+
+ln.track()  # Start tracking
+
+# Load data
+df = pd.read_csv("experimental_data.csv")
+
+# Standardize using ontologies
+df["cell_type"] = bt.CellType.standardize(df["cell_type"])
+df["tissue"] = bt.Tissue.standardize(df["tissue"])
+
+# Create curated artifact
+artifact = ln.Artifact.from_dataframe(
+    df,
+    key="curated/experiment_2025_10.parquet",
+    description="Curated experimental data with ontology-validated annotations"
+).save()
+
+# Link ontology records
+artifact.feature_sets.add_ontology(bt.CellType.from_values(df["cell_type"]))
+artifact.feature_sets.add_ontology(bt.Tissue.from_values(df["tissue"]))
+
+ln.finish()  # Complete tracking</code></pre>
+
+<h3>Workflow 3: Cross-Organism Gene Mapping</h3>
+
+<pre><code class="language-python"># Get human genes
+human_genes = ["CD8A", "CD8B", "TP53"]
+human_records = bt.Gene.from_values(human_genes, organism="human")
+
+# Find mouse orthologs (requires external mapping)
+# LaminDB doesn't provide built-in ortholog mapping
+# Use external tools like Ensembl BioMart or homologene
+
+mouse_orthologs = ["Cd8a", "Cd8b", "Trp53"]
+mouse_records = bt.Gene.from_values(mouse_orthologs, organism="mouse")</code></pre>
+
+<h2>Querying Ontology-Annotated Data</h2>
+
+<pre><code class="language-python"># Find all datasets with specific cell type
+t_cell = bt.CellType.get(name="T cell")
+ln.Artifact.filter(feature_sets__cell_types=t_cell).to_dataframe()
+
+# Find datasets measuring specific genes
+cd8a = bt.Gene.get(symbol="CD8A", organism="human")
+ln.Artifact.filter(feature_sets__genes=cd8a).to_dataframe()
+
+# Query across ontology hierarchy
+# Find all datasets with T cell or T cell subtypes
+t_cell_subtypes = t_cell.query_children()
+ln.Artifact.filter(
+    feature_sets__cell_types__in=t_cell_subtypes
+).to_dataframe()</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Import ontologies first</strong>: Call <code>import_source()</code> before validation</li>
+<li><strong>Use standardization</strong>: Leverage synonym mapping to handle variations</li>
+<li><strong>Validate early</strong>: Check terms before creating artifacts</li>
+<li><strong>Set organism context</strong>: Specify organism for gene-related queries</li>
+<li><strong>Add custom synonyms</strong>: Register common variations in your domain</li>
+<li><strong>Use public lookup</strong>: Access <code>lookup(public=True)</code> for term discovery</li>
+<li><strong>Track versions</strong>: Monitor ontology source versions for reproducibility</li>
+<li><strong>Build hierarchies</strong>: Link custom terms to existing ontology structures</li>
+<li><strong>Query hierarchically</strong>: Use <code>query_children()</code> for comprehensive searches</li>
+<li><strong>Document mappings</strong>: Track custom term additions and relationships</li>
+</ul>
+<h2>Common Ontology Operations</h2>
+
+<pre><code class="language-python"># Check if term exists
+exists = bt.CellType.filter(name="T cell").exists()
+
+# Count terms in registry
+n_cell_types = bt.CellType.filter().count()
+
+# Get all terms with specific parent
+immune_cells = bt.CellType.filter(parents__name="immune cell")
+
+# Find orphan terms (no parents)
+orphans = bt.CellType.filter(parents__isnull=True)
+
+# Get recently added terms
+from datetime import datetime, timedelta
+recent = bt.CellType.filter(
+    created_at__gte=datetime.now() - timedelta(days=7)
+)</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Setup Deployment</h3>
+  <h1>LaminDB Setup & Deployment</h1>
+
+<p>This document covers installation, configuration, instance management, storage options, and deployment strategies for LaminDB.</p>
+
+<h2>Installation</h2>
+
+<h3>Basic Installation</h3>
+
+<pre><code class="language-bash"># Install LaminDB
+pip install lamindb
+
+# Or with pip3
+pip3 install lamindb</code></pre>
+
+<h3>Installation with Extras</h3>
+
+<p>Install optional dependencies for specific functionality:</p>
+
+<pre><code class="language-bash"># Google Cloud Platform support
+pip install 'lamindb[gcp]'
+
+# Flow cytometry formats
+pip install 'lamindb[fcs]'
+
+# Array storage and streaming (Zarr support)
+pip install 'lamindb[zarr]'
+
+# AWS S3 support (usually included by default)
+pip install 'lamindb[aws]'
+
+# Multiple extras
+pip install 'lamindb[gcp,zarr,fcs]'</code></pre>
+
+<h3>Module Plugins</h3>
+
+<pre><code class="language-bash"># Biological ontologies (Bionty)
+pip install bionty
+
+# Wet lab functionality
+pip install lamindb-wetlab
+
+# Clinical data (OMOP CDM)
+pip install lamindb-clinical</code></pre>
+
+<h3>Verify Installation</h3>
+
+<pre><code class="language-python">import lamindb as ln
+print(ln.__version__)
+
+# Check available modules
+import bionty as bt
+print(bt.__version__)</code></pre>
+
+<h2>Authentication</h2>
+
+<h3>Creating an Account</h3>
+
+<ul><li>Visit https://lamin.ai</li>
+<li>Sign up for a free account</li>
+<li>Navigate to account settings to generate an API key</li>
+</ul>
+<h3>Logging In</h3>
+
+<pre><code class="language-bash"># Login with API key
+lamin login
+
+# You'll be prompted to enter your API key
+# API key is stored locally at ~/.lamin/</code></pre>
+
+<h3>Authentication Details</h3>
+
+<p><strong>Data Privacy:</strong> LaminDB authentication only collects basic metadata (email, user information). Your actual data remains private and is not sent to LaminDB servers.</p>
+
+<p><strong>Local vs Cloud:</strong> Authentication is required even for local-only usage to enable collaboration features and instance management.</p>
+
+<h2>Instance Initialization</h2>
+
+<h3>Local SQLite Instance</h3>
+
+<p>For local development and small datasets:</p>
+
+<pre><code class="language-bash"># Initialize in current directory
+lamin init --storage ./mydata
+
+# Initialize in specific directory
+lamin init --storage /path/to/data
+
+# Initialize with specific modules
+lamin init --storage ./mydata --modules bionty
+
+# Initialize with multiple modules
+lamin init --storage ./mydata --modules bionty,wetlab</code></pre>
+
+<h3>Cloud Storage with SQLite</h3>
+
+<p>Use cloud storage but local SQLite database:</p>
+
+<pre><code class="language-bash"># AWS S3
+lamin init --storage s3://my-bucket/path
+
+# Google Cloud Storage
+lamin init --storage gs://my-bucket/path
+
+# S3-compatible (MinIO, Cloudflare R2)
+lamin init --storage 's3://bucket?endpoint_url=http://endpoint:9000'</code></pre>
+
+<h3>Cloud Storage with PostgreSQL</h3>
+
+<p>For production deployments:</p>
+
+<pre><code class="language-bash"># S3 + PostgreSQL
+lamin init --storage s3://my-bucket/path \
+  --db postgresql://user:password@hostname:5432/dbname \
+  --modules bionty
+
+# GCS + PostgreSQL
+lamin init --storage gs://my-bucket/path \
+  --db postgresql://user:password@hostname:5432/dbname \
+  --modules bionty</code></pre>
+
+<h3>Instance Naming</h3>
+
+<pre><code class="language-bash"># Specify instance name
+lamin init --storage ./mydata --name my-project
+
+# Default name uses directory name
+lamin init --storage ./mydata  # Instance name: "mydata"</code></pre>
+
+<h2>Connecting to Instances</h2>
+
+<h3>Connect to Your Own Instance</h3>
+
+<pre><code class="language-bash"># By name
+lamin connect my-project
+
+# By full path
+lamin connect account_handle/my-project</code></pre>
+
+<h3>Connect to Shared Instance</h3>
+
+<pre><code class="language-bash"># Connect to someone else's instance
+lamin connect other-user/their-project
+
+# Requires appropriate permissions</code></pre>
+
+<h3>Switching Between Instances</h3>
+
+<pre><code class="language-bash"># List available instances
+lamin info
+
+# Switch instance
+lamin connect another-instance
+
+# Close current instance
+lamin close</code></pre>
+
+<h2>Storage Configuration</h2>
+
+<h3>Local Storage</h3>
+
+<p><strong>Advantages:</strong></p>
+<ul><li>Fast access</li>
+<li>No internet required</li>
+<li>Simple setup</li>
+</ul>
+<p><strong>Setup:</strong></p>
+<pre><code class="language-bash">lamin init --storage ./data</code></pre>
+
+<h3>AWS S3 Storage</h3>
+
+<p><strong>Advantages:</strong></p>
+<ul><li>Scalable</li>
+<li>Collaborative</li>
+<li>Durable</li>
+</ul>
+<p><strong>Setup:</strong></p>
+<pre><code class="language-bash"># Set credentials
+export AWS_ACCESS_KEY_ID=your_key_id
+export AWS_SECRET_ACCESS_KEY=your_secret_key
+export AWS_DEFAULT_REGION=us-east-1
+
+# Initialize
+lamin init --storage s3://my-bucket/project-data \
+  --db postgresql://user:pwd@host:5432/db</code></pre>
+
+<p><strong>S3 Permissions Required:</strong></p>
+<pre><code class="language-json">{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject",
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::my-bucket/*",
+        "arn:aws:s3:::my-bucket"
+      ]
+    }
+  ]
+}</code></pre>
+
+<h3>Google Cloud Storage</h3>
+
+<p><strong>Setup:</strong></p>
+<pre><code class="language-bash"># Authenticate
+gcloud auth application-default login
+
+# Or use service account
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
+
+# Initialize
+lamin init --storage gs://my-bucket/project-data \
+  --db postgresql://user:pwd@host:5432/db</code></pre>
+
+<h3>S3-Compatible Storage</h3>
+
+<p>For MinIO, Cloudflare R2, or other S3-compatible services:</p>
+
+<pre><code class="language-bash"># MinIO example
+export AWS_ACCESS_KEY_ID=minioadmin
+export AWS_SECRET_ACCESS_KEY=minioadmin
+
+lamin init --storage 's3://my-bucket?endpoint_url=http://minio.example.com:9000'
+
+# Cloudflare R2 example
+export AWS_ACCESS_KEY_ID=your_r2_access_key
+export AWS_SECRET_ACCESS_KEY=your_r2_secret_key
+
+lamin init --storage 's3://bucket?endpoint_url=https://account-id.r2.cloudflarestorage.com'</code></pre>
+
+<h2>Database Configuration</h2>
+
+<h3>SQLite (Default)</h3>
+
+<p><strong>Advantages:</strong></p>
+<ul><li>No separate database server</li>
+<li>Simple setup</li>
+<li>Good for development</li>
+</ul>
+<p><strong>Limitations:</strong></p>
+<ul><li>Not suitable for concurrent writes</li>
+<li>Limited scalability</li>
+</ul>
+<p><strong>Setup:</strong></p>
+<pre><code class="language-bash"># SQLite is default
+lamin init --storage ./data
+# Database stored at ./data/.lamindb/</code></pre>
+
+<h3>PostgreSQL</h3>
+
+<p><strong>Advantages:</strong></p>
+<ul><li>Production-ready</li>
+<li>Concurrent access</li>
+<li>Better performance at scale</li>
+</ul>
+<p><strong>Setup:</strong></p>
+<pre><code class="language-bash"># Full connection string
+lamin init --storage s3://bucket/path \
+  --db postgresql://username:password@hostname:5432/database
+
+# With SSL
+lamin init --storage s3://bucket/path \
+  --db "postgresql://user:pwd@host:5432/db?sslmode=require"</code></pre>
+
+<p><strong>PostgreSQL Versions:</strong> Compatible with PostgreSQL 12+</p>
+
+<h3>Database Schema Management</h3>
+
+<pre><code class="language-bash"># Check current schema version
+lamin migrate check
+
+# Upgrade schema
+lamin migrate deploy
+
+# View migration history
+lamin migrate history</code></pre>
+
+<h2>Cache Configuration</h2>
+
+<h3>Cache Directory</h3>
+
+<p>LaminDB maintains a local cache for cloud files:</p>
+
+<pre><code class="language-python">import lamindb as ln
+
+# View cache location
+print(ln.settings.cache_dir)</code></pre>
+
+<h3>Configure Cache Location</h3>
+
+<pre><code class="language-bash"># Set cache directory
+lamin cache set /path/to/cache
+
+# View current cache settings
+lamin cache get</code></pre>
+
+<h3>System-Wide Cache (Multi-User)</h3>
+
+<p>For shared systems with multiple users:</p>
+
+<pre><code class="language-bash"># Create system settings file
+sudo mkdir -p /system/settings
+sudo nano /system/settings/system.env</code></pre>
+
+<p>Add to <code>system.env</code>:</p>
+<pre><code class="language-bash">lamindb_cache_path=/shared/cache/lamindb</code></pre>
+
+<p>Ensure permissions:</p>
+<pre><code class="language-bash">sudo chmod 755 /shared/cache/lamindb
+sudo chown -R shared-user:shared-group /shared/cache/lamindb</code></pre>
+
+<h3>Cache Management</h3>
+
+<pre><code class="language-python">import lamindb as ln
+
+# Clear cache for specific artifact
+artifact = ln.Artifact.get(key="data.h5ad")
+artifact.delete_cache()
+
+# Check if artifact is cached
+if artifact.is_cached():
+    print("Already cached")
+
+# Manually clear entire cache
+import shutil
+shutil.rmtree(ln.settings.cache_dir)</code></pre>
+
+<h2>Settings Management</h2>
+
+<h3>View Current Settings</h3>
+
+<pre><code class="language-python">import lamindb as ln
+
+# User settings
+print(ln.setup.settings.user)
+# User(handle='username', email='user@email.com', name='Full Name')
+
+# Instance settings
+print(ln.setup.settings.instance)
+# Instance(name='my-project', storage='s3://bucket/path')</code></pre>
+
+<h3>Configure Settings</h3>
+
+<pre><code class="language-bash"># Set development directory for relative keys
+lamin settings set dev-dir /path/to/project
+
+# Configure git sync
+lamin settings set sync-git-repo https://github.com/user/repo.git
+
+# View all settings
+lamin settings</code></pre>
+
+<h3>Environment Variables</h3>
+
+<pre><code class="language-bash"># Cache directory
+export LAMIN_CACHE_DIR=/path/to/cache
+
+# Settings directory
+export LAMIN_SETTINGS_DIR=/path/to/settings
+
+# Git sync
+export LAMINDB_SYNC_GIT_REPO=https://github.com/user/repo.git</code></pre>
+
+<h2>Instance Management</h2>
+
+<h3>Viewing Instance Information</h3>
+
+<pre><code class="language-bash"># Current instance info
+lamin info
+
+# List all instances
+lamin ls
+
+# View instance details
+lamin instance details</code></pre>
+
+<h3>Instance Collaboration</h3>
+
+<pre><code class="language-bash"># Set instance visibility (requires LaminHub)
+lamin instance set-visibility public
+lamin instance set-visibility private
+
+# Invite collaborators (requires LaminHub)
+lamin instance invite user@email.com</code></pre>
+
+<h3>Instance Migration</h3>
+
+<pre><code class="language-bash"># Backup instance
+lamin backup create
+
+# Restore from backup
+lamin backup restore backup_id
+
+# Export instance metadata
+lamin export instance-metadata.json</code></pre>
+
+<h3>Deleting Instances</h3>
+
+<pre><code class="language-bash"># Delete instance (preserves data, removes metadata)
+lamin delete --force instance-name
+
+# This only removes the LaminDB metadata
+# Actual data in storage location remains</code></pre>
+
+<h2>Production Deployment Patterns</h2>
+
+<h3>Pattern 1: Local Development → Cloud Production</h3>
+
+<p><strong>Development:</strong></p>
+<pre><code class="language-bash"># Local development
+lamin init --storage ./dev-data --modules bionty</code></pre>
+
+<p><strong>Production:</strong></p>
+<pre><code class="language-bash"># Cloud production
+lamin init --storage s3://prod-bucket/data \
+  --db postgresql://user:pwd@db-host:5432/prod-db \
+  --modules bionty \
+  --name production</code></pre>
+
+<p><strong>Migration:</strong> Export artifacts from dev, import to prod</p>
+<pre><code class="language-python"># Export from dev
+artifacts = ln.Artifact.filter().all()
+for artifact in artifacts:
+    artifact.export("/tmp/export/")
+
+# Switch to prod
+lamin connect production
+
+# Import to prod
+for file in Path("/tmp/export/").glob("*"):
+    ln.Artifact(str(file), key=file.name).save()</code></pre>
+
+<h3>Pattern 2: Multi-Region Deployment</h3>
+
+<p>Deploy instances in multiple regions for data sovereignty:</p>
+
+<pre><code class="language-bash"># US instance
+lamin init --storage s3://us-bucket/data \
+  --db postgresql://user:pwd@us-db:5432/db \
+  --name us-production
+
+# EU instance
+lamin init --storage s3://eu-bucket/data \
+  --db postgresql://user:pwd@eu-db:5432/db \
+  --name eu-production</code></pre>
+
+<h3>Pattern 3: Shared Storage, Personal Instances</h3>
+
+<p>Multiple users, shared data:</p>
+
+<pre><code class="language-bash"># Shared storage with user-specific DB
+lamin init --storage s3://shared-bucket/data \
+  --db postgresql://user1:pwd@host:5432/user1_db \
+  --name user1-workspace
+
+lamin init --storage s3://shared-bucket/data \
+  --db postgresql://user2:pwd@host:5432/user2_db \
+  --name user2-workspace</code></pre>
+
+<h2>Performance Optimization</h2>
+
+<h3>Database Performance</h3>
+
+<pre><code class="language-python"># Use connection pooling for PostgreSQL
+# Configure in database server settings
+
+# Optimize queries with indexes
+# LaminDB creates indexes automatically for common queries</code></pre>
+
+<h3>Storage Performance</h3>
+
+<pre><code class="language-bash"># Use appropriate storage classes
+# S3: STANDARD for frequent access, INTELLIGENT_TIERING for mixed access
+
+# Configure multipart upload thresholds
+export AWS_CLI_FILE_IO_BANDWIDTH=100MB</code></pre>
+
+<h3>Cache Optimization</h3>
+
+<pre><code class="language-python"># Pre-cache frequently used artifacts
+artifacts = ln.Artifact.filter(key__startswith="reference/")
+for artifact in artifacts:
+    artifact.cache()  # Download to cache
+
+# Use backed mode for large arrays
+adata = artifact.backed()  # Don't load into memory</code></pre>
+
+<h2>Security Best Practices</h2>
+
+<ul><li><strong>Credentials Management:</strong></li>
+</ul><p>   - Use environment variables, not hardcoded credentials</p>
+<p>   - Use IAM roles on AWS/GCP instead of access keys</p>
+<p>   - Rotate credentials regularly</p>
+
+<ul><li><strong>Access Control:</strong></li>
+</ul><p>   - Use PostgreSQL for multi-user access control</p>
+<p>   - Configure storage bucket policies</p>
+<p>   - Enable audit logging</p>
+
+<ul><li><strong>Network Security:</strong></li>
+</ul><p>   - Use SSL/TLS for database connections</p>
+<p>   - Use VPCs for cloud deployments</p>
+<p>   - Restrict IP addresses when possible</p>
+
+<ul><li><strong>Data Protection:</strong></li>
+</ul><p>   - Enable encryption at rest (S3, GCS)</p>
+<p>   - Use encryption in transit (HTTPS, SSL)</p>
+<p>   - Implement backup strategies</p>
+
+<h2>Monitoring and Maintenance</h2>
+
+<h3>Health Checks</h3>
+
+<pre><code class="language-python">import lamindb as ln
+
+# Check database connection
+try:
+    ln.Artifact.filter().count()
+    print("✓ Database connected")
+except Exception as e:
+    print(f"✗ Database error: {e}")
+
+# Check storage access
+try:
+    test_artifact = ln.Artifact("test.txt", key="healthcheck.txt").save()
+    test_artifact.delete(permanent=True)
+    print("✓ Storage accessible")
+except Exception as e:
+    print(f"✗ Storage error: {e}")</code></pre>
+
+<h3>Logging</h3>
+
+<pre><code class="language-python"># Enable debug logging
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
+# LaminDB operations will produce detailed logs</code></pre>
+
+<h3>Backup Strategy</h3>
+
+<pre><code class="language-bash"># Regular database backups (PostgreSQL)
+pg_dump -h hostname -U username -d database &gt; backup_$(date +%Y%m%d).sql
+
+# Storage backups (S3 versioning)
+aws s3api put-bucket-versioning \
+  --bucket my-bucket \
+  --versioning-configuration Status=Enabled
+
+# Metadata export
+lamin export metadata_backup.json</code></pre>
+
+<h2>Troubleshooting</h2>
+
+<h3>Common Issues</h3>
+
+<p><strong>Issue: Cannot connect to instance</strong></p>
+<pre><code class="language-bash"># Check instance exists
+lamin ls
+
+# Verify authentication
+lamin login
+
+# Re-connect
+lamin connect instance-name</code></pre>
+
+<p><strong>Issue: Storage permissions denied</strong></p>
+<pre><code class="language-bash"># Check AWS credentials
+aws s3 ls s3://your-bucket/
+
+# Check GCS credentials
+gsutil ls gs://your-bucket/
+
+# Verify IAM permissions</code></pre>
+
+<p><strong>Issue: Database connection error</strong></p>
+<pre><code class="language-bash"># Test PostgreSQL connection
+psql postgresql://user:pwd@host:5432/db
+
+# Check database version compatibility
+lamin migrate check</code></pre>
+
+<p><strong>Issue: Cache full</strong></p>
+<pre><code class="language-python"># Clear cache
+import lamindb as ln
+import shutil
+shutil.rmtree(ln.settings.cache_dir)
+
+# Set larger cache location
+lamin cache set /larger/disk/cache</code></pre>
+
+<h2>Upgrade and Migration</h2>
+
+<h3>Upgrading LaminDB</h3>
+
+<pre><code class="language-bash"># Upgrade to latest version
+pip install --upgrade lamindb
+
+# Upgrade database schema
+lamin migrate deploy</code></pre>
+
+<h3>Schema Compatibility</h3>
+
+<p>Check the compatibility matrix to ensure your database schema version is compatible with your installed LaminDB version.</p>
+
+<h3>Breaking Changes</h3>
+
+<p>Major version upgrades may require migration:</p>
+
+<pre><code class="language-bash"># Check for breaking changes
+lamin migrate check
+
+# Review migration plan
+lamin migrate plan
+
+# Execute migration
+lamin migrate deploy</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Start local, scale cloud</strong>: Develop locally, deploy to cloud for production</li>
+<li><strong>Use PostgreSQL for production</strong>: SQLite is only for development</li>
+<li><strong>Configure appropriate cache</strong>: Size cache based on working set</li>
+<li><strong>Enable versioning</strong>: Use S3/GCS versioning for data protection</li>
+<li><strong>Monitor costs</strong>: Track storage and compute costs in cloud deployments</li>
+<li><strong>Document configuration</strong>: Keep infrastructure-as-code for reproducibility</li>
+<li><strong>Test backups</strong>: Regularly verify backup and restore procedures</li>
+<li><strong>Set up monitoring</strong>: Implement health checks and alerting</li>
+<li><strong>Use modules strategically</strong>: Only install needed plugins to reduce complexity</li>
+<li><strong>Plan for scale</strong>: Consider concurrent users and data growth</li>
+</ul>
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

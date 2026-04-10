@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrimeKG Knowledge Graph Skill — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="active">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / PrimeKG Knowledge Graph Skill</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>PrimeKG Knowledge Graph Skill</h1>
+    <p class="description">Query the Precision Medicine Knowledge Graph (PrimeKG) for multiscale biological data including genes, drugs, diseases, phenotypes, and more.</p>
+    <h1>PrimeKG Knowledge Graph Skill</h1>
+
+<h2>Overview</h2>
+
+<p>PrimeKG is a precision medicine knowledge graph that integrates over 20 primary databases and high-quality scientific literature into a single resource. It contains over 100,000 nodes and 4 million edges across 29 relationship types, including drug-target, disease-gene, and phenotype-disease associations.</p>
+
+<p><strong>Key capabilities:</strong></p>
+<ul><li>Search for nodes (genes, proteins, drugs, diseases, phenotypes)</li>
+<li>Retrieve direct neighbors (associated entities and clinical evidence)</li>
+<li>Analyze local disease context (related genes, drugs, phenotypes)</li>
+<li>Identify drug-disease paths (potential repurposing opportunities)</li>
+</ul>
+<p><strong>Data access:</strong> Programmatic access via <code>query_primekg.py</code>. Data is stored at <code>C:\Users\eamon\Documents\Data\PrimeKG\kg.csv</code>.</p>
+
+<h2>When to Use This Skill</h2>
+
+<p>This skill should be used when:</p>
+
+<ul><li><strong>Knowledge-based drug discovery:</strong> Identifying targets and mechanisms for diseases.</li>
+<li><strong>Drug repurposing:</strong> Finding existing drugs that might have evidence for new indications.</li>
+<li><strong>Phenotype analysis:</strong> Understanding how symptoms/phenotypes relate to diseases and genes.</li>
+<li><strong>Multiscale biology:</strong> Bridging the gap between molecular targets (genes) and clinical outcomes (diseases).</li>
+<li><strong>Network pharmacology:</strong> Investigating the broader network effects of drug-target interactions.</li>
+</ul>
+<h2>Core Workflow</h2>
+
+<h3>1. Search for Entities</h3>
+
+<p>Find identifiers for genes, drugs, or diseases.</p>
+
+<pre><code class="language-python">from scripts.query_primekg import search_nodes
+
+# Search for Alzheimer's disease nodes
+results = search_nodes("Alzheimer", node_type="disease")
+# Returns: [{"id": "EFO_0000249", "type": "disease", "name": "Alzheimer's disease", ...}]</code></pre>
+
+<h3>2. Get Neighbors (Direct Associations)</h3>
+
+<p>Retrieve all connected nodes and relationship types.</p>
+
+<pre><code class="language-python">from scripts.query_primekg import get_neighbors
+
+# Get all neighbors of a specific disease ID
+neighbors = get_neighbors("EFO_0000249")
+# Returns: List of neighbors like {"neighbor_name": "APOE", "relation": "disease_gene", ...}</code></pre>
+
+<h3>3. Analyze Disease Context</h3>
+
+<p>A high-level function to summarize associations for a disease.</p>
+
+<pre><code class="language-python">from scripts.query_primekg import get_disease_context
+
+# Comprehensive summary for a disease
+context = get_disease_context("Alzheimer's disease")
+# Access: context['associated_genes'], context['associated_drugs'], context['phenotypes']</code></pre>
+
+<h2>Relationship Types in PrimeKG</h2>
+
+<p>The graph contains several key relationship types including:</p>
+<ul><li><code>protein_protein</code>: Physical PPIs</li>
+<li><code>drug_protein</code>: Drug target/mechanism associations</li>
+<li><code>disease_gene</code>: Genetic associations</li>
+<li><code>drug_disease</code>: Indications and contraindications</li>
+<li><code>disease_phenotype</code>: Clinical signs and symptoms</li>
+<li><code>gwas</code>: Genome-wide association studies evidence</li>
+</ul>
+<h2>Best Practices</h2>
+
+<ul><li><strong>Use specific IDs:</strong> When using <code>get_neighbors</code>, ensure you have the correct ID from <code>search_nodes</code>.</li>
+<li><strong>Context first:</strong> Use <code>get_disease_context</code> for a broad overview before diving into specific genes or drugs.</li>
+<li><strong>Filter relationships:</strong> Use the <code>relation_type</code> filter in <code>get_neighbors</code> to focus on specific evidence (e.g., only <code>drug_protein</code>).</li>
+<li><strong>Multiscale integration:</strong> Combine with <code>OpenTargets</code> for deeper genetic evidence or <code>Semantic Scholar</code> for the latest literature context.</li>
+</ul>
+<h2>Resources</h2>
+
+<h3>Scripts</h3>
+<ul><li><code>scripts/query_primekg.py</code>: Core functions for searching and querying the knowledge graph.</li>
+</ul>
+<h3>Data Path</h3>
+<ul><li>Data: <code>/mnt/c/Users/eamon/Documents/Data/PrimeKG/kg.csv</code></li>
+<li>Total nodes: ~129,000</li>
+<li>Total edges: ~4,000,000</li>
+<li>Database: CSV-based, optimized for pandas querying.</li></ul>
+    
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

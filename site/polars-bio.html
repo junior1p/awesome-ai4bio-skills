@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>polars-bio — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="active">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / polars-bio</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>polars-bio</h1>
+    <p class="description">High-performance genomic interval operations and bioinformatics file I/O on Polars DataFrames. Overlap, nearest, merge, coverage, complement, subtract for BED/VCF/BAM/GFF intervals. Streaming, cloud-n</p>
+    <h1>polars-bio</h1>
+
+<h2>Overview</h2>
+
+<p>polars-bio is a high-performance Python library for genomic interval operations and bioinformatics file I/O, built on Polars, Apache Arrow, and Apache DataFusion. It provides a familiar DataFrame-centric API for interval arithmetic (overlap, nearest, merge, coverage, complement, subtract) and reading/writing common bioinformatics formats (BED, VCF, BAM, CRAM, GFF/GTF, FASTA, FASTQ).</p>
+
+<p>Key value propositions:</p>
+<ul><li><strong>6-38x faster</strong> than bioframe on real-world genomic benchmarks</li>
+<li><strong>Streaming/out-of-core</strong> support for large genomes via DataFusion</li>
+<li><strong>Cloud-native</strong> file I/O (S3, GCS, Azure) with predicate pushdown</li>
+<li><strong>Two API styles</strong>: functional (<code>pb.overlap(df1, df2)</code>) and method-chaining (<code>df1.lazy().pb.overlap(df2)</code>)</li>
+<li><strong>SQL interface</strong> for genomic data via DataFusion SQL engine</li>
+</ul>
+<h2>When to Use This Skill</h2>
+
+<p>Use this skill when:</p>
+<ul><li>Performing genomic interval operations (overlap, nearest, merge, coverage, complement, subtract)</li>
+<li>Reading/writing bioinformatics file formats (BED, VCF, BAM, CRAM, GFF/GTF, FASTA, FASTQ)</li>
+<li>Processing large genomic datasets that don't fit in memory (streaming mode)</li>
+<li>Running SQL queries on genomic data files</li>
+<li>Migrating from bioframe to a faster alternative</li>
+<li>Computing read depth/pileup from BAM/CRAM files</li>
+<li>Working with Polars DataFrames containing genomic intervals</li>
+</ul>
+<h2>Quick Start</h2>
+
+<h3>Installation</h3>
+
+<pre><code class="language-bash">pip install polars-bio
+# or
+uv pip install polars-bio</code></pre>
+
+<p>For pandas compatibility:</p>
+<pre><code class="language-bash">pip install polars-bio[pandas]</code></pre>
+
+<h3>Basic Overlap Example</h3>
+
+<pre><code class="language-python">import polars as pl
+import polars_bio as pb
+
+# Create two interval DataFrames
+df1 = pl.DataFrame({
+    "chrom": ["chr1", "chr1", "chr1"],
+    "start": [1, 5, 22],
+    "end":   [6, 9, 30],
+})
+
+df2 = pl.DataFrame({
+    "chrom": ["chr1", "chr1"],
+    "start": [3, 25],
+    "end":   [8, 28],
+})
+
+# Functional API (returns LazyFrame by default)
+result = pb.overlap(df1, df2)
+result_df = result.collect()
+
+# Get a DataFrame directly
+result_df = pb.overlap(df1, df2, output_type="polars.DataFrame")
+
+# Method-chaining API (via .pb accessor on LazyFrame)
+result = df1.lazy().pb.overlap(df2)
+result_df = result.collect()</code></pre>
+
+<h3>Reading a BED File</h3>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Eager read (loads entire file)
+df = pb.read_bed("regions.bed")
+
+# Lazy scan (streaming, for large files)
+lf = pb.scan_bed("regions.bed")
+result = lf.collect()</code></pre>
+
+<h2>Core Capabilities</h2>
+
+<h3>1. Genomic Interval Operations</h3>
+
+<p>polars-bio provides 8 core interval operations for genomic range arithmetic. All operations accept Polars DataFrames with <code>chrom</code>, <code>start</code>, <code>end</code> columns (configurable). All operations return a <code>LazyFrame</code> by default (use <code>output_type="polars.DataFrame"</code> for eager results).</p>
+
+<p><strong>Operations:</strong></p>
+<ul><li><code>overlap</code> / <code>count_overlaps</code> - Find or count overlapping intervals between two sets</li>
+<li><code>nearest</code> - Find nearest intervals (with configurable <code>k</code>, <code>overlap</code>, <code>distance</code> params)</li>
+<li><code>merge</code> - Merge overlapping/bookended intervals within a set</li>
+<li><code>cluster</code> - Assign cluster IDs to overlapping intervals</li>
+<li><code>coverage</code> - Compute per-interval coverage counts (two-input operation)</li>
+<li><code>complement</code> - Find gaps between intervals within a genome</li>
+<li><code>subtract</code> - Remove portions of intervals that overlap another set</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">import polars_bio as pb
+
+# Find overlapping intervals (returns LazyFrame)
+result = pb.overlap(df1, df2, suffixes=("_1", "_2"))
+
+# Count overlaps per interval
+counts = pb.count_overlaps(df1, df2)
+
+# Merge overlapping intervals
+merged = pb.merge(df1)
+
+# Find nearest intervals
+nearest = pb.nearest(df1, df2)
+
+# Collect any LazyFrame result to DataFrame
+result_df = result.collect()</code></pre>
+
+<p><strong>Reference:</strong> See <code>references/interval_operations.md</code> for detailed documentation on all operations, parameters, output schemas, and performance considerations.</p>
+
+<h3>2. Bioinformatics File I/O</h3>
+
+<p>Read and write common bioinformatics formats with <code>read_<em></code>, <code>scan_</em></code>, <code>write_<em></code>, and <code>sink_</em></code> functions. Supports cloud storage (S3, GCS, Azure) and compression (GZIP, BGZF).</p>
+
+<p><strong>Supported formats:</strong></p>
+<ul><li><strong>BED</strong> - Genomic intervals (<code>read_bed</code>, <code>scan_bed</code>, <code>write_*</code> via generic)</li>
+<li><strong>VCF</strong> - Genetic variants (<code>read_vcf</code>, <code>scan_vcf</code>, <code>write_vcf</code>, <code>sink_vcf</code>)</li>
+<li><strong>BAM</strong> - Aligned reads (<code>read_bam</code>, <code>scan_bam</code>, <code>write_bam</code>, <code>sink_bam</code>)</li>
+<li><strong>CRAM</strong> - Compressed alignments (<code>read_cram</code>, <code>scan_cram</code>, <code>write_cram</code>, <code>sink_cram</code>)</li>
+<li><strong>GFF</strong> - Gene annotations (<code>read_gff</code>, <code>scan_gff</code>)</li>
+<li><strong>GTF</strong> - Gene annotations (<code>read_gtf</code>, <code>scan_gtf</code>)</li>
+<li><strong>FASTA</strong> - Reference sequences (<code>read_fasta</code>, <code>scan_fasta</code>)</li>
+<li><strong>FASTQ</strong> - Sequencing reads (<code>read_fastq</code>, <code>scan_fastq</code>, <code>write_fastq</code>, <code>sink_fastq</code>)</li>
+<li><strong>SAM</strong> - Text alignments (<code>read_sam</code>, <code>scan_sam</code>, <code>write_sam</code>, <code>sink_sam</code>)</li>
+<li><strong>Hi-C pairs</strong> - Chromatin contacts (<code>read_pairs</code>, <code>scan_pairs</code>)</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">import polars_bio as pb
+
+# Read VCF file
+variants = pb.read_vcf("samples.vcf.gz")
+
+# Lazy scan BAM file (streaming)
+alignments = pb.scan_bam("aligned.bam")
+
+# Read GFF annotations
+genes = pb.read_gff("annotations.gff3")
+
+# Cloud storage (individual params, not a dict)
+df = pb.read_bed("s3://bucket/regions.bed",
+                 allow_anonymous=True)</code></pre>
+
+<p><strong>Reference:</strong> See <code>references/file_io.md</code> for per-format column schemas, parameters, cloud storage options, and compression support.</p>
+
+<h3>3. SQL Data Processing</h3>
+
+<p>Register bioinformatics files as tables and query them using DataFusion SQL. Combines the power of SQL with polars-bio's genomic-aware readers.</p>
+
+<pre><code class="language-python">import polars as pl
+import polars_bio as pb
+
+# Register files as SQL tables (path first, name= keyword)
+pb.register_vcf("samples.vcf.gz", name="variants")
+pb.register_bed("target_regions.bed", name="regions")
+
+# Query with SQL (returns LazyFrame)
+result = pb.sql("SELECT chrom, start, end, ref, alt FROM variants WHERE qual &gt; 30")
+result_df = result.collect()
+
+# Register a Polars DataFrame as a SQL table
+pb.from_polars("my_intervals", df)
+result = pb.sql("SELECT * FROM my_intervals WHERE chrom = 'chr1'").collect()</code></pre>
+
+<p><strong>Reference:</strong> See <code>references/sql_processing.md</code> for register functions, SQL syntax, and examples.</p>
+
+<h3>4. Pileup Operations</h3>
+
+<p>Compute per-base read depth from BAM/CRAM files with CIGAR-aware depth calculation.</p>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Compute depth across a BAM file
+depth_lf = pb.depth("aligned.bam")
+depth_df = depth_lf.collect()
+
+# With quality filter
+depth_lf = pb.depth("aligned.bam", min_mapping_quality=20)</code></pre>
+
+<p><strong>Reference:</strong> See <code>references/pileup_operations.md</code> for parameters and integration patterns.</p>
+
+<h2>Key Concepts</h2>
+
+<h3>Coordinate Systems</h3>
+
+<p>polars-bio defaults to <strong>1-based</strong> coordinates (genomic convention). This can be changed globally:</p>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Switch to 0-based coordinates
+pb.set_option("coordinate_system", "0-based")
+
+# Switch back to 1-based (default)
+pb.set_option("coordinate_system", "1-based")</code></pre>
+
+<p>I/O functions also accept <code>use_zero_based</code> to set coordinate metadata on the resulting DataFrame:</p>
+
+<pre><code class="language-python"># Read BED with explicit 0-based metadata
+df = pb.read_bed("regions.bed", use_zero_based=True)</code></pre>
+
+<p><strong>Important:</strong> BED files are always 0-based half-open in the file format. polars-bio handles the conversion automatically when reading BED files. Coordinate metadata is attached to DataFrames by I/O functions and propagated through operations.</p>
+
+<h3>Two API Styles</h3>
+
+<p><strong>Functional API</strong> - standalone functions, explicit inputs:</p>
+<pre><code class="language-python">result = pb.overlap(df1, df2, suffixes=("_1", "_2"))
+merged = pb.merge(df)</code></pre>
+
+<p><strong>Method-chaining API</strong> - via <code>.pb</code> accessor on <strong>LazyFrames</strong> (not DataFrames):</p>
+<pre><code class="language-python">result = df1.lazy().pb.overlap(df2)
+merged = df.lazy().pb.merge()</code></pre>
+
+<p><strong>Important:</strong> The <code>.pb</code> accessor for interval operations is only available on <code>LazyFrame</code>. On <code>DataFrame</code>, <code>.pb</code> provides write operations only (<code>write_bam</code>, <code>write_vcf</code>, etc.).</p>
+
+<p>Method-chaining enables fluent pipelines:</p>
+<pre><code class="language-python"># Chain interval operations (note: overlap outputs suffixed columns,
+# so rename before merge which expects chrom/start/end)
+result = (
+    df1.lazy()
+    .pb.overlap(df2)
+    .filter(pl.col("start_2") &gt; 1000)
+    .select(
+        pl.col("chrom_1").alias("chrom"),
+        pl.col("start_1").alias("start"),
+        pl.col("end_1").alias("end"),
+    )
+    .pb.merge()
+    .collect()
+)</code></pre>
+
+<h3>Probe-Build Architecture</h3>
+
+<p>For two-input operations (overlap, nearest, count_overlaps, coverage), polars-bio uses a probe-build join strategy:</p>
+<ul><li>The <strong>first</strong> DataFrame is the <strong>probe</strong> (iterated over)</li>
+<li>The <strong>second</strong> DataFrame is the <strong>build</strong> (indexed for lookup)</li>
+</ul>
+<p>For best performance, pass the larger DataFrame as the first argument (probe) and the smaller one as the second (build).</p>
+
+<h3>Column Conventions</h3>
+
+<p>By default, polars-bio expects columns named <code>chrom</code>, <code>start</code>, <code>end</code>. Custom column names can be specified via lists:</p>
+
+<pre><code class="language-python">result = pb.overlap(
+    df1, df2,
+    cols1=["chromosome", "begin", "finish"],
+    cols2=["chr", "pos_start", "pos_end"],
+)</code></pre>
+
+<h3>Return Types and Collecting Results</h3>
+
+<p>All interval operations and <code>pb.sql()</code> return a <strong>LazyFrame</strong> by default. Use <code>.collect()</code> to materialize results, or pass <code>output_type="polars.DataFrame"</code> for eager evaluation:</p>
+
+<pre><code class="language-python"># Lazy (default) - collect when needed
+result_lf = pb.overlap(df1, df2)
+result_df = result_lf.collect()
+
+# Eager - get DataFrame directly
+result_df = pb.overlap(df1, df2, output_type="polars.DataFrame")</code></pre>
+
+<h3>Streaming and Out-of-Core Processing</h3>
+
+<p>For datasets larger than available RAM, use <code>scan_*</code> functions and streaming execution:</p>
+
+<pre><code class="language-python"># Scan files lazily
+lf = pb.scan_bed("large_intervals.bed")
+
+# Process with streaming
+result = lf.collect(streaming=True)</code></pre>
+
+<p>DataFusion streaming is enabled by default for interval operations, processing data in batches without loading the full dataset into memory.</p>
+
+<h2>Common Pitfalls</h2>
+
+<ul><li><strong><code>.pb</code> accessor on DataFrame vs LazyFrame:</strong> Interval operations (overlap, merge, etc.) are only on <code>LazyFrame.pb</code>. <code>DataFrame.pb</code> only has write methods. Use <code>.lazy()</code> to convert before chaining interval ops.</li>
+</ul>
+<ul><li><strong>LazyFrame returns:</strong> All interval operations and <code>pb.sql()</code> return <code>LazyFrame</code> by default. Don't forget <code>.collect()</code> or use <code>output_type="polars.DataFrame"</code>.</li>
+</ul>
+<ul><li><strong>Column name mismatches:</strong> polars-bio expects <code>chrom</code>, <code>start</code>, <code>end</code> by default. Use <code>cols1</code>/<code>cols2</code> parameters (as lists) if your columns have different names.</li>
+</ul>
+<ul><li><strong>Coordinate system metadata:</strong> When constructing DataFrames manually (not via <code>read_<em></code>/<code>scan_</em></code>), polars-bio warns about missing coordinate metadata. Use <code>pb.set_option("coordinate_system", "0-based")</code> globally, or use I/O functions that set metadata automatically.</li>
+</ul>
+<ul><li><strong>Probe-build order matters:</strong> For overlap, nearest, and coverage, the first DataFrame is probed against the second. Swapping arguments changes which intervals appear in the left vs right output columns, and can affect performance.</li>
+</ul>
+<ul><li><strong>INT32 position limit:</strong> Genomic positions are stored as 32-bit integers, limiting coordinates to ~2.1 billion. This is sufficient for all known genomes but may be an issue with custom coordinate spaces.</li>
+</ul>
+<ul><li><strong>BAM index requirements:</strong> <code>read_bam</code> and <code>scan_bam</code> require a <code>.bai</code> index file alongside the BAM. Create one with <code>samtools index</code> if missing.</li>
+</ul>
+<ul><li><strong>Parallel execution disabled by default:</strong> DataFusion parallelism defaults to 1 partition. Enable for large datasets:</li>
+</ul><p>   <code>`</code>python</p>
+<p>   pb.set_option("datafusion.execution.target_partitions", 8)</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>CRAM has separate functions:</strong> Use <code>read_cram</code>/<code>scan_cram</code>/<code>register_cram</code> for CRAM files (not <code>read_bam</code>). CRAM functions require a <code>reference_path</code> parameter.</li>
+</ul>
+<h2>Best Practices</h2>
+
+<ul><li><strong>Use <code>scan_<em></code> for large files:</strong> Prefer <code>scan_bed</code>, <code>scan_vcf</code>, etc. over <code>read_</em></code> for files larger than available RAM. Scan functions enable streaming and predicate pushdown.</li>
+</ul>
+<ul><li><strong>Configure parallelism for large datasets:</strong></li>
+</ul><p>   <code>`</code>python</p>
+<p>   import os</p>
+<p>   pb.set_option("datafusion.execution.target_partitions", os.cpu_count())</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Use BGZF compression:</strong> BGZF-compressed files (<code>.bed.gz</code>, <code>.vcf.gz</code>) support parallel block decompression, significantly faster than plain GZIP.</li>
+</ul>
+<ul><li><strong>Select columns early:</strong> When only specific columns are needed, select them early to reduce memory usage:</li>
+</ul><p>   <code>`</code>python</p>
+<p>   df = pb.read_vcf("large.vcf.gz").select("chrom", "start", "end", "ref", "alt")</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Use cloud paths directly:</strong> Pass S3/GCS/Azure URIs directly to read/scan functions instead of downloading files first:</li>
+</ul><p>   <code>`</code>python</p>
+<p>   df = pb.read_bed("s3://my-bucket/regions.bed", allow_anonymous=True)</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Prefer functional API for single operations, method-chaining for pipelines:</strong> Use <code>pb.overlap()</code> for one-off operations and <code>.lazy().pb.overlap()</code> when building multi-step pipelines.</li>
+</ul>
+<h2>Resources</h2>
+
+<h3>references/</h3>
+
+<p>Detailed documentation for each major capability:</p>
+
+<ul><li><strong>interval_operations.md</strong> - All 8 interval operations with parameters, examples, output schemas, and performance tips. Core reference for genomic range arithmetic.</li>
+</ul>
+<ul><li><strong>file_io.md</strong> - Supported formats table, per-format column schemas, cloud storage configuration, compression support, and common parameters.</li>
+</ul>
+<ul><li><strong>sql_processing.md</strong> - Register functions, DataFusion SQL syntax, combining SQL with interval operations, and example queries.</li>
+</ul>
+<ul><li><strong>pileup_operations.md</strong> - Per-base read depth computation from BAM/CRAM files, parameters, and integration with interval operations.</li>
+</ul>
+<ul><li><strong>configuration.md</strong> - Global settings (parallelism, coordinate systems, streaming modes), logging, and metadata management.</li>
+</ul>
+<ul><li><strong>bioframe_migration.md</strong> - Operation mapping table, API differences, performance comparison, migration code examples, and pandas compatibility mode.</li></ul>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Bioframe Migration</h3>
+  <h1>Migrating from bioframe to polars-bio</h1>
+
+<h2>Overview</h2>
+
+<p>polars-bio is a drop-in replacement for bioframe's core interval operations, offering 6.5-38x speedups on real-world genomic benchmarks. The main differences are: Polars DataFrames instead of pandas, a Rust/DataFusion backend instead of pure Python, streaming support for large genomes, and LazyFrame returns by default.</p>
+
+<h2>Operation Mapping</h2>
+
+<p>| bioframe | polars-bio | Notes |</p>
+<p>|----------|------------|-------|</p>
+<p>| <code>bioframe.overlap(df1, df2)</code> | <code>pb.overlap(df1, df2)</code> | Returns LazyFrame; <code>.collect()</code> for DataFrame |</p>
+<p>| <code>bioframe.closest(df1, df2)</code> | <code>pb.nearest(df1, df2)</code> | Renamed; uses <code>k</code>, <code>overlap</code>, <code>distance</code> params |</p>
+<p>| <code>bioframe.count_overlaps(df1, df2)</code> | <code>pb.count_overlaps(df1, df2)</code> | Default suffixes differ: <code>("", "_")</code> vs bioframe's |</p>
+<p>| <code>bioframe.merge(df)</code> | <code>pb.merge(df)</code> | Output includes <code>n_intervals</code> column |</p>
+<p>| <code>bioframe.cluster(df)</code> | <code>pb.cluster(df)</code> | Output cols: <code>cluster</code>, <code>cluster_start</code>, <code>cluster_end</code> |</p>
+<p>| <code>bioframe.coverage(df1, df2)</code> | <code>pb.coverage(df1, df2)</code> | Two-input in both libraries |</p>
+<p>| <code>bioframe.complement(df, chromsizes)</code> | <code>pb.complement(df, view_df=genome)</code> | Genome as DataFrame, not Series |</p>
+<p>| <code>bioframe.subtract(df1, df2)</code> | <code>pb.subtract(df1, df2)</code> | Same semantics |</p>
+
+<h2>Key API Differences</h2>
+
+<h3>DataFrames: pandas vs Polars</h3>
+
+<p><strong>bioframe (pandas):</strong></p>
+<pre><code class="language-python">import bioframe
+import pandas as pd
+
+df1 = pd.DataFrame({
+    "chrom": ["chr1", "chr1"],
+    "start": [1, 10],
+    "end":   [5, 20],
+})
+
+result = bioframe.overlap(df1, df2)
+# result is a pandas DataFrame
+result["start_1"]  # pandas column access</code></pre>
+
+<p><strong>polars-bio (Polars):</strong></p>
+<pre><code class="language-python">import polars_bio as pb
+import polars as pl
+
+df1 = pl.DataFrame({
+    "chrom": ["chr1", "chr1"],
+    "start": [1, 10],
+    "end":   [5, 20],
+})
+
+result = pb.overlap(df1, df2)  # Returns LazyFrame
+result_df = result.collect()   # Materialize to DataFrame
+result_df.select("start_1")   # Polars column access</code></pre>
+
+<h3>Return Types: LazyFrame by Default</h3>
+
+<p>All polars-bio operations return a <strong>LazyFrame</strong> by default. Use <code>.collect()</code> or <code>output_type="polars.DataFrame"</code>:</p>
+
+<pre><code class="language-python"># bioframe: always returns DataFrame
+result = bioframe.overlap(df1, df2)
+
+# polars-bio: returns LazyFrame, collect for DataFrame
+result_lf = pb.overlap(df1, df2)
+result_df = result_lf.collect()
+
+# Or get DataFrame directly
+result_df = pb.overlap(df1, df2, output_type="polars.DataFrame")</code></pre>
+
+<h3>Genome/Chromsizes</h3>
+
+<p><strong>bioframe:</strong></p>
+<pre><code class="language-python">chromsizes = bioframe.fetch_chromsizes("hg38")  # Returns pandas Series
+complement = bioframe.complement(df, chromsizes)</code></pre>
+
+<p><strong>polars-bio:</strong></p>
+<pre><code class="language-python">genome = pl.DataFrame({
+    "chrom": ["chr1", "chr2"],
+    "start": [0, 0],
+    "end":   [248956422, 242193529],
+})
+complement = pb.complement(df, view_df=genome)</code></pre>
+
+<h3>closest vs nearest</h3>
+
+<p><strong>bioframe:</strong></p>
+<pre><code class="language-python">result = bioframe.closest(df1, df2)</code></pre>
+
+<p><strong>polars-bio:</strong></p>
+<pre><code class="language-python"># Basic nearest
+result = pb.nearest(df1, df2)
+
+# Find k nearest neighbors
+result = pb.nearest(df1, df2, k=3)
+
+# Exclude overlapping intervals
+result = pb.nearest(df1, df2, overlap=False)
+
+# Without distance column
+result = pb.nearest(df1, df2, distance=False)</code></pre>
+
+<h3>Method-Chaining (polars-bio only)</h3>
+
+<p>polars-bio adds a <code>.pb</code> accessor on <strong>LazyFrame</strong> for method chaining:</p>
+
+<pre><code class="language-python"># bioframe: sequential function calls
+merged = bioframe.merge(bioframe.overlap(df1, df2))
+
+# polars-bio: fluent pipeline (must use LazyFrame)
+# Note: overlap adds suffixes, so rename before merge
+merged = (
+    df1.lazy()
+    .pb.overlap(df2)
+    .select(
+        pl.col("chrom_1").alias("chrom"),
+        pl.col("start_1").alias("start"),
+        pl.col("end_1").alias("end"),
+    )
+    .pb.merge()
+    .collect()
+)</code></pre>
+
+<h2>Performance Comparison</h2>
+
+<p>Benchmarks on real-world genomic datasets (from the polars-bio paper, Bioinformatics 2025):</p>
+
+<p>| Operation | bioframe | polars-bio | Speedup |</p>
+<p>|-----------|----------|------------|---------|</p>
+<p>| overlap | 1.0x | 6.5x | 6.5x |</p>
+<p>| nearest | 1.0x | 38x | 38x |</p>
+<p>| merge | 1.0x | 8.2x | 8.2x |</p>
+<p>| coverage | 1.0x | 12x | 12x |</p>
+
+<p>Speedups come from:</p>
+<ul><li>Rust-based interval tree implementation</li>
+<li>Apache DataFusion query engine</li>
+<li>Apache Arrow columnar memory format</li>
+<li>Parallel execution (when configured)</li>
+<li>Streaming/out-of-core support</li>
+</ul>
+<h2>Migration Code Examples</h2>
+
+<h3>Example 1: Basic Overlap Pipeline</h3>
+
+<p><strong>Before (bioframe):</strong></p>
+<pre><code class="language-python">import bioframe
+import pandas as pd
+
+df1 = pd.read_csv("peaks.bed", sep="\t", names=["chrom", "start", "end"])
+df2 = pd.read_csv("genes.bed", sep="\t", names=["chrom", "start", "end", "name"])
+
+overlaps = bioframe.overlap(df1, df2, suffixes=("_peak", "_gene"))
+filtered = overlaps[overlaps["start_gene"] &gt; 10000]
+merged = bioframe.merge(filtered[["chrom_peak", "start_peak", "end_peak"]]
+    .rename(columns={"chrom_peak": "chrom", "start_peak": "start", "end_peak": "end"}))</code></pre>
+
+<p><strong>After (polars-bio):</strong></p>
+<pre><code class="language-python">import polars_bio as pb
+import polars as pl
+
+df1 = pb.read_bed("peaks.bed")
+df2 = pb.read_bed("genes.bed")
+
+overlaps = pb.overlap(df1, df2, suffixes=("_peak", "_gene"), output_type="polars.DataFrame")
+filtered = overlaps.filter(pl.col("start_gene") &gt; 10000)
+merged = pb.merge(
+    filtered.select(
+        pl.col("chrom_peak").alias("chrom"),
+        pl.col("start_peak").alias("start"),
+        pl.col("end_peak").alias("end"),
+    ),
+    output_type="polars.DataFrame",
+)</code></pre>
+
+<h3>Example 2: Large-Scale Streaming</h3>
+
+<p><strong>Before (bioframe) — limited to in-memory:</strong></p>
+<pre><code class="language-python">import bioframe
+import pandas as pd
+
+# Must load entire file into memory
+df1 = pd.read_csv("huge_intervals.bed", sep="\t", names=["chrom", "start", "end"])
+result = bioframe.merge(df1)  # Memory-bound</code></pre>
+
+<p><strong>After (polars-bio) — streaming:</strong></p>
+<pre><code class="language-python">import polars_bio as pb
+
+# Lazy scan, streaming execution
+lf = pb.scan_bed("huge_intervals.bed")
+result = pb.merge(lf).collect(streaming=True)</code></pre>
+
+<h2>pandas Compatibility Mode</h2>
+
+<p>For gradual migration, install with pandas support:</p>
+
+<pre><code class="language-bash">pip install polars-bio[pandas]</code></pre>
+
+<p>This enables conversion between pandas and Polars DataFrames:</p>
+
+<pre><code class="language-python">import polars_bio as pb
+import polars as pl
+
+# Convert pandas DataFrame to Polars for polars-bio
+polars_df = pl.from_pandas(pandas_df)
+result = pb.overlap(polars_df, other_df).collect()
+
+# Convert back to pandas if needed
+pandas_result = result.to_pandas()
+
+# Or request pandas output directly
+pandas_result = pb.overlap(polars_df, other_df, output_type="pandas.DataFrame")</code></pre>
+
+<h2>Migration Checklist</h2>
+
+<ul><li>Replace <code>import bioframe</code> with <code>import polars_bio as pb</code></li>
+<li>Replace <code>import pandas as pd</code> with <code>import polars as pl</code></li>
+<li>Convert DataFrame creation from <code>pd.DataFrame</code> to <code>pl.DataFrame</code></li>
+<li>Replace <code>bioframe.closest</code> with <code>pb.nearest</code></li>
+<li>Add <code>.collect()</code> after operations (they return LazyFrame by default)</li>
+<li>Update column access from <code>df["col"]</code> to <code>df.select("col")</code> or <code>pl.col("col")</code></li>
+<li>Replace pandas filtering <code>df[df["col"] > x]</code> with <code>df.filter(pl.col("col") > x)</code></li>
+<li>Update chromsizes from Series to DataFrame with <code>chrom</code>, <code>start</code>, <code>end</code>; pass as <code>view_df=</code></li>
+<li>Add <code>pb.set_option("datafusion.execution.target_partitions", N)</code> for parallelism</li>
+<li>Replace <code>pd.read_csv</code> for BED files with <code>pb.read_bed</code> or <code>pb.scan_bed</code></li>
+<li>Note <code>cluster</code> output column is <code>cluster</code> (not <code>cluster_id</code>), plus <code>cluster_start</code>, <code>cluster_end</code></li>
+<li>Note <code>merge</code> output includes <code>n_intervals</code> column</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Configuration</h3>
+  <h1>Configuration</h1>
+
+<h2>Overview</h2>
+
+<p>polars-bio uses a global configuration system based on <code>set_option</code> and <code>get_option</code> to control execution behavior, coordinate systems, parallelism, and streaming modes.</p>
+
+<h2>set_option / get_option</h2>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Set a configuration option
+pb.set_option("datafusion.execution.target_partitions", 8)
+
+# Get current value
+value = pb.get_option("datafusion.execution.target_partitions")</code></pre>
+
+<h2>Parallelism</h2>
+
+<h3>DataFusion Target Partitions</h3>
+
+<p>Controls the number of parallel execution partitions. Defaults to 1 (single-threaded).</p>
+
+<pre><code class="language-python">import os
+import polars_bio as pb
+
+# Use all available CPU cores
+pb.set_option("datafusion.execution.target_partitions", os.cpu_count())
+
+# Set specific number of partitions
+pb.set_option("datafusion.execution.target_partitions", 8)</code></pre>
+
+<p><strong>When to increase parallelism:</strong></p>
+<ul><li>Processing large files (>1GB)</li>
+<li>Running interval operations on millions of intervals</li>
+<li>Batch processing multiple chromosomes</li>
+</ul>
+<p><strong>When to keep default (1):</strong></p>
+<ul><li>Small datasets</li>
+<li>Memory-constrained environments</li>
+<li>Debugging (deterministic execution)</li>
+</ul>
+<h2>Coordinate Systems</h2>
+
+<p>polars-bio defaults to 1-based coordinates (standard genomic convention).</p>
+
+<h3>Global Coordinate System</h3>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Switch to 0-based half-open coordinates
+pb.set_option("coordinate_system", "0-based")
+
+# Switch back to 1-based (default)
+pb.set_option("coordinate_system", "1-based")
+
+# Check current setting
+print(pb.get_option("coordinate_system"))</code></pre>
+
+<h3>Per-File Override via I/O Functions</h3>
+
+<p>I/O functions accept <code>use_zero_based</code> to set coordinate metadata on the resulting DataFrame:</p>
+
+<pre><code class="language-python"># Read with explicit 0-based metadata
+df = pb.read_bed("regions.bed", use_zero_based=True)</code></pre>
+
+<p><strong>Note:</strong> Interval operations (overlap, nearest, etc.) do <strong>not</strong> accept <code>use_zero_based</code>. They read coordinate metadata from the DataFrames, which is set by I/O functions or the global option. When using manually constructed DataFrames, polars-bio warns about missing metadata and falls back to the global setting.</p>
+
+<h3>Setting Metadata on Manual DataFrames</h3>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Set coordinate metadata on a manually created DataFrame
+pb.set_source_metadata(df, format="bed", path="")</code></pre>
+
+<h3>File Format Conventions</h3>
+
+<p>| Format | Native Coordinate System | polars-bio Conversion |</p>
+<p>|--------|-------------------------|----------------------|</p>
+<p>| BED | 0-based half-open | Converted to configured system on read |</p>
+<p>| VCF | 1-based | Converted to configured system on read |</p>
+<p>| GFF/GTF | 1-based | Converted to configured system on read |</p>
+<p>| BAM/SAM | 0-based | Converted to configured system on read |</p>
+
+<h2>Streaming Execution Modes</h2>
+
+<p>polars-bio supports two streaming modes for out-of-core processing:</p>
+
+<h3>DataFusion Streaming</h3>
+
+<p>Enabled by default for interval operations. Processes data in batches through the DataFusion execution engine.</p>
+
+<pre><code class="language-python"># DataFusion streaming is automatic for interval operations
+result = pb.overlap(lf1, lf2)  # Streams if inputs are LazyFrames</code></pre>
+
+<h3>Polars Streaming</h3>
+
+<p>Use Polars' native streaming for post-processing operations:</p>
+
+<pre><code class="language-python"># Collect with Polars streaming
+result = lf.collect(streaming=True)</code></pre>
+
+<h3>Combining Both</h3>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Scan files lazily (DataFusion streaming for I/O)
+lf1 = pb.scan_bed("large1.bed")
+lf2 = pb.scan_bed("large2.bed")
+
+# Interval operation (DataFusion streaming)
+result_lf = pb.overlap(lf1, lf2)
+
+# Collect with Polars streaming for final materialization
+result = result_lf.collect(streaming=True)</code></pre>
+
+<h2>Logging</h2>
+
+<p>Control log verbosity for debugging:</p>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Set log level
+pb.set_loglevel("debug")   # Detailed execution info
+pb.set_loglevel("info")    # Standard messages
+pb.set_loglevel("warn")    # Warnings only (default)</code></pre>
+
+<p><strong>Note:</strong> Only <code>"debug"</code>, <code>"info"</code>, and <code>"warn"</code> are valid log levels.</p>
+
+<h2>Metadata Management</h2>
+
+<p>polars-bio attaches coordinate system and source metadata to DataFrames produced by I/O functions. This metadata is used by interval operations to determine the coordinate system.</p>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Inspect metadata on a DataFrame
+metadata = pb.get_metadata(df)
+
+# Print metadata summary
+pb.print_metadata_summary(df)
+
+# Print metadata as JSON
+pb.print_metadata_json(df)
+
+# Set metadata on a manually created DataFrame
+pb.set_source_metadata(df, format="bed", path="regions.bed")
+
+# Register a DataFrame as a SQL table
+pb.from_polars("my_table", df)</code></pre>
+
+<h2>Complete Configuration Reference</h2>
+
+<p>| Option | Default | Description |</p>
+<p>|--------|---------|-------------|</p>
+<p>| <code>datafusion.execution.target_partitions</code> | <code>1</code> | Number of parallel execution partitions |</p>
+<p>| <code>coordinate_system</code> | <code>"1-based"</code> | Default coordinate system (<code>"0-based"</code> or <code>"1-based"</code>) |</p>
+
+</div>
+<div class="ref-card">
+  <h3>📄 File Io</h3>
+  <h1>Bioinformatics File I/O</h1>
+
+<h2>Overview</h2>
+
+<p>polars-bio provides <code>read_<em></code>, <code>scan_</em></code>, <code>write_<em></code>, and <code>sink_</em></code> functions for common bioinformatics formats. <code>read_<em></code> loads data eagerly into a DataFrame, while <code>scan_</em></code> creates a LazyFrame for streaming/out-of-core processing. <code>write_<em></code> writes from DataFrame/LazyFrame and returns a row count, while <code>sink_</em></code> streams from a LazyFrame.</p>
+
+<h2>Supported Formats</h2>
+
+<p>| Format | Read | Scan | Register (SQL) | Write | Sink |</p>
+<p>|--------|------|------|-----------------|-------|------|</p>
+<p>| BED | <code>read_bed</code> | <code>scan_bed</code> | <code>register_bed</code> | — | — |</p>
+<p>| VCF | <code>read_vcf</code> | <code>scan_vcf</code> | <code>register_vcf</code> | <code>write_vcf</code> | <code>sink_vcf</code> |</p>
+<p>| BAM | <code>read_bam</code> | <code>scan_bam</code> | <code>register_bam</code> | <code>write_bam</code> | <code>sink_bam</code> |</p>
+<p>| CRAM | <code>read_cram</code> | <code>scan_cram</code> | <code>register_cram</code> | <code>write_cram</code> | <code>sink_cram</code> |</p>
+<p>| GFF | <code>read_gff</code> | <code>scan_gff</code> | <code>register_gff</code> | — | — |</p>
+<p>| GTF | <code>read_gtf</code> | <code>scan_gtf</code> | <code>register_gtf</code> | — | — |</p>
+<p>| FASTA | <code>read_fasta</code> | <code>scan_fasta</code> | — | — | — |</p>
+<p>| FASTQ | <code>read_fastq</code> | <code>scan_fastq</code> | <code>register_fastq</code> | <code>write_fastq</code> | <code>sink_fastq</code> |</p>
+<p>| SAM | <code>read_sam</code> | <code>scan_sam</code> | <code>register_sam</code> | <code>write_sam</code> | <code>sink_sam</code> |</p>
+<p>| Hi-C pairs | <code>read_pairs</code> | <code>scan_pairs</code> | <code>register_pairs</code> | — | — |</p>
+<p>| Generic table | <code>read_table</code> | <code>scan_table</code> | — | — | — |</p>
+
+<h2>Common Cloud/IO Parameters</h2>
+
+<p>All <code>read_<em></code> and <code>scan_</em></code> functions share these parameters (instead of a single <code>storage_options</code> dict):</p>
+
+<p>| Parameter | Type | Default | Description |</p>
+<p>|-----------|------|---------|-------------|</p>
+<p>| <code>path</code> | str | required | File path (local, S3, GCS, Azure) |</p>
+<p>| <code>chunk_size</code> | int | <code>8</code> | Number of chunks for parallel reading |</p>
+<p>| <code>concurrent_fetches</code> | int | <code>1</code> | Number of concurrent fetches for cloud storage |</p>
+<p>| <code>allow_anonymous</code> | bool | <code>True</code> | Allow anonymous access to cloud storage |</p>
+<p>| <code>enable_request_payer</code> | bool | <code>False</code> | Enable requester-pays for cloud storage |</p>
+<p>| <code>max_retries</code> | int | <code>5</code> | Maximum retries for cloud operations |</p>
+<p>| <code>timeout</code> | int | <code>300</code> | Timeout in seconds for cloud operations |</p>
+<p>| <code>compression_type</code> | str | <code>"auto"</code> | Compression type (auto-detected from extension) |</p>
+<p>| <code>projection_pushdown</code> | bool | <code>True</code> | Enable projection pushdown optimization |</p>
+<p>| <code>use_zero_based</code> | bool | <code>None</code> | Set coordinate system metadata (None = use global setting) |</p>
+
+<p>Not all functions support all parameters. SAM functions lack cloud parameters. FASTA/FASTQ lack <code>predicate_pushdown</code>.</p>
+
+<h2>BED Format</h2>
+
+<h3>read_bed / scan_bed</h3>
+
+<p>Read BED files. Columns are auto-detected (BED3 through BED12). BED files use 0-based half-open coordinates; polars-bio attaches coordinate metadata automatically.</p>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Eager read
+df = pb.read_bed("regions.bed")
+
+# Lazy scan
+lf = pb.scan_bed("regions.bed")</code></pre>
+
+<h3>Column Schema (BED3)</h3>
+
+<p>| Column | Type | Description |</p>
+<p>|--------|------|-------------|</p>
+<p>| <code>chrom</code> | String | Chromosome name |</p>
+<p>| <code>start</code> | Int64 | Start position |</p>
+<p>| <code>end</code> | Int64 | End position |</p>
+
+<p>Extended BED fields (auto-detected) add: <code>name</code>, <code>score</code>, <code>strand</code>, <code>thickStart</code>, <code>thickEnd</code>, <code>itemRgb</code>, <code>blockCount</code>, <code>blockSizes</code>, <code>blockStarts</code>.</p>
+
+<h2>VCF Format</h2>
+
+<h3>read_vcf / scan_vcf</h3>
+
+<p>Read VCF/BCF files. Supports <code>.vcf</code>, <code>.vcf.gz</code>, <code>.bcf</code>.</p>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Read VCF
+df = pb.read_vcf("variants.vcf.gz")
+
+# Read with specific INFO and FORMAT fields extracted as columns
+df = pb.read_vcf("variants.vcf.gz", info_fields=["AF", "DP"], format_fields=["GT", "GQ"])
+
+# Read specific samples
+df = pb.read_vcf("variants.vcf.gz", samples=["SAMPLE1", "SAMPLE2"])</code></pre>
+
+<h3>Additional Parameters</h3>
+
+<p>| Parameter | Type | Default | Description |</p>
+<p>|-----------|------|---------|-------------|</p>
+<p>| <code>info_fields</code> | list[str] | <code>None</code> | INFO fields to extract as columns |</p>
+<p>| <code>format_fields</code> | list[str] | <code>None</code> | FORMAT fields to extract as columns |</p>
+<p>| <code>samples</code> | list[str] | <code>None</code> | Samples to include |</p>
+<p>| <code>predicate_pushdown</code> | bool | <code>True</code> | Enable predicate pushdown |</p>
+
+<h3>Column Schema</h3>
+
+<p>| Column | Type | Description |</p>
+<p>|--------|------|-------------|</p>
+<p>| <code>chrom</code> | String | Chromosome |</p>
+<p>| <code>start</code> | UInt32 | Start position |</p>
+<p>| <code>end</code> | UInt32 | End position |</p>
+<p>| <code>id</code> | String | Variant ID |</p>
+<p>| <code>ref</code> | String | Reference allele |</p>
+<p>| <code>alt</code> | String | Alternate allele(s) |</p>
+<p>| <code>qual</code> | Float32 | Quality score |</p>
+<p>| <code>filter</code> | String | Filter status |</p>
+<p>| <code>info</code> | String | INFO field (raw, unless <code>info_fields</code> specified) |</p>
+
+<h3>write_vcf / sink_vcf</h3>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Write DataFrame to VCF
+rows_written = pb.write_vcf(df, "output.vcf")
+
+# Stream LazyFrame to VCF
+pb.sink_vcf(lf, "output.vcf")</code></pre>
+
+<h2>BAM Format</h2>
+
+<h3>read_bam / scan_bam</h3>
+
+<p>Read aligned sequencing reads from BAM files. Requires a <code>.bai</code> index file.</p>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Read BAM
+df = pb.read_bam("aligned.bam")
+
+# Scan BAM (streaming)
+lf = pb.scan_bam("aligned.bam")
+
+# Read with specific tags
+df = pb.read_bam("aligned.bam", tag_fields=["NM", "MD"])</code></pre>
+
+<h3>Additional Parameters</h3>
+
+<p>| Parameter | Type | Default | Description |</p>
+<p>|-----------|------|---------|-------------|</p>
+<p>| <code>tag_fields</code> | list[str] | <code>None</code> | SAM tags to extract as columns |</p>
+<p>| <code>predicate_pushdown</code> | bool | <code>True</code> | Enable predicate pushdown |</p>
+<p>| <code>infer_tag_types</code> | bool | <code>True</code> | Infer tag column types from data |</p>
+<p>| <code>infer_tag_sample_size</code> | int | <code>100</code> | Number of records to sample for type inference |</p>
+<p>| <code>tag_type_hints</code> | list[str] | <code>None</code> | Explicit type hints for tags |</p>
+
+<h3>Column Schema</h3>
+
+<p>| Column | Type | Description |</p>
+<p>|--------|------|-------------|</p>
+<p>| <code>chrom</code> | String | Reference sequence name |</p>
+<p>| <code>start</code> | Int64 | Alignment start position |</p>
+<p>| <code>end</code> | Int64 | Alignment end position |</p>
+<p>| <code>name</code> | String | Read name |</p>
+<p>| <code>flags</code> | UInt32 | SAM flags |</p>
+<p>| <code>mapping_quality</code> | UInt32 | Mapping quality |</p>
+<p>| <code>cigar</code> | String | CIGAR string |</p>
+<p>| <code>sequence</code> | String | Read sequence |</p>
+<p>| <code>quality_scores</code> | String | Base quality string |</p>
+<p>| <code>mate_chrom</code> | String | Mate reference name |</p>
+<p>| <code>mate_start</code> | Int64 | Mate start position |</p>
+<p>| <code>template_length</code> | Int64 | Template length |</p>
+
+<h3>write_bam / sink_bam</h3>
+
+<pre><code class="language-python">rows_written = pb.write_bam(df, "output.bam")
+rows_written = pb.write_bam(df, "output.bam", sort_on_write=True)
+
+pb.sink_bam(lf, "output.bam")
+pb.sink_bam(lf, "output.bam", sort_on_write=True)</code></pre>
+
+<h2>CRAM Format</h2>
+
+<h3>read_cram / scan_cram</h3>
+
+<p>CRAM files have <strong>separate functions</strong> from BAM. Require a reference FASTA and <code>.crai</code> index.</p>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Read CRAM (reference required)
+df = pb.read_cram("aligned.cram", reference_path="reference.fasta")
+
+# Scan CRAM (streaming)
+lf = pb.scan_cram("aligned.cram", reference_path="reference.fasta")</code></pre>
+
+<p>Same additional parameters and column schema as BAM, plus:</p>
+
+<p>| Parameter | Type | Default | Description |</p>
+<p>|-----------|------|---------|-------------|</p>
+<p>| <code>reference_path</code> | str | <code>None</code> | Path to reference FASTA |</p>
+
+<h3>write_cram / sink_cram</h3>
+
+<pre><code class="language-python">rows_written = pb.write_cram(df, "output.cram", reference_path="reference.fasta")
+pb.sink_cram(lf, "output.cram", reference_path="reference.fasta")</code></pre>
+
+<h2>GFF/GTF Format</h2>
+
+<h3>read_gff / scan_gff / read_gtf / scan_gtf</h3>
+
+<p>GFF3 and GTF have separate functions.</p>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Read GFF3
+df = pb.read_gff("annotations.gff3")
+
+# Read GTF
+df = pb.read_gtf("genes.gtf")
+
+# Extract specific attributes as columns
+df = pb.read_gff("annotations.gff3", attr_fields=["gene_id", "gene_name"])</code></pre>
+
+<h3>Additional Parameters</h3>
+
+<p>| Parameter | Type | Default | Description |</p>
+<p>|-----------|------|---------|-------------|</p>
+<p>| <code>attr_fields</code> | list[str] | <code>None</code> | Attribute fields to extract as columns |</p>
+<p>| <code>predicate_pushdown</code> | bool | <code>True</code> | Enable predicate pushdown |</p>
+
+<h3>Column Schema</h3>
+
+<p>| Column | Type | Description |</p>
+<p>|--------|------|-------------|</p>
+<p>| <code>chrom</code> | String | Sequence name |</p>
+<p>| <code>source</code> | String | Feature source |</p>
+<p>| <code>type</code> | String | Feature type (gene, exon, etc.) |</p>
+<p>| <code>start</code> | Int64 | Start position |</p>
+<p>| <code>end</code> | Int64 | End position |</p>
+<p>| <code>score</code> | Float32 | Score |</p>
+<p>| <code>strand</code> | String | Strand (+/-/.) |</p>
+<p>| <code>phase</code> | UInt32 | Phase (0/1/2) |</p>
+<p>| <code>attributes</code> | String | Attributes string |</p>
+
+<h2>FASTA Format</h2>
+
+<h3>read_fasta / scan_fasta</h3>
+
+<p>Read reference sequences from FASTA files.</p>
+
+<pre><code class="language-python">import polars_bio as pb
+
+df = pb.read_fasta("reference.fasta")</code></pre>
+
+<h3>Column Schema</h3>
+
+<p>| Column | Type | Description |</p>
+<p>|--------|------|-------------|</p>
+<p>| <code>name</code> | String | Sequence name |</p>
+<p>| <code>description</code> | String | Description line |</p>
+<p>| <code>sequence</code> | String | Nucleotide sequence |</p>
+
+<h2>FASTQ Format</h2>
+
+<h3>read_fastq / scan_fastq</h3>
+
+<p>Read raw sequencing reads with quality scores.</p>
+
+<pre><code class="language-python">import polars_bio as pb
+
+df = pb.read_fastq("reads.fastq.gz")</code></pre>
+
+<h3>Column Schema</h3>
+
+<p>| Column | Type | Description |</p>
+<p>|--------|------|-------------|</p>
+<p>| <code>name</code> | String | Read name |</p>
+<p>| <code>description</code> | String | Description line |</p>
+<p>| <code>sequence</code> | String | Nucleotide sequence |</p>
+<p>| <code>quality</code> | String | Quality string (Phred+33 encoded) |</p>
+
+<h3>write_fastq / sink_fastq</h3>
+
+<pre><code class="language-python">rows_written = pb.write_fastq(df, "output.fastq")
+pb.sink_fastq(lf, "output.fastq")</code></pre>
+
+<h2>SAM Format</h2>
+
+<h3>read_sam / scan_sam</h3>
+
+<p>Read text-format alignment files. Same column schema as BAM. No cloud parameters.</p>
+
+<pre><code class="language-python">import polars_bio as pb
+
+df = pb.read_sam("alignments.sam")</code></pre>
+
+<h3>Additional Parameters</h3>
+
+<p>| Parameter | Type | Default | Description |</p>
+<p>|-----------|------|---------|-------------|</p>
+<p>| <code>tag_fields</code> | list[str] | <code>None</code> | SAM tags to extract |</p>
+<p>| <code>infer_tag_types</code> | bool | <code>True</code> | Infer tag types |</p>
+<p>| <code>infer_tag_sample_size</code> | int | <code>100</code> | Sample size for inference |</p>
+<p>| <code>tag_type_hints</code> | list[str] | <code>None</code> | Explicit type hints |</p>
+
+<h3>write_sam / sink_sam</h3>
+
+<pre><code class="language-python">rows_written = pb.write_sam(df, "output.sam")
+pb.sink_sam(lf, "output.sam", sort_on_write=True)</code></pre>
+
+<h2>Hi-C Pairs</h2>
+
+<h3>read_pairs / scan_pairs</h3>
+
+<p>Read Hi-C pairs format files for chromatin contact data.</p>
+
+<pre><code class="language-python">import polars_bio as pb
+
+df = pb.read_pairs("contacts.pairs")
+lf = pb.scan_pairs("contacts.pairs")</code></pre>
+
+<h3>Column Schema</h3>
+
+<p>| Column | Type | Description |</p>
+<p>|--------|------|-------------|</p>
+<p>| <code>readID</code> | String | Read identifier |</p>
+<p>| <code>chrom1</code> | String | Chromosome of first contact |</p>
+<p>| <code>pos1</code> | Int32 | Position of first contact |</p>
+<p>| <code>chrom2</code> | String | Chromosome of second contact |</p>
+<p>| <code>pos2</code> | Int32 | Position of second contact |</p>
+<p>| <code>strand1</code> | String | Strand of first contact |</p>
+<p>| <code>strand2</code> | String | Strand of second contact |</p>
+
+<h2>Generic Table Reader</h2>
+
+<h3>read_table / scan_table</h3>
+
+<p>Read tab-delimited files with custom schema. Useful for non-standard formats or bioframe-compatible tables.</p>
+
+<pre><code class="language-python">import polars_bio as pb
+
+df = pb.read_table("custom.tsv", schema={"chrom": str, "start": int, "end": int, "name": str})
+lf = pb.scan_table("custom.tsv", schema={"chrom": str, "start": int, "end": int})</code></pre>
+
+<h2>Cloud Storage</h2>
+
+<p>All <code>read_<em></code> and <code>scan_</em></code> functions support cloud storage via individual parameters:</p>
+
+<h3>Amazon S3</h3>
+
+<pre><code class="language-python">df = pb.read_bed(
+    "s3://bucket/regions.bed",
+    allow_anonymous=False,
+    max_retries=10,
+    timeout=600,
+)</code></pre>
+
+<h3>Google Cloud Storage</h3>
+
+<pre><code class="language-python">df = pb.read_vcf("gs://bucket/variants.vcf.gz", allow_anonymous=True)</code></pre>
+
+<h3>Azure Blob Storage</h3>
+
+<pre><code class="language-python">df = pb.read_bam("az://container/aligned.bam", allow_anonymous=False)</code></pre>
+
+<p><strong>Note:</strong> For authenticated access, configure credentials via environment variables or cloud SDK configuration (e.g., <code>AWS_ACCESS_KEY_ID</code>, <code>GOOGLE_APPLICATION_CREDENTIALS</code>).</p>
+
+<h2>Compression Support</h2>
+
+<p>polars-bio transparently handles compressed files:</p>
+
+<p>| Compression | Extension | Parallel Decompression |</p>
+<p>|-------------|-----------|----------------------|</p>
+<p>| GZIP | <code>.gz</code> | No |</p>
+<p>| BGZF | <code>.gz</code> (with BGZF blocks) | Yes |</p>
+<p>| Uncompressed | (none) | N/A |</p>
+
+<p><strong>Recommendation:</strong> Use BGZF compression (e.g., created with <code>bgzip</code>) for large files. BGZF supports parallel block decompression, significantly improving read performance compared to plain GZIP.</p>
+
+<h2>Describe Functions</h2>
+
+<p>Inspect file structure without fully reading:</p>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Describe file schemas and metadata
+schema_df = pb.describe_vcf("samples.vcf.gz")
+schema_df = pb.describe_bam("aligned.bam")
+schema_df = pb.describe_sam("alignments.sam")
+schema_df = pb.describe_cram("aligned.cram", reference_path="ref.fasta")</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Interval Operations</h3>
+  <h1>Genomic Interval Operations</h1>
+
+<h2>Overview</h2>
+
+<p>polars-bio provides 8 core operations for genomic interval arithmetic. All operations work on Polars DataFrames or LazyFrames containing genomic intervals (columns: <code>chrom</code>, <code>start</code>, <code>end</code> by default) and return a <strong>LazyFrame</strong> by default. Pass <code>output_type="polars.DataFrame"</code> for eager results.</p>
+
+<h2>Operations Summary</h2>
+
+<p>| Operation | Inputs | Description |</p>
+<p>|-----------|--------|-------------|</p>
+<p>| <code>overlap</code> | two DataFrames | Find pairs of overlapping intervals |</p>
+<p>| <code>count_overlaps</code> | two DataFrames | Count overlaps per interval in the first set |</p>
+<p>| <code>nearest</code> | two DataFrames | Find nearest intervals between two sets |</p>
+<p>| <code>merge</code> | one DataFrame | Merge overlapping/bookended intervals |</p>
+<p>| <code>cluster</code> | one DataFrame | Assign cluster IDs to overlapping intervals |</p>
+<p>| <code>coverage</code> | two DataFrames | Compute per-interval coverage counts |</p>
+<p>| <code>complement</code> | one DataFrame + genome | Find gaps between intervals |</p>
+<p>| <code>subtract</code> | two DataFrames | Remove overlapping portions |</p>
+
+<h2>overlap</h2>
+
+<p>Find pairs of overlapping intervals between two DataFrames.</p>
+
+<h3>Functional API</h3>
+
+<pre><code class="language-python">import polars as pl
+import polars_bio as pb
+
+df1 = pl.DataFrame({
+    "chrom": ["chr1", "chr1", "chr1"],
+    "start": [1, 5, 22],
+    "end":   [6, 9, 30],
+})
+
+df2 = pl.DataFrame({
+    "chrom": ["chr1", "chr1"],
+    "start": [3, 25],
+    "end":   [8, 28],
+})
+
+# Returns LazyFrame by default
+result_lf = pb.overlap(df1, df2, suffixes=("_1", "_2"))
+result_df = result_lf.collect()
+
+# Or get DataFrame directly
+result_df = pb.overlap(df1, df2, suffixes=("_1", "_2"), output_type="polars.DataFrame")</code></pre>
+
+<h3>Method-Chaining API (LazyFrame only)</h3>
+
+<pre><code class="language-python">result = df1.lazy().pb.overlap(df2, suffixes=("_1", "_2")).collect()</code></pre>
+
+<h3>Parameters</h3>
+
+<p>| Parameter | Type | Default | Description |</p>
+<p>|-----------|------|---------|-------------|</p>
+<p>| <code>df1</code> | DataFrame/LazyFrame/str | required | First (probe) interval set |</p>
+<p>| <code>df2</code> | DataFrame/LazyFrame/str | required | Second (build) interval set |</p>
+<p>| <code>suffixes</code> | tuple[str, str] | <code>("_1", "_2")</code> | Suffixes for overlapping column names |</p>
+<p>| <code>on_cols</code> | list[str] | <code>None</code> | Additional columns to join on (beyond genomic coords) |</p>
+<p>| <code>cols1</code> | list[str] | <code>["chrom", "start", "end"]</code> | Column names in df1 |</p>
+<p>| <code>cols2</code> | list[str] | <code>["chrom", "start", "end"]</code> | Column names in df2 |</p>
+<p>| <code>algorithm</code> | str | <code>"Coitrees"</code> | Interval algorithm |</p>
+<p>| <code>low_memory</code> | bool | <code>False</code> | Low memory mode |</p>
+<p>| <code>output_type</code> | str | <code>"polars.LazyFrame"</code> | Output format: <code>"polars.LazyFrame"</code>, <code>"polars.DataFrame"</code>, <code>"pandas.DataFrame"</code> |</p>
+<p>| <code>projection_pushdown</code> | bool | <code>True</code> | Enable projection pushdown optimization |</p>
+
+<h3>Output Schema</h3>
+
+<p>Returns columns from both inputs with suffixes applied:</p>
+<ul><li><code>chrom_1</code>, <code>start_1</code>, <code>end_1</code> (from df1)</li>
+<li><code>chrom_2</code>, <code>start_2</code>, <code>end_2</code> (from df2)</li>
+<li>Any additional columns from df1 and df2</li>
+</ul>
+<p>Column dtypes are <code>String</code> for chrom and <code>Int64</code> for start/end.</p>
+
+<h2>count_overlaps</h2>
+
+<p>Count the number of overlapping intervals from df2 for each interval in df1.</p>
+
+<pre><code class="language-python"># Functional
+counts = pb.count_overlaps(df1, df2)
+
+# Method-chaining (LazyFrame)
+counts = df1.lazy().pb.count_overlaps(df2)</code></pre>
+
+<h3>Parameters</h3>
+
+<p>| Parameter | Type | Default | Description |</p>
+<p>|-----------|------|---------|-------------|</p>
+<p>| <code>df1</code> | DataFrame/LazyFrame/str | required | Query interval set |</p>
+<p>| <code>df2</code> | DataFrame/LazyFrame/str | required | Target interval set |</p>
+<p>| <code>suffixes</code> | tuple[str, str] | <code>("", "_")</code> | Suffixes for column names |</p>
+<p>| <code>cols1</code> | list[str] | <code>["chrom", "start", "end"]</code> | Column names in df1 |</p>
+<p>| <code>cols2</code> | list[str] | <code>["chrom", "start", "end"]</code> | Column names in df2 |</p>
+<p>| <code>on_cols</code> | list[str] | <code>None</code> | Additional join columns |</p>
+<p>| <code>output_type</code> | str | <code>"polars.LazyFrame"</code> | Output format |</p>
+<p>| <code>naive_query</code> | bool | <code>True</code> | Use naive query strategy |</p>
+<p>| <code>projection_pushdown</code> | bool | <code>True</code> | Enable projection pushdown |</p>
+
+<h3>Output Schema</h3>
+
+<p>Returns df1 columns with an additional <code>count</code> column (Int64).</p>
+
+<h2>nearest</h2>
+
+<p>Find the nearest interval in df2 for each interval in df1.</p>
+
+<pre><code class="language-python"># Find nearest (default: k=1, any direction)
+nearest = pb.nearest(df1, df2, output_type="polars.DataFrame")
+
+# Find k nearest
+nearest = pb.nearest(df1, df2, k=3)
+
+# Exclude overlapping intervals from results
+nearest = pb.nearest(df1, df2, overlap=False)
+
+# Without distance column
+nearest = pb.nearest(df1, df2, distance=False)</code></pre>
+
+<h3>Parameters</h3>
+
+<p>| Parameter | Type | Default | Description |</p>
+<p>|-----------|------|---------|-------------|</p>
+<p>| <code>df1</code> | DataFrame/LazyFrame/str | required | Query interval set |</p>
+<p>| <code>df2</code> | DataFrame/LazyFrame/str | required | Target interval set |</p>
+<p>| <code>suffixes</code> | tuple[str, str] | <code>("_1", "_2")</code> | Suffixes for column names |</p>
+<p>| <code>on_cols</code> | list[str] | <code>None</code> | Additional join columns |</p>
+<p>| <code>cols1</code> | list[str] | <code>["chrom", "start", "end"]</code> | Column names in df1 |</p>
+<p>| <code>cols2</code> | list[str] | <code>["chrom", "start", "end"]</code> | Column names in df2 |</p>
+<p>| <code>k</code> | int | <code>1</code> | Number of nearest neighbors to find |</p>
+<p>| <code>overlap</code> | bool | <code>True</code> | Include overlapping intervals in results |</p>
+<p>| <code>distance</code> | bool | <code>True</code> | Include distance column in output |</p>
+<p>| <code>output_type</code> | str | <code>"polars.LazyFrame"</code> | Output format |</p>
+<p>| <code>projection_pushdown</code> | bool | <code>True</code> | Enable projection pushdown |</p>
+
+<h3>Output Schema</h3>
+
+<p>Returns columns from both DataFrames (with suffixes) plus a <code>distance</code> column (Int64) with the distance to the nearest interval (0 if overlapping). Distance column is omitted if <code>distance=False</code>.</p>
+
+<h2>merge</h2>
+
+<p>Merge overlapping and bookended intervals within a single DataFrame.</p>
+
+<pre><code class="language-python">import polars as pl
+import polars_bio as pb
+
+df = pl.DataFrame({
+    "chrom": ["chr1", "chr1", "chr1", "chr2"],
+    "start": [1, 4, 20, 1],
+    "end":   [6, 9, 30, 10],
+})
+
+# Functional
+merged = pb.merge(df, output_type="polars.DataFrame")
+
+# Method-chaining (LazyFrame)
+merged = df.lazy().pb.merge().collect()
+
+# Merge intervals within a minimum distance
+merged = pb.merge(df, min_dist=10)</code></pre>
+
+<h3>Parameters</h3>
+
+<p>| Parameter | Type | Default | Description |</p>
+<p>|-----------|------|---------|-------------|</p>
+<p>| <code>df</code> | DataFrame/LazyFrame/str | required | Interval set to merge |</p>
+<p>| <code>min_dist</code> | int | <code>0</code> | Minimum distance between intervals to merge (0 = must overlap or be bookended) |</p>
+<p>| <code>cols</code> | list[str] | <code>["chrom", "start", "end"]</code> | Column names |</p>
+<p>| <code>on_cols</code> | list[str] | <code>None</code> | Additional grouping columns |</p>
+<p>| <code>output_type</code> | str | <code>"polars.LazyFrame"</code> | Output format |</p>
+<p>| <code>projection_pushdown</code> | bool | <code>True</code> | Enable projection pushdown |</p>
+
+<h3>Output Schema</h3>
+
+<p>| Column | Type | Description |</p>
+<p>|--------|------|-------------|</p>
+<p>| <code>chrom</code> | String | Chromosome |</p>
+<p>| <code>start</code> | Int64 | Merged interval start |</p>
+<p>| <code>end</code> | Int64 | Merged interval end |</p>
+<p>| <code>n_intervals</code> | Int64 | Number of intervals merged |</p>
+
+<h2>cluster</h2>
+
+<p>Assign cluster IDs to overlapping intervals. Intervals that overlap are assigned the same cluster ID.</p>
+
+<pre><code class="language-python"># Functional
+clustered = pb.cluster(df, output_type="polars.DataFrame")
+
+# Method-chaining (LazyFrame)
+clustered = df.lazy().pb.cluster().collect()
+
+# With minimum distance
+clustered = pb.cluster(df, min_dist=5)</code></pre>
+
+<h3>Parameters</h3>
+
+<p>| Parameter | Type | Default | Description |</p>
+<p>|-----------|------|---------|-------------|</p>
+<p>| <code>df</code> | DataFrame/LazyFrame/str | required | Interval set |</p>
+<p>| <code>min_dist</code> | int | <code>0</code> | Minimum distance for clustering |</p>
+<p>| <code>cols</code> | list[str] | <code>["chrom", "start", "end"]</code> | Column names |</p>
+<p>| <code>output_type</code> | str | <code>"polars.LazyFrame"</code> | Output format |</p>
+<p>| <code>projection_pushdown</code> | bool | <code>True</code> | Enable projection pushdown |</p>
+
+<h3>Output Schema</h3>
+
+<p>Returns the original columns plus:</p>
+
+<p>| Column | Type | Description |</p>
+<p>|--------|------|-------------|</p>
+<p>| <code>cluster</code> | Int64 | Cluster ID (intervals in the same cluster overlap) |</p>
+<p>| <code>cluster_start</code> | Int64 | Start of the cluster extent |</p>
+<p>| <code>cluster_end</code> | Int64 | End of the cluster extent |</p>
+
+<h2>coverage</h2>
+
+<p>Compute per-interval coverage counts. This is a <strong>two-input</strong> operation: for each interval in df1, count the coverage from df2.</p>
+
+<pre><code class="language-python"># Functional
+cov = pb.coverage(df1, df2, output_type="polars.DataFrame")
+
+# Method-chaining (LazyFrame)
+cov = df1.lazy().pb.coverage(df2).collect()</code></pre>
+
+<h3>Parameters</h3>
+
+<p>| Parameter | Type | Default | Description |</p>
+<p>|-----------|------|---------|-------------|</p>
+<p>| <code>df1</code> | DataFrame/LazyFrame/str | required | Query intervals |</p>
+<p>| <code>df2</code> | DataFrame/LazyFrame/str | required | Coverage source intervals |</p>
+<p>| <code>suffixes</code> | tuple[str, str] | <code>("_1", "_2")</code> | Suffixes for column names |</p>
+<p>| <code>on_cols</code> | list[str] | <code>None</code> | Additional join columns |</p>
+<p>| <code>cols1</code> | list[str] | <code>["chrom", "start", "end"]</code> | Column names in df1 |</p>
+<p>| <code>cols2</code> | list[str] | <code>["chrom", "start", "end"]</code> | Column names in df2 |</p>
+<p>| <code>output_type</code> | str | <code>"polars.LazyFrame"</code> | Output format |</p>
+<p>| <code>projection_pushdown</code> | bool | <code>True</code> | Enable projection pushdown |</p>
+
+<h3>Output Schema</h3>
+
+<p>Returns columns from df1 plus a <code>coverage</code> column (Int64).</p>
+
+<h2>complement</h2>
+
+<p>Find gaps between intervals within a genome. Requires a genome definition specifying chromosome sizes.</p>
+
+<pre><code class="language-python">import polars as pl
+import polars_bio as pb
+
+df = pl.DataFrame({
+    "chrom": ["chr1", "chr1"],
+    "start": [100, 500],
+    "end":   [200, 600],
+})
+
+genome = pl.DataFrame({
+    "chrom": ["chr1"],
+    "start": [0],
+    "end":   [1000],
+})
+
+# Functional
+gaps = pb.complement(df, view_df=genome, output_type="polars.DataFrame")
+
+# Method-chaining (LazyFrame)
+gaps = df.lazy().pb.complement(genome).collect()</code></pre>
+
+<h3>Parameters</h3>
+
+<p>| Parameter | Type | Default | Description |</p>
+<p>|-----------|------|---------|-------------|</p>
+<p>| <code>df</code> | DataFrame/LazyFrame/str | required | Interval set |</p>
+<p>| <code>view_df</code> | DataFrame/LazyFrame | <code>None</code> | Genome with chrom, start, end defining chromosome extents |</p>
+<p>| <code>cols</code> | list[str] | <code>["chrom", "start", "end"]</code> | Column names in df |</p>
+<p>| <code>view_cols</code> | list[str] | <code>None</code> | Column names in view_df |</p>
+<p>| <code>output_type</code> | str | <code>"polars.LazyFrame"</code> | Output format |</p>
+<p>| <code>projection_pushdown</code> | bool | <code>True</code> | Enable projection pushdown |</p>
+
+<h3>Output Schema</h3>
+
+<p>Returns a DataFrame with <code>chrom</code> (String), <code>start</code> (Int64), <code>end</code> (Int64) columns representing gaps between intervals.</p>
+
+<h2>subtract</h2>
+
+<p>Remove portions of intervals in df1 that overlap with intervals in df2.</p>
+
+<pre><code class="language-python"># Functional
+result = pb.subtract(df1, df2, output_type="polars.DataFrame")
+
+# Method-chaining (LazyFrame)
+result = df1.lazy().pb.subtract(df2).collect()</code></pre>
+
+<h3>Parameters</h3>
+
+<p>| Parameter | Type | Default | Description |</p>
+<p>|-----------|------|---------|-------------|</p>
+<p>| <code>df1</code> | DataFrame/LazyFrame/str | required | Intervals to subtract from |</p>
+<p>| <code>df2</code> | DataFrame/LazyFrame/str | required | Intervals to subtract |</p>
+<p>| <code>cols1</code> | list[str] | <code>["chrom", "start", "end"]</code> | Column names in df1 |</p>
+<p>| <code>cols2</code> | list[str] | <code>["chrom", "start", "end"]</code> | Column names in df2 |</p>
+<p>| <code>output_type</code> | str | <code>"polars.LazyFrame"</code> | Output format |</p>
+<p>| <code>projection_pushdown</code> | bool | <code>True</code> | Enable projection pushdown |</p>
+
+<h3>Output Schema</h3>
+
+<p>Returns <code>chrom</code> (String), <code>start</code> (Int64), <code>end</code> (Int64) representing the remaining portions of df1 intervals after subtraction.</p>
+
+<h2>Performance Considerations</h2>
+
+<h3>Probe-Build Architecture</h3>
+
+<p>Two-input operations (<code>overlap</code>, <code>nearest</code>, <code>count_overlaps</code>, <code>coverage</code>, <code>subtract</code>) use a probe-build join:</p>
+<ul><li><strong>Probe</strong> (first DataFrame): Iterated over, row by row</li>
+<li><strong>Build</strong> (second DataFrame): Indexed into an interval tree for fast lookup</li>
+</ul>
+<p>For best performance, pass the <strong>larger</strong> DataFrame as the probe (first argument) and the <strong>smaller</strong> one as the build (second argument).</p>
+
+<h3>Parallelism</h3>
+
+<p>By default, polars-bio uses a single execution partition. For large datasets, enable parallel execution:</p>
+
+<pre><code class="language-python">import os
+import polars_bio as pb
+
+pb.set_option("datafusion.execution.target_partitions", os.cpu_count())</code></pre>
+
+<h3>Streaming Execution</h3>
+
+<p>DataFusion streaming is enabled by default for interval operations. Data is processed in batches, enabling out-of-core computation for datasets larger than available RAM.</p>
+
+<h3>When to Use Lazy Evaluation</h3>
+
+<p>Use <code>scan_*</code> functions and lazy DataFrames for:</p>
+<ul><li>Files larger than available RAM</li>
+<li>When only a subset of results is needed</li>
+<li>Pipeline operations where intermediate results can be optimized away</li>
+</ul>
+<pre><code class="language-python"># Lazy pipeline
+lf1 = pb.scan_bed("large1.bed")
+lf2 = pb.scan_bed("large2.bed")
+result = pb.overlap(lf1, lf2).collect()</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Pileup Operations</h3>
+  <h1>Pileup Operations</h1>
+
+<h2>Overview</h2>
+
+<p>polars-bio provides the <code>pb.depth()</code> function for computing per-base or per-block read depth from BAM/CRAM files. It uses CIGAR-aware depth calculation to accurately account for insertions, deletions, and clipping. Returns a <strong>LazyFrame</strong> by default.</p>
+
+<h2>pb.depth()</h2>
+
+<p>Compute read depth from alignment files.</p>
+
+<h3>Basic Usage</h3>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Compute depth across entire BAM file (returns LazyFrame)
+depth_lf = pb.depth("aligned.bam")
+depth_df = depth_lf.collect()
+
+# Get DataFrame directly
+depth_df = pb.depth("aligned.bam", output_type="polars.DataFrame")</code></pre>
+
+<h3>Parameters</h3>
+
+<p>| Parameter | Type | Default | Description |</p>
+<p>|-----------|------|---------|-------------|</p>
+<p>| <code>path</code> | str | required | Path to BAM or CRAM file |</p>
+<p>| <code>filter_flag</code> | int | <code>1796</code> | SAM flag filter (default excludes unmapped, secondary, duplicate, QC-fail) |</p>
+<p>| <code>min_mapping_quality</code> | int | <code>0</code> | Minimum mapping quality to include reads |</p>
+<p>| <code>binary_cigar</code> | bool | <code>True</code> | Use binary CIGAR for faster processing |</p>
+<p>| <code>dense_mode</code> | str | <code>"auto"</code> | Dense output mode |</p>
+<p>| <code>use_zero_based</code> | bool | <code>None</code> | Coordinate system (None = use global setting) |</p>
+<p>| <code>per_base</code> | bool | <code>False</code> | Per-base depth (True) vs block depth (False) |</p>
+<p>| <code>output_type</code> | str | <code>"polars.LazyFrame"</code> | Output format: <code>"polars.LazyFrame"</code>, <code>"polars.DataFrame"</code>, <code>"pandas.DataFrame"</code> |</p>
+
+<h3>Output Schema (Block Mode, default)</h3>
+
+<p>When <code>per_base=False</code> (default), adjacent positions with the same depth are grouped into blocks:</p>
+
+<p>| Column | Type | Description |</p>
+<p>|--------|------|-------------|</p>
+<p>| <code>contig</code> | String | Chromosome/contig name |</p>
+<p>| <code>pos_start</code> | Int64 | Block start position |</p>
+<p>| <code>pos_end</code> | Int64 | Block end position |</p>
+<p>| <code>coverage</code> | Int16 | Read depth |</p>
+
+<h3>Output Schema (Per-Base Mode)</h3>
+
+<p>When <code>per_base=True</code>, each position is reported individually:</p>
+
+<p>| Column | Type | Description |</p>
+<p>|--------|------|-------------|</p>
+<p>| <code>contig</code> | String | Chromosome/contig name |</p>
+<p>| <code>pos</code> | Int64 | Position |</p>
+<p>| <code>coverage</code> | Int16 | Read depth at position |</p>
+
+<h3>filter_flag</h3>
+
+<p>The default <code>filter_flag=1796</code> excludes reads with these SAM flags:</p>
+<ul><li>4: unmapped</li>
+<li>256: secondary alignment</li>
+<li>512: failed QC</li>
+<li>1024: PCR/optical duplicate</li>
+</ul>
+<h3>CIGAR-Aware Computation</h3>
+
+<p><code>pb.depth()</code> correctly handles CIGAR operations:</p>
+<ul><li><strong>M/X/=</strong> (match/mismatch): Counted as coverage</li>
+<li><strong>D</strong> (deletion): Counted as coverage (reads span the deletion)</li>
+<li><strong>N</strong> (skipped region): Not counted (e.g., spliced alignments)</li>
+<li><strong>I</strong> (insertion): Not counted at reference positions</li>
+<li><strong>S/H</strong> (soft/hard clipping): Not counted</li>
+</ul>
+<h2>Examples</h2>
+
+<h3>Whole-Genome Depth</h3>
+
+<pre><code class="language-python">import polars_bio as pb
+import polars as pl
+
+# Compute depth genome-wide (block mode)
+depth = pb.depth("sample.bam", output_type="polars.DataFrame")
+
+# Summary statistics
+depth.select(
+    pl.col("coverage").cast(pl.Int64).mean().alias("mean_depth"),
+    pl.col("coverage").cast(pl.Int64).median().alias("median_depth"),
+    pl.col("coverage").cast(pl.Int64).max().alias("max_depth"),
+)</code></pre>
+
+<h3>Per-Base Depth</h3>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Per-base depth (one row per position)
+depth = pb.depth("sample.bam", per_base=True, output_type="polars.DataFrame")</code></pre>
+
+<h3>Depth with Quality Filters</h3>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Only count well-mapped reads
+depth = pb.depth(
+    "sample.bam",
+    min_mapping_quality=20,
+    output_type="polars.DataFrame",
+)</code></pre>
+
+<h3>Custom Flag Filter</h3>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Only exclude unmapped (4) and duplicate (1024) reads
+depth = pb.depth(
+    "sample.bam",
+    filter_flag=4 + 1024,
+    output_type="polars.DataFrame",
+)</code></pre>
+
+<h2>Integration with Interval Operations</h2>
+
+<p>Depth results can be used with polars-bio interval operations. Note that depth output uses <code>contig</code>/<code>pos_start</code>/<code>pos_end</code> column names, so use <code>cols</code> parameters to map them:</p>
+
+<pre><code class="language-python">import polars_bio as pb
+import polars as pl
+
+# Compute depth
+depth = pb.depth("sample.bam", output_type="polars.DataFrame")
+
+# Rename columns to match interval operation conventions
+depth_intervals = depth.rename({
+    "contig": "chrom",
+    "pos_start": "start",
+    "pos_end": "end",
+})
+
+# Find regions with adequate coverage
+adequate = depth_intervals.filter(pl.col("coverage") &gt;= 30)
+
+# Merge adjacent adequate-coverage blocks
+merged = pb.merge(adequate, output_type="polars.DataFrame")
+
+# Find gaps in coverage (complement)
+genome = pl.DataFrame({
+    "chrom": ["chr1"],
+    "start": [0],
+    "end": [248956422],
+})
+gaps = pb.complement(adequate, view_df=genome, output_type="polars.DataFrame")</code></pre>
+
+<h3>Using cols Parameters Instead of Renaming</h3>
+
+<pre><code class="language-python">import polars_bio as pb
+
+depth = pb.depth("sample.bam", output_type="polars.DataFrame")
+targets = pb.read_bed("targets.bed")
+
+# Use cols1 to specify depth column names
+overlapping = pb.overlap(
+    depth, targets,
+    cols1=["contig", "pos_start", "pos_end"],
+    output_type="polars.DataFrame",
+)</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Sql Processing</h3>
+  <h1>SQL Data Processing</h1>
+
+<h2>Overview</h2>
+
+<p>polars-bio integrates Apache DataFusion's SQL engine, enabling SQL queries on bioinformatics files and Polars DataFrames. Register files as tables and query them using standard SQL syntax. All queries return a <strong>LazyFrame</strong> — call <code>.collect()</code> to materialize results.</p>
+
+<h2>Register Functions</h2>
+
+<p>Register bioinformatics files as SQL tables. <strong>Path is the first argument</strong>, name is an optional keyword:</p>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Register various file formats (path first, name= keyword)
+pb.register_vcf("samples.vcf.gz", name="variants")
+pb.register_bed("target_regions.bed", name="regions")
+pb.register_bam("aligned.bam", name="alignments")
+pb.register_cram("aligned.cram", name="cram_alignments")
+pb.register_gff("genes.gff3", name="annotations")
+pb.register_gtf("genes.gtf", name="gtf_annotations")
+pb.register_fastq("sample.fastq.gz", name="reads")
+pb.register_sam("alignments.sam", name="sam_alignments")
+pb.register_pairs("contacts.pairs", name="hic_contacts")</code></pre>
+
+<h3>Parameters</h3>
+
+<p>All <code>register_*</code> functions share these parameters:</p>
+
+<p>| Parameter | Type | Default | Description |</p>
+<p>|-----------|------|---------|-------------|</p>
+<p>| <code>path</code> | str | required (first positional) | Path to file (local or cloud) |</p>
+<p>| <code>name</code> | str | <code>None</code> | Table name for SQL queries (auto-generated if omitted) |</p>
+<p>| <code>chunk_size</code> | int | <code>64</code> | Chunk size for reading |</p>
+<p>| <code>concurrent_fetches</code> | int | <code>8</code> | Concurrent cloud fetches |</p>
+<p>| <code>allow_anonymous</code> | bool | <code>True</code> | Allow anonymous cloud access |</p>
+<p>| <code>max_retries</code> | int | <code>5</code> | Cloud retry count |</p>
+<p>| <code>timeout</code> | int | <code>300</code> | Cloud timeout in seconds |</p>
+<p>| <code>enable_request_payer</code> | bool | <code>False</code> | Requester-pays cloud |</p>
+<p>| <code>compression_type</code> | str | <code>"auto"</code> | Compression type |</p>
+
+<p>Some register functions have additional format-specific parameters (e.g., <code>info_fields</code> on <code>register_vcf</code>).</p>
+
+<p><strong>Note:</strong> <code>register_fasta</code> does not exist. Use <code>scan_fasta</code> + <code>from_polars</code> as a workaround.</p>
+
+<h2>from_polars</h2>
+
+<p>Register an existing Polars DataFrame as a SQL-queryable table:</p>
+
+<pre><code class="language-python">import polars as pl
+import polars_bio as pb
+
+df = pl.DataFrame({
+    "chrom": ["chr1", "chr1", "chr2"],
+    "start": [100, 500, 200],
+    "end":   [200, 600, 400],
+    "name":  ["peak1", "peak2", "peak3"],
+})
+
+pb.from_polars("my_peaks", df)
+
+# Now query with SQL
+result = pb.sql("SELECT * FROM my_peaks WHERE chrom = 'chr1'").collect()</code></pre>
+
+<p><strong>Important:</strong> <code>register_view</code> takes a SQL query string, not a DataFrame. Use <code>from_polars</code> to register DataFrames.</p>
+
+<h2>register_view</h2>
+
+<p>Create a SQL view from a query string:</p>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Create a view from a SQL query
+pb.register_view("chr1_variants", "SELECT * FROM variants WHERE chrom = 'chr1'")
+
+# Query the view
+result = pb.sql("SELECT * FROM chr1_variants WHERE qual &gt; 30").collect()</code></pre>
+
+<h3>Parameters</h3>
+
+<p>| Parameter | Type | Description |</p>
+<p>|-----------|------|-------------|</p>
+<p>| <code>name</code> | str | View name |</p>
+<p>| <code>query</code> | str | SQL query string defining the view |</p>
+
+<h2>pb.sql()</h2>
+
+<p>Execute SQL queries using DataFusion SQL syntax. <strong>Returns a LazyFrame</strong> — call <code>.collect()</code> to get a DataFrame.</p>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Simple query
+result = pb.sql("SELECT chrom, start, end FROM regions WHERE chrom = 'chr1'").collect()
+
+# Aggregation
+result = pb.sql("""
+    SELECT chrom, COUNT(*) as variant_count, AVG(qual) as avg_qual
+    FROM variants
+    GROUP BY chrom
+    ORDER BY variant_count DESC
+""").collect()
+
+# Join tables
+result = pb.sql("""
+    SELECT v.chrom, v.start, v.end, v.ref, v.alt, r.name
+    FROM variants v
+    JOIN regions r ON v.chrom = r.chrom
+        AND v.start &gt;= r.start
+        AND v.end &lt;= r.end
+""").collect()</code></pre>
+
+<h2>DataFusion SQL Syntax</h2>
+
+<p>polars-bio uses Apache DataFusion's SQL dialect. Key features:</p>
+
+<h3>Filtering</h3>
+
+<pre><code class="language-sql">SELECT * FROM variants WHERE qual &gt; 30 AND filter = 'PASS'</code></pre>
+
+<h3>Aggregations</h3>
+
+<pre><code class="language-sql">SELECT chrom, COUNT(*) as n, MIN(start) as min_pos, MAX(end) as max_pos
+FROM regions
+GROUP BY chrom
+HAVING COUNT(*) &gt; 100</code></pre>
+
+<h3>Window Functions</h3>
+
+<pre><code class="language-sql">SELECT chrom, start, end,
+    ROW_NUMBER() OVER (PARTITION BY chrom ORDER BY start) as row_num,
+    LAG(end) OVER (PARTITION BY chrom ORDER BY start) as prev_end
+FROM regions</code></pre>
+
+<h3>Subqueries</h3>
+
+<pre><code class="language-sql">SELECT * FROM variants
+WHERE chrom IN (SELECT DISTINCT chrom FROM regions)</code></pre>
+
+<h3>Common Table Expressions (CTEs)</h3>
+
+<pre><code class="language-sql">WITH filtered_variants AS (
+    SELECT * FROM variants WHERE qual &gt; 30
+),
+chr1_regions AS (
+    SELECT * FROM regions WHERE chrom = 'chr1'
+)
+SELECT f.chrom, f.start, f.ref, f.alt
+FROM filtered_variants f
+JOIN chr1_regions r ON f.start BETWEEN r.start AND r.end</code></pre>
+
+<h2>Combining SQL with Interval Operations</h2>
+
+<p>SQL queries return LazyFrames that can be used directly with polars-bio interval operations:</p>
+
+<pre><code class="language-python">import polars_bio as pb
+
+# Register files
+pb.register_vcf("samples.vcf.gz", name="variants")
+pb.register_bed("target_regions.bed", name="targets")
+
+# SQL to filter (returns LazyFrame)
+high_qual = pb.sql("SELECT chrom, start, end FROM variants WHERE qual &gt; 30").collect()
+targets = pb.sql("SELECT chrom, start, end FROM targets WHERE chrom = 'chr1'").collect()
+
+# Interval operation on SQL results
+overlapping = pb.overlap(high_qual, targets).collect()</code></pre>
+
+<h2>Example Workflows</h2>
+
+<h3>Variant Density Analysis</h3>
+
+<pre><code class="language-python">import polars_bio as pb
+
+pb.register_vcf("cohort.vcf.gz", name="variants")
+pb.register_bed("genome_windows_1mb.bed", name="windows")
+
+# Count variants per window using SQL
+result = pb.sql("""
+    SELECT w.chrom, w.start, w.end, COUNT(v.start) as variant_count
+    FROM windows w
+    LEFT JOIN variants v ON w.chrom = v.chrom
+        AND v.start &gt;= w.start
+        AND v.start &lt; w.end
+    GROUP BY w.chrom, w.start, w.end
+    ORDER BY variant_count DESC
+""").collect()</code></pre>
+
+<h3>Gene Annotation Lookup</h3>
+
+<pre><code class="language-python">import polars_bio as pb
+
+pb.register_gff("gencode.gff3", name="genes")
+
+# Find all protein-coding genes on chromosome 1
+coding_genes = pb.sql("""
+    SELECT chrom, start, end, attributes
+    FROM genes
+    WHERE type = 'gene'
+        AND chrom = 'chr1'
+        AND attributes LIKE '%protein_coding%'
+    ORDER BY start
+""").collect()</code></pre>
+
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

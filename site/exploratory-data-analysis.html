@@ -1,0 +1,4296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exploratory Data Analysis — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="active">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / Exploratory Data Analysis</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>Exploratory Data Analysis</h1>
+    <p class="description">Perform comprehensive exploratory data analysis on scientific data files across 200+ file formats. This skill should be used when analyzing any scientific data file to understand its structure, conten</p>
+    <h1>Exploratory Data Analysis</h1>
+
+<h2>Overview</h2>
+
+<p>Perform comprehensive exploratory data analysis (EDA) on scientific data files across multiple domains. This skill provides automated file type detection, format-specific analysis, data quality assessment, and generates detailed markdown reports suitable for documentation and downstream analysis planning.</p>
+
+<p><strong>Key Capabilities:</strong></p>
+<ul><li>Automatic detection and analysis of 200+ scientific file formats</li>
+<li>Comprehensive format-specific metadata extraction</li>
+<li>Data quality and integrity assessment</li>
+<li>Statistical summaries and distributions</li>
+<li>Visualization recommendations</li>
+<li>Downstream analysis suggestions</li>
+<li>Markdown report generation</li>
+</ul>
+<h2>When to Use This Skill</h2>
+
+<p>Use this skill when:</p>
+<ul><li>User provides a path to a scientific data file for analysis</li>
+<li>User asks to "explore", "analyze", or "summarize" a data file</li>
+<li>User wants to understand the structure and content of scientific data</li>
+<li>User needs a comprehensive report of a dataset before analysis</li>
+<li>User wants to assess data quality or completeness</li>
+<li>User asks what type of analysis is appropriate for a file</li>
+</ul>
+<h2>Supported File Categories</h2>
+
+<p>The skill has comprehensive coverage of scientific file formats organized into six major categories:</p>
+
+<h3>1. Chemistry and Molecular Formats (60+ extensions)</h3>
+<p>Structure files, computational chemistry outputs, molecular dynamics trajectories, and chemical databases.</p>
+
+<p><strong>File types include:</strong> <code>.pdb</code>, <code>.cif</code>, <code>.mol</code>, <code>.mol2</code>, <code>.sdf</code>, <code>.xyz</code>, <code>.smi</code>, <code>.gro</code>, <code>.log</code>, <code>.fchk</code>, <code>.cube</code>, <code>.dcd</code>, <code>.xtc</code>, <code>.trr</code>, <code>.prmtop</code>, <code>.psf</code>, and more.</p>
+
+<p><strong>Reference file:</strong> <code>references/chemistry_molecular_formats.md</code></p>
+
+<h3>2. Bioinformatics and Genomics Formats (50+ extensions)</h3>
+<p>Sequence data, alignments, annotations, variants, and expression data.</p>
+
+<p><strong>File types include:</strong> <code>.fasta</code>, <code>.fastq</code>, <code>.sam</code>, <code>.bam</code>, <code>.vcf</code>, <code>.bed</code>, <code>.gff</code>, <code>.gtf</code>, <code>.bigwig</code>, <code>.h5ad</code>, <code>.loom</code>, <code>.counts</code>, <code>.mtx</code>, and more.</p>
+
+<p><strong>Reference file:</strong> <code>references/bioinformatics_genomics_formats.md</code></p>
+
+<h3>3. Microscopy and Imaging Formats (45+ extensions)</h3>
+<p>Microscopy images, medical imaging, whole slide imaging, and electron microscopy.</p>
+
+<p><strong>File types include:</strong> <code>.tif</code>, <code>.nd2</code>, <code>.lif</code>, <code>.czi</code>, <code>.ims</code>, <code>.dcm</code>, <code>.nii</code>, <code>.mrc</code>, <code>.dm3</code>, <code>.vsi</code>, <code>.svs</code>, <code>.ome.tiff</code>, and more.</p>
+
+<p><strong>Reference file:</strong> <code>references/microscopy_imaging_formats.md</code></p>
+
+<h3>4. Spectroscopy and Analytical Chemistry Formats (35+ extensions)</h3>
+<p>NMR, mass spectrometry, IR/Raman, UV-Vis, X-ray, chromatography, and other analytical techniques.</p>
+
+<p><strong>File types include:</strong> <code>.fid</code>, <code>.mzML</code>, <code>.mzXML</code>, <code>.raw</code>, <code>.mgf</code>, <code>.spc</code>, <code>.jdx</code>, <code>.xy</code>, <code>.cif</code> (crystallography), <code>.wdf</code>, and more.</p>
+
+<p><strong>Reference file:</strong> <code>references/spectroscopy_analytical_formats.md</code></p>
+
+<h3>5. Proteomics and Metabolomics Formats (30+ extensions)</h3>
+<p>Mass spec proteomics, metabolomics, lipidomics, and multi-omics data.</p>
+
+<p><strong>File types include:</strong> <code>.mzML</code>, <code>.pepXML</code>, <code>.protXML</code>, <code>.mzid</code>, <code>.mzTab</code>, <code>.sky</code>, <code>.mgf</code>, <code>.msp</code>, <code>.h5ad</code>, and more.</p>
+
+<p><strong>Reference file:</strong> <code>references/proteomics_metabolomics_formats.md</code></p>
+
+<h3>6. General Scientific Data Formats (30+ extensions)</h3>
+<p>Arrays, tables, hierarchical data, compressed archives, and common scientific formats.</p>
+
+<p><strong>File types include:</strong> <code>.npy</code>, <code>.npz</code>, <code>.csv</code>, <code>.xlsx</code>, <code>.json</code>, <code>.hdf5</code>, <code>.zarr</code>, <code>.parquet</code>, <code>.mat</code>, <code>.fits</code>, <code>.nc</code>, <code>.xml</code>, and more.</p>
+
+<p><strong>Reference file:</strong> <code>references/general_scientific_formats.md</code></p>
+
+<h2>Workflow</h2>
+
+<h3>Step 1: File Type Detection</h3>
+
+<p>When a user provides a file path, first identify the file type:</p>
+
+<ul><li>Extract the file extension</li>
+<li>Look up the extension in the appropriate reference file</li>
+<li>Identify the file category and format description</li>
+<li>Load format-specific information</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code>User: "Analyze data.fastq"
+→ Extension: .fastq
+→ Category: bioinformatics_genomics
+→ Format: FASTQ Format (sequence data with quality scores)
+→ Reference: references/bioinformatics_genomics_formats.md</code></pre>
+
+<h3>Step 2: Load Format-Specific Information</h3>
+
+<p>Based on the file type, read the corresponding reference file to understand:</p>
+<ul><li><strong>Typical Data:</strong> What kind of data this format contains</li>
+<li><strong>Use Cases:</strong> Common applications for this format</li>
+<li><strong>Python Libraries:</strong> How to read the file in Python</li>
+<li><strong>EDA Approach:</strong> What analyses are appropriate for this data type</li>
+</ul>
+<p>Search the reference file for the specific extension (e.g., search for "### .fastq" in <code>bioinformatics_genomics_formats.md</code>).</p>
+
+<h3>Step 3: Perform Data Analysis</h3>
+
+<p>Use the <code>scripts/eda_analyzer.py</code> script OR implement custom analysis:</p>
+
+<p><strong>Option A: Use the analyzer script</strong></p>
+<pre><code class="language-python"># The script automatically:
+# 1. Detects file type
+# 2. Loads reference information
+# 3. Performs format-specific analysis
+# 4. Generates markdown report
+
+python scripts/eda_analyzer.py &lt;filepath&gt; [output.md]</code></pre>
+
+<p><strong>Option B: Custom analysis in the conversation</strong></p>
+<p>Based on the format information from the reference file, perform appropriate analysis:</p>
+
+<p>For tabular data (CSV, TSV, Excel):</p>
+<ul><li>Load with pandas</li>
+<li>Check dimensions, data types</li>
+<li>Analyze missing values</li>
+<li>Calculate summary statistics</li>
+<li>Identify outliers</li>
+<li>Check for duplicates</li>
+</ul>
+<p>For sequence data (FASTA, FASTQ):</p>
+<ul><li>Count sequences</li>
+<li>Analyze length distributions</li>
+<li>Calculate GC content</li>
+<li>Assess quality scores (FASTQ)</li>
+</ul>
+<p>For images (TIFF, ND2, CZI):</p>
+<ul><li>Check dimensions (X, Y, Z, C, T)</li>
+<li>Analyze bit depth and value range</li>
+<li>Extract metadata (channels, timestamps, spatial calibration)</li>
+<li>Calculate intensity statistics</li>
+</ul>
+<p>For arrays (NPY, HDF5):</p>
+<ul><li>Check shape and dimensions</li>
+<li>Analyze data type</li>
+<li>Calculate statistical summaries</li>
+<li>Check for missing/invalid values</li>
+</ul>
+<h3>Step 4: Generate Comprehensive Report</h3>
+
+<p>Create a markdown report with the following sections:</p>
+
+<h4>Required Sections:</h4>
+<ul><li><strong>Title and Metadata</strong></li>
+</ul><p>   - Filename and timestamp</p>
+<p>   - File size and location</p>
+
+<ul><li><strong>Basic Information</strong></li>
+</ul><p>   - File properties</p>
+<p>   - Format identification</p>
+
+<ul><li><strong>File Type Details</strong></li>
+</ul><p>   - Format description from reference</p>
+<p>   - Typical data content</p>
+<p>   - Common use cases</p>
+<p>   - Python libraries for reading</p>
+
+<ul><li><strong>Data Analysis</strong></li>
+</ul><p>   - Structure and dimensions</p>
+<p>   - Statistical summaries</p>
+<p>   - Quality assessment</p>
+<p>   - Data characteristics</p>
+
+<ul><li><strong>Key Findings</strong></li>
+</ul><p>   - Notable patterns</p>
+<p>   - Potential issues</p>
+<p>   - Quality metrics</p>
+
+<ul><li><strong>Recommendations</strong></li>
+</ul><p>   - Preprocessing steps</p>
+<p>   - Appropriate analyses</p>
+<p>   - Tools and methods</p>
+<p>   - Visualization approaches</p>
+
+<h4>Template Location</h4>
+<p>Use <code>assets/report_template.md</code> as a guide for report structure.</p>
+
+<h3>Step 5: Save Report</h3>
+
+<p>Save the markdown report with a descriptive filename:</p>
+<ul><li>Pattern: <code>{original_filename}_eda_report.md</code></li>
+<li>Example: <code>experiment_data.fastq</code> → <code>experiment_data_eda_report.md</code></li>
+</ul>
+<h2>Detailed Format References</h2>
+
+<p>Each reference file contains comprehensive information for dozens of file types. To find information about a specific format:</p>
+
+<ul><li>Identify the category from the extension</li>
+<li>Read the appropriate reference file</li>
+<li>Search for the section heading matching the extension (e.g., "### .pdb")</li>
+<li>Extract the format information</li>
+</ul>
+<h3>Reference File Structure</h3>
+
+<p>Each format entry includes:</p>
+<ul><li><strong>Description:</strong> What the format is</li>
+<li><strong>Typical Data:</strong> What it contains</li>
+<li><strong>Use Cases:</strong> Common applications</li>
+<li><strong>Python Libraries:</strong> How to read it (with code examples)</li>
+<li><strong>EDA Approach:</strong> Specific analyses to perform</li>
+</ul>
+<p><strong>Example lookup:</strong></p>
+<pre><code class="language-markdown">### .pdb - Protein Data Bank
+**Description:** Standard format for 3D structures of biological macromolecules
+**Typical Data:** Atomic coordinates, residue information, secondary structure
+**Use Cases:** Protein structure analysis, molecular visualization, docking
+**Python Libraries:**
+- `Biopython`: `Bio.PDB`
+- `MDAnalysis`: `MDAnalysis.Universe('file.pdb')`
+**EDA Approach:**
+- Structure validation (bond lengths, angles)
+- B-factor distribution
+- Missing residues detection
+- Ramachandran plots</code></pre>
+
+<h2>Best Practices</h2>
+
+<h3>Reading Reference Files</h3>
+
+<p>Reference files are large (10,000+ words each). To efficiently use them:</p>
+
+<ul><li><strong>Search by extension:</strong> Use grep to find the specific format</li>
+</ul><p>   <code>`</code>python</p>
+<p>   import re</p>
+<p>   with open('references/chemistry_molecular_formats.md', 'r') as f:</p>
+<p>       content = f.read()</p>
+<p>       pattern = r'### \.pdb[^#]*?(?=###|\Z)'</p>
+<p>       match = re.search(pattern, content, re.IGNORECASE | re.DOTALL)</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Extract relevant sections:</strong> Don't load entire reference files into context unnecessarily</li>
+</ul>
+<ul><li><strong>Cache format info:</strong> If analyzing multiple files of the same type, reuse the format information</li>
+</ul>
+<h3>Data Analysis</h3>
+
+<ul><li><strong>Sample large files:</strong> For files with millions of records, analyze a representative sample</li>
+<li><strong>Handle errors gracefully:</strong> Many scientific formats require specific libraries; provide clear installation instructions</li>
+<li><strong>Validate metadata:</strong> Cross-check metadata consistency (e.g., stated dimensions vs actual data)</li>
+<li><strong>Consider data provenance:</strong> Note instrument, software versions, processing steps</li>
+</ul>
+<h3>Report Generation</h3>
+
+<ul><li><strong>Be comprehensive:</strong> Include all relevant information for downstream analysis</li>
+<li><strong>Be specific:</strong> Provide concrete recommendations based on the file type</li>
+<li><strong>Be actionable:</strong> Suggest specific next steps and tools</li>
+<li><strong>Include code examples:</strong> Show how to load and work with the data</li>
+</ul>
+<h2>Examples</h2>
+
+<h3>Example 1: Analyzing a FASTQ file</h3>
+
+<pre><code class="language-python"># User provides: "Analyze reads.fastq"
+
+# 1. Detect file type
+extension = '.fastq'
+category = 'bioinformatics_genomics'
+
+# 2. Read reference info
+# Search references/bioinformatics_genomics_formats.md for "### .fastq"
+
+# 3. Perform analysis
+from Bio import SeqIO
+sequences = list(SeqIO.parse('reads.fastq', 'fastq'))
+# Calculate: read count, length distribution, quality scores, GC content
+
+# 4. Generate report
+# Include: format description, analysis results, QC recommendations
+
+# 5. Save as: reads_eda_report.md</code></pre>
+
+<h3>Example 2: Analyzing a CSV dataset</h3>
+
+<pre><code class="language-python"># User provides: "Explore experiment_results.csv"
+
+# 1. Detect: .csv → general_scientific
+
+# 2. Load reference for CSV format
+
+# 3. Analyze
+import pandas as pd
+df = pd.read_csv('experiment_results.csv')
+# Dimensions, dtypes, missing values, statistics, correlations
+
+# 4. Generate report with:
+# - Data structure
+# - Missing value patterns
+# - Statistical summaries
+# - Correlation matrix
+# - Outlier detection results
+
+# 5. Save report</code></pre>
+
+<h3>Example 3: Analyzing microscopy data</h3>
+
+<pre><code class="language-python"># User provides: "Analyze cells.nd2"
+
+# 1. Detect: .nd2 → microscopy_imaging (Nikon format)
+
+# 2. Read reference for ND2 format
+# Learn: multi-dimensional (XYZCT), requires nd2reader
+
+# 3. Analyze
+from nd2reader import ND2Reader
+with ND2Reader('cells.nd2') as images:
+    # Extract: dimensions, channels, timepoints, metadata
+    # Calculate: intensity statistics, frame info
+
+# 4. Generate report with:
+# - Image dimensions (XY, Z-stacks, time, channels)
+# - Channel wavelengths
+# - Pixel size and calibration
+# - Recommendations for image analysis
+
+# 5. Save report</code></pre>
+
+<h2>Troubleshooting</h2>
+
+<h3>Missing Libraries</h3>
+
+<p>Many scientific formats require specialized libraries:</p>
+
+<p><strong>Problem:</strong> Import error when trying to read a file</p>
+
+<p><strong>Solution:</strong> Provide clear installation instructions</p>
+<pre><code class="language-python">try:
+    from Bio import SeqIO
+except ImportError:
+    print("Install Biopython: uv pip install biopython")</code></pre>
+
+<p>Common requirements by category:</p>
+<ul><li><strong>Bioinformatics:</strong> <code>biopython</code>, <code>pysam</code>, <code>pyBigWig</code></li>
+<li><strong>Chemistry:</strong> <code>rdkit</code>, <code>mdanalysis</code>, <code>cclib</code></li>
+<li><strong>Microscopy:</strong> <code>tifffile</code>, <code>nd2reader</code>, <code>aicsimageio</code>, <code>pydicom</code></li>
+<li><strong>Spectroscopy:</strong> <code>nmrglue</code>, <code>pymzml</code>, <code>pyteomics</code></li>
+<li><strong>General:</strong> <code>pandas</code>, <code>numpy</code>, <code>h5py</code>, <code>scipy</code></li>
+</ul>
+<h3>Unknown File Types</h3>
+
+<p>If a file extension is not in the references:</p>
+
+<ul><li>Ask the user about the file format</li>
+<li>Check if it's a vendor-specific variant</li>
+<li>Attempt generic analysis based on file structure (text vs binary)</li>
+<li>Provide general recommendations</li>
+</ul>
+<h3>Large Files</h3>
+
+<p>For very large files:</p>
+
+<ul><li>Use sampling strategies (first N records)</li>
+<li>Use memory-mapped access (for HDF5, NPY)</li>
+<li>Process in chunks (for CSV, FASTQ)</li>
+<li>Provide estimates based on samples</li>
+</ul>
+<h2>Script Usage</h2>
+
+<p>The <code>scripts/eda_analyzer.py</code> can be used directly:</p>
+
+<pre><code class="language-bash"># Basic usage
+python scripts/eda_analyzer.py data.csv
+
+# Specify output file
+python scripts/eda_analyzer.py data.csv output_report.md
+
+# The script will:
+# 1. Auto-detect file type
+# 2. Load format references
+# 3. Perform appropriate analysis
+# 4. Generate markdown report</code></pre>
+
+<p>The script supports automatic analysis for many common formats, but custom analysis in the conversation provides more flexibility and domain-specific insights.</p>
+
+<h2>Advanced Usage</h2>
+
+<h3>Multi-File Analysis</h3>
+
+<p>When analyzing multiple related files:</p>
+<ul><li>Perform individual EDA on each file</li>
+<li>Create a summary comparison report</li>
+<li>Identify relationships and dependencies</li>
+<li>Suggest integration strategies</li>
+</ul>
+<h3>Quality Control</h3>
+
+<p>For data quality assessment:</p>
+<ul><li>Check format compliance</li>
+<li>Validate metadata consistency</li>
+<li>Assess completeness</li>
+<li>Identify outliers and anomalies</li>
+<li>Compare to expected ranges/distributions</li>
+</ul>
+<h3>Preprocessing Recommendations</h3>
+
+<p>Based on data characteristics, recommend:</p>
+<ul><li>Normalization strategies</li>
+<li>Missing value imputation</li>
+<li>Outlier handling</li>
+<li>Batch correction</li>
+<li>Format conversions</li>
+</ul>
+<h2>Resources</h2>
+
+<h3>scripts/</h3>
+<ul><li><code>eda_analyzer.py</code>: Comprehensive analysis script that can be run directly or imported</li>
+</ul>
+<h3>references/</h3>
+<ul><li><code>chemistry_molecular_formats.md</code>: 60+ chemistry/molecular file formats</li>
+<li><code>bioinformatics_genomics_formats.md</code>: 50+ bioinformatics formats</li>
+<li><code>microscopy_imaging_formats.md</code>: 45+ imaging formats</li>
+<li><code>spectroscopy_analytical_formats.md</code>: 35+ spectroscopy formats</li>
+<li><code>proteomics_metabolomics_formats.md</code>: 30+ omics formats</li>
+<li><code>general_scientific_formats.md</code>: 30+ general formats</li>
+</ul>
+<h3>assets/</h3>
+<ul><li><code>report_template.md</code>: Comprehensive markdown template for EDA reports</li></ul>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Bioinformatics Genomics Formats</h3>
+  <h1>Bioinformatics and Genomics File Formats Reference</h1>
+
+<p>This reference covers file formats used in genomics, transcriptomics, sequence analysis, and related bioinformatics applications.</p>
+
+<h2>Sequence Data Formats</h2>
+
+<h3>.fasta / .fa / .fna - FASTA Format</h3>
+<p><strong>Description:</strong> Text-based format for nucleotide or protein sequences</p>
+<p><strong>Typical Data:</strong> DNA, RNA, or protein sequences with headers</p>
+<p><strong>Use Cases:</strong> Sequence storage, BLAST searches, alignments</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>Biopython</code>: <code>SeqIO.parse('file.fasta', 'fasta')</code></li>
+<li><code>pyfaidx</code>: Fast indexed FASTA access</li>
+<li><code>screed</code>: Fast sequence parsing</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Sequence count and length distribution</li>
+<li>GC content analysis</li>
+<li>N content (ambiguous bases)</li>
+<li>Sequence ID parsing</li>
+<li>Duplicate detection</li>
+<li>Quality metrics for assemblies (N50, L50)</li>
+</ul>
+<h3>.fastq / .fq - FASTQ Format</h3>
+<p><strong>Description:</strong> Sequence data with base quality scores</p>
+<p><strong>Typical Data:</strong> Raw sequencing reads with Phred quality scores</p>
+<p><strong>Use Cases:</strong> NGS data, quality control, read mapping</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>Biopython</code>: <code>SeqIO.parse('file.fastq', 'fastq')</code></li>
+<li><code>pysam</code>: Fast FASTQ/BAM operations</li>
+<li><code>HTSeq</code>: Sequencing data analysis</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Read count and length distribution</li>
+<li>Quality score distribution (per-base, per-read)</li>
+<li>GC content and bias</li>
+<li>Duplicate rate estimation</li>
+<li>Adapter contamination detection</li>
+<li>k-mer frequency analysis</li>
+<li>Encoding format validation (Phred33/64)</li>
+</ul>
+<h3>.sam - Sequence Alignment/Map</h3>
+<p><strong>Description:</strong> Tab-delimited text format for alignments</p>
+<p><strong>Typical Data:</strong> Aligned sequencing reads with mapping quality</p>
+<p><strong>Use Cases:</strong> Read alignment storage, variant calling</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pysam</code>: <code>pysam.AlignmentFile('file.sam', 'r')</code></li>
+<li><code>HTSeq</code>: <code>HTSeq.SAM_Reader('file.sam')</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Mapping rate and quality distribution</li>
+<li>Coverage analysis</li>
+<li>Insert size distribution (paired-end)</li>
+<li>Alignment flags distribution</li>
+<li>CIGAR string patterns</li>
+<li>Mismatch and indel rates</li>
+<li>Duplicate and supplementary alignment counts</li>
+</ul>
+<h3>.bam - Binary Alignment/Map</h3>
+<p><strong>Description:</strong> Compressed binary version of SAM</p>
+<p><strong>Typical Data:</strong> Aligned reads in compressed format</p>
+<p><strong>Use Cases:</strong> Efficient storage and processing of alignments</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pysam</code>: Full BAM support with indexing</li>
+<li><code>bamnostic</code>: Pure Python BAM reader</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Same as SAM plus:</li>
+<li>Compression ratio analysis</li>
+<li>Index file (.bai) validation</li>
+<li>Chromosome-wise statistics</li>
+<li>Strand bias detection</li>
+<li>Read group analysis</li>
+</ul>
+<h3>.cram - CRAM Format</h3>
+<p><strong>Description:</strong> Highly compressed alignment format</p>
+<p><strong>Typical Data:</strong> Reference-compressed aligned reads</p>
+<p><strong>Use Cases:</strong> Long-term storage, space-efficient archives</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pysam</code>: CRAM support (requires reference)</li>
+<li>Reference genome must be accessible</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Compression efficiency vs BAM</li>
+<li>Reference dependency validation</li>
+<li>Lossy vs lossless compression assessment</li>
+<li>Decompression performance</li>
+<li>Similar alignment metrics as BAM</li>
+</ul>
+<h3>.bed - Browser Extensible Data</h3>
+<p><strong>Description:</strong> Tab-delimited format for genomic features</p>
+<p><strong>Typical Data:</strong> Genomic intervals (chr, start, end) with annotations</p>
+<p><strong>Use Cases:</strong> Peak calling, variant annotation, genome browsing</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pybedtools</code>: <code>pybedtools.BedTool('file.bed')</code></li>
+<li><code>pyranges</code>: <code>pyranges.read_bed('file.bed')</code></li>
+<li><code>pandas</code>: Simple BED reading</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Feature count and size distribution</li>
+<li>Chromosome distribution</li>
+<li>Strand bias</li>
+<li>Score distribution (if present)</li>
+<li>Overlap and proximity analysis</li>
+<li>Coverage statistics</li>
+<li>Gap analysis between features</li>
+</ul>
+<h3>.bedGraph - BED with Graph Data</h3>
+<p><strong>Description:</strong> BED format with per-base signal values</p>
+<p><strong>Typical Data:</strong> Continuous-valued genomic data (coverage, signals)</p>
+<p><strong>Use Cases:</strong> Coverage tracks, ChIP-seq signals, methylation</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyBigWig</code>: Can convert to bigWig</li>
+<li><code>pybedtools</code>: BedGraph operations</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Signal distribution statistics</li>
+<li>Genome coverage percentage</li>
+<li>Signal dynamics (peaks, valleys)</li>
+<li>Chromosome-wise signal patterns</li>
+<li>Quantile analysis</li>
+<li>Zero-coverage regions</li>
+</ul>
+<h3>.bigWig / .bw - Binary BigWig</h3>
+<p><strong>Description:</strong> Indexed binary format for genome-wide signal data</p>
+<p><strong>Typical Data:</strong> Continuous genomic signals (compressed and indexed)</p>
+<p><strong>Use Cases:</strong> Efficient genome browser tracks, large-scale data</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyBigWig</code>: <code>pyBigWig.open('file.bw')</code></li>
+<li><code>pybbi</code>: BigWig/BigBed interface</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Signal statistics extraction</li>
+<li>Zoom level analysis</li>
+<li>Regional signal extraction</li>
+<li>Efficient genome-wide summaries</li>
+<li>Compression efficiency</li>
+<li>Index structure analysis</li>
+</ul>
+<h3>.bigBed / .bb - Binary BigBed</h3>
+<p><strong>Description:</strong> Indexed binary BED format</p>
+<p><strong>Typical Data:</strong> Genomic features (compressed and indexed)</p>
+<p><strong>Use Cases:</strong> Large feature sets, genome browsers</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pybbi</code>: BigBed reading</li>
+<li><code>pybigtools</code>: Modern BigBed interface</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Feature density analysis</li>
+<li>Efficient interval queries</li>
+<li>Zoom level validation</li>
+<li>Index performance metrics</li>
+<li>Feature size statistics</li>
+</ul>
+<h3>.gff / .gff3 - General Feature Format</h3>
+<p><strong>Description:</strong> Tab-delimited format for genomic annotations</p>
+<p><strong>Typical Data:</strong> Gene models, transcripts, exons, regulatory elements</p>
+<p><strong>Use Cases:</strong> Genome annotation, gene prediction</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>BCBio.GFF</code>: Biopython GFF module</li>
+<li><code>gffutils</code>: <code>gffutils.create_db('file.gff3')</code></li>
+<li><code>pyranges</code>: GFF support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Feature type distribution (gene, exon, CDS, etc.)</li>
+<li>Gene structure validation</li>
+<li>Strand balance</li>
+<li>Hierarchical relationship validation</li>
+<li>Phase validation for CDS</li>
+<li>Attribute completeness</li>
+<li>Gene model statistics (introns, exons per gene)</li>
+</ul>
+<h3>.gtf - Gene Transfer Format</h3>
+<p><strong>Description:</strong> GFF2-based format for gene annotations</p>
+<p><strong>Typical Data:</strong> Gene and transcript annotations</p>
+<p><strong>Use Cases:</strong> RNA-seq analysis, gene quantification</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyranges</code>: <code>pyranges.read_gtf('file.gtf')</code></li>
+<li><code>gffutils</code>: GTF database creation</li>
+<li><code>HTSeq</code>: GTF reading for counts</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Transcript isoform analysis</li>
+<li>Gene structure completeness</li>
+<li>Exon number distribution</li>
+<li>Transcript length distribution</li>
+<li>TSS and TES analysis</li>
+<li>Biotype distribution</li>
+<li>Overlapping gene detection</li>
+</ul>
+<h3>.vcf - Variant Call Format</h3>
+<p><strong>Description:</strong> Text format for genetic variants</p>
+<p><strong>Typical Data:</strong> SNPs, indels, structural variants with annotations</p>
+<p><strong>Use Cases:</strong> Variant calling, population genetics, GWAS</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pysam</code>: <code>pysam.VariantFile('file.vcf')</code></li>
+<li><code>cyvcf2</code>: Fast VCF parsing</li>
+<li><code>PyVCF</code>: Older but comprehensive</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Variant count by type (SNP, indel, SV)</li>
+<li>Quality score distribution</li>
+<li>Allele frequency spectrum</li>
+<li>Transition/transversion ratio</li>
+<li>Heterozygosity rates</li>
+<li>Missing genotype analysis</li>
+<li>Hardy-Weinberg equilibrium</li>
+<li>Annotation completeness (if annotated)</li>
+</ul>
+<h3>.bcf - Binary VCF</h3>
+<p><strong>Description:</strong> Compressed binary variant format</p>
+<p><strong>Typical Data:</strong> Same as VCF but binary</p>
+<p><strong>Use Cases:</strong> Efficient variant storage and processing</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pysam</code>: Full BCF support</li>
+<li><code>cyvcf2</code>: Optimized BCF reading</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Same as VCF plus:</li>
+<li>Compression efficiency</li>
+<li>Indexing validation</li>
+<li>Read performance metrics</li>
+</ul>
+<h3>.gvcf - Genomic VCF</h3>
+<p><strong>Description:</strong> VCF with reference confidence blocks</p>
+<p><strong>Typical Data:</strong> All positions (variant and non-variant)</p>
+<p><strong>Use Cases:</strong> Joint genotyping workflows, GATK</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pysam</code>: GVCF support</li>
+<li>Standard VCF parsers</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Reference block analysis</li>
+<li>Coverage uniformity</li>
+<li>Variant density</li>
+<li>Genotype quality across genome</li>
+<li>Reference confidence distribution</li>
+</ul>
+<h2>RNA-Seq and Expression Data</h2>
+
+<h3>.counts - Gene Count Matrix</h3>
+<p><strong>Description:</strong> Tab-delimited gene expression counts</p>
+<p><strong>Typical Data:</strong> Gene IDs with read counts per sample</p>
+<p><strong>Use Cases:</strong> RNA-seq quantification, differential expression</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pandas</code>: <code>pd.read_csv('file.counts', sep='\t')</code></li>
+<li><code>scanpy</code> (for single-cell): <code>sc.read_csv()</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Library size distribution</li>
+<li>Detection rate (genes per sample)</li>
+<li>Zero-inflation analysis</li>
+<li>Count distribution (log scale)</li>
+<li>Outlier sample detection</li>
+<li>Correlation between replicates</li>
+<li>PCA for sample relationships</li>
+</ul>
+<h3>.tpm / .fpkm - Normalized Expression</h3>
+<p><strong>Description:</strong> Normalized gene expression values</p>
+<p><strong>Typical Data:</strong> TPM (transcripts per million) or FPKM values</p>
+<p><strong>Use Cases:</strong> Cross-sample comparison, visualization</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pandas</code>: Standard CSV reading</li>
+<li><code>anndata</code>: For integrated analysis</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Expression distribution</li>
+<li>Highly expressed gene identification</li>
+<li>Sample clustering</li>
+<li>Batch effect detection</li>
+<li>Coefficient of variation analysis</li>
+<li>Dynamic range assessment</li>
+</ul>
+<h3>.mtx - Matrix Market Format</h3>
+<p><strong>Description:</strong> Sparse matrix format (common in single-cell)</p>
+<p><strong>Typical Data:</strong> Sparse count matrices (cells × genes)</p>
+<p><strong>Use Cases:</strong> Single-cell RNA-seq, large sparse matrices</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>scipy.io</code>: <code>scipy.io.mmread('file.mtx')</code></li>
+<li><code>scanpy</code>: <code>sc.read_mtx('file.mtx')</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Sparsity analysis</li>
+<li>Cell and gene filtering thresholds</li>
+<li>Doublet detection metrics</li>
+<li>Mitochondrial fraction</li>
+<li>UMI count distribution</li>
+<li>Gene detection per cell</li>
+</ul>
+<h3>.h5ad - Anndata Format</h3>
+<p><strong>Description:</strong> HDF5-based annotated data matrix</p>
+<p><strong>Typical Data:</strong> Expression matrix with metadata (cells, genes)</p>
+<p><strong>Use Cases:</strong> Single-cell RNA-seq analysis with Scanpy</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>scanpy</code>: <code>sc.read_h5ad('file.h5ad')</code></li>
+<li><code>anndata</code>: Direct AnnData manipulation</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Cell and gene counts</li>
+<li>Metadata completeness</li>
+<li>Layer availability (raw, normalized)</li>
+<li>Embedding presence (PCA, UMAP)</li>
+<li>QC metrics distribution</li>
+<li>Batch information</li>
+<li>Cell type annotation coverage</li>
+</ul>
+<h3>.loom - Loom Format</h3>
+<p><strong>Description:</strong> HDF5-based format for omics data</p>
+<p><strong>Typical Data:</strong> Expression matrices with metadata</p>
+<p><strong>Use Cases:</strong> Single-cell data, RNA velocity analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>loompy</code>: <code>loompy.connect('file.loom')</code></li>
+<li><code>scanpy</code>: Can import loom files</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Layer analysis (spliced, unspliced)</li>
+<li>Row and column attribute exploration</li>
+<li>Graph connectivity analysis</li>
+<li>Cluster assignments</li>
+<li>Velocity-specific metrics</li>
+</ul>
+<h3>.rds - R Data Serialization</h3>
+<p><strong>Description:</strong> R object storage (often Seurat objects)</p>
+<p><strong>Typical Data:</strong> R analysis results, especially single-cell</p>
+<p><strong>Use Cases:</strong> R-Python data exchange</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyreadr</code>: <code>pyreadr.read_r('file.rds')</code></li>
+<li><code>rpy2</code>: For full R integration</li>
+<li>Conversion tools to AnnData</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Object type identification</li>
+<li>Data structure exploration</li>
+<li>Metadata extraction</li>
+<li>Conversion validation</li>
+</ul>
+<h2>Alignment and Assembly Formats</h2>
+
+<h3>.maf - Multiple Alignment Format</h3>
+<p><strong>Description:</strong> Text format for multiple sequence alignments</p>
+<p><strong>Typical Data:</strong> Genome-wide or local multiple alignments</p>
+<p><strong>Use Cases:</strong> Comparative genomics, conservation analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>Biopython</code>: <code>AlignIO.parse('file.maf', 'maf')</code></li>
+<li><code>bx-python</code>: MAF-specific tools</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Alignment block statistics</li>
+<li>Species coverage</li>
+<li>Gap analysis</li>
+<li>Conservation scoring</li>
+<li>Alignment quality metrics</li>
+<li>Block length distribution</li>
+</ul>
+<h3>.axt - Pairwise Alignment Format</h3>
+<p><strong>Description:</strong> Pairwise alignment format (UCSC)</p>
+<p><strong>Typical Data:</strong> Pairwise genomic alignments</p>
+<p><strong>Use Cases:</strong> Genome comparison, synteny analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Custom parsers (simple format)</li>
+<li><code>bx-python</code>: AXT support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Alignment score distribution</li>
+<li>Identity percentage</li>
+<li>Syntenic block identification</li>
+<li>Gap size analysis</li>
+<li>Coverage statistics</li>
+</ul>
+<h3>.chain - Chain Alignment Format</h3>
+<p><strong>Description:</strong> Genome coordinate mapping chains</p>
+<p><strong>Typical Data:</strong> Coordinate transformations between genome builds</p>
+<p><strong>Use Cases:</strong> Liftover, coordinate conversion</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyliftover</code>: Chain file usage</li>
+<li>Custom parsers for chain format</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Chain score distribution</li>
+<li>Coverage of source genome</li>
+<li>Gap analysis</li>
+<li>Inversion detection</li>
+<li>Mapping quality assessment</li>
+</ul>
+<h3>.psl - Pattern Space Layout</h3>
+<p><strong>Description:</strong> BLAT/BLAST alignment format</p>
+<p><strong>Typical Data:</strong> Alignment results from BLAT</p>
+<p><strong>Use Cases:</strong> Transcript mapping, similarity searches</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Custom parsers (tab-delimited)</li>
+<li><code>pybedtools</code>: Can handle PSL</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Match percentage distribution</li>
+<li>Gap statistics</li>
+<li>Query coverage</li>
+<li>Multiple mapping analysis</li>
+<li>Alignment quality metrics</li>
+</ul>
+<h2>Genome Assembly and Annotation</h2>
+
+<h3>.agp - Assembly Golden Path</h3>
+<p><strong>Description:</strong> Assembly structure description</p>
+<p><strong>Typical Data:</strong> Scaffold composition, gap information</p>
+<p><strong>Use Cases:</strong> Genome assembly representation</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Custom parsers (simple tab-delimited)</li>
+<li>Assembly analysis tools</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Scaffold statistics (N50, L50)</li>
+<li>Gap type and size distribution</li>
+<li>Component length analysis</li>
+<li>Assembly contiguity metrics</li>
+<li>Unplaced contig analysis</li>
+</ul>
+<h3>.scaffolds / .contigs - Assembly Sequences</h3>
+<p><strong>Description:</strong> Assembled sequences (usually FASTA)</p>
+<p><strong>Typical Data:</strong> Assembled genomic sequences</p>
+<p><strong>Use Cases:</strong> Genome assembly output</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Same as FASTA format</li>
+<li>Assembly-specific tools (QUAST)</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Assembly statistics (N50, N90, etc.)</li>
+<li>Length distribution</li>
+<li>Coverage analysis</li>
+<li>Gap (N) content</li>
+<li>Duplication assessment</li>
+<li>BUSCO completeness (if annotations available)</li>
+</ul>
+<h3>.2bit - Compressed Genome Format</h3>
+<p><strong>Description:</strong> UCSC compact genome format</p>
+<p><strong>Typical Data:</strong> Reference genomes (highly compressed)</p>
+<p><strong>Use Cases:</strong> Efficient genome storage and access</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>py2bit</code>: <code>py2bit.open('file.2bit')</code></li>
+<li><code>twobitreader</code>: Alternative reader</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Compression efficiency</li>
+<li>Random access performance</li>
+<li>Sequence extraction validation</li>
+<li>Masked region analysis</li>
+<li>N content and distribution</li>
+</ul>
+<h3>.sizes - Chromosome Sizes</h3>
+<p><strong>Description:</strong> Simple format with chromosome lengths</p>
+<p><strong>Typical Data:</strong> Tab-delimited chromosome names and sizes</p>
+<p><strong>Use Cases:</strong> Genome browsers, coordinate validation</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Simple file reading with pandas</li>
+<li>Built into many genomic tools</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Genome size calculation</li>
+<li>Chromosome count</li>
+<li>Size distribution</li>
+<li>Karyotype validation</li>
+<li>Completeness check against reference</li>
+</ul>
+<h2>Phylogenetics and Evolution</h2>
+
+<h3>.nwk / .newick - Newick Tree Format</h3>
+<p><strong>Description:</strong> Parenthetical tree representation</p>
+<p><strong>Typical Data:</strong> Phylogenetic trees with branch lengths</p>
+<p><strong>Use Cases:</strong> Evolutionary analysis, tree visualization</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>Biopython</code>: <code>Phylo.read('file.nwk', 'newick')</code></li>
+<li><code>ete3</code>: <code>ete3.Tree('file.nwk')</code></li>
+<li><code>dendropy</code>: Phylogenetic computing</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Tree structure analysis (tips, internal nodes)</li>
+<li>Branch length distribution</li>
+<li>Tree balance metrics</li>
+<li>Ultrametricity check</li>
+<li>Bootstrap support analysis</li>
+<li>Topology validation</li>
+</ul>
+<h3>.nexus - Nexus Format</h3>
+<p><strong>Description:</strong> Rich format for phylogenetic data</p>
+<p><strong>Typical Data:</strong> Alignments, trees, character matrices</p>
+<p><strong>Use Cases:</strong> Phylogenetic software interchange</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>Biopython</code>: Nexus support</li>
+<li><code>dendropy</code>: Comprehensive Nexus handling</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Data block analysis</li>
+<li>Character type distribution</li>
+<li>Tree block validation</li>
+<li>Taxa consistency</li>
+<li>Command block parsing</li>
+<li>Format compliance checking</li>
+</ul>
+<h3>.phylip - PHYLIP Format</h3>
+<p><strong>Description:</strong> Sequence alignment format (strict/relaxed)</p>
+<p><strong>Typical Data:</strong> Multiple sequence alignments</p>
+<p><strong>Use Cases:</strong> Phylogenetic analysis input</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>Biopython</code>: <code>AlignIO.read('file.phy', 'phylip')</code></li>
+<li><code>dendropy</code>: PHYLIP support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Alignment dimensions</li>
+<li>Sequence length uniformity</li>
+<li>Gap position analysis</li>
+<li>Informative site calculation</li>
+<li>Format variant detection (strict vs relaxed)</li>
+</ul>
+<h3>.paml - PAML Output</h3>
+<p><strong>Description:</strong> Output from PAML phylogenetic software</p>
+<p><strong>Typical Data:</strong> Evolutionary model results, dN/dS ratios</p>
+<p><strong>Use Cases:</strong> Molecular evolution analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Custom parsers for specific PAML programs</li>
+<li><code>Biopython</code>: Basic PAML parsing</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Model parameter extraction</li>
+<li>Likelihood values</li>
+<li>dN/dS ratio distribution</li>
+<li>Branch-specific results</li>
+<li>Convergence assessment</li>
+</ul>
+<h2>Protein and Structure Data</h2>
+
+<h3>.embl - EMBL Format</h3>
+<p><strong>Description:</strong> Rich sequence annotation format</p>
+<p><strong>Typical Data:</strong> Sequences with extensive annotations</p>
+<p><strong>Use Cases:</strong> Sequence databases, genome records</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>Biopython</code>: <code>SeqIO.read('file.embl', 'embl')</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Feature annotation completeness</li>
+<li>Sequence length and type</li>
+<li>Reference information</li>
+<li>Cross-reference validation</li>
+<li>Feature overlap analysis</li>
+</ul>
+<h3>.genbank / .gb / .gbk - GenBank Format</h3>
+<p><strong>Description:</strong> NCBI's sequence annotation format</p>
+<p><strong>Typical Data:</strong> Annotated sequences with features</p>
+<p><strong>Use Cases:</strong> Sequence databases, annotation transfer</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>Biopython</code>: <code>SeqIO.parse('file.gb', 'genbank')</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Feature type distribution</li>
+<li>CDS analysis (start codons, stops)</li>
+<li>Translation validation</li>
+<li>Annotation completeness</li>
+<li>Source organism extraction</li>
+<li>Reference and publication info</li>
+<li>Locus tag consistency</li>
+</ul>
+<h3>.sff - Standard Flowgram Format</h3>
+<p><strong>Description:</strong> 454/Roche sequencing data format</p>
+<p><strong>Typical Data:</strong> Raw pyrosequencing flowgrams</p>
+<p><strong>Use Cases:</strong> Legacy 454 sequencing data</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>Biopython</code>: <code>SeqIO.parse('file.sff', 'sff')</code></li>
+<li>Platform-specific tools</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Read count and length</li>
+<li>Flowgram signal quality</li>
+<li>Key sequence detection</li>
+<li>Adapter trimming validation</li>
+<li>Quality score distribution</li>
+</ul>
+<h3>.hdf5 (Genomics Specific)</h3>
+<p><strong>Description:</strong> HDF5 for genomics (10X, Hi-C, etc.)</p>
+<p><strong>Typical Data:</strong> High-throughput genomics data</p>
+<p><strong>Use Cases:</strong> 10X Genomics, spatial transcriptomics</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>h5py</code>: Low-level access</li>
+<li><code>scanpy</code>: For 10X data</li>
+<li><code>cooler</code>: For Hi-C data</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Dataset structure exploration</li>
+<li>Barcode statistics</li>
+<li>UMI counting</li>
+<li>Feature-barcode matrix analysis</li>
+<li>Spatial coordinates (if applicable)</li>
+</ul>
+<h3>.cool / .mcool - Cooler Format</h3>
+<p><strong>Description:</strong> HDF5-based Hi-C contact matrices</p>
+<p><strong>Typical Data:</strong> Chromatin interaction matrices</p>
+<p><strong>Use Cases:</strong> 3D genome analysis, Hi-C data</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>cooler</code>: <code>cooler.Cooler('file.cool')</code></li>
+<li><code>hicstraw</code>: For .hic format</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Resolution analysis</li>
+<li>Contact matrix statistics</li>
+<li>Distance decay curves</li>
+<li>Compartment analysis</li>
+<li>TAD boundary detection</li>
+<li>Balance factor validation</li>
+</ul>
+<h3>.hic - Hi-C Binary Format</h3>
+<p><strong>Description:</strong> Juicer binary Hi-C format</p>
+<p><strong>Typical Data:</strong> Multi-resolution Hi-C matrices</p>
+<p><strong>Use Cases:</strong> Hi-C analysis with Juicer tools</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>hicstraw</code>: <code>hicstraw.HiCFile('file.hic')</code></li>
+<li><code>straw</code>: C++ library with Python bindings</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Available resolutions</li>
+<li>Normalization methods</li>
+<li>Contact statistics</li>
+<li>Chromosomal interactions</li>
+<li>Quality metrics</li>
+</ul>
+<h3>.bw (ChIP-seq / ATAC-seq specific)</h3>
+<p><strong>Description:</strong> BigWig files for epigenomics</p>
+<p><strong>Typical Data:</strong> Coverage or enrichment signals</p>
+<p><strong>Use Cases:</strong> ChIP-seq, ATAC-seq, DNase-seq</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyBigWig</code>: Standard bigWig access</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Peak enrichment patterns</li>
+<li>Background signal analysis</li>
+<li>Sample correlation</li>
+<li>Signal-to-noise ratio</li>
+<li>Library complexity metrics</li>
+</ul>
+<h3>.narrowPeak / .broadPeak - ENCODE Peak Formats</h3>
+<p><strong>Description:</strong> BED-based formats for peaks</p>
+<p><strong>Typical Data:</strong> Peak calls with scores and p-values</p>
+<p><strong>Use Cases:</strong> ChIP-seq peak calling output</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pybedtools</code>: BED-compatible</li>
+<li>Custom parsers for peak-specific fields</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Peak count and width distribution</li>
+<li>Signal value distribution</li>
+<li>Q-value and p-value analysis</li>
+<li>Peak summit analysis</li>
+<li>Overlap with known features</li>
+<li>Motif enrichment preparation</li>
+</ul>
+<h3>.wig - Wiggle Format</h3>
+<p><strong>Description:</strong> Dense continuous genomic data</p>
+<p><strong>Typical Data:</strong> Coverage or signal tracks</p>
+<p><strong>Use Cases:</strong> Genome browser visualization</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyBigWig</code>: Can convert to bigWig</li>
+<li>Custom parsers for wiggle format</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Signal statistics</li>
+<li>Coverage metrics</li>
+<li>Format variant (fixedStep vs variableStep)</li>
+<li>Span parameter analysis</li>
+<li>Conversion efficiency to bigWig</li>
+</ul>
+<h3>.ab1 - Sanger Sequencing Trace</h3>
+<p><strong>Description:</strong> Binary chromatogram format</p>
+<p><strong>Typical Data:</strong> Sanger sequencing traces</p>
+<p><strong>Use Cases:</strong> Capillary sequencing validation</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>Biopython</code>: <code>SeqIO.read('file.ab1', 'abi')</code></li>
+<li><code>tracy</code> tools: For quality assessment</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Base calling quality</li>
+<li>Trace quality scores</li>
+<li>Mixed base detection</li>
+<li>Primer and vector detection</li>
+<li>Read length and quality region</li>
+<li>Heterozygosity detection</li>
+</ul>
+<h3>.scf - Standard Chromatogram Format</h3>
+<p><strong>Description:</strong> Sanger sequencing chromatogram</p>
+<p><strong>Typical Data:</strong> Base calls and confidence values</p>
+<p><strong>Use Cases:</strong> Sequencing trace analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>Biopython</code>: SCF format support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Similar to AB1 format</li>
+<li>Quality score profiles</li>
+<li>Peak height ratios</li>
+<li>Signal-to-noise metrics</li>
+</ul>
+<h3>.idx - Index Files (Generic)</h3>
+<p><strong>Description:</strong> Index files for various formats</p>
+<p><strong>Typical Data:</strong> Fast random access indices</p>
+<p><strong>Use Cases:</strong> Efficient data access (BAM, VCF, etc.)</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Format-specific libraries handle indices</li>
+<li><code>pysam</code>: Auto-handles BAI, CSI indices</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Index completeness validation</li>
+<li>Binning strategy analysis</li>
+<li>Access performance metrics</li>
+<li>Index size vs data size ratio</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Chemistry Molecular Formats</h3>
+  <h1>Chemistry and Molecular File Formats Reference</h1>
+
+<p>This reference covers file formats commonly used in computational chemistry, cheminformatics, molecular modeling, and related fields.</p>
+
+<h2>Structure File Formats</h2>
+
+<h3>.pdb - Protein Data Bank</h3>
+<p><strong>Description:</strong> Standard format for 3D structures of biological macromolecules</p>
+<p><strong>Typical Data:</strong> Atomic coordinates, residue information, secondary structure, crystal structure data</p>
+<p><strong>Use Cases:</strong> Protein structure analysis, molecular visualization, docking studies</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>Biopython</code>: <code>Bio.PDB</code></li>
+<li><code>MDAnalysis</code>: <code>MDAnalysis.Universe('file.pdb')</code></li>
+<li><code>PyMOL</code>: <code>pymol.cmd.load('file.pdb')</code></li>
+<li><code>ProDy</code>: <code>prody.parsePDB('file.pdb')</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Structure validation (bond lengths, angles, clashes)</li>
+<li>Secondary structure analysis</li>
+<li>B-factor distribution</li>
+<li>Missing residues/atoms detection</li>
+<li>Ramachandran plots for validation</li>
+<li>Surface area and volume calculations</li>
+</ul>
+<h3>.cif - Crystallographic Information File</h3>
+<p><strong>Description:</strong> Structured data format for crystallographic information</p>
+<p><strong>Typical Data:</strong> Unit cell parameters, atomic coordinates, symmetry operations, experimental data</p>
+<p><strong>Use Cases:</strong> Crystal structure determination, structural biology, materials science</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>gemmi</code>: <code>gemmi.cif.read_file('file.cif')</code></li>
+<li><code>PyCifRW</code>: <code>CifFile.ReadCif('file.cif')</code></li>
+<li><code>Biopython</code>: <code>Bio.PDB.MMCIFParser()</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Data completeness check</li>
+<li>Resolution and quality metrics</li>
+<li>Unit cell parameter analysis</li>
+<li>Symmetry group validation</li>
+<li>Atomic displacement parameters</li>
+<li>R-factors and validation metrics</li>
+</ul>
+<h3>.mol - MDL Molfile</h3>
+<p><strong>Description:</strong> Chemical structure file format by MDL/Accelrys</p>
+<p><strong>Typical Data:</strong> 2D/3D coordinates, atom types, bond orders, charges</p>
+<p><strong>Use Cases:</strong> Chemical database storage, cheminformatics, drug design</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>RDKit</code>: <code>Chem.MolFromMolFile('file.mol')</code></li>
+<li><code>Open Babel</code>: <code>pybel.readfile('mol', 'file.mol')</code></li>
+<li><code>ChemoPy</code>: For descriptor calculation</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Molecular property calculation (MW, logP, TPSA)</li>
+<li>Functional group analysis</li>
+<li>Ring system detection</li>
+<li>Stereochemistry validation</li>
+<li>2D/3D coordinate consistency</li>
+<li>Valence and charge validation</li>
+</ul>
+<h3>.mol2 - Tripos Mol2</h3>
+<p><strong>Description:</strong> Complete 3D molecular structure format with atom typing</p>
+<p><strong>Typical Data:</strong> Coordinates, SYBYL atom types, bond types, charges, substructures</p>
+<p><strong>Use Cases:</strong> Molecular docking, QSAR studies, drug discovery</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>RDKit</code>: <code>Chem.MolFromMol2File('file.mol2')</code></li>
+<li><code>Open Babel</code>: <code>pybel.readfile('mol2', 'file.mol2')</code></li>
+<li><code>MDAnalysis</code>: Can parse mol2 topology</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Atom type distribution</li>
+<li>Partial charge analysis</li>
+<li>Bond type statistics</li>
+<li>Substructure identification</li>
+<li>Conformational analysis</li>
+<li>Energy minimization status check</li>
+</ul>
+<h3>.sdf - Structure Data File</h3>
+<p><strong>Description:</strong> Multi-structure file format with associated data</p>
+<p><strong>Typical Data:</strong> Multiple molecular structures with properties/annotations</p>
+<p><strong>Use Cases:</strong> Chemical databases, virtual screening, compound libraries</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>RDKit</code>: <code>Chem.SDMolSupplier('file.sdf')</code></li>
+<li><code>Open Babel</code>: <code>pybel.readfile('sdf', 'file.sdf')</code></li>
+<li><code>PandasTools</code> (RDKit): For DataFrame integration</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Dataset size and diversity metrics</li>
+<li>Property distribution analysis (MW, logP, etc.)</li>
+<li>Structural diversity (Tanimoto similarity)</li>
+<li>Missing data assessment</li>
+<li>Outlier detection in properties</li>
+<li>Scaffold analysis</li>
+</ul>
+<h3>.xyz - XYZ Coordinates</h3>
+<p><strong>Description:</strong> Simple Cartesian coordinate format</p>
+<p><strong>Typical Data:</strong> Atom types and 3D coordinates</p>
+<p><strong>Use Cases:</strong> Quantum chemistry, geometry optimization, molecular dynamics</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>ASE</code>: <code>ase.io.read('file.xyz')</code></li>
+<li><code>Open Babel</code>: <code>pybel.readfile('xyz', 'file.xyz')</code></li>
+<li><code>cclib</code>: For parsing QM outputs with xyz</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Geometry analysis (bond lengths, angles, dihedrals)</li>
+<li>Center of mass calculation</li>
+<li>Moment of inertia</li>
+<li>Molecular size metrics</li>
+<li>Coordinate validation</li>
+<li>Symmetry detection</li>
+</ul>
+<h3>.smi / .smiles - SMILES String</h3>
+<p><strong>Description:</strong> Line notation for chemical structures</p>
+<p><strong>Typical Data:</strong> Text representation of molecular structure</p>
+<p><strong>Use Cases:</strong> Chemical databases, literature mining, data exchange</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>RDKit</code>: <code>Chem.MolFromSmiles(smiles)</code></li>
+<li><code>Open Babel</code>: Can parse SMILES</li>
+<li><code>DeepChem</code>: For ML on SMILES</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>SMILES syntax validation</li>
+<li>Descriptor calculation from SMILES</li>
+<li>Fingerprint generation</li>
+<li>Substructure searching</li>
+<li>Tautomer enumeration</li>
+<li>Stereoisomer handling</li>
+</ul>
+<h3>.pdbqt - AutoDock PDBQT</h3>
+<p><strong>Description:</strong> Modified PDB format for AutoDock docking</p>
+<p><strong>Typical Data:</strong> Coordinates, partial charges, atom types for docking</p>
+<p><strong>Use Cases:</strong> Molecular docking, virtual screening</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>Meeko</code>: For PDBQT preparation</li>
+<li><code>Open Babel</code>: Can read PDBQT</li>
+<li><code>ProDy</code>: Limited PDBQT support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Charge distribution analysis</li>
+<li>Rotatable bond identification</li>
+<li>Atom type validation</li>
+<li>Coordinate quality check</li>
+<li>Hydrogen placement validation</li>
+<li>Torsion definition analysis</li>
+</ul>
+<h3>.mae - Maestro Format</h3>
+<p><strong>Description:</strong> Schrödinger's proprietary molecular structure format</p>
+<p><strong>Typical Data:</strong> Structures, properties, annotations from Schrödinger suite</p>
+<p><strong>Use Cases:</strong> Drug discovery, molecular modeling with Schrödinger tools</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>schrodinger.structure</code>: Requires Schrödinger installation</li>
+<li>Custom parsers for basic reading</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Property extraction and analysis</li>
+<li>Structure quality metrics</li>
+<li>Conformer analysis</li>
+<li>Docking score distributions</li>
+<li>Ligand efficiency metrics</li>
+</ul>
+<h3>.gro - GROMACS Coordinate File</h3>
+<p><strong>Description:</strong> Molecular structure file for GROMACS MD simulations</p>
+<p><strong>Typical Data:</strong> Atom positions, velocities, box vectors</p>
+<p><strong>Use Cases:</strong> Molecular dynamics simulations, GROMACS workflows</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>MDAnalysis</code>: <code>Universe('file.gro')</code></li>
+<li><code>MDTraj</code>: <code>mdtraj.load_gro('file.gro')</code></li>
+<li><code>GromacsWrapper</code>: For GROMACS integration</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>System composition analysis</li>
+<li>Box dimension validation</li>
+<li>Atom position distribution</li>
+<li>Velocity distribution (if present)</li>
+<li>Density calculation</li>
+<li>Solvation analysis</li>
+</ul>
+<h2>Computational Chemistry Output Formats</h2>
+
+<h3>.log - Gaussian Log File</h3>
+<p><strong>Description:</strong> Output from Gaussian quantum chemistry calculations</p>
+<p><strong>Typical Data:</strong> Energies, geometries, frequencies, orbitals, populations</p>
+<p><strong>Use Cases:</strong> QM calculations, geometry optimization, frequency analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>cclib</code>: <code>cclib.io.ccread('file.log')</code></li>
+<li><code>GaussianRunPack</code>: For Gaussian workflows</li>
+<li>Custom parsers with regex</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Convergence analysis</li>
+<li>Energy profile extraction</li>
+<li>Vibrational frequency analysis</li>
+<li>Orbital energy levels</li>
+<li>Population analysis (Mulliken, NBO)</li>
+<li>Thermochemistry data extraction</li>
+</ul>
+<h3>.out - Quantum Chemistry Output</h3>
+<p><strong>Description:</strong> Generic output file from various QM packages</p>
+<p><strong>Typical Data:</strong> Calculation results, energies, properties</p>
+<p><strong>Use Cases:</strong> QM calculations across different software</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>cclib</code>: Universal parser for QM outputs</li>
+<li><code>ASE</code>: Can read some output formats</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Software-specific parsing</li>
+<li>Convergence criteria check</li>
+<li>Energy and gradient trends</li>
+<li>Basis set and method validation</li>
+<li>Computational cost analysis</li>
+</ul>
+<h3>.wfn / .wfx - Wavefunction Files</h3>
+<p><strong>Description:</strong> Wavefunction data for quantum chemical analysis</p>
+<p><strong>Typical Data:</strong> Molecular orbitals, basis sets, density matrices</p>
+<p><strong>Use Cases:</strong> Electron density analysis, QTAIM analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>Multiwfn</code>: Interface via Python</li>
+<li><code>Horton</code>: For wavefunction analysis</li>
+<li>Custom parsers for specific formats</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Orbital population analysis</li>
+<li>Electron density distribution</li>
+<li>Critical point analysis (QTAIM)</li>
+<li>Molecular orbital visualization</li>
+<li>Bonding analysis</li>
+</ul>
+<h3>.fchk - Gaussian Formatted Checkpoint</h3>
+<p><strong>Description:</strong> Formatted checkpoint file from Gaussian</p>
+<p><strong>Typical Data:</strong> Complete wavefunction data, results, geometry</p>
+<p><strong>Use Cases:</strong> Post-processing Gaussian calculations</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>cclib</code>: Can parse fchk files</li>
+<li><code>GaussView</code> Python API (if available)</li>
+<li>Custom parsers</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Wavefunction quality assessment</li>
+<li>Property extraction</li>
+<li>Basis set information</li>
+<li>Gradient and Hessian analysis</li>
+<li>Natural orbital analysis</li>
+</ul>
+<h3>.cube - Gaussian Cube File</h3>
+<p><strong>Description:</strong> Volumetric data on a 3D grid</p>
+<p><strong>Typical Data:</strong> Electron density, molecular orbitals, ESP on grid</p>
+<p><strong>Use Cases:</strong> Visualization of volumetric properties</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>cclib</code>: <code>cclib.io.ccread('file.cube')</code></li>
+<li><code>ase.io</code>: <code>ase.io.read('file.cube')</code></li>
+<li><code>pyquante</code>: For cube file manipulation</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Grid dimension and spacing analysis</li>
+<li>Value distribution statistics</li>
+<li>Isosurface value determination</li>
+<li>Integration over volume</li>
+<li>Comparison between different cubes</li>
+</ul>
+<h2>Molecular Dynamics Formats</h2>
+
+<h3>.dcd - Binary Trajectory</h3>
+<p><strong>Description:</strong> Binary trajectory format (CHARMM, NAMD)</p>
+<p><strong>Typical Data:</strong> Time series of atomic coordinates</p>
+<p><strong>Use Cases:</strong> MD trajectory analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>MDAnalysis</code>: <code>Universe(topology, 'traj.dcd')</code></li>
+<li><code>MDTraj</code>: <code>mdtraj.load_dcd('traj.dcd', top='topology.pdb')</code></li>
+<li><code>PyTraj</code> (Amber): Limited support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>RMSD/RMSF analysis</li>
+<li>Trajectory length and frame count</li>
+<li>Coordinate range and drift</li>
+<li>Periodic boundary handling</li>
+<li>File integrity check</li>
+<li>Time step validation</li>
+</ul>
+<h3>.xtc - Compressed Trajectory</h3>
+<p><strong>Description:</strong> GROMACS compressed trajectory format</p>
+<p><strong>Typical Data:</strong> Compressed coordinates from MD simulations</p>
+<p><strong>Use Cases:</strong> Space-efficient MD trajectory storage</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>MDAnalysis</code>: <code>Universe(topology, 'traj.xtc')</code></li>
+<li><code>MDTraj</code>: <code>mdtraj.load_xtc('traj.xtc', top='topology.pdb')</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Compression ratio assessment</li>
+<li>Precision loss evaluation</li>
+<li>RMSD over time</li>
+<li>Structural stability metrics</li>
+<li>Sampling frequency analysis</li>
+</ul>
+<h3>.trr - GROMACS Trajectory</h3>
+<p><strong>Description:</strong> Full precision GROMACS trajectory</p>
+<p><strong>Typical Data:</strong> Coordinates, velocities, forces from MD</p>
+<p><strong>Use Cases:</strong> High-precision MD analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>MDAnalysis</code>: Full support</li>
+<li><code>MDTraj</code>: Can read trr files</li>
+<li><code>GromacsWrapper</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Full system dynamics analysis</li>
+<li>Energy conservation check (with velocities)</li>
+<li>Force analysis</li>
+<li>Temperature and pressure validation</li>
+<li>System equilibration assessment</li>
+</ul>
+<h3>.nc / .netcdf - Amber NetCDF Trajectory</h3>
+<p><strong>Description:</strong> Network Common Data Form trajectory</p>
+<p><strong>Typical Data:</strong> MD coordinates, velocities, forces</p>
+<p><strong>Use Cases:</strong> Amber MD simulations, large trajectory storage</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>MDAnalysis</code>: NetCDF support</li>
+<li><code>PyTraj</code>: Native Amber analysis</li>
+<li><code>netCDF4</code>: Low-level access</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Metadata extraction</li>
+<li>Trajectory statistics</li>
+<li>Time series analysis</li>
+<li>Replica exchange analysis</li>
+<li>Multi-dimensional data extraction</li>
+</ul>
+<h3>.top - GROMACS Topology</h3>
+<p><strong>Description:</strong> Molecular topology for GROMACS</p>
+<p><strong>Typical Data:</strong> Atom types, bonds, angles, force field parameters</p>
+<p><strong>Use Cases:</strong> MD simulation setup and analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>ParmEd</code>: <code>parmed.load_file('system.top')</code></li>
+<li><code>MDAnalysis</code>: Can parse topology</li>
+<li>Custom parsers for specific fields</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Force field parameter validation</li>
+<li>System composition</li>
+<li>Bond/angle/dihedral distribution</li>
+<li>Charge neutrality check</li>
+<li>Molecule type enumeration</li>
+</ul>
+<h3>.psf - Protein Structure File (CHARMM)</h3>
+<p><strong>Description:</strong> Topology file for CHARMM/NAMD</p>
+<p><strong>Typical Data:</strong> Atom connectivity, types, charges</p>
+<p><strong>Use Cases:</strong> CHARMM/NAMD MD simulations</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>MDAnalysis</code>: Native PSF support</li>
+<li><code>ParmEd</code>: Can read PSF files</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Topology validation</li>
+<li>Connectivity analysis</li>
+<li>Charge distribution</li>
+<li>Atom type statistics</li>
+<li>Segment analysis</li>
+</ul>
+<h3>.prmtop - Amber Parameter/Topology</h3>
+<p><strong>Description:</strong> Amber topology and parameter file</p>
+<p><strong>Typical Data:</strong> System topology, force field parameters</p>
+<p><strong>Use Cases:</strong> Amber MD simulations</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>ParmEd</code>: <code>parmed.load_file('system.prmtop')</code></li>
+<li><code>PyTraj</code>: Native Amber support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Force field completeness</li>
+<li>Parameter validation</li>
+<li>System size and composition</li>
+<li>Periodic box information</li>
+<li>Atom mask creation for analysis</li>
+</ul>
+<h3>.inpcrd / .rst7 - Amber Coordinates</h3>
+<p><strong>Description:</strong> Amber coordinate/restart file</p>
+<p><strong>Typical Data:</strong> Atomic coordinates, velocities, box info</p>
+<p><strong>Use Cases:</strong> Starting coordinates for Amber MD</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>ParmEd</code>: Works with prmtop</li>
+<li><code>PyTraj</code>: Amber coordinate reading</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Coordinate validity</li>
+<li>System initialization check</li>
+<li>Box vector validation</li>
+<li>Velocity distribution (if restart)</li>
+<li>Energy minimization status</li>
+</ul>
+<h2>Spectroscopy and Analytical Data</h2>
+
+<h3>.jcamp / .jdx - JCAMP-DX</h3>
+<p><strong>Description:</strong> Joint Committee on Atomic and Molecular Physical Data eXchange</p>
+<p><strong>Typical Data:</strong> Spectroscopic data (IR, NMR, MS, UV-Vis)</p>
+<p><strong>Use Cases:</strong> Spectroscopy data exchange and archiving</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>jcamp</code>: <code>jcamp.jcamp_reader('file.jdx')</code></li>
+<li><code>nmrglue</code>: For NMR JCAMP files</li>
+<li>Custom parsers for specific subtypes</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Peak detection and analysis</li>
+<li>Baseline correction assessment</li>
+<li>Signal-to-noise calculation</li>
+<li>Spectral range validation</li>
+<li>Integration analysis</li>
+<li>Comparison with reference spectra</li>
+</ul>
+<h3>.mzML - Mass Spectrometry Markup Language</h3>
+<p><strong>Description:</strong> Standard XML format for mass spectrometry data</p>
+<p><strong>Typical Data:</strong> MS/MS spectra, chromatograms, metadata</p>
+<p><strong>Use Cases:</strong> Proteomics, metabolomics, mass spectrometry workflows</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pymzml</code>: <code>pymzml.run.Reader('file.mzML')</code></li>
+<li><code>pyteomics</code>: <code>pyteomics.mzml.read('file.mzML')</code></li>
+<li><code>MSFileReader</code> wrappers</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Scan count and types</li>
+<li>MS level distribution</li>
+<li>Retention time range</li>
+<li>m/z range and resolution</li>
+<li>Peak intensity distribution</li>
+<li>Data completeness</li>
+<li>Quality control metrics</li>
+</ul>
+<h3>.mzXML - Mass Spectrometry XML</h3>
+<p><strong>Description:</strong> Open XML format for MS data</p>
+<p><strong>Typical Data:</strong> Mass spectra, retention times, peak lists</p>
+<p><strong>Use Cases:</strong> Legacy MS data, metabolomics</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pymzml</code>: Can read mzXML</li>
+<li><code>pyteomics.mzxml</code></li>
+<li><code>lxml</code> for direct XML parsing</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Similar to mzML</li>
+<li>Version compatibility check</li>
+<li>Conversion quality assessment</li>
+<li>Peak picking validation</li>
+</ul>
+<h3>.raw - Vendor Raw Data</h3>
+<p><strong>Description:</strong> Proprietary instrument data files (Thermo, Bruker, etc.)</p>
+<p><strong>Typical Data:</strong> Raw instrument signals, unprocessed data</p>
+<p><strong>Use Cases:</strong> Direct instrument data access</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pymsfilereader</code>: For Thermo RAW files</li>
+<li><code>ThermoRawFileParser</code>: CLI wrapper</li>
+<li>Vendor-specific APIs (Thermo, Bruker Compass)</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Instrument method extraction</li>
+<li>Raw signal quality</li>
+<li>Calibration status</li>
+<li>Scan function analysis</li>
+<li>Chromatographic quality metrics</li>
+</ul>
+<h3>.d - Agilent Data Directory</h3>
+<p><strong>Description:</strong> Agilent's data folder structure</p>
+<p><strong>Typical Data:</strong> LC-MS, GC-MS data and metadata</p>
+<p><strong>Use Cases:</strong> Agilent instrument data processing</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>agilent-reader</code>: Community tools</li>
+<li><code>Chemstation</code> Python integration</li>
+<li>Custom directory parsing</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Directory structure validation</li>
+<li>Method parameter extraction</li>
+<li>Signal file integrity</li>
+<li>Calibration curve analysis</li>
+<li>Sequence information extraction</li>
+</ul>
+<h3>.fid - NMR Free Induction Decay</h3>
+<p><strong>Description:</strong> Raw NMR time-domain data</p>
+<p><strong>Typical Data:</strong> Time-domain NMR signal</p>
+<p><strong>Use Cases:</strong> NMR processing and analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>nmrglue</code>: <code>nmrglue.bruker.read_fid('fid')</code></li>
+<li><code>nmrstarlib</code>: For NMR-STAR files</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Signal decay analysis</li>
+<li>Noise level assessment</li>
+<li>Acquisition parameter validation</li>
+<li>Apodization function selection</li>
+<li>Zero-filling optimization</li>
+<li>Phasing parameter estimation</li>
+</ul>
+<h3>.ft - NMR Frequency-Domain Data</h3>
+<p><strong>Description:</strong> Processed NMR spectrum</p>
+<p><strong>Typical Data:</strong> Frequency-domain NMR data</p>
+<p><strong>Use Cases:</strong> NMR analysis and interpretation</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>nmrglue</code>: Comprehensive NMR support</li>
+<li><code>pyNMR</code>: For processing</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Peak picking and integration</li>
+<li>Chemical shift calibration</li>
+<li>Multiplicity analysis</li>
+<li>Coupling constant extraction</li>
+<li>Spectral quality metrics</li>
+<li>Reference compound identification</li>
+</ul>
+<h3>.spc - Spectroscopy File</h3>
+<p><strong>Description:</strong> Thermo Galactic spectroscopy format</p>
+<p><strong>Typical Data:</strong> IR, Raman, UV-Vis spectra</p>
+<p><strong>Use Cases:</strong> Spectroscopic data from various instruments</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>spc</code>: <code>spc.File('file.spc')</code></li>
+<li>Custom parsers for binary format</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Spectral resolution</li>
+<li>Wavelength/wavenumber range</li>
+<li>Baseline characterization</li>
+<li>Peak identification</li>
+<li>Derivative spectra calculation</li>
+</ul>
+<h2>Chemical Database Formats</h2>
+
+<h3>.inchi - International Chemical Identifier</h3>
+<p><strong>Description:</strong> Text identifier for chemical substances</p>
+<p><strong>Typical Data:</strong> Layered chemical structure representation</p>
+<p><strong>Use Cases:</strong> Chemical database keys, structure searching</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>RDKit</code>: <code>Chem.MolFromInchi(inchi)</code></li>
+<li><code>Open Babel</code>: InChI conversion</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>InChI validation</li>
+<li>Layer analysis</li>
+<li>Stereochemistry verification</li>
+<li>InChI key generation</li>
+<li>Structure round-trip validation</li>
+</ul>
+<h3>.cdx / .cdxml - ChemDraw Exchange</h3>
+<p><strong>Description:</strong> ChemDraw drawing file format</p>
+<p><strong>Typical Data:</strong> 2D chemical structures with annotations</p>
+<p><strong>Use Cases:</strong> Chemical drawing, publication figures</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>RDKit</code>: Can import some CDXML</li>
+<li><code>Open Babel</code>: Limited support</li>
+<li><code>ChemDraw</code> Python API (commercial)</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Structure extraction</li>
+<li>Annotation preservation</li>
+<li>Style consistency</li>
+<li>2D coordinate validation</li>
+</ul>
+<h3>.cml - Chemical Markup Language</h3>
+<p><strong>Description:</strong> XML-based chemical structure format</p>
+<p><strong>Typical Data:</strong> Chemical structures, reactions, properties</p>
+<p><strong>Use Cases:</strong> Semantic chemical data representation</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>RDKit</code>: CML support</li>
+<li><code>Open Babel</code>: Good CML support</li>
+<li><code>lxml</code>: For XML parsing</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>XML schema validation</li>
+<li>Namespace handling</li>
+<li>Property extraction</li>
+<li>Reaction scheme analysis</li>
+<li>Metadata completeness</li>
+</ul>
+<h3>.rxn - MDL Reaction File</h3>
+<p><strong>Description:</strong> Chemical reaction structure file</p>
+<p><strong>Typical Data:</strong> Reactants, products, reaction arrows</p>
+<p><strong>Use Cases:</strong> Reaction databases, synthesis planning</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>RDKit</code>: <code>Chem.ReactionFromRxnFile('file.rxn')</code></li>
+<li><code>Open Babel</code>: Reaction support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Reaction balancing validation</li>
+<li>Atom mapping analysis</li>
+<li>Reagent identification</li>
+<li>Stereochemistry changes</li>
+<li>Reaction classification</li>
+</ul>
+<h3>.rdf - Reaction Data File</h3>
+<p><strong>Description:</strong> Multi-reaction file format</p>
+<p><strong>Typical Data:</strong> Multiple reactions with data</p>
+<p><strong>Use Cases:</strong> Reaction databases</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>RDKit</code>: RDF reading capabilities</li>
+<li>Custom parsers</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Reaction yield statistics</li>
+<li>Condition analysis</li>
+<li>Success rate patterns</li>
+<li>Reagent frequency analysis</li>
+</ul>
+<h2>Computational Output and Data</h2>
+
+<h3>.hdf5 / .h5 - Hierarchical Data Format</h3>
+<p><strong>Description:</strong> Container for scientific data arrays</p>
+<p><strong>Typical Data:</strong> Large arrays, metadata, hierarchical organization</p>
+<p><strong>Use Cases:</strong> Large dataset storage, computational results</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>h5py</code>: <code>h5py.File('file.h5', 'r')</code></li>
+<li><code>pytables</code>: Advanced HDF5 interface</li>
+<li><code>pandas</code>: Can read HDF5</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Dataset structure exploration</li>
+<li>Array shape and dtype analysis</li>
+<li>Metadata extraction</li>
+<li>Memory-efficient data sampling</li>
+<li>Chunk optimization analysis</li>
+<li>Compression ratio assessment</li>
+</ul>
+<h3>.pkl / .pickle - Python Pickle</h3>
+<p><strong>Description:</strong> Serialized Python objects</p>
+<p><strong>Typical Data:</strong> Any Python object (molecules, dataframes, models)</p>
+<p><strong>Use Cases:</strong> Intermediate data storage, model persistence</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pickle</code>: Built-in serialization</li>
+<li><code>joblib</code>: Enhanced pickling for large arrays</li>
+<li><code>dill</code>: Extended pickle support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Object type inspection</li>
+<li>Size and complexity analysis</li>
+<li>Version compatibility check</li>
+<li>Security validation (trusted source)</li>
+<li>Deserialization testing</li>
+</ul>
+<h3>.npy / .npz - NumPy Arrays</h3>
+<p><strong>Description:</strong> NumPy array binary format</p>
+<p><strong>Typical Data:</strong> Numerical arrays (coordinates, features, matrices)</p>
+<p><strong>Use Cases:</strong> Fast numerical data I/O</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>numpy</code>: <code>np.load('file.npy')</code></li>
+<li>Direct memory mapping for large files</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Array shape and dimensions</li>
+<li>Data type and precision</li>
+<li>Statistical summary (mean, std, range)</li>
+<li>Missing value detection</li>
+<li>Outlier identification</li>
+<li>Memory footprint analysis</li>
+</ul>
+<h3>.mat - MATLAB Data File</h3>
+<p><strong>Description:</strong> MATLAB workspace data</p>
+<p><strong>Typical Data:</strong> Arrays, structures from MATLAB</p>
+<p><strong>Use Cases:</strong> MATLAB-Python data exchange</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>scipy.io</code>: <code>scipy.io.loadmat('file.mat')</code></li>
+<li><code>h5py</code>: For v7.3 MAT files</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Variable extraction and types</li>
+<li>Array dimension analysis</li>
+<li>Structure field exploration</li>
+<li>MATLAB version compatibility</li>
+<li>Data type conversion validation</li>
+</ul>
+<h3>.csv - Comma-Separated Values</h3>
+<p><strong>Description:</strong> Tabular data in text format</p>
+<p><strong>Typical Data:</strong> Chemical properties, experimental data, descriptors</p>
+<p><strong>Use Cases:</strong> Data exchange, analysis, machine learning</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pandas</code>: <code>pd.read_csv('file.csv')</code></li>
+<li><code>csv</code>: Built-in module</li>
+<li><code>polars</code>: Fast CSV reading</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Data types inference</li>
+<li>Missing value patterns</li>
+<li>Statistical summaries</li>
+<li>Correlation analysis</li>
+<li>Distribution visualization</li>
+<li>Outlier detection</li>
+</ul>
+<h3>.json - JavaScript Object Notation</h3>
+<p><strong>Description:</strong> Structured text data format</p>
+<p><strong>Typical Data:</strong> Chemical properties, metadata, API responses</p>
+<p><strong>Use Cases:</strong> Data interchange, configuration, web APIs</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>json</code>: Built-in JSON support</li>
+<li><code>pandas</code>: <code>pd.read_json()</code></li>
+<li><code>ujson</code>: Faster JSON parsing</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Schema validation</li>
+<li>Nesting depth analysis</li>
+<li>Key-value distribution</li>
+<li>Data type consistency</li>
+<li>Array length statistics</li>
+</ul>
+<h3>.parquet - Apache Parquet</h3>
+<p><strong>Description:</strong> Columnar storage format</p>
+<p><strong>Typical Data:</strong> Large tabular datasets efficiently</p>
+<p><strong>Use Cases:</strong> Big data, efficient columnar analytics</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pandas</code>: <code>pd.read_parquet('file.parquet')</code></li>
+<li><code>pyarrow</code>: Direct parquet access</li>
+<li><code>fastparquet</code>: Alternative implementation</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Column statistics from metadata</li>
+<li>Partition analysis</li>
+<li>Compression efficiency</li>
+<li>Row group structure</li>
+<li>Fast sampling for large files</li>
+<li>Schema evolution tracking</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 General Scientific Formats</h3>
+  <h1>General Scientific Data Formats Reference</h1>
+
+<p>This reference covers general-purpose scientific data formats used across multiple disciplines.</p>
+
+<h2>Numerical and Array Data</h2>
+
+<h3>.npy - NumPy Array</h3>
+<p><strong>Description:</strong> Binary NumPy array format</p>
+<p><strong>Typical Data:</strong> N-dimensional arrays of any data type</p>
+<p><strong>Use Cases:</strong> Fast I/O for numerical data, intermediate results</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>numpy</code>: <code>np.load('file.npy')</code>, <code>np.save()</code></li>
+<li>Memory-mapped access: <code>np.load('file.npy', mmap_mode='r')</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Array shape and dimensionality</li>
+<li>Data type and precision</li>
+<li>Statistical summary (mean, std, min, max, percentiles)</li>
+<li>Missing or invalid values (NaN, inf)</li>
+<li>Memory footprint</li>
+<li>Value distribution and histogram</li>
+<li>Sparsity analysis</li>
+<li>Correlation structure (if 2D)</li>
+</ul>
+<h3>.npz - Compressed NumPy Archive</h3>
+<p><strong>Description:</strong> Multiple NumPy arrays in one file</p>
+<p><strong>Typical Data:</strong> Collections of related arrays</p>
+<p><strong>Use Cases:</strong> Saving multiple arrays together, compressed storage</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>numpy</code>: <code>np.load('file.npz')</code> returns dict-like object</li>
+<li><code>np.savez()</code> or <code>np.savez_compressed()</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>List of contained arrays</li>
+<li>Individual array analysis</li>
+<li>Relationships between arrays</li>
+<li>Total file size and compression ratio</li>
+<li>Naming conventions</li>
+<li>Data consistency checks</li>
+</ul>
+<h3>.csv - Comma-Separated Values</h3>
+<p><strong>Description:</strong> Plain text tabular data</p>
+<p><strong>Typical Data:</strong> Experimental measurements, results tables</p>
+<p><strong>Use Cases:</strong> Universal data exchange, spreadsheet export</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pandas</code>: <code>pd.read_csv('file.csv')</code></li>
+<li><code>csv</code>: Built-in module</li>
+<li><code>polars</code>: High-performance CSV reading</li>
+<li><code>numpy</code>: <code>np.loadtxt()</code> or <code>np.genfromtxt()</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Row and column counts</li>
+<li>Data type inference</li>
+<li>Missing value patterns and frequency</li>
+<li>Column statistics (numeric: mean, std; categorical: frequencies)</li>
+<li>Outlier detection</li>
+<li>Correlation matrix</li>
+<li>Duplicate row detection</li>
+<li>Header and index validation</li>
+<li>Encoding issues detection</li>
+</ul>
+<h3>.tsv / .tab - Tab-Separated Values</h3>
+<p><strong>Description:</strong> Tab-delimited tabular data</p>
+<p><strong>Typical Data:</strong> Similar to CSV but tab-separated</p>
+<p><strong>Use Cases:</strong> Bioinformatics, text processing output</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pandas</code>: <code>pd.read_csv('file.tsv', sep='\t')</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Same as CSV format</li>
+<li>Tab vs space validation</li>
+<li>Quote handling</li>
+</ul>
+<h3>.xlsx / .xls - Excel Spreadsheets</h3>
+<p><strong>Description:</strong> Microsoft Excel binary/XML formats</p>
+<p><strong>Typical Data:</strong> Tabular data with formatting, formulas</p>
+<p><strong>Use Cases:</strong> Lab notebooks, data entry, reports</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pandas</code>: <code>pd.read_excel('file.xlsx')</code></li>
+<li><code>openpyxl</code>: Full Excel file manipulation</li>
+<li><code>xlrd</code>: Reading .xls (legacy)</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Sheet enumeration and names</li>
+<li>Per-sheet data analysis</li>
+<li>Formula evaluation</li>
+<li>Merged cells handling</li>
+<li>Hidden rows/columns</li>
+<li>Data validation rules</li>
+<li>Named ranges</li>
+<li>Formatting-only cells detection</li>
+</ul>
+<h3>.json - JavaScript Object Notation</h3>
+<p><strong>Description:</strong> Hierarchical text data format</p>
+<p><strong>Typical Data:</strong> Nested data structures, metadata</p>
+<p><strong>Use Cases:</strong> API responses, configuration, results</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>json</code>: Built-in module</li>
+<li><code>pandas</code>: <code>pd.read_json()</code></li>
+<li><code>ujson</code>: Faster JSON parsing</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Schema inference</li>
+<li>Nesting depth</li>
+<li>Key-value distribution</li>
+<li>Array lengths</li>
+<li>Data type consistency</li>
+<li>Missing keys</li>
+<li>Duplicate detection</li>
+<li>Size and complexity metrics</li>
+</ul>
+<h3>.xml - Extensible Markup Language</h3>
+<p><strong>Description:</strong> Hierarchical markup format</p>
+<p><strong>Typical Data:</strong> Structured data with metadata</p>
+<p><strong>Use Cases:</strong> Standards-based data exchange, APIs</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>lxml</code>: <code>lxml.etree.parse()</code></li>
+<li><code>xml.etree.ElementTree</code>: Built-in XML</li>
+<li><code>xmltodict</code>: Convert XML to dict</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Schema/DTD validation</li>
+<li>Element hierarchy and depth</li>
+<li>Namespace handling</li>
+<li>Attribute vs element content</li>
+<li>CDATA sections</li>
+<li>Text content extraction</li>
+<li>Sibling and child counts</li>
+</ul>
+<h3>.yaml / .yml - YAML</h3>
+<p><strong>Description:</strong> Human-readable data serialization</p>
+<p><strong>Typical Data:</strong> Configuration, metadata, parameters</p>
+<p><strong>Use Cases:</strong> Experiment configurations, pipelines</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>yaml</code>: <code>yaml.safe_load()</code> or <code>yaml.load()</code></li>
+<li><code>ruamel.yaml</code>: YAML 1.2 support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Configuration structure</li>
+<li>Data type handling</li>
+<li>List and dict depth</li>
+<li>Anchor and alias usage</li>
+<li>Multi-document files</li>
+<li>Comments preservation</li>
+<li>Validation against schema</li>
+</ul>
+<h3>.toml - TOML Configuration</h3>
+<p><strong>Description:</strong> Configuration file format</p>
+<p><strong>Typical Data:</strong> Settings, parameters</p>
+<p><strong>Use Cases:</strong> Python package configuration, settings</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>tomli</code> / <code>tomllib</code>: TOML reading (tomllib in Python 3.11+)</li>
+<li><code>toml</code>: Reading and writing</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Section structure</li>
+<li>Key-value pairs</li>
+<li>Data type inference</li>
+<li>Nested table validation</li>
+<li>Required vs optional fields</li>
+</ul>
+<h3>.ini - INI Configuration</h3>
+<p><strong>Description:</strong> Simple configuration format</p>
+<p><strong>Typical Data:</strong> Application settings</p>
+<p><strong>Use Cases:</strong> Legacy configurations, simple settings</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>configparser</code>: Built-in INI parser</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Section enumeration</li>
+<li>Key-value extraction</li>
+<li>Type conversion</li>
+<li>Comment handling</li>
+<li>Case sensitivity</li>
+</ul>
+<h2>Binary and Compressed Data</h2>
+
+<h3>.hdf5 / .h5 - Hierarchical Data Format 5</h3>
+<p><strong>Description:</strong> Container for large scientific datasets</p>
+<p><strong>Typical Data:</strong> Multi-dimensional arrays, metadata, groups</p>
+<p><strong>Use Cases:</strong> Large datasets, multi-modal data, parallel I/O</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>h5py</code>: <code>h5py.File('file.h5', 'r')</code></li>
+<li><code>pytables</code>: Advanced HDF5 interface</li>
+<li><code>pandas</code>: HDF5 storage via HDFStore</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Group and dataset hierarchy</li>
+<li>Dataset shapes and dtypes</li>
+<li>Attributes and metadata</li>
+<li>Compression and chunking strategy</li>
+<li>Memory-efficient sampling</li>
+<li>Dataset relationships</li>
+<li>File size and efficiency</li>
+<li>Access patterns optimization</li>
+</ul>
+<h3>.zarr - Chunked Array Storage</h3>
+<p><strong>Description:</strong> Cloud-optimized chunked arrays</p>
+<p><strong>Typical Data:</strong> Large N-dimensional arrays</p>
+<p><strong>Use Cases:</strong> Cloud storage, parallel computing, streaming</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>zarr</code>: <code>zarr.open('file.zarr')</code></li>
+<li><code>xarray</code>: Zarr backend support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Array metadata and dimensions</li>
+<li>Chunk size optimization</li>
+<li>Compression codec and ratio</li>
+<li>Synchronizer and store type</li>
+<li>Multi-scale hierarchies</li>
+<li>Parallel access performance</li>
+<li>Attribute metadata</li>
+</ul>
+<h3>.gz / .gzip - Gzip Compressed</h3>
+<p><strong>Description:</strong> Compressed data files</p>
+<p><strong>Typical Data:</strong> Any compressed text or binary</p>
+<p><strong>Use Cases:</strong> Compression for storage/transfer</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>gzip</code>: Built-in gzip module</li>
+<li><code>pandas</code>: Automatic gzip handling in read functions</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Compression ratio</li>
+<li>Original file type detection</li>
+<li>Decompression validation</li>
+<li>Header information</li>
+<li>Multi-member archives</li>
+</ul>
+<h3>.bz2 - Bzip2 Compressed</h3>
+<p><strong>Description:</strong> Bzip2 compression</p>
+<p><strong>Typical Data:</strong> Highly compressed files</p>
+<p><strong>Use Cases:</strong> Better compression than gzip</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>bz2</code>: Built-in bz2 module</li>
+<li>Automatic handling in pandas</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Compression efficiency</li>
+<li>Decompression time</li>
+<li>Content validation</li>
+</ul>
+<h3>.zip - ZIP Archive</h3>
+<p><strong>Description:</strong> Archive with multiple files</p>
+<p><strong>Typical Data:</strong> Collections of files</p>
+<p><strong>Use Cases:</strong> File distribution, archiving</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>zipfile</code>: Built-in ZIP support</li>
+<li><code>pandas</code>: Can read zipped CSVs</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Archive member listing</li>
+<li>Compression method per file</li>
+<li>Total vs compressed size</li>
+<li>Directory structure</li>
+<li>File type distribution</li>
+<li>Extraction validation</li>
+</ul>
+<h3>.tar / .tar.gz - TAR Archive</h3>
+<p><strong>Description:</strong> Unix tape archive</p>
+<p><strong>Typical Data:</strong> Multiple files and directories</p>
+<p><strong>Use Cases:</strong> Software distribution, backups</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>tarfile</code>: Built-in TAR support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Member file listing</li>
+<li>Compression (if .tar.gz, .tar.bz2)</li>
+<li>Directory structure</li>
+<li>Permissions preservation</li>
+<li>Extraction testing</li>
+</ul>
+<h2>Time Series and Waveform Data</h2>
+
+<h3>.wav - Waveform Audio</h3>
+<p><strong>Description:</strong> Audio waveform data</p>
+<p><strong>Typical Data:</strong> Acoustic signals, audio recordings</p>
+<p><strong>Use Cases:</strong> Acoustic analysis, ultrasound, signal processing</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>scipy.io.wavfile</code>: <code>scipy.io.wavfile.read()</code></li>
+<li><code>wave</code>: Built-in module</li>
+<li><code>soundfile</code>: Enhanced audio I/O</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Sample rate and duration</li>
+<li>Bit depth and channels</li>
+<li>Amplitude distribution</li>
+<li>Spectral analysis (FFT)</li>
+<li>Signal-to-noise ratio</li>
+<li>Clipping detection</li>
+<li>Frequency content</li>
+</ul>
+<h3>.mat - MATLAB Data</h3>
+<p><strong>Description:</strong> MATLAB workspace variables</p>
+<p><strong>Typical Data:</strong> Arrays, structures, cells</p>
+<p><strong>Use Cases:</strong> MATLAB-Python interoperability</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>scipy.io</code>: <code>scipy.io.loadmat()</code></li>
+<li><code>h5py</code>: For MATLAB v7.3 files (HDF5-based)</li>
+<li><code>mat73</code>: Pure Python for v7.3</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Variable names and types</li>
+<li>Array dimensions</li>
+<li>Structure field exploration</li>
+<li>Cell array handling</li>
+<li>Sparse matrix detection</li>
+<li>MATLAB version compatibility</li>
+<li>Metadata extraction</li>
+</ul>
+<h3>.edf - European Data Format</h3>
+<p><strong>Description:</strong> Time series data (especially medical)</p>
+<p><strong>Typical Data:</strong> EEG, physiological signals</p>
+<p><strong>Use Cases:</strong> Medical signal storage</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyedflib</code>: EDF/EDF+ reading and writing</li>
+<li><code>mne</code>: Neurophysiology data (supports EDF)</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Signal count and names</li>
+<li>Sampling frequencies</li>
+<li>Signal ranges and units</li>
+<li>Recording duration</li>
+<li>Annotation events</li>
+<li>Data quality (saturation, noise)</li>
+<li>Patient/study information</li>
+</ul>
+<h3>.csv (Time Series)</h3>
+<p><strong>Description:</strong> CSV with timestamp column</p>
+<p><strong>Typical Data:</strong> Time-indexed measurements</p>
+<p><strong>Use Cases:</strong> Sensor data, monitoring, experiments</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pandas</code>: <code>pd.read_csv()</code> with <code>parse_dates</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Temporal range and resolution</li>
+<li>Sampling regularity</li>
+<li>Missing time points</li>
+<li>Trend and seasonality</li>
+<li>Stationarity tests</li>
+<li>Autocorrelation</li>
+<li>Anomaly detection</li>
+</ul>
+<h2>Geospatial and Environmental Data</h2>
+
+<h3>.shp - Shapefile</h3>
+<p><strong>Description:</strong> Geospatial vector data</p>
+<p><strong>Typical Data:</strong> Geographic features (points, lines, polygons)</p>
+<p><strong>Use Cases:</strong> GIS analysis, spatial data</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>geopandas</code>: <code>gpd.read_file('file.shp')</code></li>
+<li><code>fiona</code>: Lower-level shapefile access</li>
+<li><code>pyshp</code>: Pure Python shapefile reader</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Geometry type and count</li>
+<li>Coordinate reference system</li>
+<li>Bounding box</li>
+<li>Attribute table analysis</li>
+<li>Geometry validity</li>
+<li>Spatial distribution</li>
+<li>Multi-part features</li>
+<li>Associated files (.shx, .dbf, .prj)</li>
+</ul>
+<h3>.geojson - GeoJSON</h3>
+<p><strong>Description:</strong> JSON format for geographic data</p>
+<p><strong>Typical Data:</strong> Features with geometry and properties</p>
+<p><strong>Use Cases:</strong> Web mapping, spatial analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>geopandas</code>: Native GeoJSON support</li>
+<li><code>json</code>: Parse as JSON then process</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Feature count and types</li>
+<li>CRS specification</li>
+<li>Bounding box calculation</li>
+<li>Property schema</li>
+<li>Geometry complexity</li>
+<li>Nesting structure</li>
+</ul>
+<h3>.tif / .tiff (Geospatial)</h3>
+<p><strong>Description:</strong> GeoTIFF with spatial reference</p>
+<p><strong>Typical Data:</strong> Satellite imagery, DEMs, rasters</p>
+<p><strong>Use Cases:</strong> Remote sensing, terrain analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>rasterio</code>: <code>rasterio.open('file.tif')</code></li>
+<li><code>gdal</code>: Geospatial Data Abstraction Library</li>
+<li><code>xarray</code> with <code>rioxarray</code>: N-D geospatial arrays</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Raster dimensions and resolution</li>
+<li>Band count and descriptions</li>
+<li>Coordinate reference system</li>
+<li>Geotransform parameters</li>
+<li>NoData value handling</li>
+<li>Pixel value distribution</li>
+<li>Histogram analysis</li>
+<li>Overviews and pyramids</li>
+</ul>
+<h3>.nc / .netcdf - Network Common Data Form</h3>
+<p><strong>Description:</strong> Self-describing array-based data</p>
+<p><strong>Typical Data:</strong> Climate, atmospheric, oceanographic data</p>
+<p><strong>Use Cases:</strong> Scientific datasets, model output</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>netCDF4</code>: <code>netCDF4.Dataset('file.nc')</code></li>
+<li><code>xarray</code>: <code>xr.open_dataset('file.nc')</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Variable enumeration</li>
+<li>Dimension analysis</li>
+<li>Time series properties</li>
+<li>Spatial coverage</li>
+<li>Attribute metadata (CF conventions)</li>
+<li>Coordinate systems</li>
+<li>Chunking and compression</li>
+<li>Data quality flags</li>
+</ul>
+<h3>.grib / .grib2 - Gridded Binary</h3>
+<p><strong>Description:</strong> Meteorological data format</p>
+<p><strong>Typical Data:</strong> Weather forecasts, climate data</p>
+<p><strong>Use Cases:</strong> Numerical weather prediction</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pygrib</code>: GRIB file reading</li>
+<li><code>xarray</code> with <code>cfgrib</code>: GRIB to xarray</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Message inventory</li>
+<li>Parameter and level types</li>
+<li>Spatial grid specification</li>
+<li>Temporal coverage</li>
+<li>Ensemble members</li>
+<li>Forecast vs analysis</li>
+<li>Data packing and precision</li>
+</ul>
+<h3>.hdf4 - HDF4 Format</h3>
+<p><strong>Description:</strong> Older HDF format</p>
+<p><strong>Typical Data:</strong> NASA Earth Science data</p>
+<p><strong>Use Cases:</strong> Satellite data (MODIS, etc.)</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyhdf</code>: HDF4 access</li>
+<li><code>gdal</code>: Can read HDF4</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Scientific dataset listing</li>
+<li>Vdata and attributes</li>
+<li>Dimension scales</li>
+<li>Metadata extraction</li>
+<li>Quality flags</li>
+<li>Conversion to HDF5 or NetCDF</li>
+</ul>
+<h2>Specialized Scientific Formats</h2>
+
+<h3>.fits - Flexible Image Transport System</h3>
+<p><strong>Description:</strong> Astronomy data format</p>
+<p><strong>Typical Data:</strong> Images, tables, spectra from telescopes</p>
+<p><strong>Use Cases:</strong> Astronomical observations</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>astropy.io.fits</code>: <code>fits.open('file.fits')</code></li>
+<li><code>fitsio</code>: Alternative FITS library</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>HDU (Header Data Unit) structure</li>
+<li>Image dimensions and WCS</li>
+<li>Header keyword analysis</li>
+<li>Table column descriptions</li>
+<li>Data type and scaling</li>
+<li>FITS convention compliance</li>
+<li>Checksum validation</li>
+</ul>
+<h3>.asdf - Advanced Scientific Data Format</h3>
+<p><strong>Description:</strong> Next-gen data format for astronomy</p>
+<p><strong>Typical Data:</strong> Complex hierarchical scientific data</p>
+<p><strong>Use Cases:</strong> James Webb Space Telescope data</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>asdf</code>: <code>asdf.open('file.asdf')</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Tree structure exploration</li>
+<li>Schema validation</li>
+<li>Internal vs external arrays</li>
+<li>Compression methods</li>
+<li>YAML metadata</li>
+<li>Version compatibility</li>
+</ul>
+<h3>.root - ROOT Data Format</h3>
+<p><strong>Description:</strong> CERN ROOT framework format</p>
+<p><strong>Typical Data:</strong> High-energy physics data</p>
+<p><strong>Use Cases:</strong> Particle physics experiments</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>uproot</code>: Pure Python ROOT reading</li>
+<li><code>ROOT</code>: Official PyROOT bindings</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>TTree structure</li>
+<li>Branch types and entries</li>
+<li>Histogram inventory</li>
+<li>Event loop statistics</li>
+<li>File compression</li>
+<li>Split level analysis</li>
+</ul>
+<h3>.txt - Plain Text Data</h3>
+<p><strong>Description:</strong> Generic text-based data</p>
+<p><strong>Typical Data:</strong> Tab/space-delimited, custom formats</p>
+<p><strong>Use Cases:</strong> Simple data exchange, logs</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pandas</code>: <code>pd.read_csv()</code> with custom delimiters</li>
+<li><code>numpy</code>: <code>np.loadtxt()</code>, <code>np.genfromtxt()</code></li>
+<li>Built-in file reading</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Format detection (delimiter, header)</li>
+<li>Data type inference</li>
+<li>Comment line handling</li>
+<li>Missing value codes</li>
+<li>Column alignment</li>
+<li>Encoding detection</li>
+</ul>
+<h3>.dat - Generic Data File</h3>
+<p><strong>Description:</strong> Binary or text data</p>
+<p><strong>Typical Data:</strong> Instrument output, custom formats</p>
+<p><strong>Use Cases:</strong> Various scientific instruments</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Format-specific: requires knowledge of structure</li>
+<li><code>numpy</code>: <code>np.fromfile()</code> for binary</li>
+<li><code>struct</code>: Parse binary structures</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Binary vs text determination</li>
+<li>Header detection</li>
+<li>Record structure inference</li>
+<li>Endianness</li>
+<li>Data type patterns</li>
+<li>Validation with documentation</li>
+</ul>
+<h3>.log - Log Files</h3>
+<p><strong>Description:</strong> Text logs from software/instruments</p>
+<p><strong>Typical Data:</strong> Timestamped events, messages</p>
+<p><strong>Use Cases:</strong> Troubleshooting, experiment tracking</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Built-in file reading</li>
+<li><code>pandas</code>: Structured log parsing</li>
+<li>Regular expressions for parsing</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Log level distribution</li>
+<li>Timestamp parsing</li>
+<li>Error and warning frequency</li>
+<li>Event sequencing</li>
+<li>Pattern recognition</li>
+<li>Anomaly detection</li>
+<li>Session boundaries</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Microscopy Imaging Formats</h3>
+  <h1>Microscopy and Imaging File Formats Reference</h1>
+
+<p>This reference covers file formats used in microscopy, medical imaging, remote sensing, and scientific image analysis.</p>
+
+<h2>Microscopy-Specific Formats</h2>
+
+<h3>.tif / .tiff - Tagged Image File Format</h3>
+<p><strong>Description:</strong> Flexible image format supporting multiple pages and metadata</p>
+<p><strong>Typical Data:</strong> Microscopy images, z-stacks, time series, multi-channel</p>
+<p><strong>Use Cases:</strong> Fluorescence microscopy, confocal imaging, biological imaging</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>tifffile</code>: <code>tifffile.imread('file.tif')</code> - Microscopy TIFF support</li>
+<li><code>PIL/Pillow</code>: <code>Image.open('file.tif')</code> - Basic TIFF</li>
+<li><code>scikit-image</code>: <code>io.imread('file.tif')</code></li>
+<li><code>AICSImageIO</code>: Multi-format microscopy reader</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Image dimensions and bit depth</li>
+<li>Multi-page/z-stack analysis</li>
+<li>Metadata extraction (OME-TIFF)</li>
+<li>Channel analysis and intensity distributions</li>
+<li>Temporal dynamics (time-lapse)</li>
+<li>Pixel size and spatial calibration</li>
+<li>Histogram analysis per channel</li>
+<li>Dynamic range utilization</li>
+</ul>
+<h3>.nd2 - Nikon NIS-Elements</h3>
+<p><strong>Description:</strong> Proprietary Nikon microscope format</p>
+<p><strong>Typical Data:</strong> Multi-dimensional microscopy (XYZCT)</p>
+<p><strong>Use Cases:</strong> Nikon microscope data, confocal, widefield</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>nd2reader</code>: <code>ND2Reader('file.nd2')</code></li>
+<li><code>pims</code>: <code>pims.ND2_Reader('file.nd2')</code></li>
+<li><code>AICSImageIO</code>: Universal reader</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Experiment metadata extraction</li>
+<li>Channel configurations</li>
+<li>Time-lapse frame analysis</li>
+<li>Z-stack depth and spacing</li>
+<li>XY stage positions</li>
+<li>Laser settings and power</li>
+<li>Pixel binning information</li>
+<li>Acquisition timestamps</li>
+</ul>
+<h3>.lif - Leica Image Format</h3>
+<p><strong>Description:</strong> Leica microscope proprietary format</p>
+<p><strong>Typical Data:</strong> Multi-experiment, multi-dimensional images</p>
+<p><strong>Use Cases:</strong> Leica confocal and widefield data</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>readlif</code>: <code>readlif.LifFile('file.lif')</code></li>
+<li><code>AICSImageIO</code>: LIF support</li>
+<li><code>python-bioformats</code>: Via Bio-Formats</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Multiple experiment detection</li>
+<li>Image series enumeration</li>
+<li>Metadata per experiment</li>
+<li>Channel and timepoint structure</li>
+<li>Physical dimensions extraction</li>
+<li>Objective and detector information</li>
+<li>Scan settings analysis</li>
+</ul>
+<h3>.czi - Carl Zeiss Image</h3>
+<p><strong>Description:</strong> Zeiss microscope format</p>
+<p><strong>Typical Data:</strong> Multi-dimensional microscopy with rich metadata</p>
+<p><strong>Use Cases:</strong> Zeiss confocal, lightsheet, widefield</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>czifile</code>: <code>czifile.CziFile('file.czi')</code></li>
+<li><code>AICSImageIO</code>: CZI support</li>
+<li><code>pylibCZIrw</code>: Official Zeiss library</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Scene and position analysis</li>
+<li>Mosaic tile structure</li>
+<li>Channel wavelength information</li>
+<li>Acquisition mode detection</li>
+<li>Scaling and calibration</li>
+<li>Instrument configuration</li>
+<li>ROI definitions</li>
+</ul>
+<h3>.oib / .oif - Olympus Image Format</h3>
+<p><strong>Description:</strong> Olympus microscope formats</p>
+<p><strong>Typical Data:</strong> Confocal and multiphoton imaging</p>
+<p><strong>Use Cases:</strong> Olympus FluoView data</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>AICSImageIO</code>: OIB/OIF support</li>
+<li><code>python-bioformats</code>: Via Bio-Formats</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Directory structure validation (OIF)</li>
+<li>Metadata file parsing</li>
+<li>Channel configuration</li>
+<li>Scan parameters</li>
+<li>Objective and filter information</li>
+<li>PMT settings</li>
+</ul>
+<h3>.vsi - Olympus VSI</h3>
+<p><strong>Description:</strong> Olympus slide scanner format</p>
+<p><strong>Typical Data:</strong> Whole slide imaging, large mosaics</p>
+<p><strong>Use Cases:</strong> Virtual microscopy, pathology</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>openslide-python</code>: <code>openslide.OpenSlide('file.vsi')</code></li>
+<li><code>AICSImageIO</code>: VSI support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Pyramid level analysis</li>
+<li>Tile structure and overlap</li>
+<li>Macro and label images</li>
+<li>Magnification levels</li>
+<li>Whole slide statistics</li>
+<li>Region detection</li>
+</ul>
+<h3>.ims - Imaris Format</h3>
+<p><strong>Description:</strong> Bitplane Imaris HDF5-based format</p>
+<p><strong>Typical Data:</strong> Large 3D/4D microscopy datasets</p>
+<p><strong>Use Cases:</strong> 3D rendering, time-lapse analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>h5py</code>: Direct HDF5 access</li>
+<li><code>imaris_ims_file_reader</code>: Specialized reader</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Resolution level analysis</li>
+<li>Time point structure</li>
+<li>Channel organization</li>
+<li>Dataset hierarchy</li>
+<li>Thumbnail generation</li>
+<li>Memory-mapped access strategies</li>
+<li>Chunking optimization</li>
+</ul>
+<h3>.lsm - Zeiss LSM</h3>
+<p><strong>Description:</strong> Legacy Zeiss confocal format</p>
+<p><strong>Typical Data:</strong> Confocal laser scanning microscopy</p>
+<p><strong>Use Cases:</strong> Older Zeiss confocal data</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>tifffile</code>: LSM support (TIFF-based)</li>
+<li><code>python-bioformats</code>: LSM reading</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Similar to TIFF with LSM-specific metadata</li>
+<li>Scan speed and resolution</li>
+<li>Laser lines and power</li>
+<li>Detector gain and offset</li>
+<li>LUT information</li>
+</ul>
+<h3>.stk - MetaMorph Stack</h3>
+<p><strong>Description:</strong> MetaMorph image stack format</p>
+<p><strong>Typical Data:</strong> Time-lapse or z-stack sequences</p>
+<p><strong>Use Cases:</strong> MetaMorph software output</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>tifffile</code>: STK is TIFF-based</li>
+<li><code>python-bioformats</code>: STK support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Stack dimensionality</li>
+<li>Plane metadata</li>
+<li>Timing information</li>
+<li>Stage positions</li>
+<li>UIC tags parsing</li>
+</ul>
+<h3>.dv - DeltaVision</h3>
+<p><strong>Description:</strong> Applied Precision DeltaVision format</p>
+<p><strong>Typical Data:</strong> Deconvolution microscopy</p>
+<p><strong>Use Cases:</strong> DeltaVision microscope data</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>mrc</code>: Can read DV (MRC-related)</li>
+<li><code>AICSImageIO</code>: DV support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Wave information (channels)</li>
+<li>Extended header analysis</li>
+<li>Lens and magnification</li>
+<li>Deconvolution status</li>
+<li>Time stamps per section</li>
+</ul>
+<h3>.mrc - Medical Research Council</h3>
+<p><strong>Description:</strong> Electron microscopy format</p>
+<p><strong>Typical Data:</strong> EM images, cryo-EM, tomography</p>
+<p><strong>Use Cases:</strong> Structural biology, electron microscopy</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>mrcfile</code>: <code>mrcfile.open('file.mrc')</code></li>
+<li><code>EMAN2</code>: EM-specific tools</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Volume dimensions</li>
+<li>Voxel size and units</li>
+<li>Origin and map statistics</li>
+<li>Symmetry information</li>
+<li>Extended header analysis</li>
+<li>Density statistics</li>
+<li>Header consistency validation</li>
+</ul>
+<h3>.dm3 / .dm4 - Gatan Digital Micrograph</h3>
+<p><strong>Description:</strong> Gatan TEM/STEM format</p>
+<p><strong>Typical Data:</strong> Transmission electron microscopy</p>
+<p><strong>Use Cases:</strong> TEM imaging and analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>hyperspy</code>: <code>hs.load('file.dm3')</code></li>
+<li><code>ncempy</code>: <code>ncempy.io.dm.dmReader('file.dm3')</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Microscope parameters</li>
+<li>Energy dispersive spectroscopy data</li>
+<li>Diffraction patterns</li>
+<li>Calibration information</li>
+<li>Tag structure analysis</li>
+<li>Image series handling</li>
+</ul>
+<h3>.eer - Electron Event Representation</h3>
+<p><strong>Description:</strong> Direct electron detector format</p>
+<p><strong>Typical Data:</strong> Electron counting data from detectors</p>
+<p><strong>Use Cases:</strong> Cryo-EM data collection</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>mrcfile</code>: Some EER support</li>
+<li>Vendor-specific tools (Gatan, TFS)</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Event counting statistics</li>
+<li>Frame rate and dose</li>
+<li>Detector configuration</li>
+<li>Motion correction assessment</li>
+<li>Gain reference validation</li>
+</ul>
+<h3>.ser - TIA Series</h3>
+<p><strong>Description:</strong> FEI/TFS TIA format</p>
+<p><strong>Typical Data:</strong> EM image series</p>
+<p><strong>Use Cases:</strong> FEI/Thermo Fisher EM data</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>hyperspy</code>: SER support</li>
+<li><code>ncempy</code>: TIA reader</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Series structure</li>
+<li>Calibration data</li>
+<li>Acquisition metadata</li>
+<li>Time stamps</li>
+<li>Multi-dimensional data organization</li>
+</ul>
+<h2>Medical and Biological Imaging</h2>
+
+<h3>.dcm - DICOM</h3>
+<p><strong>Description:</strong> Digital Imaging and Communications in Medicine</p>
+<p><strong>Typical Data:</strong> Medical images with patient/study metadata</p>
+<p><strong>Use Cases:</strong> Clinical imaging, radiology, CT, MRI, PET</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pydicom</code>: <code>pydicom.dcmread('file.dcm')</code></li>
+<li><code>SimpleITK</code>: <code>sitk.ReadImage('file.dcm')</code></li>
+<li><code>nibabel</code>: Limited DICOM support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Patient metadata extraction (anonymization check)</li>
+<li>Modality-specific analysis</li>
+<li>Series and study organization</li>
+<li>Slice thickness and spacing</li>
+<li>Window/level settings</li>
+<li>Hounsfield units (CT)</li>
+<li>Image orientation and position</li>
+<li>Multi-frame analysis</li>
+</ul>
+<h3>.nii / .nii.gz - NIfTI</h3>
+<p><strong>Description:</strong> Neuroimaging Informatics Technology Initiative</p>
+<p><strong>Typical Data:</strong> Brain imaging, fMRI, structural MRI</p>
+<p><strong>Use Cases:</strong> Neuroimaging research, brain analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>nibabel</code>: <code>nibabel.load('file.nii')</code></li>
+<li><code>nilearn</code>: Neuroimaging with ML</li>
+<li><code>SimpleITK</code>: NIfTI support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Volume dimensions and voxel size</li>
+<li>Affine transformation matrix</li>
+<li>Time series analysis (fMRI)</li>
+<li>Intensity distribution</li>
+<li>Brain extraction quality</li>
+<li>Registration assessment</li>
+<li>Orientation validation</li>
+<li>Header information consistency</li>
+</ul>
+<h3>.mnc - MINC Format</h3>
+<p><strong>Description:</strong> Medical Image NetCDF</p>
+<p><strong>Typical Data:</strong> Medical imaging (predecessor to NIfTI)</p>
+<p><strong>Use Cases:</strong> Legacy neuroimaging data</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyminc</code>: MINC-specific tools</li>
+<li><code>nibabel</code>: MINC support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Similar to NIfTI</li>
+<li>NetCDF structure exploration</li>
+<li>Dimension ordering</li>
+<li>Metadata extraction</li>
+</ul>
+<h3>.nrrd - Nearly Raw Raster Data</h3>
+<p><strong>Description:</strong> Medical imaging format with detached header</p>
+<p><strong>Typical Data:</strong> Medical images, research imaging</p>
+<p><strong>Use Cases:</strong> 3D Slicer, ITK-based applications</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pynrrd</code>: <code>nrrd.read('file.nrrd')</code></li>
+<li><code>SimpleITK</code>: NRRD support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Header field analysis</li>
+<li>Encoding format</li>
+<li>Dimension and spacing</li>
+<li>Orientation matrix</li>
+<li>Compression assessment</li>
+<li>Endianness handling</li>
+</ul>
+<h3>.mha / .mhd - MetaImage</h3>
+<p><strong>Description:</strong> MetaImage format (ITK)</p>
+<p><strong>Typical Data:</strong> Medical/scientific 3D images</p>
+<p><strong>Use Cases:</strong> ITK/SimpleITK applications</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>SimpleITK</code>: Native MHA/MHD support</li>
+<li><code>itk</code>: Direct ITK integration</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Header-data file pairing (MHD)</li>
+<li>Transform matrix</li>
+<li>Element spacing</li>
+<li>Compression format</li>
+<li>Data type and dimensions</li>
+</ul>
+<h3>.hdr / .img - Analyze Format</h3>
+<p><strong>Description:</strong> Legacy medical imaging format</p>
+<p><strong>Typical Data:</strong> Brain imaging (pre-NIfTI)</p>
+<p><strong>Use Cases:</strong> Old neuroimaging datasets</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>nibabel</code>: Analyze support</li>
+<li>Conversion to NIfTI recommended</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Header-image pairing validation</li>
+<li>Byte order issues</li>
+<li>Conversion to modern formats</li>
+<li>Metadata limitations</li>
+</ul>
+<h2>Scientific Image Formats</h2>
+
+<h3>.png - Portable Network Graphics</h3>
+<p><strong>Description:</strong> Lossless compressed image format</p>
+<p><strong>Typical Data:</strong> 2D images, screenshots, processed data</p>
+<p><strong>Use Cases:</strong> Publication figures, lossless storage</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>PIL/Pillow</code>: <code>Image.open('file.png')</code></li>
+<li><code>scikit-image</code>: <code>io.imread('file.png')</code></li>
+<li><code>imageio</code>: <code>imageio.imread('file.png')</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Bit depth analysis (8-bit, 16-bit)</li>
+<li>Color mode (grayscale, RGB, palette)</li>
+<li>Metadata (PNG chunks)</li>
+<li>Transparency handling</li>
+<li>Compression efficiency</li>
+<li>Histogram analysis</li>
+</ul>
+<h3>.jpg / .jpeg - Joint Photographic Experts Group</h3>
+<p><strong>Description:</strong> Lossy compressed image format</p>
+<p><strong>Typical Data:</strong> Natural images, photos</p>
+<p><strong>Use Cases:</strong> Visualization, web graphics (not raw data)</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>PIL/Pillow</code>: Standard JPEG support</li>
+<li><code>scikit-image</code>: JPEG reading</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Compression artifacts detection</li>
+<li>Quality factor estimation</li>
+<li>Color space (RGB, grayscale)</li>
+<li>EXIF metadata</li>
+<li>Quantization table analysis</li>
+<li>Note: Not suitable for quantitative analysis</li>
+</ul>
+<h3>.bmp - Bitmap Image</h3>
+<p><strong>Description:</strong> Uncompressed raster image</p>
+<p><strong>Typical Data:</strong> Simple images, screenshots</p>
+<p><strong>Use Cases:</strong> Compatibility, simple storage</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>PIL/Pillow</code>: BMP support</li>
+<li><code>scikit-image</code>: BMP reading</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Color depth</li>
+<li>Palette analysis (if indexed)</li>
+<li>File size efficiency</li>
+<li>Pixel format validation</li>
+</ul>
+<h3>.gif - Graphics Interchange Format</h3>
+<p><strong>Description:</strong> Image format with animation support</p>
+<p><strong>Typical Data:</strong> Animated images, simple graphics</p>
+<p><strong>Use Cases:</strong> Animations, time-lapse visualization</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>PIL/Pillow</code>: GIF support</li>
+<li><code>imageio</code>: Better GIF animation support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Frame count and timing</li>
+<li>Palette limitations (256 colors)</li>
+<li>Loop count</li>
+<li>Disposal method</li>
+<li>Transparency handling</li>
+</ul>
+<h3>.svg - Scalable Vector Graphics</h3>
+<p><strong>Description:</strong> XML-based vector graphics</p>
+<p><strong>Typical Data:</strong> Vector drawings, plots, diagrams</p>
+<p><strong>Use Cases:</strong> Publication-quality figures, plots</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>svgpathtools</code>: Path manipulation</li>
+<li><code>cairosvg</code>: Rasterization</li>
+<li><code>lxml</code>: XML parsing</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Element structure analysis</li>
+<li>Style information</li>
+<li>Viewbox and dimensions</li>
+<li>Path complexity</li>
+<li>Text element extraction</li>
+<li>Layer organization</li>
+</ul>
+<h3>.eps - Encapsulated PostScript</h3>
+<p><strong>Description:</strong> Vector graphics format</p>
+<p><strong>Typical Data:</strong> Publication figures</p>
+<p><strong>Use Cases:</strong> Legacy publication graphics</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>PIL/Pillow</code>: Basic EPS rasterization</li>
+<li><code>ghostscript</code> via subprocess</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Bounding box information</li>
+<li>Preview image validation</li>
+<li>Font embedding</li>
+<li>Conversion to modern formats</li>
+</ul>
+<h3>.pdf (Images)</h3>
+<p><strong>Description:</strong> Portable Document Format with images</p>
+<p><strong>Typical Data:</strong> Publication figures, multi-page documents</p>
+<p><strong>Use Cases:</strong> Publication, data presentation</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>PyMuPDF/fitz</code>: <code>fitz.open('file.pdf')</code></li>
+<li><code>pdf2image</code>: Rasterization</li>
+<li><code>pdfplumber</code>: Text and layout extraction</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Page count</li>
+<li>Image extraction</li>
+<li>Resolution and DPI</li>
+<li>Embedded fonts and metadata</li>
+<li>Compression methods</li>
+<li>Image vs vector content</li>
+</ul>
+<h3>.fig - MATLAB Figure</h3>
+<p><strong>Description:</strong> MATLAB figure file</p>
+<p><strong>Typical Data:</strong> MATLAB plots and figures</p>
+<p><strong>Use Cases:</strong> MATLAB data visualization</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Custom parsers (MAT file structure)</li>
+<li>Conversion to other formats</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Figure structure</li>
+<li>Data extraction from plots</li>
+<li>Axes and label information</li>
+<li>Plot type identification</li>
+</ul>
+<h3>.hdf5 (Imaging Specific)</h3>
+<p><strong>Description:</strong> HDF5 for large imaging datasets</p>
+<p><strong>Typical Data:</strong> High-content screening, large microscopy</p>
+<p><strong>Use Cases:</strong> BigDataViewer, large-scale imaging</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>h5py</code>: Universal HDF5 access</li>
+<li>Imaging-specific readers (BigDataViewer)</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Dataset hierarchy</li>
+<li>Chunk and compression strategy</li>
+<li>Multi-resolution pyramid</li>
+<li>Metadata organization</li>
+<li>Memory-mapped access</li>
+<li>Parallel I/O performance</li>
+</ul>
+<h3>.zarr - Chunked Array Storage</h3>
+<p><strong>Description:</strong> Cloud-optimized array storage</p>
+<p><strong>Typical Data:</strong> Large imaging datasets, OME-ZARR</p>
+<p><strong>Use Cases:</strong> Cloud microscopy, large-scale analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>zarr</code>: <code>zarr.open('file.zarr')</code></li>
+<li><code>ome-zarr-py</code>: OME-ZARR support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Chunk size optimization</li>
+<li>Compression codec analysis</li>
+<li>Multi-scale representation</li>
+<li>Array dimensions and dtype</li>
+<li>Metadata structure (OME)</li>
+<li>Cloud access patterns</li>
+</ul>
+<h3>.raw - Raw Image Data</h3>
+<p><strong>Description:</strong> Unformatted binary pixel data</p>
+<p><strong>Typical Data:</strong> Raw detector output</p>
+<p><strong>Use Cases:</strong> Custom imaging systems</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>numpy</code>: <code>np.fromfile()</code> with dtype</li>
+<li><code>imageio</code>: Raw format plugins</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Dimensions determination (external info needed)</li>
+<li>Byte order and data type</li>
+<li>Header presence detection</li>
+<li>Pixel value range</li>
+<li>Noise characteristics</li>
+</ul>
+<h3>.bin - Binary Image Data</h3>
+<p><strong>Description:</strong> Generic binary image format</p>
+<p><strong>Typical Data:</strong> Raw or custom-formatted images</p>
+<p><strong>Use Cases:</strong> Instrument-specific outputs</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>numpy</code>: Custom binary reading</li>
+<li><code>struct</code>: For structured binary data</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Format specification required</li>
+<li>Header parsing (if present)</li>
+<li>Data type inference</li>
+<li>Dimension extraction</li>
+<li>Validation with known parameters</li>
+</ul>
+<h2>Image Analysis Formats</h2>
+
+<h3>.roi - ImageJ ROI</h3>
+<p><strong>Description:</strong> ImageJ region of interest format</p>
+<p><strong>Typical Data:</strong> Geometric ROIs, selections</p>
+<p><strong>Use Cases:</strong> ImageJ/Fiji analysis workflows</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>read-roi</code>: <code>read_roi.read_roi_file('file.roi')</code></li>
+<li><code>roifile</code>: ROI manipulation</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>ROI type analysis (rectangle, polygon, etc.)</li>
+<li>Coordinate extraction</li>
+<li>ROI properties (area, perimeter)</li>
+<li>Group analysis (ROI sets)</li>
+<li>Z-position and time information</li>
+</ul>
+<h3>.zip (ROI sets)</h3>
+<p><strong>Description:</strong> ZIP archive of ImageJ ROIs</p>
+<p><strong>Typical Data:</strong> Multiple ROI files</p>
+<p><strong>Use Cases:</strong> Batch ROI analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>read-roi</code>: <code>read_roi.read_roi_zip('file.zip')</code></li>
+<li>Standard <code>zipfile</code> module</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>ROI count in set</li>
+<li>ROI type distribution</li>
+<li>Spatial distribution</li>
+<li>Overlapping ROI detection</li>
+<li>Naming conventions</li>
+</ul>
+<h3>.ome.tif / .ome.tiff - OME-TIFF</h3>
+<p><strong>Description:</strong> TIFF with OME-XML metadata</p>
+<p><strong>Typical Data:</strong> Standardized microscopy with rich metadata</p>
+<p><strong>Use Cases:</strong> Bio-Formats compatible storage</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>tifffile</code>: OME-TIFF support</li>
+<li><code>AICSImageIO</code>: OME reading</li>
+<li><code>python-bioformats</code>: Bio-Formats integration</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>OME-XML validation</li>
+<li>Physical dimensions extraction</li>
+<li>Channel naming and wavelengths</li>
+<li>Plane positions (Z, C, T)</li>
+<li>Instrument metadata</li>
+<li>Bio-Formats compatibility</li>
+</ul>
+<h3>.ome.zarr - OME-ZARR</h3>
+<p><strong>Description:</strong> OME-NGFF specification on ZARR</p>
+<p><strong>Typical Data:</strong> Next-generation file format for bioimaging</p>
+<p><strong>Use Cases:</strong> Cloud-native imaging, large datasets</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>ome-zarr-py</code>: Official implementation</li>
+<li><code>zarr</code>: Underlying array storage</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Multiscale resolution levels</li>
+<li>Metadata compliance with OME-NGFF spec</li>
+<li>Coordinate transformations</li>
+<li>Label and ROI handling</li>
+<li>Cloud storage optimization</li>
+<li>Chunk access patterns</li>
+</ul>
+<h3>.klb - Keller Lab Block</h3>
+<p><strong>Description:</strong> Fast microscopy format for large data</p>
+<p><strong>Typical Data:</strong> Lightsheet microscopy, time-lapse</p>
+<p><strong>Use Cases:</strong> High-throughput imaging</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyklb</code>: KLB reading and writing</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Compression efficiency</li>
+<li>Block structure</li>
+<li>Multi-resolution support</li>
+<li>Read performance benchmarking</li>
+<li>Metadata extraction</li>
+</ul>
+<h3>.vsi - Whole Slide Imaging</h3>
+<p><strong>Description:</strong> Virtual slide format (multiple vendors)</p>
+<p><strong>Typical Data:</strong> Pathology slides, large mosaics</p>
+<p><strong>Use Cases:</strong> Digital pathology</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>openslide-python</code>: Multi-format WSI</li>
+<li><code>tiffslide</code>: Pure Python alternative</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Pyramid level count</li>
+<li>Downsampling factors</li>
+<li>Associated images (macro, label)</li>
+<li>Tile size and overlap</li>
+<li>MPP (microns per pixel)</li>
+<li>Background detection</li>
+<li>Tissue segmentation</li>
+</ul>
+<h3>.ndpi - Hamamatsu NanoZoomer</h3>
+<p><strong>Description:</strong> Hamamatsu slide scanner format</p>
+<p><strong>Typical Data:</strong> Whole slide pathology images</p>
+<p><strong>Use Cases:</strong> Digital pathology workflows</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>openslide-python</code>: NDPI support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Multi-resolution pyramid</li>
+<li>Lens and objective information</li>
+<li>Scan area and magnification</li>
+<li>Focal plane information</li>
+<li>Tissue detection</li>
+</ul>
+<h3>.svs - Aperio ScanScope</h3>
+<p><strong>Description:</strong> Aperio whole slide format</p>
+<p><strong>Typical Data:</strong> Digital pathology slides</p>
+<p><strong>Use Cases:</strong> Pathology image analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>openslide-python</code>: SVS support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Pyramid structure</li>
+<li>MPP calibration</li>
+<li>Label and macro images</li>
+<li>Compression quality</li>
+<li>Thumbnail generation</li>
+</ul>
+<h3>.scn - Leica SCN</h3>
+<p><strong>Description:</strong> Leica slide scanner format</p>
+<p><strong>Typical Data:</strong> Whole slide imaging</p>
+<p><strong>Use Cases:</strong> Digital pathology</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>openslide-python</code>: SCN support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Tile structure analysis</li>
+<li>Collection organization</li>
+<li>Metadata extraction</li>
+<li>Magnification levels</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Proteomics Metabolomics Formats</h3>
+  <h1>Proteomics and Metabolomics File Formats Reference</h1>
+
+<p>This reference covers file formats specific to proteomics, metabolomics, lipidomics, and related omics workflows.</p>
+
+<h2>Mass Spectrometry-Based Proteomics</h2>
+
+<h3>.mzML - Mass Spectrometry Markup Language</h3>
+<p><strong>Description:</strong> Standard XML format for MS data</p>
+<p><strong>Typical Data:</strong> MS1 and MS2 spectra, retention times, intensities</p>
+<p><strong>Use Cases:</strong> Proteomics, metabolomics pipelines</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pymzml</code>: <code>pymzml.run.Reader('file.mzML')</code></li>
+<li><code>pyteomics.mzml</code>: <code>pyteomics.mzml.read('file.mzML')</code></li>
+<li><code>pyopenms</code>: OpenMS Python bindings</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Scan count and MS level distribution</li>
+<li>Total ion chromatogram (TIC) analysis</li>
+<li>Base peak chromatogram (BPC)</li>
+<li>m/z coverage and resolution</li>
+<li>Retention time range</li>
+<li>Precursor selection patterns</li>
+<li>Data completeness</li>
+<li>Quality control metrics (lock mass, standards)</li>
+</ul>
+<h3>.mzXML - Legacy MS XML Format</h3>
+<p><strong>Description:</strong> Older XML-based MS format</p>
+<p><strong>Typical Data:</strong> Mass spectra with metadata</p>
+<p><strong>Use Cases:</strong> Legacy proteomics data</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyteomics.mzxml</code></li>
+<li><code>pymzml</code>: Can read mzXML</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Similar to mzML</li>
+<li>Format version compatibility</li>
+<li>Conversion quality validation</li>
+<li>Metadata preservation check</li>
+</ul>
+<h3>.mzIdentML - Peptide Identification Format</h3>
+<p><strong>Description:</strong> PSI standard for peptide identifications</p>
+<p><strong>Typical Data:</strong> Peptide-spectrum matches, proteins, scores</p>
+<p><strong>Use Cases:</strong> Search engine results, proteomics workflows</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyteomics.mzid</code></li>
+<li><code>pyopenms</code>: MzIdentML support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>PSM count and score distribution</li>
+<li>FDR calculation and filtering</li>
+<li>Modification analysis</li>
+<li>Missed cleavage statistics</li>
+<li>Protein inference results</li>
+<li>Search parameters validation</li>
+<li>Decoy hit analysis</li>
+<li>Rank-1 vs lower ranks</li>
+</ul>
+<h3>.pepXML - Trans-Proteomic Pipeline Peptide XML</h3>
+<p><strong>Description:</strong> TPP format for peptide identifications</p>
+<p><strong>Typical Data:</strong> Search results with statistical validation</p>
+<p><strong>Use Cases:</strong> Proteomics database search output</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyteomics.pepxml</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Search engine comparison</li>
+<li>Score distributions (XCorr, expect value, etc.)</li>
+<li>Charge state analysis</li>
+<li>Modification frequencies</li>
+<li>PeptideProphet probabilities</li>
+<li>Protein coverage</li>
+<li>Spectral counting</li>
+</ul>
+<h3>.protXML - Protein Inference Results</h3>
+<p><strong>Description:</strong> TPP protein-level identifications</p>
+<p><strong>Typical Data:</strong> Protein groups, probabilities, peptides</p>
+<p><strong>Use Cases:</strong> Protein-level analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyteomics.protxml</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Protein group statistics</li>
+<li>Parsimonious protein sets</li>
+<li>ProteinProphet probabilities</li>
+<li>Coverage and peptide count per protein</li>
+<li>Unique vs shared peptides</li>
+<li>Protein molecular weight distribution</li>
+<li>GO term enrichment preparation</li>
+</ul>
+<h3>.pride.xml - PRIDE XML Format</h3>
+<p><strong>Description:</strong> Proteomics Identifications Database format</p>
+<p><strong>Typical Data:</strong> Complete proteomics experiment data</p>
+<p><strong>Use Cases:</strong> Public data deposition (legacy)</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyteomics.pride</code></li>
+<li>Custom XML parsers</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Experiment metadata extraction</li>
+<li>Identification completeness</li>
+<li>Cross-linking to spectra</li>
+<li>Protocol information</li>
+<li>Instrument details</li>
+</ul>
+<h3>.tsv / .csv (Proteomics)</h3>
+<p><strong>Description:</strong> Tab or comma-separated proteomics results</p>
+<p><strong>Typical Data:</strong> Peptide or protein quantification tables</p>
+<p><strong>Use Cases:</strong> MaxQuant, Proteome Discoverer, Skyline output</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pandas</code>: <code>pd.read_csv()</code> or <code>pd.read_table()</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Identification counts</li>
+<li>Quantitative value distributions</li>
+<li>Missing value patterns</li>
+<li>Intensity-based analysis</li>
+<li>Label-free quantification assessment</li>
+<li>Isobaric tag ratio analysis</li>
+<li>Coefficient of variation</li>
+<li>Batch effects</li>
+</ul>
+<h3>.msf - Thermo MSF Database</h3>
+<p><strong>Description:</strong> Proteome Discoverer results database</p>
+<p><strong>Typical Data:</strong> SQLite database with search results</p>
+<p><strong>Use Cases:</strong> Thermo Proteome Discoverer workflows</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>sqlite3</code>: Database access</li>
+<li>Custom MSF parsers</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Database schema exploration</li>
+<li>Peptide and protein tables</li>
+<li>Score thresholds</li>
+<li>Quantification data</li>
+<li>Processing node information</li>
+<li>Confidence levels</li>
+</ul>
+<h3>.pdResult - Proteome Discoverer Result</h3>
+<p><strong>Description:</strong> Proteome Discoverer study results</p>
+<p><strong>Typical Data:</strong> Comprehensive search and quantification</p>
+<p><strong>Use Cases:</strong> PD study exports</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Vendor tools for conversion</li>
+<li>Export to TSV for Python analysis</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Study design validation</li>
+<li>Result filtering criteria</li>
+<li>Quantitative comparison groups</li>
+<li>Imputation strategies</li>
+</ul>
+<h3>.pep.xml - Peptide Summary</h3>
+<p><strong>Description:</strong> Compact peptide identification format</p>
+<p><strong>Typical Data:</strong> Peptide sequences, modifications, scores</p>
+<p><strong>Use Cases:</strong> Downstream analysis input</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyteomics</code>: XML parsing</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Unique peptide counting</li>
+<li>PTM site localization</li>
+<li>Retention time predictability</li>
+<li>Charge state preferences</li>
+</ul>
+<h2>Quantitative Proteomics</h2>
+
+<h3>.sky - Skyline Document</h3>
+<p><strong>Description:</strong> Skyline targeted proteomics document</p>
+<p><strong>Typical Data:</strong> Transition lists, chromatograms, results</p>
+<p><strong>Use Cases:</strong> Targeted proteomics (SRM/MRM/PRM)</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>skyline</code>: Python API (limited)</li>
+<li>Export to CSV for analysis</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Transition selection validation</li>
+<li>Chromatographic peak quality</li>
+<li>Interference detection</li>
+<li>Retention time consistency</li>
+<li>Calibration curve assessment</li>
+<li>Replicate correlation</li>
+<li>LOD/LOQ determination</li>
+</ul>
+<h3>.sky.zip - Zipped Skyline Document</h3>
+<p><strong>Description:</strong> Skyline document with external files</p>
+<p><strong>Typical Data:</strong> Complete Skyline analysis</p>
+<p><strong>Use Cases:</strong> Sharing Skyline projects</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>zipfile</code>: Extract for processing</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Document structure</li>
+<li>External file references</li>
+<li>Result export and analysis</li>
+</ul>
+<h3>.wiff - SCIEX WIFF Format</h3>
+<p><strong>Description:</strong> SCIEX instrument data with quantitation</p>
+<p><strong>Typical Data:</strong> LC-MS/MS with MRM transitions</p>
+<p><strong>Use Cases:</strong> SCIEX QTRAP, TripleTOF data</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Vendor tools (limited Python access)</li>
+<li>Conversion to mzML</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>MRM transition performance</li>
+<li>Dwell time optimization</li>
+<li>Cycle time analysis</li>
+<li>Peak integration quality</li>
+</ul>
+<h3>.raw (Thermo)</h3>
+<p><strong>Description:</strong> Thermo raw instrument file</p>
+<p><strong>Typical Data:</strong> Full MS data from Orbitrap, Q Exactive</p>
+<p><strong>Use Cases:</strong> Label-free and TMT quantification</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pymsfilereader</code>: Thermo RawFileReader</li>
+<li><code>ThermoRawFileParser</code>: Cross-platform CLI</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>MS1 and MS2 acquisition rates</li>
+<li>AGC target and fill times</li>
+<li>Resolution settings</li>
+<li>Isolation window validation</li>
+<li>SPS ion selection (TMT)</li>
+<li>Contamination assessment</li>
+</ul>
+<h3>.d (Agilent)</h3>
+<p><strong>Description:</strong> Agilent data directory</p>
+<p><strong>Typical Data:</strong> LC-MS and GC-MS data</p>
+<p><strong>Use Cases:</strong> Agilent instrument workflows</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Community parsers</li>
+<li>Export to mzML</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Method consistency</li>
+<li>Calibration status</li>
+<li>Sequence run information</li>
+<li>Retention time stability</li>
+</ul>
+<h2>Metabolomics and Lipidomics</h2>
+
+<h3>.mzML (Metabolomics)</h3>
+<p><strong>Description:</strong> Standard MS format for metabolomics</p>
+<p><strong>Typical Data:</strong> Full scan MS, targeted MS/MS</p>
+<p><strong>Use Cases:</strong> Untargeted and targeted metabolomics</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Same as proteomics mzML tools</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Feature detection quality</li>
+<li>Mass accuracy assessment</li>
+<li>Retention time alignment</li>
+<li>Blank subtraction</li>
+<li>QC sample consistency</li>
+<li>Isotope pattern validation</li>
+<li>Adduct formation analysis</li>
+<li>In-source fragmentation check</li>
+</ul>
+<h3>.cdf / .netCDF - ANDI-MS</h3>
+<p><strong>Description:</strong> Analytical Data Interchange for MS</p>
+<p><strong>Typical Data:</strong> GC-MS, LC-MS chromatography data</p>
+<p><strong>Use Cases:</strong> Metabolomics, GC-MS workflows</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>netCDF4</code>: Low-level access</li>
+<li><code>pyopenms</code>: CDF support</li>
+<li><code>xcms</code> via R integration</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>TIC and extracted ion chromatograms</li>
+<li>Peak detection across samples</li>
+<li>Retention index calculation</li>
+<li>Mass spectral matching</li>
+<li>Library search preparation</li>
+</ul>
+<h3>.msp - Mass Spectral Format (NIST)</h3>
+<p><strong>Description:</strong> NIST spectral library format</p>
+<p><strong>Typical Data:</strong> Reference mass spectra</p>
+<p><strong>Use Cases:</strong> Metabolite identification, library matching</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>matchms</code>: Spectral matching</li>
+<li>Custom MSP parsers</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Library coverage</li>
+<li>Metadata completeness (InChI, SMILES)</li>
+<li>Spectral quality metrics</li>
+<li>Collision energy standardization</li>
+<li>Precursor type annotation</li>
+</ul>
+<h3>.mgf (Metabolomics)</h3>
+<p><strong>Description:</strong> Mascot Generic Format for MS/MS</p>
+<p><strong>Typical Data:</strong> MS/MS spectra for metabolite ID</p>
+<p><strong>Use Cases:</strong> Spectral library searching</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>matchms</code>: Metabolomics spectral analysis</li>
+<li><code>pyteomics.mgf</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Spectrum quality filtering</li>
+<li>Precursor isolation purity</li>
+<li>Fragment m/z accuracy</li>
+<li>Neutral loss patterns</li>
+<li>MS/MS completeness</li>
+</ul>
+<h3>.nmrML - NMR Markup Language</h3>
+<p><strong>Description:</strong> Standard XML format for NMR metabolomics</p>
+<p><strong>Typical Data:</strong> 1D/2D NMR spectra with metadata</p>
+<p><strong>Use Cases:</strong> NMR-based metabolomics</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>nmrml2isa</code>: Format conversion</li>
+<li>Custom XML parsers</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Spectral quality metrics</li>
+<li>Binning consistency</li>
+<li>Reference compound validation</li>
+<li>pH and temperature effects</li>
+<li>Metabolite identification confidence</li>
+</ul>
+<h3>.json (Metabolomics)</h3>
+<p><strong>Description:</strong> JSON format for metabolomics results</p>
+<p><strong>Typical Data:</strong> Feature tables, annotations, metadata</p>
+<p><strong>Use Cases:</strong> GNPS, MetaboAnalyst, web tools</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>json</code>: Standard library</li>
+<li><code>pandas</code>: JSON normalization</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Feature annotation coverage</li>
+<li>GNPS clustering results</li>
+<li>Molecular networking statistics</li>
+<li>Adduct and in-source fragment linkage</li>
+<li>Putative identification confidence</li>
+</ul>
+<h3>.txt (Metabolomics Tables)</h3>
+<p><strong>Description:</strong> Tab-delimited feature tables</p>
+<p><strong>Typical Data:</strong> m/z, RT, intensities across samples</p>
+<p><strong>Use Cases:</strong> MZmine, XCMS, MS-DIAL output</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pandas</code>: Text file reading</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Feature count and quality</li>
+<li>Missing value imputation</li>
+<li>Data normalization assessment</li>
+<li>Batch correction validation</li>
+<li>PCA and clustering for QC</li>
+<li>Fold change calculations</li>
+<li>Statistical test preparation</li>
+</ul>
+<h3>.featureXML - OpenMS Feature Format</h3>
+<p><strong>Description:</strong> OpenMS detected features</p>
+<p><strong>Typical Data:</strong> LC-MS features with quality scores</p>
+<p><strong>Use Cases:</strong> OpenMS workflows</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyopenms</code>: FeatureXML support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Feature detection parameters</li>
+<li>Quality metrics per feature</li>
+<li>Isotope pattern fitting</li>
+<li>Charge state assignment</li>
+<li>FWHM and asymmetry</li>
+</ul>
+<h3>.consensusXML - OpenMS Consensus Features</h3>
+<p><strong>Description:</strong> Linked features across samples</p>
+<p><strong>Typical Data:</strong> Aligned features with group info</p>
+<p><strong>Use Cases:</strong> Multi-sample LC-MS analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyopenms</code>: ConsensusXML reading</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Feature correspondence quality</li>
+<li>Retention time alignment</li>
+<li>Missing value patterns</li>
+<li>Intensity normalization needs</li>
+<li>Batch-wise feature agreement</li>
+</ul>
+<h3>.idXML - OpenMS Identification Format</h3>
+<p><strong>Description:</strong> Peptide/metabolite identifications</p>
+<p><strong>Typical Data:</strong> MS/MS identifications with scores</p>
+<p><strong>Use Cases:</strong> OpenMS ID workflows</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyopenms</code>: IdXML support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Identification rate</li>
+<li>Score distribution</li>
+<li>Spectral match quality</li>
+<li>False discovery assessment</li>
+<li>Annotation transfer validation</li>
+</ul>
+<h2>Lipidomics-Specific Formats</h2>
+
+<h3>.lcb - LipidCreator Batch</h3>
+<p><strong>Description:</strong> LipidCreator transition list</p>
+<p><strong>Typical Data:</strong> Lipid transitions for targeted MS</p>
+<p><strong>Use Cases:</strong> Targeted lipidomics</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Export to CSV for processing</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Transition coverage per lipid class</li>
+<li>Retention time prediction</li>
+<li>Collision energy optimization</li>
+<li>Class-specific fragmentation patterns</li>
+</ul>
+<h3>.mzTab - Proteomics/Metabolomics Tabular Format</h3>
+<p><strong>Description:</strong> PSI tabular summary format</p>
+<p><strong>Typical Data:</strong> Protein/peptide/metabolite quantification</p>
+<p><strong>Use Cases:</strong> Publication and data sharing</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyteomics.mztab</code></li>
+<li><code>pandas</code> for TSV-like structure</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Data completeness</li>
+<li>Metadata section validation</li>
+<li>Quantification method</li>
+<li>Identification confidence</li>
+<li>Software and parameters</li>
+<li>Quality metrics summary</li>
+</ul>
+<h3>.csv (LipidSearch, LipidMatch)</h3>
+<p><strong>Description:</strong> Lipid identification results</p>
+<p><strong>Typical Data:</strong> Lipid annotations, grades, intensities</p>
+<p><strong>Use Cases:</strong> Lipidomics software output</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pandas</code>: CSV reading</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Lipid class distribution</li>
+<li>Identification grade/confidence</li>
+<li>Fatty acid composition analysis</li>
+<li>Double bond and chain length patterns</li>
+<li>Intensity correlations</li>
+<li>Normalization to internal standards</li>
+</ul>
+<h3>.sdf (Metabolomics)</h3>
+<p><strong>Description:</strong> Structure data file for metabolites</p>
+<p><strong>Typical Data:</strong> Chemical structures with properties</p>
+<p><strong>Use Cases:</strong> Metabolite database creation</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>RDKit</code>: <code>Chem.SDMolSupplier('file.sdf')</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Structure validation</li>
+<li>Property calculation (logP, MW, TPSA)</li>
+<li>Molecular formula consistency</li>
+<li>Tautomer enumeration</li>
+<li>Retention time prediction features</li>
+</ul>
+<h3>.mol (Metabolomics)</h3>
+<p><strong>Description:</strong> Single molecule structure files</p>
+<p><strong>Typical Data:</strong> Metabolite chemical structure</p>
+<p><strong>Use Cases:</strong> Structure-based searches</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>RDKit</code>: <code>Chem.MolFromMolFile('file.mol')</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Structure correctness</li>
+<li>Stereochemistry validation</li>
+<li>Charge state</li>
+<li>Implicit hydrogen handling</li>
+</ul>
+<h2>Data Processing and Analysis</h2>
+
+<h3>.h5 / .hdf5 (Omics)</h3>
+<p><strong>Description:</strong> HDF5 for large omics datasets</p>
+<p><strong>Typical Data:</strong> Feature matrices, spectra, metadata</p>
+<p><strong>Use Cases:</strong> Large-scale studies, cloud computing</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>h5py</code>: HDF5 access</li>
+<li><code>anndata</code>: For single-cell proteomics</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Dataset organization</li>
+<li>Chunking and compression</li>
+<li>Metadata structure</li>
+<li>Efficient data access patterns</li>
+<li>Sample and feature annotations</li>
+</ul>
+<h3>.Rdata / .rds - R Objects</h3>
+<p><strong>Description:</strong> Serialized R analysis objects</p>
+<p><strong>Typical Data:</strong> Processed omics results from R packages</p>
+<p><strong>Use Cases:</strong> xcms, CAMERA, MSnbase workflows</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyreadr</code>: <code>pyreadr.read_r('file.Rdata')</code></li>
+<li><code>rpy2</code>: R-Python integration</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Object structure exploration</li>
+<li>Data extraction</li>
+<li>Method parameter review</li>
+<li>Conversion to Python-native formats</li>
+</ul>
+<h3>.mzTab-M - Metabolomics mzTab</h3>
+<p><strong>Description:</strong> mzTab specific to metabolomics</p>
+<p><strong>Typical Data:</strong> Small molecule quantification</p>
+<p><strong>Use Cases:</strong> Metabolomics data sharing</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyteomics.mztab</code>: Can parse mzTab-M</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Small molecule evidence</li>
+<li>Feature quantification</li>
+<li>Database references (HMDB, KEGG, etc.)</li>
+<li>Adduct and charge annotation</li>
+<li>MS level information</li>
+</ul>
+<h3>.parquet (Omics)</h3>
+<p><strong>Description:</strong> Columnar storage for large tables</p>
+<p><strong>Typical Data:</strong> Feature matrices, metadata</p>
+<p><strong>Use Cases:</strong> Efficient big data omics</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pandas</code>: <code>pd.read_parquet()</code></li>
+<li><code>pyarrow</code>: Direct parquet access</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Compression efficiency</li>
+<li>Column-wise statistics</li>
+<li>Partition structure</li>
+<li>Schema validation</li>
+<li>Fast filtering and aggregation</li>
+</ul>
+<h3>.pkl (Omics Models)</h3>
+<p><strong>Description:</strong> Pickled Python objects</p>
+<p><strong>Typical Data:</strong> ML models, processed data</p>
+<p><strong>Use Cases:</strong> Workflow intermediate storage</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pickle</code>: Standard serialization</li>
+<li><code>joblib</code>: Enhanced pickling</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Object type and structure</li>
+<li>Model parameters</li>
+<li>Feature importance (if ML model)</li>
+<li>Data shapes and types</li>
+<li>Deserialization validation</li>
+</ul>
+<h3>.zarr (Omics)</h3>
+<p><strong>Description:</strong> Chunked, compressed array storage</p>
+<p><strong>Typical Data:</strong> Multi-dimensional omics data</p>
+<p><strong>Use Cases:</strong> Cloud-optimized analysis</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>zarr</code>: Array storage</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Chunk optimization</li>
+<li>Compression codecs</li>
+<li>Multi-scale data</li>
+<li>Parallel access patterns</li>
+<li>Metadata annotations</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Spectroscopy Analytical Formats</h3>
+  <h1>Spectroscopy and Analytical Chemistry File Formats Reference</h1>
+
+<p>This reference covers file formats used in various spectroscopic techniques and analytical chemistry instrumentation.</p>
+
+<h2>NMR Spectroscopy</h2>
+
+<h3>.fid - NMR Free Induction Decay</h3>
+<p><strong>Description:</strong> Raw time-domain NMR data from Bruker, Agilent, JEOL</p>
+<p><strong>Typical Data:</strong> Complex time-domain signal</p>
+<p><strong>Use Cases:</strong> NMR spectroscopy, structure elucidation</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>nmrglue</code>: <code>nmrglue.bruker.read_fid('fid')</code> or <code>nmrglue.varian.read_fid('fid')</code></li>
+<li><code>nmrstarlib</code>: NMR data handling</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Time-domain signal decay</li>
+<li>Sampling rate and acquisition time</li>
+<li>Number of data points</li>
+<li>Signal-to-noise ratio estimation</li>
+<li>Baseline drift assessment</li>
+<li>Digital filter effects</li>
+<li>Acquisition parameter validation</li>
+<li>Apodization function selection</li>
+</ul>
+<h3>.ft / .ft1 / .ft2 - NMR Frequency Domain</h3>
+<p><strong>Description:</strong> Fourier-transformed NMR spectrum</p>
+<p><strong>Typical Data:</strong> Processed frequency-domain data</p>
+<p><strong>Use Cases:</strong> NMR analysis, peak integration</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>nmrglue</code>: Frequency domain reading</li>
+<li>Custom processing pipelines</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Peak picking and integration</li>
+<li>Chemical shift range</li>
+<li>Baseline correction quality</li>
+<li>Phase correction assessment</li>
+<li>Reference peak identification</li>
+<li>Spectral resolution</li>
+<li>Artifacts detection</li>
+<li>Multiplicity analysis</li>
+</ul>
+<h3>.1r / .2rr - Bruker NMR Processed Data</h3>
+<p><strong>Description:</strong> Bruker processed spectrum (real part)</p>
+<p><strong>Typical Data:</strong> 1D or 2D processed NMR spectra</p>
+<p><strong>Use Cases:</strong> NMR data analysis with Bruker software</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>nmrglue</code>: Bruker format support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Processing parameters review</li>
+<li>Window function effects</li>
+<li>Zero-filling assessment</li>
+<li>Linear prediction validation</li>
+<li>Spectral artifacts</li>
+</ul>
+<h3>.dx - NMR JCAMP-DX</h3>
+<p><strong>Description:</strong> JCAMP-DX format for NMR</p>
+<p><strong>Typical Data:</strong> Standardized NMR spectrum</p>
+<p><strong>Use Cases:</strong> Data exchange between software</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>jcamp</code>: JCAMP reader</li>
+<li><code>nmrglue</code>: Can import JCAMP</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Format compliance</li>
+<li>Metadata completeness</li>
+<li>Peak table validation</li>
+<li>Integration values</li>
+<li>Compound identification info</li>
+</ul>
+<h3>.mnova - Mnova Format</h3>
+<p><strong>Description:</strong> Mestrelab Research Mnova format</p>
+<p><strong>Typical Data:</strong> NMR data with processing info</p>
+<p><strong>Use Cases:</strong> Mnova software workflows</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>nmrglue</code>: Limited Mnova support</li>
+<li>Conversion tools to standard formats</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Multi-spectrum handling</li>
+<li>Processing pipeline review</li>
+<li>Quantification data</li>
+<li>Structure assignment</li>
+</ul>
+<h2>Mass Spectrometry</h2>
+
+<h3>.mzML - Mass Spectrometry Markup Language</h3>
+<p><strong>Description:</strong> Standard XML-based MS format</p>
+<p><strong>Typical Data:</strong> MS spectra, chromatograms, metadata</p>
+<p><strong>Use Cases:</strong> Proteomics, metabolomics, lipidomics</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pymzml</code>: <code>pymzml.run.Reader('file.mzML')</code></li>
+<li><code>pyteomics.mzml</code>: <code>pyteomics.mzml.read('file.mzML')</code></li>
+<li><code>MSFileReader</code>: Various wrappers</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Scan count and MS level distribution</li>
+<li>Retention time range and TIC</li>
+<li>m/z range and resolution</li>
+<li>Precursor ion selection</li>
+<li>Fragmentation patterns</li>
+<li>Instrument configuration</li>
+<li>Quality control metrics</li>
+<li>Data completeness</li>
+</ul>
+<h3>.mzXML - Mass Spectrometry XML</h3>
+<p><strong>Description:</strong> Legacy XML MS format</p>
+<p><strong>Typical Data:</strong> Mass spectra and chromatograms</p>
+<p><strong>Use Cases:</strong> Proteomics workflows (older)</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyteomics.mzxml</code></li>
+<li><code>pymzml</code>: Can read mzXML</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Similar to mzML</li>
+<li>Version compatibility</li>
+<li>Conversion quality assessment</li>
+</ul>
+<h3>.mzData - mzData Format</h3>
+<p><strong>Description:</strong> Legacy PSI MS format</p>
+<p><strong>Typical Data:</strong> Mass spectrometry data</p>
+<p><strong>Use Cases:</strong> Legacy data archives</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyteomics</code>: Limited support</li>
+<li>Conversion to mzML recommended</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Format conversion validation</li>
+<li>Data completeness</li>
+<li>Metadata extraction</li>
+</ul>
+<h3>.raw - Vendor Raw Files (Thermo, Agilent, Bruker)</h3>
+<p><strong>Description:</strong> Proprietary instrument data</p>
+<p><strong>Typical Data:</strong> Raw mass spectra and metadata</p>
+<p><strong>Use Cases:</strong> Direct instrument output</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pymsfilereader</code>: Thermo RAW files</li>
+<li><code>ThermoRawFileParser</code>: CLI wrapper</li>
+<li>Vendor-specific APIs</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Method parameter extraction</li>
+<li>Instrument performance metrics</li>
+<li>Calibration status</li>
+<li>Scan function analysis</li>
+<li>MS/MS quality metrics</li>
+<li>Dynamic exclusion evaluation</li>
+</ul>
+<h3>.d - Agilent Data Directory</h3>
+<p><strong>Description:</strong> Agilent MS data folder</p>
+<p><strong>Typical Data:</strong> LC-MS, GC-MS with methods</p>
+<p><strong>Use Cases:</strong> Agilent MassHunter workflows</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Community parsers</li>
+<li>Chemstation integration</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Directory structure validation</li>
+<li>Method parameters</li>
+<li>Calibration curves</li>
+<li>Sequence metadata</li>
+<li>Signal quality metrics</li>
+</ul>
+<h3>.wiff - AB SCIEX Data</h3>
+<p><strong>Description:</strong> AB SCIEX/SCIEX instrument format</p>
+<p><strong>Typical Data:</strong> Mass spectrometry data</p>
+<p><strong>Use Cases:</strong> SCIEX instrument workflows</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Vendor SDKs (limited Python support)</li>
+<li>Conversion tools</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Experiment type identification</li>
+<li>Scan properties</li>
+<li>Quantitation data</li>
+<li>Multi-experiment structure</li>
+</ul>
+<h3>.mgf - Mascot Generic Format</h3>
+<p><strong>Description:</strong> Peak list format for MS/MS</p>
+<p><strong>Typical Data:</strong> Precursor and fragment masses</p>
+<p><strong>Use Cases:</strong> Peptide identification, database searches</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyteomics.mgf</code>: <code>pyteomics.mgf.read('file.mgf')</code></li>
+<li><code>pyopenms</code>: MGF support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Spectrum count</li>
+<li>Charge state distribution</li>
+<li>Precursor m/z and intensity</li>
+<li>Fragment peak count</li>
+<li>Mass accuracy</li>
+<li>Title and metadata parsing</li>
+</ul>
+<h3>.pkl - Peak List (Binary)</h3>
+<p><strong>Description:</strong> Binary peak list format</p>
+<p><strong>Typical Data:</strong> Serialized MS/MS spectra</p>
+<p><strong>Use Cases:</strong> Software-specific storage</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pickle</code>: Standard deserialization</li>
+<li><code>pyteomics</code>: PKL support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Data structure inspection</li>
+<li>Conversion to standard formats</li>
+<li>Metadata preservation</li>
+</ul>
+<h3>.ms1 / .ms2 - MS1/MS2 Formats</h3>
+<p><strong>Description:</strong> Simple text format for MS data</p>
+<p><strong>Typical Data:</strong> MS1 and MS2 scans</p>
+<p><strong>Use Cases:</strong> Database searching, proteomics</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyteomics.ms1</code> and <code>ms2</code></li>
+<li>Simple text parsing</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Scan count by level</li>
+<li>Retention time series</li>
+<li>Charge state analysis</li>
+<li>m/z range coverage</li>
+</ul>
+<h3>.pepXML - Peptide XML</h3>
+<p><strong>Description:</strong> TPP peptide identification format</p>
+<p><strong>Typical Data:</strong> Peptide-spectrum matches</p>
+<p><strong>Use Cases:</strong> Proteomics search results</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyteomics.pepxml</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Search result statistics</li>
+<li>Score distribution</li>
+<li>Modification analysis</li>
+<li>FDR assessment</li>
+<li>Enzyme specificity</li>
+</ul>
+<h3>.protXML - Protein XML</h3>
+<p><strong>Description:</strong> TPP protein inference format</p>
+<p><strong>Typical Data:</strong> Protein identifications</p>
+<p><strong>Use Cases:</strong> Proteomics protein-level results</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pyteomics.protxml</code></li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Protein group analysis</li>
+<li>Coverage statistics</li>
+<li>Confidence scoring</li>
+<li>Parsimony analysis</li>
+</ul>
+<h3>.msp - NIST MS Search Format</h3>
+<p><strong>Description:</strong> NIST spectral library format</p>
+<p><strong>Typical Data:</strong> Reference mass spectra</p>
+<p><strong>Use Cases:</strong> Spectral library searching</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>matchms</code>: Spectral library handling</li>
+<li>Custom parsers</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Library size and coverage</li>
+<li>Metadata completeness</li>
+<li>Peak count statistics</li>
+<li>Compound annotation quality</li>
+</ul>
+<h2>Infrared and Raman Spectroscopy</h2>
+
+<h3>.spc - Galactic SPC</h3>
+<p><strong>Description:</strong> Thermo Galactic spectroscopy format</p>
+<p><strong>Typical Data:</strong> IR, Raman, UV-Vis spectra</p>
+<p><strong>Use Cases:</strong> Various spectroscopy instruments</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>spc</code>: <code>spc.File('file.spc')</code></li>
+<li><code>specio</code>: Multi-format reader</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Wavenumber/wavelength range</li>
+<li>Data point density</li>
+<li>Multi-spectrum handling</li>
+<li>Baseline characteristics</li>
+<li>Peak identification</li>
+<li>Absorbance/transmittance mode</li>
+<li>Instrument information</li>
+</ul>
+<h3>.spa - Thermo Nicolet</h3>
+<p><strong>Description:</strong> Thermo Fisher FTIR format</p>
+<p><strong>Typical Data:</strong> FTIR spectra</p>
+<p><strong>Use Cases:</strong> OMNIC software data</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Custom binary parsers</li>
+<li>Conversion to JCAMP or SPC</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Interferogram vs spectrum</li>
+<li>Background spectrum validation</li>
+<li>Atmospheric compensation</li>
+<li>Resolution and scan number</li>
+<li>Sample information</li>
+</ul>
+<h3>.0 - Bruker OPUS</h3>
+<p><strong>Description:</strong> Bruker OPUS FTIR format (numbered files)</p>
+<p><strong>Typical Data:</strong> FTIR spectra and metadata</p>
+<p><strong>Use Cases:</strong> Bruker FTIR instruments</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>brukeropusreader</code>: OPUS format parser</li>
+<li><code>specio</code>: OPUS support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Multiple block types (AB, ScSm, etc.)</li>
+<li>Sample and reference spectra</li>
+<li>Instrument parameters</li>
+<li>Optical path configuration</li>
+<li>Beam splitter and detector info</li>
+</ul>
+<h3>.dpt - Data Point Table</h3>
+<p><strong>Description:</strong> Simple XY data format</p>
+<p><strong>Typical Data:</strong> Generic spectroscopic data</p>
+<p><strong>Use Cases:</strong> Renishaw Raman, generic exports</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pandas</code>: CSV-like reading</li>
+<li>Text parsing</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>X-axis type (wavelength, wavenumber, Raman shift)</li>
+<li>Y-axis units (intensity, absorbance, etc.)</li>
+<li>Data point spacing</li>
+<li>Header information</li>
+<li>Multi-column data handling</li>
+</ul>
+<h3>.wdf - Renishaw Raman</h3>
+<p><strong>Description:</strong> Renishaw WiRE data format</p>
+<p><strong>Typical Data:</strong> Raman spectra and maps</p>
+<p><strong>Use Cases:</strong> Renishaw Raman microscopy</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>renishawWiRE</code>: WDF reader</li>
+<li>Custom parsers for WDF format</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Spectral vs mapping data</li>
+<li>Laser wavelength</li>
+<li>Accumulation and exposure time</li>
+<li>Spatial coordinates (mapping)</li>
+<li>Z-scan data</li>
+<li>Baseline and cosmic ray correction</li>
+</ul>
+<h3>.txt (Spectroscopy)</h3>
+<p><strong>Description:</strong> Generic text export from instruments</p>
+<p><strong>Typical Data:</strong> Wavelength/wavenumber and intensity</p>
+<p><strong>Use Cases:</strong> Universal data exchange</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pandas</code>: Text file reading</li>
+<li><code>numpy</code>: Simple array loading</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Delimiter and format detection</li>
+<li>Header parsing</li>
+<li>Units identification</li>
+<li>Multiple spectrum handling</li>
+<li>Metadata extraction from comments</li>
+</ul>
+<h2>UV-Visible Spectroscopy</h2>
+
+<h3>.asd / .asc - ASD Binary/ASCII</h3>
+<p><strong>Description:</strong> ASD FieldSpec spectroradiometer</p>
+<p><strong>Typical Data:</strong> Hyperspectral UV-Vis-NIR data</p>
+<p><strong>Use Cases:</strong> Remote sensing, reflectance spectroscopy</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>spectral.io.asd</code>: ASD format support</li>
+<li>Custom parsers</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Wavelength range (UV to NIR)</li>
+<li>Reference spectrum validation</li>
+<li>Dark current correction</li>
+<li>Integration time</li>
+<li>GPS metadata (if present)</li>
+<li>Reflectance vs radiance</li>
+</ul>
+<h3>.sp - Perkin Elmer</h3>
+<p><strong>Description:</strong> Perkin Elmer UV/Vis format</p>
+<p><strong>Typical Data:</strong> UV-Vis spectrophotometer data</p>
+<p><strong>Use Cases:</strong> PE Lambda instruments</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Custom parsers</li>
+<li>Conversion to standard formats</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Scan parameters</li>
+<li>Baseline correction</li>
+<li>Multi-wavelength scans</li>
+<li>Time-based measurements</li>
+<li>Sample/reference handling</li>
+</ul>
+<h3>.csv (Spectroscopy)</h3>
+<p><strong>Description:</strong> CSV export from UV-Vis instruments</p>
+<p><strong>Typical Data:</strong> Wavelength and absorbance/transmittance</p>
+<p><strong>Use Cases:</strong> Universal format for UV-Vis data</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pandas</code>: Native CSV support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Lambda max identification</li>
+<li>Beer's law compliance</li>
+<li>Baseline offset</li>
+<li>Path length correction</li>
+<li>Concentration calculations</li>
+</ul>
+<h2>X-ray and Diffraction</h2>
+
+<h3>.cif - Crystallographic Information File</h3>
+<p><strong>Description:</strong> Crystal structure and diffraction data</p>
+<p><strong>Typical Data:</strong> Unit cell, atomic positions, structure factors</p>
+<p><strong>Use Cases:</strong> Crystallography, materials science</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>gemmi</code>: <code>gemmi.cif.read_file('file.cif')</code></li>
+<li><code>PyCifRW</code>: CIF reading/writing</li>
+<li><code>pymatgen</code>: Materials structure analysis</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Crystal system and space group</li>
+<li>Unit cell parameters</li>
+<li>Atomic positions and occupancy</li>
+<li>Thermal parameters</li>
+<li>R-factors and refinement quality</li>
+<li>Completeness and redundancy</li>
+<li>Structure validation</li>
+</ul>
+<h3>.hkl - Reflection Data</h3>
+<p><strong>Description:</strong> Miller indices and intensities</p>
+<p><strong>Typical Data:</strong> Integrated diffraction intensities</p>
+<p><strong>Use Cases:</strong> Crystallographic refinement</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Custom parsers (format dependent)</li>
+<li>Crystallography packages (CCP4, etc.)</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Resolution range</li>
+<li>Completeness by shell</li>
+<li>I/sigma distribution</li>
+<li>Systematic absences</li>
+<li>Twinning detection</li>
+<li>Wilson plot</li>
+</ul>
+<h3>.mtz - MTZ Format (CCP4)</h3>
+<p><strong>Description:</strong> Binary crystallographic data</p>
+<p><strong>Typical Data:</strong> Reflections, phases, structure factors</p>
+<p><strong>Use Cases:</strong> Macromolecular crystallography</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>gemmi</code>: MTZ support</li>
+<li><code>cctbx</code>: Comprehensive crystallography</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Column types and data</li>
+<li>Resolution limits</li>
+<li>R-factors (Rwork, Rfree)</li>
+<li>Phase probability distribution</li>
+<li>Map coefficients</li>
+<li>Batch information</li>
+</ul>
+<h3>.xy / .xye - Powder Diffraction</h3>
+<p><strong>Description:</strong> 2-theta vs intensity data</p>
+<p><strong>Typical Data:</strong> Powder X-ray diffraction patterns</p>
+<p><strong>Use Cases:</strong> Phase identification, Rietveld refinement</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>pandas</code>: Simple XY reading</li>
+<li><code>pymatgen</code>: XRD pattern analysis</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>2-theta range</li>
+<li>Peak positions and intensities</li>
+<li>Background modeling</li>
+<li>Peak width analysis (strain/size)</li>
+<li>Phase identification via matching</li>
+<li>Preferred orientation effects</li>
+</ul>
+<h3>.raw (XRD)</h3>
+<p><strong>Description:</strong> Vendor-specific XRD raw data</p>
+<p><strong>Typical Data:</strong> XRD patterns with metadata</p>
+<p><strong>Use Cases:</strong> Bruker, PANalytical, Rigaku instruments</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Vendor-specific parsers</li>
+<li>Conversion tools</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Scan parameters (step size, time)</li>
+<li>Sample alignment</li>
+<li>Incident beam setup</li>
+<li>Detector configuration</li>
+<li>Background scan validation</li>
+</ul>
+<h3>.gsa / .gsas - GSAS Format</h3>
+<p><strong>Description:</strong> General Structure Analysis System</p>
+<p><strong>Typical Data:</strong> Powder diffraction for Rietveld</p>
+<p><strong>Use Cases:</strong> Rietveld refinement</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>GSAS-II Python interface</li>
+<li>Custom parsers</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Histogram data</li>
+<li>Instrument parameters</li>
+<li>Phase information</li>
+<li>Refinement constraints</li>
+<li>Profile function parameters</li>
+</ul>
+<h2>Electron Spectroscopy</h2>
+
+<h3>.vms - VG Scienta</h3>
+<p><strong>Description:</strong> VG Scienta spectrometer format</p>
+<p><strong>Typical Data:</strong> XPS, UPS, ARPES spectra</p>
+<p><strong>Use Cases:</strong> Photoelectron spectroscopy</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Custom parsers for VMS</li>
+<li><code>specio</code>: Multi-format support</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Binding energy calibration</li>
+<li>Pass energy and resolution</li>
+<li>Photoelectron line identification</li>
+<li>Satellite peak analysis</li>
+<li>Background subtraction quality</li>
+<li>Fermi edge position</li>
+</ul>
+<h3>.spe - WinSpec/SPE Format</h3>
+<p><strong>Description:</strong> Princeton Instruments/Roper Scientific</p>
+<p><strong>Typical Data:</strong> CCD spectra, Raman, PL</p>
+<p><strong>Use Cases:</strong> Spectroscopy with CCD detectors</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>spe2py</code>: SPE file reader</li>
+<li><code>spe_loader</code>: Alternative parser</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>CCD frame analysis</li>
+<li>Wavelength calibration</li>
+<li>Dark frame subtraction</li>
+<li>Cosmic ray identification</li>
+<li>Readout noise</li>
+<li>Accumulation statistics</li>
+</ul>
+<h3>.pxt - Princeton PTI</h3>
+<p><strong>Description:</strong> Photon Technology International</p>
+<p><strong>Typical Data:</strong> Fluorescence, phosphorescence spectra</p>
+<p><strong>Use Cases:</strong> Fluorescence spectroscopy</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Custom parsers</li>
+<li>Text-based format variants</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Excitation and emission spectra</li>
+<li>Quantum yield calculations</li>
+<li>Time-resolved measurements</li>
+<li>Temperature-dependent data</li>
+<li>Correction factors applied</li>
+</ul>
+<h3>.dat (Spectroscopy Generic)</h3>
+<p><strong>Description:</strong> Generic binary or text spectroscopy data</p>
+<p><strong>Typical Data:</strong> Various spectroscopic measurements</p>
+<p><strong>Use Cases:</strong> Many instruments use .dat extension</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Format-specific identification needed</li>
+<li><code>numpy</code>, <code>pandas</code> for known formats</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Format detection (binary vs text)</li>
+<li>Header identification</li>
+<li>Data structure inference</li>
+<li>Units and axis labels</li>
+<li>Instrument signature detection</li>
+</ul>
+<h2>Chromatography</h2>
+
+<h3>.chrom - Chromatogram Data</h3>
+<p><strong>Description:</strong> Generic chromatography format</p>
+<p><strong>Typical Data:</strong> Retention time vs signal</p>
+<p><strong>Use Cases:</strong> HPLC, GC, LC-MS</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Vendor-specific parsers</li>
+<li><code>pandas</code> for text exports</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Retention time range</li>
+<li>Peak detection and integration</li>
+<li>Baseline drift</li>
+<li>Resolution between peaks</li>
+<li>Signal-to-noise ratio</li>
+<li>Tailing factor</li>
+</ul>
+<h3>.ch - ChemStation</h3>
+<p><strong>Description:</strong> Agilent ChemStation format</p>
+<p><strong>Typical Data:</strong> Chromatograms and method parameters</p>
+<p><strong>Use Cases:</strong> Agilent HPLC and GC systems</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li><code>agilent-chemstation</code>: Community tools</li>
+<li>Binary format parsers</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Method validation</li>
+<li>Integration parameters</li>
+<li>Calibration curve</li>
+<li>Sample sequence information</li>
+<li>Instrument status</li>
+</ul>
+<h3>.arw - Empower (Waters)</h3>
+<p><strong>Description:</strong> Waters Empower format</p>
+<p><strong>Typical Data:</strong> UPLC/HPLC chromatograms</p>
+<p><strong>Use Cases:</strong> Waters instrument data</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Vendor tools (limited Python access)</li>
+<li>Database extraction tools</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Audit trail information</li>
+<li>Processing methods</li>
+<li>Compound identification</li>
+<li>Quantitation results</li>
+<li>System suitability tests</li>
+</ul>
+<h3>.lcd - Shimadzu LabSolutions</h3>
+<p><strong>Description:</strong> Shimadzu chromatography format</p>
+<p><strong>Typical Data:</strong> GC/HPLC data</p>
+<p><strong>Use Cases:</strong> Shimadzu instruments</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Vendor-specific parsers</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Method parameters</li>
+<li>Peak purity analysis</li>
+<li>Spectral data (if PDA)</li>
+<li>Quantitative results</li>
+</ul>
+<h2>Other Analytical Techniques</h2>
+
+<h3>.dta - DSC/TGA Data</h3>
+<p><strong>Description:</strong> Thermal analysis data (TA Instruments)</p>
+<p><strong>Typical Data:</strong> Temperature vs heat flow or mass</p>
+<p><strong>Use Cases:</strong> Differential scanning calorimetry, thermogravimetry</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Custom parsers for TA formats</li>
+<li><code>pandas</code> for exported data</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Transition temperature identification</li>
+<li>Enthalpy calculations</li>
+<li>Mass loss steps</li>
+<li>Heating rate effects</li>
+<li>Baseline determination</li>
+<li>Purity assessment</li>
+</ul>
+<h3>.run - ICP-MS/ICP-OES</h3>
+<p><strong>Description:</strong> Elemental analysis data</p>
+<p><strong>Typical Data:</strong> Element concentrations or counts</p>
+<p><strong>Use Cases:</strong> Inductively coupled plasma MS/OES</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Vendor-specific tools</li>
+<li>Custom parsers</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Element detection and quantitation</li>
+<li>Internal standard performance</li>
+<li>Spike recovery</li>
+<li>Dilution factor corrections</li>
+<li>Isotope ratios</li>
+<li>LOD/LOQ calculations</li>
+</ul>
+<h3>.exp - Electrochemistry Data</h3>
+<p><strong>Description:</strong> Electrochemical experiment data</p>
+<p><strong>Typical Data:</strong> Potential vs current or charge</p>
+<p><strong>Use Cases:</strong> Cyclic voltammetry, chronoamperometry</p>
+<p><strong>Python Libraries:</strong></p>
+<ul><li>Custom parsers per instrument (CHI, Gamry, etc.)</li>
+<li><code>galvani</code>: Biologic EC-Lab files</li>
+</ul><p><strong>EDA Approach:</strong></p>
+<ul><li>Redox peak identification</li>
+<li>Peak potential and current</li>
+<li>Scan rate effects</li>
+<li>Electron transfer kinetics</li>
+<li>Background subtraction</li>
+<li>Capacitance calculations</li>
+</ul>
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

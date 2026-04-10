@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zarr Python — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="active">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / Zarr Python</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>Zarr Python</h1>
+    <p class="description">Chunked N-D arrays for cloud storage. Compressed arrays, parallel I/O, S3/GCS integration, NumPy/Dask/Xarray compatible, for large-scale scientific computing pipelines.</p>
+    <h1>Zarr Python</h1>
+
+<h2>Overview</h2>
+
+<p>Zarr is a Python library for storing large N-dimensional arrays with chunking and compression. Apply this skill for efficient parallel I/O, cloud-native workflows, and seamless integration with NumPy, Dask, and Xarray.</p>
+
+<h2>Quick Start</h2>
+
+<h3>Installation</h3>
+
+<pre><code class="language-bash">uv pip install zarr</code></pre>
+
+<p>Requires Python 3.11+. For cloud storage support, install additional packages:</p>
+<pre><code class="language-python">uv pip install s3fs  # For S3
+uv pip install gcsfs  # For Google Cloud Storage</code></pre>
+
+<h3>Basic Array Creation</h3>
+
+<pre><code class="language-python">import zarr
+import numpy as np
+
+# Create a 2D array with chunking and compression
+z = zarr.create_array(
+    store="data/my_array.zarr",
+    shape=(10000, 10000),
+    chunks=(1000, 1000),
+    dtype="f4"
+)
+
+# Write data using NumPy-style indexing
+z[:, :] = np.random.random((10000, 10000))
+
+# Read data
+data = z[0:100, 0:100]  # Returns NumPy array</code></pre>
+
+<h2>Core Operations</h2>
+
+<h3>Creating Arrays</h3>
+
+<p>Zarr provides multiple convenience functions for array creation:</p>
+
+<pre><code class="language-python"># Create empty array
+z = zarr.zeros(shape=(10000, 10000), chunks=(1000, 1000), dtype='f4',
+               store='data.zarr')
+
+# Create filled arrays
+z = zarr.ones((5000, 5000), chunks=(500, 500))
+z = zarr.full((1000, 1000), fill_value=42, chunks=(100, 100))
+
+# Create from existing data
+data = np.arange(10000).reshape(100, 100)
+z = zarr.array(data, chunks=(10, 10), store='data.zarr')
+
+# Create like another array
+z2 = zarr.zeros_like(z)  # Matches shape, chunks, dtype of z</code></pre>
+
+<h3>Opening Existing Arrays</h3>
+
+<pre><code class="language-python"># Open array (read/write mode by default)
+z = zarr.open_array('data.zarr', mode='r+')
+
+# Read-only mode
+z = zarr.open_array('data.zarr', mode='r')
+
+# The open() function auto-detects arrays vs groups
+z = zarr.open('data.zarr')  # Returns Array or Group</code></pre>
+
+<h3>Reading and Writing Data</h3>
+
+<p>Zarr arrays support NumPy-like indexing:</p>
+
+<pre><code class="language-python"># Write entire array
+z[:] = 42
+
+# Write slices
+z[0, :] = np.arange(100)
+z[10:20, 50:60] = np.random.random((10, 10))
+
+# Read data (returns NumPy array)
+data = z[0:100, 0:100]
+row = z[5, :]
+
+# Advanced indexing
+z.vindex[[0, 5, 10], [2, 8, 15]]  # Coordinate indexing
+z.oindex[0:10, [5, 10, 15]]       # Orthogonal indexing
+z.blocks[0, 0]                     # Block/chunk indexing</code></pre>
+
+<h3>Resizing and Appending</h3>
+
+<pre><code class="language-python"># Resize array
+z.resize(15000, 15000)  # Expands or shrinks dimensions
+
+# Append data along an axis
+z.append(np.random.random((1000, 10000)), axis=0)  # Adds rows</code></pre>
+
+<h2>Chunking Strategies</h2>
+
+<p>Chunking is critical for performance. Choose chunk sizes and shapes based on access patterns.</p>
+
+<h3>Chunk Size Guidelines</h3>
+
+<ul><li><strong>Minimum chunk size</strong>: 1 MB recommended for optimal performance</li>
+<li><strong>Balance</strong>: Larger chunks = fewer metadata operations; smaller chunks = better parallel access</li>
+<li><strong>Memory consideration</strong>: Entire chunks must fit in memory during compression</li>
+</ul>
+<pre><code class="language-python"># Configure chunk size (aim for ~1MB per chunk)
+# For float32 data: 1MB = 262,144 elements = 512×512 array
+z = zarr.zeros(
+    shape=(10000, 10000),
+    chunks=(512, 512),  # ~1MB chunks
+    dtype='f4'
+)</code></pre>
+
+<h3>Aligning Chunks with Access Patterns</h3>
+
+<p><strong>Critical</strong>: Chunk shape dramatically affects performance based on how data is accessed.</p>
+
+<pre><code class="language-python"># If accessing rows frequently (first dimension)
+z = zarr.zeros((10000, 10000), chunks=(10, 10000))  # Chunk spans columns
+
+# If accessing columns frequently (second dimension)
+z = zarr.zeros((10000, 10000), chunks=(10000, 10))  # Chunk spans rows
+
+# For mixed access patterns (balanced approach)
+z = zarr.zeros((10000, 10000), chunks=(1000, 1000))  # Square chunks</code></pre>
+
+<p><strong>Performance example</strong>: For a (200, 200, 200) array, reading along the first dimension:</p>
+<ul><li>Using chunks (1, 200, 200): ~107ms</li>
+<li>Using chunks (200, 200, 1): ~1.65ms (65× faster!)</li>
+</ul>
+<h3>Sharding for Large-Scale Storage</h3>
+
+<p>When arrays have millions of small chunks, use sharding to group chunks into larger storage objects:</p>
+
+<pre><code class="language-python">from zarr.codecs import ShardingCodec, BytesCodec
+from zarr.codecs.blosc import BloscCodec
+
+# Create array with sharding
+z = zarr.create_array(
+    store='data.zarr',
+    shape=(100000, 100000),
+    chunks=(100, 100),  # Small chunks for access
+    shards=(1000, 1000),  # Groups 100 chunks per shard
+    dtype='f4'
+)</code></pre>
+
+<p><strong>Benefits</strong>:</p>
+<ul><li>Reduces file system overhead from millions of small files</li>
+<li>Improves cloud storage performance (fewer object requests)</li>
+<li>Prevents filesystem block size waste</li>
+</ul>
+<p><strong>Important</strong>: Entire shards must fit in memory before writing.</p>
+
+<h2>Compression</h2>
+
+<p>Zarr applies compression per chunk to reduce storage while maintaining fast access.</p>
+
+<h3>Configuring Compression</h3>
+
+<pre><code class="language-python">from zarr.codecs.blosc import BloscCodec
+from zarr.codecs import GzipCodec, ZstdCodec
+
+# Default: Blosc with Zstandard
+z = zarr.zeros((1000, 1000), chunks=(100, 100))  # Uses default compression
+
+# Configure Blosc codec
+z = zarr.create_array(
+    store='data.zarr',
+    shape=(1000, 1000),
+    chunks=(100, 100),
+    dtype='f4',
+    codecs=[BloscCodec(cname='zstd', clevel=5, shuffle='shuffle')]
+)
+
+# Available Blosc compressors: 'blosclz', 'lz4', 'lz4hc', 'snappy', 'zlib', 'zstd'
+
+# Use Gzip compression
+z = zarr.create_array(
+    store='data.zarr',
+    shape=(1000, 1000),
+    chunks=(100, 100),
+    dtype='f4',
+    codecs=[GzipCodec(level=6)]
+)
+
+# Disable compression
+z = zarr.create_array(
+    store='data.zarr',
+    shape=(1000, 1000),
+    chunks=(100, 100),
+    dtype='f4',
+    codecs=[BytesCodec()]  # No compression
+)</code></pre>
+
+<h3>Compression Performance Tips</h3>
+
+<ul><li><strong>Blosc</strong> (default): Fast compression/decompression, good for interactive workloads</li>
+<li><strong>Zstandard</strong>: Better compression ratios, slightly slower than LZ4</li>
+<li><strong>Gzip</strong>: Maximum compression, slower performance</li>
+<li><strong>LZ4</strong>: Fastest compression, lower ratios</li>
+<li><strong>Shuffle</strong>: Enable shuffle filter for better compression on numeric data</li>
+</ul>
+<pre><code class="language-python"># Optimal for numeric scientific data
+codecs=[BloscCodec(cname='zstd', clevel=5, shuffle='shuffle')]
+
+# Optimal for speed
+codecs=[BloscCodec(cname='lz4', clevel=1)]
+
+# Optimal for compression ratio
+codecs=[GzipCodec(level=9)]</code></pre>
+
+<h2>Storage Backends</h2>
+
+<p>Zarr supports multiple storage backends through a flexible storage interface.</p>
+
+<h3>Local Filesystem (Default)</h3>
+
+<pre><code class="language-python">from zarr.storage import LocalStore
+
+# Explicit store creation
+store = LocalStore('data/my_array.zarr')
+z = zarr.open_array(store=store, mode='w', shape=(1000, 1000), chunks=(100, 100))
+
+# Or use string path (creates LocalStore automatically)
+z = zarr.open_array('data/my_array.zarr', mode='w', shape=(1000, 1000),
+                    chunks=(100, 100))</code></pre>
+
+<h3>In-Memory Storage</h3>
+
+<pre><code class="language-python">from zarr.storage import MemoryStore
+
+# Create in-memory store
+store = MemoryStore()
+z = zarr.open_array(store=store, mode='w', shape=(1000, 1000), chunks=(100, 100))
+
+# Data exists only in memory, not persisted</code></pre>
+
+<h3>ZIP File Storage</h3>
+
+<pre><code class="language-python">from zarr.storage import ZipStore
+
+# Write to ZIP file
+store = ZipStore('data.zip', mode='w')
+z = zarr.open_array(store=store, mode='w', shape=(1000, 1000), chunks=(100, 100))
+z[:] = np.random.random((1000, 1000))
+store.close()  # IMPORTANT: Must close ZipStore
+
+# Read from ZIP file
+store = ZipStore('data.zip', mode='r')
+z = zarr.open_array(store=store)
+data = z[:]
+store.close()</code></pre>
+
+<h3>Cloud Storage (S3, GCS)</h3>
+
+<pre><code class="language-python">import s3fs
+import zarr
+
+# S3 storage
+s3 = s3fs.S3FileSystem(anon=False)  # Use credentials
+store = s3fs.S3Map(root='my-bucket/path/to/array.zarr', s3=s3)
+z = zarr.open_array(store=store, mode='w', shape=(1000, 1000), chunks=(100, 100))
+z[:] = data
+
+# Google Cloud Storage
+import gcsfs
+gcs = gcsfs.GCSFileSystem(project='my-project')
+store = gcsfs.GCSMap(root='my-bucket/path/to/array.zarr', gcs=gcs)
+z = zarr.open_array(store=store, mode='w', shape=(1000, 1000), chunks=(100, 100))</code></pre>
+
+<p><strong>Cloud Storage Best Practices</strong>:</p>
+<ul><li>Use consolidated metadata to reduce latency: <code>zarr.consolidate_metadata(store)</code></li>
+<li>Align chunk sizes with cloud object sizing (typically 5-100 MB optimal)</li>
+<li>Enable parallel writes using Dask for large-scale data</li>
+<li>Consider sharding to reduce number of objects</li>
+</ul>
+<h2>Groups and Hierarchies</h2>
+
+<p>Groups organize multiple arrays hierarchically, similar to directories or HDF5 groups.</p>
+
+<h3>Creating and Using Groups</h3>
+
+<pre><code class="language-python"># Create root group
+root = zarr.group(store='data/hierarchy.zarr')
+
+# Create sub-groups
+temperature = root.create_group('temperature')
+precipitation = root.create_group('precipitation')
+
+# Create arrays within groups
+temp_array = temperature.create_array(
+    name='t2m',
+    shape=(365, 720, 1440),
+    chunks=(1, 720, 1440),
+    dtype='f4'
+)
+
+precip_array = precipitation.create_array(
+    name='prcp',
+    shape=(365, 720, 1440),
+    chunks=(1, 720, 1440),
+    dtype='f4'
+)
+
+# Access using paths
+array = root['temperature/t2m']
+
+# Visualize hierarchy
+print(root.tree())
+# Output:
+# /
+#  ├── temperature
+#  │   └── t2m (365, 720, 1440) f4
+#  └── precipitation
+#      └── prcp (365, 720, 1440) f4</code></pre>
+
+<h3>H5py-Compatible API</h3>
+
+<p>Zarr provides an h5py-compatible interface for familiar HDF5 users:</p>
+
+<pre><code class="language-python"># Create group with h5py-style methods
+root = zarr.group('data.zarr')
+dataset = root.create_dataset('my_data', shape=(1000, 1000), chunks=(100, 100),
+                              dtype='f4')
+
+# Access like h5py
+grp = root.require_group('subgroup')
+arr = grp.require_dataset('array', shape=(500, 500), chunks=(50, 50), dtype='i4')</code></pre>
+
+<h2>Attributes and Metadata</h2>
+
+<p>Attach custom metadata to arrays and groups using attributes:</p>
+
+<pre><code class="language-python"># Add attributes to array
+z = zarr.zeros((1000, 1000), chunks=(100, 100))
+z.attrs['description'] = 'Temperature data in Kelvin'
+z.attrs['units'] = 'K'
+z.attrs['created'] = '2024-01-15'
+z.attrs['processing_version'] = 2.1
+
+# Attributes are stored as JSON
+print(z.attrs['units'])  # Output: K
+
+# Add attributes to groups
+root = zarr.group('data.zarr')
+root.attrs['project'] = 'Climate Analysis'
+root.attrs['institution'] = 'Research Institute'
+
+# Attributes persist with the array/group
+z2 = zarr.open('data.zarr')
+print(z2.attrs['description'])</code></pre>
+
+<p><strong>Important</strong>: Attributes must be JSON-serializable (strings, numbers, lists, dicts, booleans, null).</p>
+
+<h2>Integration with NumPy, Dask, and Xarray</h2>
+
+<h3>NumPy Integration</h3>
+
+<p>Zarr arrays implement the NumPy array interface:</p>
+
+<pre><code class="language-python">import numpy as np
+import zarr
+
+z = zarr.zeros((1000, 1000), chunks=(100, 100))
+
+# Use NumPy functions directly
+result = np.sum(z, axis=0)  # NumPy operates on Zarr array
+mean = np.mean(z[:100, :100])
+
+# Convert to NumPy array
+numpy_array = z[:]  # Loads entire array into memory</code></pre>
+
+<h3>Dask Integration</h3>
+
+<p>Dask provides lazy, parallel computation on Zarr arrays:</p>
+
+<pre><code class="language-python">import dask.array as da
+import zarr
+
+# Create large Zarr array
+z = zarr.open('data.zarr', mode='w', shape=(100000, 100000),
+              chunks=(1000, 1000), dtype='f4')
+
+# Load as Dask array (lazy, no data loaded)
+dask_array = da.from_zarr('data.zarr')
+
+# Perform computations (parallel, out-of-core)
+result = dask_array.mean(axis=0).compute()  # Parallel computation
+
+# Write Dask array to Zarr
+large_array = da.random.random((100000, 100000), chunks=(1000, 1000))
+da.to_zarr(large_array, 'output.zarr')</code></pre>
+
+<p><strong>Benefits</strong>:</p>
+<ul><li>Process datasets larger than memory</li>
+<li>Automatic parallel computation across chunks</li>
+<li>Efficient I/O with chunked storage</li>
+</ul>
+<h3>Xarray Integration</h3>
+
+<p>Xarray provides labeled, multidimensional arrays with Zarr backend:</p>
+
+<pre><code class="language-python">import xarray as xr
+import zarr
+
+# Open Zarr store as Xarray Dataset (lazy loading)
+ds = xr.open_zarr('data.zarr')
+
+# Dataset includes coordinates and metadata
+print(ds)
+
+# Access variables
+temperature = ds['temperature']
+
+# Perform labeled operations
+subset = ds.sel(time='2024-01', lat=slice(30, 60))
+
+# Write Xarray Dataset to Zarr
+ds.to_zarr('output.zarr')
+
+# Create from scratch with coordinates
+ds = xr.Dataset(
+    {
+        'temperature': (['time', 'lat', 'lon'], data),
+        'precipitation': (['time', 'lat', 'lon'], data2)
+    },
+    coords={
+        'time': pd.date_range('2024-01-01', periods=365),
+        'lat': np.arange(-90, 91, 1),
+        'lon': np.arange(-180, 180, 1)
+    }
+)
+ds.to_zarr('climate_data.zarr')</code></pre>
+
+<p><strong>Benefits</strong>:</p>
+<ul><li>Named dimensions and coordinates</li>
+<li>Label-based indexing and selection</li>
+<li>Integration with pandas for time series</li>
+<li>NetCDF-like interface familiar to climate/geospatial scientists</li>
+</ul>
+<h2>Parallel Computing and Synchronization</h2>
+
+<h3>Thread-Safe Operations</h3>
+
+<pre><code class="language-python">from zarr import ThreadSynchronizer
+import zarr
+
+# For multi-threaded writes
+synchronizer = ThreadSynchronizer()
+z = zarr.open_array('data.zarr', mode='r+', shape=(10000, 10000),
+                    chunks=(1000, 1000), synchronizer=synchronizer)
+
+# Safe for concurrent writes from multiple threads
+# (when writes don't span chunk boundaries)</code></pre>
+
+<h3>Process-Safe Operations</h3>
+
+<pre><code class="language-python">from zarr import ProcessSynchronizer
+import zarr
+
+# For multi-process writes
+synchronizer = ProcessSynchronizer('sync_data.sync')
+z = zarr.open_array('data.zarr', mode='r+', shape=(10000, 10000),
+                    chunks=(1000, 1000), synchronizer=synchronizer)
+
+# Safe for concurrent writes from multiple processes</code></pre>
+
+<p><strong>Note</strong>:</p>
+<ul><li>Concurrent reads require no synchronization</li>
+<li>Synchronization only needed for writes that may span chunk boundaries</li>
+<li>Each process/thread writing to separate chunks needs no synchronization</li>
+</ul>
+<h2>Consolidated Metadata</h2>
+
+<p>For hierarchical stores with many arrays, consolidate metadata into a single file to reduce I/O operations:</p>
+
+<pre><code class="language-python">import zarr
+
+# After creating arrays/groups
+root = zarr.group('data.zarr')
+# ... create multiple arrays/groups ...
+
+# Consolidate metadata
+zarr.consolidate_metadata('data.zarr')
+
+# Open with consolidated metadata (faster, especially on cloud storage)
+root = zarr.open_consolidated('data.zarr')</code></pre>
+
+<p><strong>Benefits</strong>:</p>
+<ul><li>Reduces metadata read operations from N (one per array) to 1</li>
+<li>Critical for cloud storage (reduces latency)</li>
+<li>Speeds up <code>tree()</code> operations and group traversal</li>
+</ul>
+<p><strong>Cautions</strong>:</p>
+<ul><li>Metadata can become stale if arrays update without re-consolidation</li>
+<li>Not suitable for frequently-updated datasets</li>
+<li>Multi-writer scenarios may have inconsistent reads</li>
+</ul>
+<h2>Performance Optimization</h2>
+
+<h3>Checklist for Optimal Performance</h3>
+
+<ul><li><strong>Chunk Size</strong>: Aim for 1-10 MB per chunk</li>
+</ul><p>   <code>`</code>python</p>
+<p>   # For float32: 1MB = 262,144 elements</p>
+<p>   chunks = (512, 512)  # 512×512×4 bytes = ~1MB</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Chunk Shape</strong>: Align with access patterns</li>
+</ul><p>   <code>`</code>python</p>
+<p>   # Row-wise access → chunk spans columns: (small, large)</p>
+<p>   # Column-wise access → chunk spans rows: (large, small)</p>
+<p>   # Random access → balanced: (medium, medium)</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Compression</strong>: Choose based on workload</li>
+</ul><p>   <code>`</code>python</p>
+<p>   # Interactive/fast: BloscCodec(cname='lz4')</p>
+<p>   # Balanced: BloscCodec(cname='zstd', clevel=5)</p>
+<p>   # Maximum compression: GzipCodec(level=9)</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Storage Backend</strong>: Match to environment</li>
+</ul><p>   <code>`</code>python</p>
+<p>   # Local: LocalStore (default)</p>
+<p>   # Cloud: S3Map/GCSMap with consolidated metadata</p>
+<p>   # Temporary: MemoryStore</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Sharding</strong>: Use for large-scale datasets</li>
+</ul><p>   <code>`</code>python</p>
+<p>   # When you have millions of small chunks</p>
+<p>   shards=(10<em>chunk_size, 10</em>chunk_size)</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Parallel I/O</strong>: Use Dask for large operations</li>
+</ul><p>   <code>`</code>python</p>
+<p>   import dask.array as da</p>
+<p>   dask_array = da.from_zarr('data.zarr')</p>
+<p>   result = dask_array.compute(scheduler='threads', num_workers=8)</p>
+<p>   <code>`</code></p>
+
+<h3>Profiling and Debugging</h3>
+
+<pre><code class="language-python"># Print detailed array information
+print(z.info)
+
+# Output includes:
+# - Type, shape, chunks, dtype
+# - Compression codec and level
+# - Storage size (compressed vs uncompressed)
+# - Storage location
+
+# Check storage size
+print(f"Compressed size: {z.nbytes_stored / 1e6:.2f} MB")
+print(f"Uncompressed size: {z.nbytes / 1e6:.2f} MB")
+print(f"Compression ratio: {z.nbytes / z.nbytes_stored:.2f}x")</code></pre>
+
+<h2>Common Patterns and Best Practices</h2>
+
+<h3>Pattern: Time Series Data</h3>
+
+<pre><code class="language-python"># Store time series with time as first dimension
+# This allows efficient appending of new time steps
+z = zarr.open('timeseries.zarr', mode='a',
+              shape=(0, 720, 1440),  # Start with 0 time steps
+              chunks=(1, 720, 1440),  # One time step per chunk
+              dtype='f4')
+
+# Append new time steps
+new_data = np.random.random((1, 720, 1440))
+z.append(new_data, axis=0)</code></pre>
+
+<h3>Pattern: Large Matrix Operations</h3>
+
+<pre><code class="language-python">import dask.array as da
+
+# Create large matrix in Zarr
+z = zarr.open('matrix.zarr', mode='w',
+              shape=(100000, 100000),
+              chunks=(1000, 1000),
+              dtype='f8')
+
+# Use Dask for parallel computation
+dask_z = da.from_zarr('matrix.zarr')
+result = (dask_z @ dask_z.T).compute()  # Parallel matrix multiply</code></pre>
+
+<h3>Pattern: Cloud-Native Workflow</h3>
+
+<pre><code class="language-python">import s3fs
+import zarr
+
+# Write to S3
+s3 = s3fs.S3FileSystem()
+store = s3fs.S3Map(root='s3://my-bucket/data.zarr', s3=s3)
+
+# Create array with appropriate chunking for cloud
+z = zarr.open_array(store=store, mode='w',
+                    shape=(10000, 10000),
+                    chunks=(500, 500),  # ~1MB chunks
+                    dtype='f4')
+z[:] = data
+
+# Consolidate metadata for faster reads
+zarr.consolidate_metadata(store)
+
+# Read from S3 (anywhere, anytime)
+store_read = s3fs.S3Map(root='s3://my-bucket/data.zarr', s3=s3)
+z_read = zarr.open_consolidated(store_read)
+subset = z_read[0:100, 0:100]</code></pre>
+
+<h3>Pattern: Format Conversion</h3>
+
+<pre><code class="language-python"># HDF5 to Zarr
+import h5py
+import zarr
+
+with h5py.File('data.h5', 'r') as h5:
+    dataset = h5['dataset_name']
+    z = zarr.array(dataset[:],
+                   chunks=(1000, 1000),
+                   store='data.zarr')
+
+# NumPy to Zarr
+import numpy as np
+data = np.load('data.npy')
+z = zarr.array(data, chunks='auto', store='data.zarr')
+
+# Zarr to NetCDF (via Xarray)
+import xarray as xr
+ds = xr.open_zarr('data.zarr')
+ds.to_netcdf('data.nc')</code></pre>
+
+<h2>Common Issues and Solutions</h2>
+
+<h3>Issue: Slow Performance</h3>
+
+<p><strong>Diagnosis</strong>: Check chunk size and alignment</p>
+<pre><code class="language-python">print(z.chunks)  # Are chunks appropriate size?
+print(z.info)    # Check compression ratio</code></pre>
+
+<p><strong>Solutions</strong>:</p>
+<ul><li>Increase chunk size to 1-10 MB</li>
+<li>Align chunks with access pattern</li>
+<li>Try different compression codecs</li>
+<li>Use Dask for parallel operations</li>
+</ul>
+<h3>Issue: High Memory Usage</h3>
+
+<p><strong>Cause</strong>: Loading entire array or large chunks into memory</p>
+
+<p><strong>Solutions</strong>:</p>
+<pre><code class="language-python"># Don't load entire array
+# Bad: data = z[:]
+# Good: Process in chunks
+for i in range(0, z.shape[0], 1000):
+    chunk = z[i:i+1000, :]
+    process(chunk)
+
+# Or use Dask for automatic chunking
+import dask.array as da
+dask_z = da.from_zarr('data.zarr')
+result = dask_z.mean().compute()  # Processes in chunks</code></pre>
+
+<h3>Issue: Cloud Storage Latency</h3>
+
+<p><strong>Solutions</strong>:</p>
+<pre><code class="language-python"># 1. Consolidate metadata
+zarr.consolidate_metadata(store)
+z = zarr.open_consolidated(store)
+
+# 2. Use appropriate chunk sizes (5-100 MB for cloud)
+chunks = (2000, 2000)  # Larger chunks for cloud
+
+# 3. Enable sharding
+shards = (10000, 10000)  # Groups many chunks</code></pre>
+
+<h3>Issue: Concurrent Write Conflicts</h3>
+
+<p><strong>Solution</strong>: Use synchronizers or ensure non-overlapping writes</p>
+<pre><code class="language-python">from zarr import ProcessSynchronizer
+
+sync = ProcessSynchronizer('sync.sync')
+z = zarr.open_array('data.zarr', mode='r+', synchronizer=sync)
+
+# Or design workflow so each process writes to separate chunks</code></pre>
+
+<h2>Additional Resources</h2>
+
+<p>For detailed API documentation, advanced usage, and the latest updates:</p>
+
+<ul><li><strong>Official Documentation</strong>: https://zarr.readthedocs.io/</li>
+<li><strong>Zarr Specifications</strong>: https://zarr-specs.readthedocs.io/</li>
+<li><strong>GitHub Repository</strong>: https://github.com/zarr-developers/zarr-python</li>
+<li><strong>Community Chat</strong>: https://gitter.im/zarr-developers/community</li>
+</ul>
+<p><strong>Related Libraries</strong>:</p>
+<ul><li><strong>Xarray</strong>: https://docs.xarray.dev/ (labeled arrays)</li>
+<li><strong>Dask</strong>: https://docs.dask.org/ (parallel computing)</li>
+<li><strong>NumCodecs</strong>: https://numcodecs.readthedocs.io/ (compression codecs)</li></ul>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Api Reference</h3>
+  <h1>Zarr Python Quick Reference</h1>
+
+<p>This reference provides a concise overview of commonly used Zarr functions, parameters, and patterns for quick lookup during development.</p>
+
+<h2>Array Creation Functions</h2>
+
+<h3><code>zarr.zeros()</code> / <code>zarr.ones()</code> / <code>zarr.empty()</code></h3>
+<pre><code class="language-python">zarr.zeros(shape, chunks=None, dtype='f8', store=None, compressor='default',
+           fill_value=0, order='C', filters=None)</code></pre>
+<p>Create arrays filled with zeros, ones, or empty (uninitialized) values.</p>
+
+<p><strong>Key parameters:</strong></p>
+<ul><li><code>shape</code>: Tuple defining array dimensions (e.g., <code>(1000, 1000)</code>)</li>
+<li><code>chunks</code>: Tuple defining chunk dimensions (e.g., <code>(100, 100)</code>), or <code>None</code> for no chunking</li>
+<li><code>dtype</code>: NumPy data type (e.g., <code>'f4'</code>, <code>'i8'</code>, <code>'bool'</code>)</li>
+<li><code>store</code>: Storage location (string path, Store object, or <code>None</code> for memory)</li>
+<li><code>compressor</code>: Compression codec or <code>None</code> for no compression</li>
+</ul>
+<h3><code>zarr.create_array()</code> / <code>zarr.create()</code></h3>
+<pre><code class="language-python">zarr.create_array(store, shape, chunks, dtype='f8', compressor='default',
+                  fill_value=0, order='C', filters=None, overwrite=False)</code></pre>
+<p>Create a new array with explicit control over all parameters.</p>
+
+<h3><code>zarr.array()</code></h3>
+<pre><code class="language-python">zarr.array(data, chunks=None, dtype=None, compressor='default', store=None)</code></pre>
+<p>Create array from existing data (NumPy array, list, etc.).</p>
+
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">import numpy as np
+data = np.random.random((1000, 1000))
+z = zarr.array(data, chunks=(100, 100), store='data.zarr')</code></pre>
+
+<h3><code>zarr.open_array()</code> / <code>zarr.open()</code></h3>
+<pre><code class="language-python">zarr.open_array(store, mode='a', shape=None, chunks=None, dtype=None,
+                compressor='default', fill_value=0)</code></pre>
+<p>Open existing array or create new one.</p>
+
+<p><strong>Mode options:</strong></p>
+<ul><li><code>'r'</code>: Read-only</li>
+<li><code>'r+'</code>: Read-write, file must exist</li>
+<li><code>'a'</code>: Read-write, create if doesn't exist (default)</li>
+<li><code>'w'</code>: Create new, overwrite if exists</li>
+<li><code>'w-'</code>: Create new, fail if exists</li>
+</ul>
+<h2>Storage Classes</h2>
+
+<h3>LocalStore (Default)</h3>
+<pre><code class="language-python">from zarr.storage import LocalStore
+
+store = LocalStore('path/to/data.zarr')
+z = zarr.open_array(store=store, mode='w', shape=(1000, 1000), chunks=(100, 100))</code></pre>
+
+<h3>MemoryStore</h3>
+<pre><code class="language-python">from zarr.storage import MemoryStore
+
+store = MemoryStore()  # Data only in memory
+z = zarr.open_array(store=store, mode='w', shape=(1000, 1000), chunks=(100, 100))</code></pre>
+
+<h3>ZipStore</h3>
+<pre><code class="language-python">from zarr.storage import ZipStore
+
+# Write
+store = ZipStore('data.zip', mode='w')
+z = zarr.open_array(store=store, mode='w', shape=(1000, 1000), chunks=(100, 100))
+z[:] = data
+store.close()  # MUST close
+
+# Read
+store = ZipStore('data.zip', mode='r')
+z = zarr.open_array(store=store)
+data = z[:]
+store.close()</code></pre>
+
+<h3>Cloud Storage (S3/GCS)</h3>
+<pre><code class="language-python"># S3
+import s3fs
+s3 = s3fs.S3FileSystem(anon=False)
+store = s3fs.S3Map(root='bucket/path/data.zarr', s3=s3)
+
+# GCS
+import gcsfs
+gcs = gcsfs.GCSFileSystem(project='my-project')
+store = gcsfs.GCSMap(root='bucket/path/data.zarr', gcs=gcs)</code></pre>
+
+<h2>Compression Codecs</h2>
+
+<h3>Blosc Codec (Default)</h3>
+<pre><code class="language-python">from zarr.codecs.blosc import BloscCodec
+
+codec = BloscCodec(
+    cname='zstd',      # Compressor: 'blosclz', 'lz4', 'lz4hc', 'snappy', 'zlib', 'zstd'
+    clevel=5,          # Compression level: 0-9
+    shuffle='shuffle'  # Shuffle filter: 'noshuffle', 'shuffle', 'bitshuffle'
+)
+
+z = zarr.create_array(store='data.zarr', shape=(1000, 1000), chunks=(100, 100),
+                      dtype='f4', codecs=[codec])</code></pre>
+
+<p><strong>Blosc compressor characteristics:</strong></p>
+<ul><li><code>'lz4'</code>: Fastest compression, lower ratio</li>
+<li><code>'zstd'</code>: Balanced (default), good ratio and speed</li>
+<li><code>'zlib'</code>: Good compatibility, moderate performance</li>
+<li><code>'lz4hc'</code>: Better ratio than lz4, slower</li>
+<li><code>'snappy'</code>: Fast, moderate ratio</li>
+<li><code>'blosclz'</code>: Blosc's default</li>
+</ul>
+<h3>Other Codecs</h3>
+<pre><code class="language-python">from zarr.codecs import GzipCodec, ZstdCodec, BytesCodec
+
+# Gzip compression (maximum ratio, slower)
+GzipCodec(level=6)  # Level 0-9
+
+# Zstandard compression
+ZstdCodec(level=3)  # Level 1-22
+
+# No compression
+BytesCodec()</code></pre>
+
+<h2>Array Indexing and Selection</h2>
+
+<h3>Basic Indexing (NumPy-style)</h3>
+<pre><code class="language-python">z = zarr.zeros((1000, 1000), chunks=(100, 100))
+
+# Read
+row = z[0, :]           # Single row
+col = z[:, 0]           # Single column
+block = z[10:20, 50:60] # Slice
+element = z[5, 10]      # Single element
+
+# Write
+z[0, :] = 42
+z[10:20, 50:60] = np.random.random((10, 10))</code></pre>
+
+<h3>Advanced Indexing</h3>
+<pre><code class="language-python"># Coordinate indexing (point selection)
+z.vindex[[0, 5, 10], [2, 8, 15]]  # Specific coordinates
+
+# Orthogonal indexing (outer product)
+z.oindex[0:10, [5, 10, 15]]  # Rows 0-9, columns 5, 10, 15
+
+# Block/chunk indexing
+z.blocks[0, 0]  # First chunk
+z.blocks[0:2, 0:2]  # First four chunks</code></pre>
+
+<h2>Groups and Hierarchies</h2>
+
+<h3>Creating Groups</h3>
+<pre><code class="language-python"># Create root group
+root = zarr.group(store='data.zarr')
+
+# Create nested groups
+grp1 = root.create_group('group1')
+grp2 = grp1.create_group('subgroup')
+
+# Create arrays in groups
+arr = grp1.create_array(name='data', shape=(1000, 1000),
+                        chunks=(100, 100), dtype='f4')
+
+# Access by path
+arr2 = root['group1/data']</code></pre>
+
+<h3>Group Methods</h3>
+<pre><code class="language-python">root = zarr.group('data.zarr')
+
+# h5py-compatible methods
+dataset = root.create_dataset('data', shape=(1000, 1000), chunks=(100, 100))
+subgrp = root.require_group('subgroup')  # Create if doesn't exist
+
+# Visualize structure
+print(root.tree())
+
+# List contents
+print(list(root.keys()))
+print(list(root.groups()))
+print(list(root.arrays()))</code></pre>
+
+<h2>Array Attributes and Metadata</h2>
+
+<h3>Working with Attributes</h3>
+<pre><code class="language-python">z = zarr.zeros((1000, 1000), chunks=(100, 100))
+
+# Set attributes
+z.attrs['units'] = 'meters'
+z.attrs['description'] = 'Temperature data'
+z.attrs['created'] = '2024-01-15'
+z.attrs['version'] = 1.2
+z.attrs['tags'] = ['climate', 'temperature']
+
+# Read attributes
+print(z.attrs['units'])
+print(dict(z.attrs))  # All attributes as dict
+
+# Update/delete
+z.attrs['version'] = 2.0
+del z.attrs['tags']</code></pre>
+
+<p><strong>Note:</strong> Attributes must be JSON-serializable.</p>
+
+<h2>Array Properties and Methods</h2>
+
+<h3>Properties</h3>
+<pre><code class="language-python">z = zarr.zeros((1000, 1000), chunks=(100, 100), dtype='f4')
+
+z.shape          # (1000, 1000)
+z.chunks         # (100, 100)
+z.dtype          # dtype('float32')
+z.size           # 1000000
+z.nbytes         # 4000000 (uncompressed size in bytes)
+z.nbytes_stored  # Actual compressed size on disk
+z.nchunks        # 100 (number of chunks)
+z.cdata_shape    # Shape in terms of chunks: (10, 10)</code></pre>
+
+<h3>Methods</h3>
+<pre><code class="language-python"># Information
+print(z.info)  # Detailed information about array
+print(z.info_items())  # Info as list of tuples
+
+# Resizing
+z.resize(1500, 1500)  # Change dimensions
+
+# Appending
+z.append(new_data, axis=0)  # Add data along axis
+
+# Copying
+z2 = z.copy(store='new_location.zarr')</code></pre>
+
+<h2>Chunking Guidelines</h2>
+
+<h3>Chunk Size Calculation</h3>
+<pre><code class="language-python"># For float32 (4 bytes per element):
+# 1 MB = 262,144 elements
+# 10 MB = 2,621,440 elements
+
+# Examples for 1 MB chunks:
+(512, 512)      # For 2D: 512 × 512 × 4 = 1,048,576 bytes
+(128, 128, 128) # For 3D: 128 × 128 × 128 × 4 = 8,388,608 bytes ≈ 8 MB
+(64, 256, 256)  # For 3D: 64 × 256 × 256 × 4 = 16,777,216 bytes ≈ 16 MB</code></pre>
+
+<h3>Chunking Strategies by Access Pattern</h3>
+
+<p><strong>Time series (sequential access along first dimension):</strong></p>
+<pre><code class="language-python">chunks=(1, 720, 1440)  # One time step per chunk</code></pre>
+
+<p><strong>Row-wise access:</strong></p>
+<pre><code class="language-python">chunks=(10, 10000)  # Small rows, span columns</code></pre>
+
+<p><strong>Column-wise access:</strong></p>
+<pre><code class="language-python">chunks=(10000, 10)  # Span rows, small columns</code></pre>
+
+<p><strong>Random access:</strong></p>
+<pre><code class="language-python">chunks=(500, 500)  # Balanced square chunks</code></pre>
+
+<p><strong>3D volumetric data:</strong></p>
+<pre><code class="language-python">chunks=(64, 64, 64)  # Cubic chunks for isotropic access</code></pre>
+
+<h2>Integration APIs</h2>
+
+<h3>NumPy Integration</h3>
+<pre><code class="language-python">import numpy as np
+
+z = zarr.zeros((1000, 1000), chunks=(100, 100))
+
+# Use NumPy functions
+result = np.sum(z, axis=0)
+mean = np.mean(z)
+std = np.std(z)
+
+# Convert to NumPy
+arr = z[:]  # Loads entire array into memory</code></pre>
+
+<h3>Dask Integration</h3>
+<pre><code class="language-python">import dask.array as da
+
+# Load Zarr as Dask array
+dask_array = da.from_zarr('data.zarr')
+
+# Compute operations in parallel
+result = dask_array.mean(axis=0).compute()
+
+# Write Dask array to Zarr
+large_array = da.random.random((100000, 100000), chunks=(1000, 1000))
+da.to_zarr(large_array, 'output.zarr')</code></pre>
+
+<h3>Xarray Integration</h3>
+<pre><code class="language-python">import xarray as xr
+
+# Open Zarr as Xarray Dataset
+ds = xr.open_zarr('data.zarr')
+
+# Write Xarray to Zarr
+ds.to_zarr('output.zarr')
+
+# Create with coordinates
+ds = xr.Dataset(
+    {'temperature': (['time', 'lat', 'lon'], data)},
+    coords={
+        'time': pd.date_range('2024-01-01', periods=365),
+        'lat': np.arange(-90, 91, 1),
+        'lon': np.arange(-180, 180, 1)
+    }
+)
+ds.to_zarr('climate.zarr')</code></pre>
+
+<h2>Parallel Computing</h2>
+
+<h3>Synchronizers</h3>
+<pre><code class="language-python">from zarr import ThreadSynchronizer, ProcessSynchronizer
+
+# Multi-threaded writes
+sync = ThreadSynchronizer()
+z = zarr.open_array('data.zarr', mode='r+', synchronizer=sync)
+
+# Multi-process writes
+sync = ProcessSynchronizer('sync.sync')
+z = zarr.open_array('data.zarr', mode='r+', synchronizer=sync)</code></pre>
+
+<p><strong>Note:</strong> Synchronization only needed for:</p>
+<ul><li>Concurrent writes that may span chunk boundaries</li>
+<li>Not needed for reads (always safe)</li>
+<li>Not needed if each process writes to separate chunks</li>
+</ul>
+<h2>Metadata Consolidation</h2>
+
+<pre><code class="language-python"># Consolidate metadata (after creating all arrays/groups)
+zarr.consolidate_metadata('data.zarr')
+
+# Open with consolidated metadata (faster, especially on cloud)
+root = zarr.open_consolidated('data.zarr')</code></pre>
+
+<p><strong>Benefits:</strong></p>
+<ul><li>Reduces I/O from N operations to 1</li>
+<li>Critical for cloud storage (reduces latency)</li>
+<li>Speeds up hierarchy traversal</li>
+</ul>
+<p><strong>Cautions:</strong></p>
+<ul><li>Can become stale if data updates</li>
+<li>Re-consolidate after modifications</li>
+<li>Not for frequently-updated datasets</li>
+</ul>
+<h2>Common Patterns</h2>
+
+<h3>Time Series with Growing Data</h3>
+<pre><code class="language-python"># Start with empty first dimension
+z = zarr.open('timeseries.zarr', mode='a',
+              shape=(0, 720, 1440),
+              chunks=(1, 720, 1440),
+              dtype='f4')
+
+# Append new time steps
+for new_timestep in data_stream:
+    z.append(new_timestep, axis=0)</code></pre>
+
+<h3>Processing Large Arrays in Chunks</h3>
+<pre><code class="language-python">z = zarr.open('large_data.zarr', mode='r')
+
+# Process without loading entire array
+for i in range(0, z.shape[0], 1000):
+    chunk = z[i:i+1000, :]
+    result = process(chunk)
+    save(result)</code></pre>
+
+<h3>Format Conversion Pipeline</h3>
+<pre><code class="language-python"># HDF5 → Zarr
+import h5py
+with h5py.File('data.h5', 'r') as h5:
+    z = zarr.array(h5['dataset'][:], chunks=(1000, 1000), store='data.zarr')
+
+# Zarr → NumPy file
+z = zarr.open('data.zarr', mode='r')
+np.save('data.npy', z[:])
+
+# Zarr → NetCDF (via Xarray)
+ds = xr.open_zarr('data.zarr')
+ds.to_netcdf('data.nc')</code></pre>
+
+<h2>Performance Optimization Quick Checklist</h2>
+
+<ul><li><strong>Chunk size</strong>: 1-10 MB per chunk</li>
+<li><strong>Chunk shape</strong>: Align with access pattern</li>
+<li><strong>Compression</strong>:</li>
+</ul><p>   - Fast: <code>BloscCodec(cname='lz4', clevel=1)</code></p>
+<p>   - Balanced: <code>BloscCodec(cname='zstd', clevel=5)</code></p>
+<p>   - Maximum: <code>GzipCodec(level=9)</code></p>
+<ul><li><strong>Cloud storage</strong>:</li>
+</ul><p>   - Larger chunks (5-100 MB)</p>
+<p>   - Consolidate metadata</p>
+<p>   - Consider sharding</p>
+<ul><li><strong>Parallel I/O</strong>: Use Dask for large operations</li>
+<li><strong>Memory</strong>: Process in chunks, don't load entire arrays</li>
+</ul>
+<h2>Debugging and Profiling</h2>
+
+<pre><code class="language-python">z = zarr.open('data.zarr', mode='r')
+
+# Detailed information
+print(z.info)
+
+# Size statistics
+print(f"Uncompressed: {z.nbytes / 1e6:.2f} MB")
+print(f"Compressed: {z.nbytes_stored / 1e6:.2f} MB")
+print(f"Ratio: {z.nbytes / z.nbytes_stored:.1f}x")
+
+# Chunk information
+print(f"Chunks: {z.chunks}")
+print(f"Number of chunks: {z.nchunks}")
+print(f"Chunk grid: {z.cdata_shape}")</code></pre>
+
+<h2>Common Data Types</h2>
+
+<pre><code class="language-python"># Integers
+'i1', 'i2', 'i4', 'i8'  # Signed: 8, 16, 32, 64-bit
+'u1', 'u2', 'u4', 'u8'  # Unsigned: 8, 16, 32, 64-bit
+
+# Floats
+'f2', 'f4', 'f8'  # 16, 32, 64-bit (half, single, double precision)
+
+# Others
+'bool'     # Boolean
+'c8', 'c16'  # Complex: 64, 128-bit
+'S10'      # Fixed-length string (10 bytes)
+'U10'      # Unicode string (10 characters)</code></pre>
+
+<h2>Version Compatibility</h2>
+
+<p>Zarr-Python version 3.x supports both:</p>
+<ul><li><strong>Zarr v2 format</strong>: Legacy format, widely compatible</li>
+<li><strong>Zarr v3 format</strong>: New format with sharding, improved metadata</li>
+</ul>
+<p>Check format version:</p>
+<pre><code class="language-python"># Zarr automatically detects format version
+z = zarr.open('data.zarr', mode='r')
+# Format info available in metadata</code></pre>
+
+<h2>Error Handling</h2>
+
+<pre><code class="language-python">try:
+    z = zarr.open_array('data.zarr', mode='r')
+except zarr.errors.PathNotFoundError:
+    print("Array does not exist")
+except zarr.errors.ReadOnlyError:
+    print("Cannot write to read-only array")
+except Exception as e:
+    print(f"Unexpected error: {e}")</code></pre>
+
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

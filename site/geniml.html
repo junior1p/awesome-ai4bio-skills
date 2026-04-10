@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geniml: Genomic Interval Machine Learning — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="active">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / Geniml: Genomic Interval Machine Learning</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>Geniml: Genomic Interval Machine Learning</h1>
+    <p class="description">This skill should be used when working with genomic interval data (BED files) for machine learning tasks. Use for training region embeddings (Region2Vec, BEDspace), single-cell ATAC-seq analysis (scEm</p>
+    <h1>Geniml: Genomic Interval Machine Learning</h1>
+
+<h2>Overview</h2>
+
+<p>Geniml is a Python package for building machine learning models on genomic interval data from BED files. It provides unsupervised methods for learning embeddings of genomic regions, single cells, and metadata labels, enabling similarity searches, clustering, and downstream ML tasks.</p>
+
+<h2>Installation</h2>
+
+<p>Install geniml using uv:</p>
+
+<pre><code class="language-bash">uv uv pip install geniml</code></pre>
+
+<p>For ML dependencies (PyTorch, etc.):</p>
+
+<pre><code class="language-bash">uv uv pip install 'geniml[ml]'</code></pre>
+
+<p>Development version from GitHub:</p>
+
+<pre><code class="language-bash">uv uv pip install git+https://github.com/databio/geniml.git</code></pre>
+
+<h2>Core Capabilities</h2>
+
+<p>Geniml provides five primary capabilities, each detailed in dedicated reference files:</p>
+
+<h3>1. Region2Vec: Genomic Region Embeddings</h3>
+
+<p>Train unsupervised embeddings of genomic regions using word2vec-style learning.</p>
+
+<p><strong>Use for:</strong> Dimensionality reduction of BED files, region similarity analysis, feature vectors for downstream ML.</p>
+
+<p><strong>Workflow:</strong></p>
+<ul><li>Tokenize BED files using a universe reference</li>
+<li>Train Region2Vec model on tokens</li>
+<li>Generate embeddings for regions</li>
+</ul>
+<p><strong>Reference:</strong> See <code>references/region2vec.md</code> for detailed workflow, parameters, and examples.</p>
+
+<h3>2. BEDspace: Joint Region and Metadata Embeddings</h3>
+
+<p>Train shared embeddings for region sets and metadata labels using StarSpace.</p>
+
+<p><strong>Use for:</strong> Metadata-aware searches, cross-modal queries (region→label or label→region), joint analysis of genomic content and experimental conditions.</p>
+
+<p><strong>Workflow:</strong></p>
+<ul><li>Preprocess regions and metadata</li>
+<li>Train BEDspace model</li>
+<li>Compute distances</li>
+<li>Query across regions and labels</li>
+</ul>
+<p><strong>Reference:</strong> See <code>references/bedspace.md</code> for detailed workflow, search types, and examples.</p>
+
+<h3>3. scEmbed: Single-Cell Chromatin Accessibility Embeddings</h3>
+
+<p>Train Region2Vec models on single-cell ATAC-seq data for cell-level embeddings.</p>
+
+<p><strong>Use for:</strong> scATAC-seq clustering, cell-type annotation, dimensionality reduction of single cells, integration with scanpy workflows.</p>
+
+<p><strong>Workflow:</strong></p>
+<ul><li>Prepare AnnData with peak coordinates</li>
+<li>Pre-tokenize cells</li>
+<li>Train scEmbed model</li>
+<li>Generate cell embeddings</li>
+<li>Cluster and visualize with scanpy</li>
+</ul>
+<p><strong>Reference:</strong> See <code>references/scembed.md</code> for detailed workflow, parameters, and examples.</p>
+
+<h3>4. Consensus Peaks: Universe Building</h3>
+
+<p>Build reference peak sets (universes) from BED file collections using multiple statistical methods.</p>
+
+<p><strong>Use for:</strong> Creating tokenization references, standardizing regions across datasets, defining consensus features with statistical rigor.</p>
+
+<p><strong>Workflow:</strong></p>
+<ul><li>Combine BED files</li>
+<li>Generate coverage tracks</li>
+<li>Build universe using CC, CCF, ML, or HMM method</li>
+</ul>
+<p><strong>Methods:</strong></p>
+<ul><li><strong>CC (Coverage Cutoff)</strong>: Simple threshold-based</li>
+<li><strong>CCF (Coverage Cutoff Flexible)</strong>: Confidence intervals for boundaries</li>
+<li><strong>ML (Maximum Likelihood)</strong>: Probabilistic modeling of positions</li>
+<li><strong>HMM (Hidden Markov Model)</strong>: Complex state modeling</li>
+</ul>
+<p><strong>Reference:</strong> See <code>references/consensus_peaks.md</code> for method comparison, parameters, and examples.</p>
+
+<h3>5. Utilities: Supporting Tools</h3>
+
+<p>Additional tools for caching, randomization, evaluation, and search.</p>
+
+<p><strong>Available utilities:</strong></p>
+<ul><li><strong>BBClient</strong>: BED file caching for repeated access</li>
+<li><strong>BEDshift</strong>: Randomization preserving genomic context</li>
+<li><strong>Evaluation</strong>: Metrics for embedding quality (silhouette, Davies-Bouldin, etc.)</li>
+<li><strong>Tokenization</strong>: Region tokenization utilities (hard, soft, universe-based)</li>
+<li><strong>Text2BedNN</strong>: Neural search backends for genomic queries</li>
+</ul>
+<p><strong>Reference:</strong> See <code>references/utilities.md</code> for detailed usage of each utility.</p>
+
+<h2>Common Workflows</h2>
+
+<h3>Basic Region Embedding Pipeline</h3>
+
+<pre><code class="language-python">from geniml.tokenization import hard_tokenization
+from geniml.region2vec import region2vec
+from geniml.evaluation import evaluate_embeddings
+
+# Step 1: Tokenize BED files
+hard_tokenization(
+    src_folder='bed_files/',
+    dst_folder='tokens/',
+    universe_file='universe.bed',
+    p_value_threshold=1e-9
+)
+
+# Step 2: Train Region2Vec
+region2vec(
+    token_folder='tokens/',
+    save_dir='model/',
+    num_shufflings=1000,
+    embedding_dim=100
+)
+
+# Step 3: Evaluate
+metrics = evaluate_embeddings(
+    embeddings_file='model/embeddings.npy',
+    labels_file='metadata.csv'
+)</code></pre>
+
+<h3>scATAC-seq Analysis Pipeline</h3>
+
+<pre><code class="language-python">import scanpy as sc
+from geniml.scembed import ScEmbed
+from geniml.io import tokenize_cells
+
+# Step 1: Load data
+adata = sc.read_h5ad('scatac_data.h5ad')
+
+# Step 2: Tokenize cells
+tokenize_cells(
+    adata='scatac_data.h5ad',
+    universe_file='universe.bed',
+    output='tokens.parquet'
+)
+
+# Step 3: Train scEmbed
+model = ScEmbed(embedding_dim=100)
+model.train(dataset='tokens.parquet', epochs=100)
+
+# Step 4: Generate embeddings
+embeddings = model.encode(adata)
+adata.obsm['scembed_X'] = embeddings
+
+# Step 5: Cluster with scanpy
+sc.pp.neighbors(adata, use_rep='scembed_X')
+sc.tl.leiden(adata)
+sc.tl.umap(adata)</code></pre>
+
+<h3>Universe Building and Evaluation</h3>
+
+<pre><code class="language-bash"># Generate coverage
+cat bed_files/*.bed &gt; combined.bed
+uniwig -m 25 combined.bed chrom.sizes coverage/
+
+# Build universe with coverage cutoff
+geniml universe build cc \
+  --coverage-folder coverage/ \
+  --output-file universe.bed \
+  --cutoff 5 \
+  --merge 100 \
+  --filter-size 50
+
+# Evaluate universe quality
+geniml universe evaluate \
+  --universe universe.bed \
+  --coverage-folder coverage/ \
+  --bed-folder bed_files/</code></pre>
+
+<h2>CLI Reference</h2>
+
+<p>Geniml provides command-line interfaces for major operations:</p>
+
+<pre><code class="language-bash"># Region2Vec training
+geniml region2vec --token-folder tokens/ --save-dir model/ --num-shuffle 1000
+
+# BEDspace preprocessing
+geniml bedspace preprocess --input regions/ --metadata labels.csv --universe universe.bed
+
+# BEDspace training
+geniml bedspace train --input preprocessed.txt --output model/ --dim 100
+
+# BEDspace search
+geniml bedspace search -t r2l -d distances.pkl -q query.bed -n 10
+
+# Universe building
+geniml universe build cc --coverage-folder coverage/ --output universe.bed --cutoff 5
+
+# BEDshift randomization
+geniml bedshift --input peaks.bed --genome hg38 --preserve-chrom --iterations 100</code></pre>
+
+<h2>When to Use Which Tool</h2>
+
+<p><strong>Use Region2Vec when:</strong></p>
+<ul><li>Working with bulk genomic data (ChIP-seq, ATAC-seq, etc.)</li>
+<li>Need unsupervised embeddings without metadata</li>
+<li>Comparing region sets across experiments</li>
+<li>Building features for downstream supervised learning</li>
+</ul>
+<p><strong>Use BEDspace when:</strong></p>
+<ul><li>Metadata labels available (cell types, tissues, conditions)</li>
+<li>Need to query regions by metadata or vice versa</li>
+<li>Want joint embedding space for regions and labels</li>
+<li>Building searchable genomic databases</li>
+</ul>
+<p><strong>Use scEmbed when:</strong></p>
+<ul><li>Analyzing single-cell ATAC-seq data</li>
+<li>Clustering cells by chromatin accessibility</li>
+<li>Annotating cell types from scATAC-seq</li>
+<li>Integration with scanpy is desired</li>
+</ul>
+<p><strong>Use Universe Building when:</strong></p>
+<ul><li>Need reference peak sets for tokenization</li>
+<li>Combining multiple experiments into consensus</li>
+<li>Want statistically rigorous region definitions</li>
+<li>Building standard references for a project</li>
+</ul>
+<p><strong>Use Utilities when:</strong></p>
+<ul><li>Need to cache remote BED files (BBClient)</li>
+<li>Generating null models for statistics (BEDshift)</li>
+<li>Evaluating embedding quality (Evaluation)</li>
+<li>Building search interfaces (Text2BedNN)</li>
+</ul>
+<h2>Best Practices</h2>
+
+<h3>General Guidelines</h3>
+
+<ul><li><strong>Universe quality is critical</strong>: Invest time in building comprehensive, well-constructed universes</li>
+<li><strong>Tokenization validation</strong>: Check coverage (>80% ideal) before training</li>
+<li><strong>Parameter tuning</strong>: Experiment with embedding dimensions, learning rates, and training epochs</li>
+<li><strong>Evaluation</strong>: Always validate embeddings with multiple metrics and visualizations</li>
+<li><strong>Documentation</strong>: Record parameters and random seeds for reproducibility</li>
+</ul>
+<h3>Performance Considerations</h3>
+
+<ul><li><strong>Pre-tokenization</strong>: For scEmbed, always pre-tokenize cells for faster training</li>
+<li><strong>Memory management</strong>: Large datasets may require batch processing or downsampling</li>
+<li><strong>Computational resources</strong>: ML/HMM universe methods are computationally intensive</li>
+<li><strong>Model caching</strong>: Use BBClient to avoid repeated downloads</li>
+</ul>
+<h3>Integration Patterns</h3>
+
+<ul><li><strong>With scanpy</strong>: scEmbed embeddings integrate seamlessly as <code>adata.obsm</code> entries</li>
+<li><strong>With BEDbase</strong>: Use BBClient for accessing remote BED repositories</li>
+<li><strong>With Hugging Face</strong>: Export trained models for sharing and reproducibility</li>
+<li><strong>With R</strong>: Use reticulate for R integration (see utilities reference)</li>
+</ul>
+<h2>Related Projects</h2>
+
+<p>Geniml is part of the BEDbase ecosystem:</p>
+
+<ul><li><strong>BEDbase</strong>: Unified platform for genomic regions</li>
+<li><strong>BEDboss</strong>: Processing pipeline for BED files</li>
+<li><strong>Gtars</strong>: Genomic tools and utilities</li>
+<li><strong>BBClient</strong>: Client for BEDbase repositories</li>
+</ul>
+<h2>Additional Resources</h2>
+
+<ul><li><strong>Documentation</strong>: https://docs.bedbase.org/geniml/</li>
+<li><strong>GitHub</strong>: https://github.com/databio/geniml</li>
+<li><strong>Pre-trained models</strong>: Available on Hugging Face (databio organization)</li>
+<li><strong>Publications</strong>: Cited in documentation for methodological details</li>
+</ul>
+<h2>Troubleshooting</h2>
+
+<p><strong>"Tokenization coverage too low":</strong></p>
+<ul><li>Check universe quality and completeness</li>
+<li>Adjust p-value threshold (try 1e-6 instead of 1e-9)</li>
+<li>Ensure universe matches genome assembly</li>
+</ul>
+<p><strong>"Training not converging":</strong></p>
+<ul><li>Adjust learning rate (try 0.01-0.05 range)</li>
+<li>Increase training epochs</li>
+<li>Check data quality and preprocessing</li>
+</ul>
+<p><strong>"Out of memory errors":</strong></p>
+<ul><li>Reduce batch size for scEmbed</li>
+<li>Process data in chunks</li>
+<li>Use pre-tokenization for single-cell data</li>
+</ul>
+<p><strong>"StarSpace not found" (BEDspace):</strong></p>
+<ul><li>Install StarSpace separately: https://github.com/facebookresearch/StarSpace</li>
+<li>Set <code>--path-to-starspace</code> parameter correctly</li>
+</ul>
+<p>For detailed troubleshooting and method-specific issues, consult the appropriate reference file.</p>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Bedspace</h3>
+  <h1>BEDspace: Joint Region and Metadata Embeddings</h1>
+
+<h2>Overview</h2>
+
+<p>BEDspace applies the StarSpace model to genomic data, enabling simultaneous training of numerical embeddings for both region sets and their metadata labels in a shared low-dimensional space. This allows for rich queries across regions and metadata.</p>
+
+<h2>When to Use</h2>
+
+<p>Use BEDspace when working with:</p>
+<ul><li>Region sets with associated metadata (cell types, tissues, conditions)</li>
+<li>Search tasks requiring metadata-aware similarity</li>
+<li>Cross-modal queries (e.g., "find regions similar to label X")</li>
+<li>Joint analysis of genomic content and experimental conditions</li>
+</ul>
+<h2>Workflow</h2>
+
+<p>BEDspace consists of four sequential operations:</p>
+
+<h3>1. Preprocess</h3>
+
+<p>Format genomic intervals and metadata for StarSpace training:</p>
+
+<pre><code class="language-bash">geniml bedspace preprocess \
+  --input /path/to/regions/ \
+  --metadata labels.csv \
+  --universe universe.bed \
+  --labels "cell_type,tissue" \
+  --output preprocessed.txt</code></pre>
+
+<p><strong>Required files:</strong></p>
+<ul><li><strong>Input folder</strong>: Directory containing BED files</li>
+<li><strong>Metadata CSV</strong>: Must include <code>file_name</code> column matching BED filenames, plus metadata columns</li>
+<li><strong>Universe file</strong>: Reference BED file for tokenization</li>
+<li><strong>Labels</strong>: Comma-separated list of metadata columns to use</li>
+</ul>
+<p>The preprocessing step adds <code>__label__</code> prefixes to metadata and converts regions to StarSpace-compatible format.</p>
+
+<h3>2. Train</h3>
+
+<p>Execute StarSpace model on preprocessed data:</p>
+
+<pre><code class="language-bash">geniml bedspace train \
+  --path-to-starspace /path/to/starspace \
+  --input preprocessed.txt \
+  --output model/ \
+  --dim 100 \
+  --epochs 50 \
+  --lr 0.05</code></pre>
+
+<p><strong>Key training parameters:</strong></p>
+<ul><li><code>--dim</code>: Embedding dimension (typical: 50-200)</li>
+<li><code>--epochs</code>: Training epochs (typical: 20-100)</li>
+<li><code>--lr</code>: Learning rate (typical: 0.01-0.1)</li>
+</ul>
+<h3>3. Distances</h3>
+
+<p>Compute distance metrics between region sets and metadata labels:</p>
+
+<pre><code class="language-bash">geniml bedspace distances \
+  --input model/ \
+  --metadata labels.csv \
+  --universe universe.bed \
+  --output distances.pkl</code></pre>
+
+<p>This step creates a distance matrix needed for similarity searches.</p>
+
+<h3>4. Search</h3>
+
+<p>Retrieve similar items across three scenarios:</p>
+
+<p><strong>Region-to-Label (r2l)</strong>: Query region set → retrieve similar metadata labels</p>
+<pre><code class="language-bash">geniml bedspace search -t r2l -d distances.pkl -q query_regions.bed -n 10</code></pre>
+
+<p><strong>Label-to-Region (l2r)</strong>: Query metadata label → retrieve similar region sets</p>
+<pre><code class="language-bash">geniml bedspace search -t l2r -d distances.pkl -q "T_cell" -n 10</code></pre>
+
+<p><strong>Region-to-Region (r2r)</strong>: Query region set → retrieve similar region sets</p>
+<pre><code class="language-bash">geniml bedspace search -t r2r -d distances.pkl -q query_regions.bed -n 10</code></pre>
+
+<p>The <code>-n</code> parameter controls the number of results returned.</p>
+
+<h2>Python API</h2>
+
+<pre><code class="language-python">from geniml.bedspace import BEDSpaceModel
+
+# Load trained model
+model = BEDSpaceModel.load('model/')
+
+# Query similar items
+results = model.search(
+    query="T_cell",
+    search_type="l2r",
+    top_k=10
+)</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Metadata structure</strong>: Ensure metadata CSV includes <code>file_name</code> column that exactly matches BED filenames (without path)</li>
+<li><strong>Label selection</strong>: Choose informative metadata columns that capture biological variation of interest</li>
+<li><strong>Universe consistency</strong>: Use the same universe file across preprocessing, distances, and any subsequent analyses</li>
+<li><strong>Validation</strong>: Preprocess and check output format before investing in training</li>
+<li><strong>StarSpace installation</strong>: Install StarSpace separately as it's an external dependency</li>
+</ul>
+<h2>Output Interpretation</h2>
+
+<p>Search results return items ranked by similarity in the joint embedding space:</p>
+<ul><li><strong>r2l</strong>: Identifies metadata labels characterizing your query regions</li>
+<li><strong>l2r</strong>: Finds region sets matching your metadata criteria</li>
+<li><strong>r2r</strong>: Discovers region sets with similar genomic content</li>
+</ul>
+<h2>Requirements</h2>
+
+<p>BEDspace requires StarSpace to be installed separately. Download from: https://github.com/facebookresearch/StarSpace</p>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Consensus Peaks</h3>
+  <h1>Consensus Peaks: Universe Building</h1>
+
+<h2>Overview</h2>
+
+<p>Geniml provides tools for building genomic "universes" — standardized reference sets of consensus peaks from collections of BED files. These universes represent genomic regions where analyzed datasets show significant coverage overlap, serving as reference vocabularies for tokenization and analysis.</p>
+
+<h2>When to Use</h2>
+
+<p>Use consensus peak creation when:</p>
+<ul><li>Building reference peak sets from multiple experiments</li>
+<li>Creating universe files for Region2Vec or BEDspace tokenization</li>
+<li>Standardizing genomic regions across a collection of datasets</li>
+<li>Defining regions of interest with statistical significance</li>
+</ul>
+<h2>Workflow</h2>
+
+<h3>Step 1: Combine BED Files</h3>
+
+<p>Merge all BED files into a single combined file:</p>
+
+<pre><code class="language-bash">cat /path/to/bed/files/*.bed &gt; combined_files.bed</code></pre>
+
+<h3>Step 2: Generate Coverage Tracks</h3>
+
+<p>Create bigWig coverage tracks using uniwig with a smoothing window:</p>
+
+<pre><code class="language-bash">uniwig -m 25 combined_files.bed chrom.sizes coverage/</code></pre>
+
+<p><strong>Parameters:</strong></p>
+<ul><li><code>-m 25</code>: Smoothing window size (25bp typical for chromatin accessibility)</li>
+<li><code>chrom.sizes</code>: Chromosome sizes file for your genome</li>
+<li><code>coverage/</code>: Output directory for bigWig files</li>
+</ul>
+<p>The smoothing window helps reduce noise and creates more robust peak boundaries.</p>
+
+<h3>Step 3: Build Universe</h3>
+
+<p>Use one of four methods to construct the consensus peaks:</p>
+
+<h2>Universe-Building Methods</h2>
+
+<h3>1. Coverage Cutoff (CC)</h3>
+
+<p>The simplest approach using a fixed coverage threshold:</p>
+
+<pre><code class="language-bash">geniml universe build cc \
+  --coverage-folder coverage/ \
+  --output-file universe_cc.bed \
+  --cutoff 5 \
+  --merge 100 \
+  --filter-size 50</code></pre>
+
+<p><strong>Parameters:</strong></p>
+<ul><li><code>--cutoff</code>: Coverage threshold (1 = union; file count = intersection)</li>
+<li><code>--merge</code>: Distance for merging adjacent peaks (bp)</li>
+<li><code>--filter-size</code>: Minimum peak size for inclusion (bp)</li>
+</ul>
+<p><strong>Use when:</strong> Simple threshold-based selection is sufficient</p>
+
+<h3>2. Coverage Cutoff Flexible (CCF)</h3>
+
+<p>Creates confidence intervals around likelihood cutoffs for boundaries and region cores:</p>
+
+<pre><code class="language-bash">geniml universe build ccf \
+  --coverage-folder coverage/ \
+  --output-file universe_ccf.bed \
+  --cutoff 5 \
+  --confidence 0.95 \
+  --merge 100 \
+  --filter-size 50</code></pre>
+
+<p><strong>Additional parameters:</strong></p>
+<ul><li><code>--confidence</code>: Confidence level for flexible boundaries (0-1)</li>
+</ul>
+<p><strong>Use when:</strong> Uncertainty in peak boundaries should be captured</p>
+
+<h3>3. Maximum Likelihood (ML)</h3>
+
+<p>Builds probabilistic models accounting for region start/end positions:</p>
+
+<pre><code class="language-bash">geniml universe build ml \
+  --coverage-folder coverage/ \
+  --output-file universe_ml.bed \
+  --merge 100 \
+  --filter-size 50 \
+  --model-type gaussian</code></pre>
+
+<p><strong>Parameters:</strong></p>
+<ul><li><code>--model-type</code>: Distribution for likelihood estimation (gaussian, poisson)</li>
+</ul>
+<p><strong>Use when:</strong> Statistical modeling of peak locations is important</p>
+
+<h3>4. Hidden Markov Model (HMM)</h3>
+
+<p>Models genomic regions as hidden states with coverage as emissions:</p>
+
+<pre><code class="language-bash">geniml universe build hmm \
+  --coverage-folder coverage/ \
+  --output-file universe_hmm.bed \
+  --states 3 \
+  --merge 100 \
+  --filter-size 50</code></pre>
+
+<p><strong>Parameters:</strong></p>
+<ul><li><code>--states</code>: Number of HMM hidden states (typically 2-5)</li>
+</ul>
+<p><strong>Use when:</strong> Complex patterns of genomic states should be captured</p>
+
+<h2>Python API</h2>
+
+<pre><code class="language-python">from geniml.universe import build_universe
+
+# Build using coverage cutoff method
+universe = build_universe(
+    coverage_folder='coverage/',
+    method='cc',
+    cutoff=5,
+    merge_distance=100,
+    min_size=50,
+    output_file='universe.bed'
+)</code></pre>
+
+<h2>Method Comparison</h2>
+
+<p>| Method | Complexity | Flexibility | Computational Cost | Best For |</p>
+<p>|--------|------------|-------------|-------------------|----------|</p>
+<p>| CC | Low | Low | Low | Quick reference sets |</p>
+<p>| CCF | Medium | Medium | Medium | Boundary uncertainty |</p>
+<p>| ML | High | High | High | Statistical rigor |</p>
+<p>| HMM | High | High | Very High | Complex patterns |</p>
+
+<h2>Best Practices</h2>
+
+<h3>Choosing a Method</h3>
+
+<ul><li><strong>Start with CC</strong>: Quick and interpretable for initial exploration</li>
+<li><strong>Use CCF</strong>: When peak boundaries are uncertain or noisy</li>
+<li><strong>Apply ML</strong>: For publication-quality statistical analysis</li>
+<li><strong>Deploy HMM</strong>: When modeling complex chromatin states</li>
+</ul>
+<h3>Parameter Selection</h3>
+
+<p><strong>Coverage cutoff:</strong></p>
+<ul><li><code>cutoff = 1</code>: Union of all peaks (most permissive)</li>
+<li><code>cutoff = n_files</code>: Intersection (most stringent)</li>
+<li><code>cutoff = 0.5 * n_files</code>: Moderate consensus (typical choice)</li>
+</ul>
+<p><strong>Merge distance:</strong></p>
+<ul><li>ATAC-seq: 100-200bp</li>
+<li>ChIP-seq (narrow peaks): 50-100bp</li>
+<li>ChIP-seq (broad peaks): 500-1000bp</li>
+</ul>
+<p><strong>Filter size:</strong></p>
+<ul><li>Minimum 30bp to avoid artifacts</li>
+<li>50-100bp typical for most assays</li>
+<li>Larger for broad histone marks</li>
+</ul>
+<h3>Quality Control</h3>
+
+<p>After building, assess universe quality:</p>
+
+<pre><code class="language-python">from geniml.evaluation import assess_universe
+
+metrics = assess_universe(
+    universe_file='universe.bed',
+    coverage_folder='coverage/',
+    bed_files='bed_files/'
+)
+
+print(f"Number of regions: {metrics['n_regions']}")
+print(f"Mean region size: {metrics['mean_size']:.1f}bp")
+print(f"Coverage of input peaks: {metrics['coverage']:.1%}")</code></pre>
+
+<p><strong>Key metrics:</strong></p>
+<ul><li><strong>Region count</strong>: Should capture major features without excessive fragmentation</li>
+<li><strong>Size distribution</strong>: Should match expected biology (e.g., ~500bp for ATAC-seq)</li>
+<li><strong>Input coverage</strong>: Proportion of original peaks represented (typically >80%)</li>
+</ul>
+<h2>Output Format</h2>
+
+<p>Consensus peaks are saved as BED files with three required columns:</p>
+
+<pre><code>chr1    1000    1500
+chr1    2000    2800
+chr2    500     1000</code></pre>
+
+<p>Additional columns may include confidence scores or state annotations depending on the method.</p>
+
+<h2>Common Workflows</h2>
+
+<h3>For Region2Vec</h3>
+
+<ul><li>Build universe using preferred method</li>
+<li>Use universe as tokenization reference</li>
+<li>Tokenize BED files</li>
+<li>Train Region2Vec model</li>
+</ul>
+<h3>For BEDspace</h3>
+
+<ul><li>Build universe from all datasets</li>
+<li>Use universe in preprocessing step</li>
+<li>Train BEDspace with metadata</li>
+<li>Query across regions and labels</li>
+</ul>
+<h3>For scEmbed</h3>
+
+<ul><li>Create universe from bulk or aggregated scATAC-seq</li>
+<li>Use for cell tokenization</li>
+<li>Train scEmbed model</li>
+<li>Generate cell embeddings</li>
+</ul>
+<h2>Troubleshooting</h2>
+
+<p><strong>Too few regions:</strong> Lower cutoff threshold or reduce filter size</p>
+
+<p><strong>Too many regions:</strong> Raise cutoff threshold, increase merge distance, or increase filter size</p>
+
+<p><strong>Noisy boundaries:</strong> Use CCF or ML methods instead of CC</p>
+
+<p><strong>Long computation:</strong> Start with CC method for quick results, then refine with ML/HMM if needed</p>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Region2Vec</h3>
+  <h1>Region2Vec: Genomic Region Embeddings</h1>
+
+<h2>Overview</h2>
+
+<p>Region2Vec generates unsupervised embeddings of genomic regions and region sets from BED files. It maps genomic regions to a vocabulary, creates sentences through concatenation, and applies word2vec training to learn meaningful representations.</p>
+
+<h2>When to Use</h2>
+
+<p>Use Region2Vec when working with:</p>
+<ul><li>BED file collections requiring dimensionality reduction</li>
+<li>Genomic region similarity analysis</li>
+<li>Downstream ML tasks requiring region feature vectors</li>
+<li>Comparative analysis across multiple genomic datasets</li>
+</ul>
+<h2>Workflow</h2>
+
+<h3>Step 1: Prepare Data</h3>
+
+<p>Gather BED files in a source folder. Optionally specify a file list (default uses all files in the directory). Prepare a universe file as the reference vocabulary for tokenization.</p>
+
+<h3>Step 2: Tokenization</h3>
+
+<p>Run hard tokenization to convert genomic regions into tokens:</p>
+
+<pre><code class="language-python">from geniml.tokenization import hard_tokenization
+
+src_folder = '/path/to/raw/bed/files'
+dst_folder = '/path/to/tokenized_files'
+universe_file = '/path/to/universe_file.bed'
+
+hard_tokenization(src_folder, dst_folder, universe_file, 1e-9)</code></pre>
+
+<p>The final parameter (1e-9) is the p-value threshold for tokenization overlap significance.</p>
+
+<h3>Step 3: Train Region2Vec Model</h3>
+
+<p>Execute Region2Vec training on the tokenized files:</p>
+
+<pre><code class="language-python">from geniml.region2vec import region2vec
+
+region2vec(
+    token_folder=dst_folder,
+    save_dir='./region2vec_model',
+    num_shufflings=1000,
+    embedding_dim=100,
+    context_len=50,
+    window_size=5,
+    init_lr=0.025
+)</code></pre>
+
+<h2>Key Parameters</h2>
+
+<p>| Parameter | Description | Typical Range |</p>
+<p>|-----------|-------------|---------------|</p>
+<p>| <code>init_lr</code> | Initial learning rate | 0.01 - 0.05 |</p>
+<p>| <code>window_size</code> | Context window size | 3 - 10 |</p>
+<p>| <code>num_shufflings</code> | Number of shuffling iterations | 500 - 2000 |</p>
+<p>| <code>embedding_dim</code> | Dimension of output embeddings | 50 - 300 |</p>
+<p>| <code>context_len</code> | Context length for training | 30 - 100 |</p>
+
+<h2>CLI Usage</h2>
+
+<pre><code class="language-bash">geniml region2vec --token-folder /path/to/tokens \
+  --save-dir ./region2vec_model \
+  --num-shuffle 1000 \
+  --embed-dim 100 \
+  --context-len 50 \
+  --window-size 5 \
+  --init-lr 0.025</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Parameter tuning</strong>: Frequently tune <code>init_lr</code>, <code>window_size</code>, <code>num_shufflings</code>, and <code>embedding_dim</code> for optimal performance on your specific dataset</li>
+<li><strong>Universe file</strong>: Use a comprehensive universe file that covers all regions of interest in your analysis</li>
+<li><strong>Validation</strong>: Always validate tokenization output before proceeding to training</li>
+<li><strong>Resources</strong>: Training can be computationally intensive; monitor memory usage with large datasets</li>
+</ul>
+<h2>Output</h2>
+
+<p>The trained model saves embeddings that can be used for:</p>
+<ul><li>Similarity searches across genomic regions</li>
+<li>Clustering region sets</li>
+<li>Feature vectors for downstream ML tasks</li>
+<li>Visualization via dimensionality reduction (t-SNE, UMAP)</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Scembed</h3>
+  <h1>scEmbed: Single-Cell Embedding Generation</h1>
+
+<h2>Overview</h2>
+
+<p>scEmbed trains Region2Vec models on single-cell ATAC-seq datasets to generate cell embeddings for clustering and analysis. It provides an unsupervised machine learning framework for representing and analyzing scATAC-seq data in low-dimensional space.</p>
+
+<h2>When to Use</h2>
+
+<p>Use scEmbed when working with:</p>
+<ul><li>Single-cell ATAC-seq (scATAC-seq) data requiring clustering</li>
+<li>Cell-type annotation tasks</li>
+<li>Dimensionality reduction for single-cell chromatin accessibility</li>
+<li>Integration with scanpy workflows for downstream analysis</li>
+</ul>
+<h2>Workflow</h2>
+
+<h3>Step 1: Data Preparation</h3>
+
+<p>Input data must be in AnnData format with <code>.var</code> attributes containing <code>chr</code>, <code>start</code>, and <code>end</code> values for peaks.</p>
+
+<p><strong>Starting from raw data</strong> (barcodes.txt, peaks.bed, matrix.mtx):</p>
+
+<pre><code class="language-python">import scanpy as sc
+import pandas as pd
+import scipy.io
+import anndata
+
+# Load data
+barcodes = pd.read_csv('barcodes.txt', header=None, names=['barcode'])
+peaks = pd.read_csv('peaks.bed', sep='\t', header=None,
+                    names=['chr', 'start', 'end'])
+matrix = scipy.io.mmread('matrix.mtx').tocsr()
+
+# Create AnnData
+adata = anndata.AnnData(X=matrix.T, obs=barcodes, var=peaks)
+adata.write('scatac_data.h5ad')</code></pre>
+
+<h3>Step 2: Pre-tokenization</h3>
+
+<p>Convert genomic regions into tokens using gtars utilities. This creates a parquet file with tokenized cells for faster training:</p>
+
+<pre><code class="language-python">from geniml.io import tokenize_cells
+
+tokenize_cells(
+    adata='scatac_data.h5ad',
+    universe_file='universe.bed',
+    output='tokenized_cells.parquet'
+)</code></pre>
+
+<p><strong>Benefits of pre-tokenization:</strong></p>
+<ul><li>Faster training iterations</li>
+<li>Reduced memory requirements</li>
+<li>Reusable tokenized data for multiple training runs</li>
+</ul>
+<h3>Step 3: Model Training</h3>
+
+<p>Train the scEmbed model using tokenized data:</p>
+
+<pre><code class="language-python">from geniml.scembed import ScEmbed
+from geniml.region2vec import Region2VecDataset
+
+# Load tokenized dataset
+dataset = Region2VecDataset('tokenized_cells.parquet')
+
+# Initialize and train model
+model = ScEmbed(
+    embedding_dim=100,
+    window_size=5,
+    negative_samples=5
+)
+
+model.train(
+    dataset=dataset,
+    epochs=100,
+    batch_size=256,
+    learning_rate=0.025
+)
+
+# Save model
+model.save('scembed_model/')</code></pre>
+
+<h3>Step 4: Generate Cell Embeddings</h3>
+
+<p>Use the trained model to generate embeddings for cells:</p>
+
+<pre><code class="language-python">from geniml.scembed import ScEmbed
+
+# Load trained model
+model = ScEmbed.from_pretrained('scembed_model/')
+
+# Generate embeddings for AnnData object
+embeddings = model.encode(adata)
+
+# Add to AnnData for downstream analysis
+adata.obsm['scembed_X'] = embeddings</code></pre>
+
+<h3>Step 5: Downstream Analysis</h3>
+
+<p>Integrate with scanpy for clustering and visualization:</p>
+
+<pre><code class="language-python">import scanpy as sc
+
+# Use scEmbed embeddings for neighborhood graph
+sc.pp.neighbors(adata, use_rep='scembed_X')
+
+# Cluster cells
+sc.tl.leiden(adata, resolution=0.5)
+
+# Compute UMAP for visualization
+sc.tl.umap(adata)
+
+# Plot results
+sc.pl.umap(adata, color='leiden')</code></pre>
+
+<h2>Key Parameters</h2>
+
+<h3>Training Parameters</h3>
+
+<p>| Parameter | Description | Typical Range |</p>
+<p>|-----------|-------------|---------------|</p>
+<p>| <code>embedding_dim</code> | Dimension of cell embeddings | 50 - 200 |</p>
+<p>| <code>window_size</code> | Context window for training | 3 - 10 |</p>
+<p>| <code>negative_samples</code> | Number of negative samples | 5 - 20 |</p>
+<p>| <code>epochs</code> | Training epochs | 50 - 200 |</p>
+<p>| <code>batch_size</code> | Training batch size | 128 - 512 |</p>
+<p>| <code>learning_rate</code> | Initial learning rate | 0.01 - 0.05 |</p>
+
+<h3>Tokenization Parameters</h3>
+
+<ul><li><strong>Universe file</strong>: Reference BED file defining the genomic vocabulary</li>
+<li><strong>Overlap threshold</strong>: Minimum overlap for peak-universe matching (typically 1e-9)</li>
+</ul>
+<h2>Pre-trained Models</h2>
+
+<p>Pre-trained scEmbed models are available on Hugging Face for common reference datasets. Load them using:</p>
+
+<pre><code class="language-python">from geniml.scembed import ScEmbed
+
+# Load pre-trained model
+model = ScEmbed.from_pretrained('databio/scembed-pbmc-10k')
+
+# Generate embeddings
+embeddings = model.encode(adata)</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Data quality</strong>: Use filtered peak-barcode matrices, not raw counts</li>
+<li><strong>Pre-tokenization</strong>: Always pre-tokenize to improve training efficiency</li>
+<li><strong>Parameter tuning</strong>: Adjust <code>embedding_dim</code> and training epochs based on dataset size</li>
+<li><strong>Validation</strong>: Use known cell-type markers to validate clustering quality</li>
+<li><strong>Integration</strong>: Combine with scanpy for comprehensive single-cell analysis</li>
+<li><strong>Model sharing</strong>: Export trained models to Hugging Face for reproducibility</li>
+</ul>
+<h2>Example Dataset</h2>
+
+<p>The 10x Genomics PBMC 10k dataset (10,000 peripheral blood mononuclear cells) serves as a standard benchmark:</p>
+<ul><li>Contains diverse immune cell types</li>
+<li>Well-characterized cell populations</li>
+<li>Available from 10x Genomics website</li>
+</ul>
+<h2>Cell-Type Annotation</h2>
+
+<p>After clustering, annotate cell types using k-nearest neighbors (KNN) with reference datasets:</p>
+
+<pre><code class="language-python">from geniml.scembed import annotate_celltypes
+
+# Annotate using reference
+annotations = annotate_celltypes(
+    query_adata=adata,
+    reference_adata=reference,
+    embedding_key='scembed_X',
+    k=10
+)
+
+adata.obs['cell_type'] = annotations</code></pre>
+
+<h2>Output</h2>
+
+<p>scEmbed produces:</p>
+<ul><li>Low-dimensional cell embeddings (stored in <code>adata.obsm</code>)</li>
+<li>Trained model files for reuse</li>
+<li>Compatible format for scanpy downstream analysis</li>
+<li>Optional export to Hugging Face for sharing</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Utilities</h3>
+  <h1>Geniml Utilities and Additional Tools</h1>
+
+<h2>BBClient: BED File Caching</h2>
+
+<h3>Overview</h3>
+
+<p>BBClient provides efficient caching of BED files from remote sources, enabling faster repeated access and integration with R workflows.</p>
+
+<h3>When to Use</h3>
+
+<p>Use BBClient when:</p>
+<ul><li>Repeatedly accessing BED files from remote databases</li>
+<li>Working with BEDbase repositories</li>
+<li>Integrating genomic data with R pipelines</li>
+<li>Need local caching for performance</li>
+</ul>
+<h3>Python Usage</h3>
+
+<pre><code class="language-python">from geniml.bbclient import BBClient
+
+# Initialize client
+client = BBClient(cache_folder='~/.bedcache')
+
+# Fetch and cache BED file
+bed_file = client.load_bed(bed_id='GSM123456')
+
+# Access cached file
+regions = client.get_regions('GSM123456')</code></pre>
+
+<h3>R Integration</h3>
+
+<pre><code class="language-r">library(reticulate)
+geniml &lt;- import("geniml.bbclient")
+
+# Initialize client
+client &lt;- geniml$BBClient(cache_folder='~/.bedcache')
+
+# Load BED file
+bed_file &lt;- client$load_bed(bed_id='GSM123456')</code></pre>
+
+<h3>Best Practices</h3>
+
+<ul><li>Configure cache directory with sufficient storage</li>
+<li>Use consistent cache locations across analyses</li>
+<li>Clear cache periodically to remove unused files</li>
+</ul>
+<hr>
+
+<h2>BEDshift: BED File Randomization</h2>
+
+<h3>Overview</h3>
+
+<p>BEDshift provides tools for randomizing BED files while preserving genomic context, essential for generating null distributions and statistical testing.</p>
+
+<h3>When to Use</h3>
+
+<p>Use BEDshift when:</p>
+<ul><li>Creating null models for statistical testing</li>
+<li>Generating control datasets</li>
+<li>Assessing significance of genomic overlaps</li>
+<li>Benchmarking analysis methods</li>
+</ul>
+<h3>Usage</h3>
+
+<pre><code class="language-python">from geniml.bedshift import bedshift
+
+# Randomize BED file preserving chromosome distribution
+randomized = bedshift(
+    input_bed='peaks.bed',
+    genome='hg38',
+    preserve_chrom=True,
+    n_iterations=100
+)</code></pre>
+
+<h3>CLI Usage</h3>
+
+<pre><code class="language-bash">geniml bedshift \
+  --input peaks.bed \
+  --genome hg38 \
+  --preserve-chrom \
+  --iterations 100 \
+  --output randomized_peaks.bed</code></pre>
+
+<h3>Randomization Strategies</h3>
+
+<p><strong>Preserve chromosome distribution:</strong></p>
+<pre><code class="language-python">bedshift(input_bed, genome, preserve_chrom=True)</code></pre>
+<p>Maintains regions on same chromosomes as original.</p>
+
+<p><strong>Preserve distance distribution:</strong></p>
+<pre><code class="language-python">bedshift(input_bed, genome, preserve_distance=True)</code></pre>
+<p>Maintains inter-region distances.</p>
+
+<p><strong>Preserve region sizes:</strong></p>
+<pre><code class="language-python">bedshift(input_bed, genome, preserve_size=True)</code></pre>
+<p>Keeps original region lengths.</p>
+
+<h3>Best Practices</h3>
+
+<ul><li>Choose randomization strategy matching null hypothesis</li>
+<li>Generate multiple iterations for robust statistics</li>
+<li>Validate randomized output maintains desired properties</li>
+<li>Document randomization parameters for reproducibility</li>
+</ul>
+<hr>
+
+<h2>Evaluation: Model Assessment Tools</h2>
+
+<h3>Overview</h3>
+
+<p>Geniml provides evaluation utilities for assessing embedding quality and model performance.</p>
+
+<h3>When to Use</h3>
+
+<p>Use evaluation tools when:</p>
+<ul><li>Validating trained embeddings</li>
+<li>Comparing different models</li>
+<li>Assessing clustering quality</li>
+<li>Publishing model results</li>
+</ul>
+<h3>Embedding Evaluation</h3>
+
+<pre><code class="language-python">from geniml.evaluation import evaluate_embeddings
+
+# Evaluate Region2Vec embeddings
+metrics = evaluate_embeddings(
+    embeddings_file='region2vec_model/embeddings.npy',
+    labels_file='metadata.csv',
+    metrics=['silhouette', 'davies_bouldin', 'calinski_harabasz']
+)
+
+print(f"Silhouette score: {metrics['silhouette']:.3f}")
+print(f"Davies-Bouldin index: {metrics['davies_bouldin']:.3f}")</code></pre>
+
+<h3>Clustering Metrics</h3>
+
+<p><strong>Silhouette score:</strong> Measures cluster cohesion and separation (-1 to 1, higher better)</p>
+
+<p><strong>Davies-Bouldin index:</strong> Average similarity between clusters (≥0, lower better)</p>
+
+<p><strong>Calinski-Harabasz score:</strong> Ratio of between/within cluster dispersion (higher better)</p>
+
+<h3>scEmbed Cell-Type Annotation Evaluation</h3>
+
+<pre><code class="language-python">from geniml.evaluation import evaluate_annotation
+
+# Evaluate cell-type predictions
+results = evaluate_annotation(
+    predicted=adata.obs['predicted_celltype'],
+    true=adata.obs['true_celltype'],
+    metrics=['accuracy', 'f1', 'confusion_matrix']
+)
+
+print(f"Accuracy: {results['accuracy']:.1%}")
+print(f"F1 score: {results['f1']:.3f}")</code></pre>
+
+<h3>Best Practices</h3>
+
+<ul><li>Use multiple complementary metrics</li>
+<li>Compare against baseline models</li>
+<li>Report metrics on held-out test data</li>
+<li>Visualize embeddings (UMAP/t-SNE) alongside metrics</li>
+</ul>
+<hr>
+
+<h2>Tokenization: Region Tokenization Utilities</h2>
+
+<h3>Overview</h3>
+
+<p>Tokenization converts genomic regions into discrete tokens using a reference universe, enabling word2vec-style training.</p>
+
+<h3>When to Use</h3>
+
+<p>Tokenization is a required preprocessing step for:</p>
+<ul><li>Region2Vec training</li>
+<li>scEmbed model training</li>
+<li>Any embedding method requiring discrete tokens</li>
+</ul>
+<h3>Hard Tokenization</h3>
+
+<p>Strict overlap-based tokenization:</p>
+
+<pre><code class="language-python">from geniml.tokenization import hard_tokenization
+
+hard_tokenization(
+    src_folder='bed_files/',
+    dst_folder='tokenized/',
+    universe_file='universe.bed',
+    p_value_threshold=1e-9
+)</code></pre>
+
+<p><strong>Parameters:</strong></p>
+<ul><li><code>p_value_threshold</code>: Significance level for overlap (typically 1e-9 or 1e-6)</li>
+</ul>
+<h3>Soft Tokenization</h3>
+
+<p>Probabilistic tokenization allowing partial matches:</p>
+
+<pre><code class="language-python">from geniml.tokenization import soft_tokenization
+
+soft_tokenization(
+    src_folder='bed_files/',
+    dst_folder='tokenized/',
+    universe_file='universe.bed',
+    overlap_threshold=0.5
+)</code></pre>
+
+<p><strong>Parameters:</strong></p>
+<ul><li><code>overlap_threshold</code>: Minimum overlap fraction (0-1)</li>
+</ul>
+<h3>Universe-Based Tokenization</h3>
+
+<p>Map regions to universe tokens with custom parameters:</p>
+
+<pre><code class="language-python">from geniml.tokenization import universe_tokenization
+
+universe_tokenization(
+    bed_file='peaks.bed',
+    universe_file='universe.bed',
+    output_file='tokens.txt',
+    method='hard',
+    threshold=1e-9
+)</code></pre>
+
+<h3>Best Practices</h3>
+
+<ul><li><strong>Universe quality</strong>: Use comprehensive, well-constructed universes</li>
+<li><strong>Threshold selection</strong>: More stringent (lower p-value) for higher confidence</li>
+<li><strong>Validation</strong>: Check tokenization coverage (what % of regions tokenized)</li>
+<li><strong>Consistency</strong>: Use same universe and parameters across related analyses</li>
+</ul>
+<h3>Tokenization Coverage</h3>
+
+<p>Check how well regions tokenize:</p>
+
+<pre><code class="language-python">from geniml.tokenization import check_coverage
+
+coverage = check_coverage(
+    bed_file='peaks.bed',
+    universe_file='universe.bed',
+    threshold=1e-9
+)
+
+print(f"Tokenization coverage: {coverage:.1%}")</code></pre>
+
+<p>Aim for >80% coverage for reliable training.</p>
+
+<hr>
+
+<h2>Text2BedNN: Search Backend</h2>
+
+<h3>Overview</h3>
+
+<p>Text2BedNN creates neural network-based search backends for querying genomic regions using natural language or metadata.</p>
+
+<h3>When to Use</h3>
+
+<p>Use Text2BedNN when:</p>
+<ul><li>Building search interfaces for genomic databases</li>
+<li>Enabling natural language queries over BED files</li>
+<li>Creating metadata-aware search systems</li>
+<li>Deploying interactive genomic search applications</li>
+</ul>
+<h3>Workflow</h3>
+
+<p><strong>Step 1: Prepare embeddings</strong></p>
+
+<p>Train BEDspace or Region2Vec model with metadata.</p>
+
+<p><strong>Step 2: Build search index</strong></p>
+
+<pre><code class="language-python">from geniml.search import build_search_index
+
+build_search_index(
+    embeddings_file='bedspace_model/embeddings.npy',
+    metadata_file='metadata.csv',
+    output_dir='search_backend/'
+)</code></pre>
+
+<p><strong>Step 3: Query the index</strong></p>
+
+<pre><code class="language-python">from geniml.search import SearchBackend
+
+backend = SearchBackend.load('search_backend/')
+
+# Natural language query
+results = backend.query(
+    text="T cell regulatory regions",
+    top_k=10
+)
+
+# Metadata query
+results = backend.query(
+    metadata={'cell_type': 'T_cell', 'tissue': 'blood'},
+    top_k=10
+)</code></pre>
+
+<h3>Best Practices</h3>
+
+<ul><li>Train embeddings with rich metadata for better search</li>
+<li>Index large collections for comprehensive coverage</li>
+<li>Validate search relevance on known queries</li>
+<li>Deploy with API for interactive applications</li>
+</ul>
+<hr>
+
+<h2>Additional Tools</h2>
+
+<h3>I/O Utilities</h3>
+
+<pre><code class="language-python">from geniml.io import read_bed, write_bed, load_universe
+
+# Read BED file
+regions = read_bed('peaks.bed')
+
+# Write BED file
+write_bed(regions, 'output.bed')
+
+# Load universe
+universe = load_universe('universe.bed')</code></pre>
+
+<h3>Model Utilities</h3>
+
+<pre><code class="language-python">from geniml.models import save_model, load_model
+
+# Save trained model
+save_model(model, 'my_model/')
+
+# Load model
+model = load_model('my_model/')</code></pre>
+
+<h3>Common Patterns</h3>
+
+<p><strong>Pipeline workflow:</strong></p>
+<pre><code class="language-python"># 1. Build universe
+universe = build_universe(coverage_folder='coverage/', method='cc', cutoff=5)
+
+# 2. Tokenize
+hard_tokenization(src_folder='beds/', dst_folder='tokens/',
+                   universe_file='universe.bed', p_value_threshold=1e-9)
+
+# 3. Train embeddings
+region2vec(token_folder='tokens/', save_dir='model/', num_shufflings=1000)
+
+# 4. Evaluate
+metrics = evaluate_embeddings(embeddings_file='model/embeddings.npy',
+                               labels_file='metadata.csv')</code></pre>
+
+<p>This modular design allows flexible composition of geniml tools for diverse genomic ML workflows.</p>
+
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

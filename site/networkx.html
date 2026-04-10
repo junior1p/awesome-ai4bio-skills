@@ -1,0 +1,2363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NetworkX — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="active">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / NetworkX</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>NetworkX</h1>
+    <p class="description">Comprehensive toolkit for creating, analyzing, and visualizing complex networks and graphs in Python. Use when working with network/graph data structures, analyzing relationships between entities, com</p>
+    <h1>NetworkX</h1>
+
+<h2>Overview</h2>
+
+<p>NetworkX is a Python package for creating, manipulating, and analyzing complex networks and graphs. Use this skill when working with network or graph data structures, including social networks, biological networks, transportation systems, citation networks, knowledge graphs, or any system involving relationships between entities.</p>
+
+<h2>When to Use This Skill</h2>
+
+<p>Invoke this skill when tasks involve:</p>
+
+<ul><li><strong>Creating graphs</strong>: Building network structures from data, adding nodes and edges with attributes</li>
+<li><strong>Graph analysis</strong>: Computing centrality measures, finding shortest paths, detecting communities, measuring clustering</li>
+<li><strong>Graph algorithms</strong>: Running standard algorithms like Dijkstra's, PageRank, minimum spanning trees, maximum flow</li>
+<li><strong>Network generation</strong>: Creating synthetic networks (random, scale-free, small-world models) for testing or simulation</li>
+<li><strong>Graph I/O</strong>: Reading from or writing to various formats (edge lists, GraphML, JSON, CSV, adjacency matrices)</li>
+<li><strong>Visualization</strong>: Drawing and customizing network visualizations with matplotlib or interactive libraries</li>
+<li><strong>Network comparison</strong>: Checking isomorphism, computing graph metrics, analyzing structural properties</li>
+</ul>
+<h2>Core Capabilities</h2>
+
+<h3>1. Graph Creation and Manipulation</h3>
+
+<p>NetworkX supports four main graph types:</p>
+<ul><li><strong>Graph</strong>: Undirected graphs with single edges</li>
+<li><strong>DiGraph</strong>: Directed graphs with one-way connections</li>
+<li><strong>MultiGraph</strong>: Undirected graphs allowing multiple edges between nodes</li>
+<li><strong>MultiDiGraph</strong>: Directed graphs with multiple edges</li>
+</ul>
+<p>Create graphs by:</p>
+<pre><code class="language-python">import networkx as nx
+
+# Create empty graph
+G = nx.Graph()
+
+# Add nodes (can be any hashable type)
+G.add_node(1)
+G.add_nodes_from([2, 3, 4])
+G.add_node("protein_A", type='enzyme', weight=1.5)
+
+# Add edges
+G.add_edge(1, 2)
+G.add_edges_from([(1, 3), (2, 4)])
+G.add_edge(1, 4, weight=0.8, relation='interacts')</code></pre>
+
+<p><strong>Reference</strong>: See <code>references/graph-basics.md</code> for comprehensive guidance on creating, modifying, examining, and managing graph structures, including working with attributes and subgraphs.</p>
+
+<h3>2. Graph Algorithms</h3>
+
+<p>NetworkX provides extensive algorithms for network analysis:</p>
+
+<p><strong>Shortest Paths</strong>:</p>
+<pre><code class="language-python"># Find shortest path
+path = nx.shortest_path(G, source=1, target=5)
+length = nx.shortest_path_length(G, source=1, target=5, weight='weight')</code></pre>
+
+<p><strong>Centrality Measures</strong>:</p>
+<pre><code class="language-python"># Degree centrality
+degree_cent = nx.degree_centrality(G)
+
+# Betweenness centrality
+betweenness = nx.betweenness_centrality(G)
+
+# PageRank
+pagerank = nx.pagerank(G)</code></pre>
+
+<p><strong>Community Detection</strong>:</p>
+<pre><code class="language-python">from networkx.algorithms import community
+
+# Detect communities
+communities = community.greedy_modularity_communities(G)</code></pre>
+
+<p><strong>Connectivity</strong>:</p>
+<pre><code class="language-python"># Check connectivity
+is_connected = nx.is_connected(G)
+
+# Find connected components
+components = list(nx.connected_components(G))</code></pre>
+
+<p><strong>Reference</strong>: See <code>references/algorithms.md</code> for detailed documentation on all available algorithms including shortest paths, centrality measures, clustering, community detection, flows, matching, tree algorithms, and graph traversal.</p>
+
+<h3>3. Graph Generators</h3>
+
+<p>Create synthetic networks for testing, simulation, or modeling:</p>
+
+<p><strong>Classic Graphs</strong>:</p>
+<pre><code class="language-python"># Complete graph
+G = nx.complete_graph(n=10)
+
+# Cycle graph
+G = nx.cycle_graph(n=20)
+
+# Known graphs
+G = nx.karate_club_graph()
+G = nx.petersen_graph()</code></pre>
+
+<p><strong>Random Networks</strong>:</p>
+<pre><code class="language-python"># Erdős-Rényi random graph
+G = nx.erdos_renyi_graph(n=100, p=0.1, seed=42)
+
+# Barabási-Albert scale-free network
+G = nx.barabasi_albert_graph(n=100, m=3, seed=42)
+
+# Watts-Strogatz small-world network
+G = nx.watts_strogatz_graph(n=100, k=6, p=0.1, seed=42)</code></pre>
+
+<p><strong>Structured Networks</strong>:</p>
+<pre><code class="language-python"># Grid graph
+G = nx.grid_2d_graph(m=5, n=7)
+
+# Random tree
+G = nx.random_tree(n=100, seed=42)</code></pre>
+
+<p><strong>Reference</strong>: See <code>references/generators.md</code> for comprehensive coverage of all graph generators including classic, random, lattice, bipartite, and specialized network models with detailed parameters and use cases.</p>
+
+<h3>4. Reading and Writing Graphs</h3>
+
+<p>NetworkX supports numerous file formats and data sources:</p>
+
+<p><strong>File Formats</strong>:</p>
+<pre><code class="language-python"># Edge list
+G = nx.read_edgelist('graph.edgelist')
+nx.write_edgelist(G, 'graph.edgelist')
+
+# GraphML (preserves attributes)
+G = nx.read_graphml('graph.graphml')
+nx.write_graphml(G, 'graph.graphml')
+
+# GML
+G = nx.read_gml('graph.gml')
+nx.write_gml(G, 'graph.gml')
+
+# JSON
+data = nx.node_link_data(G)
+G = nx.node_link_graph(data)</code></pre>
+
+<p><strong>Pandas Integration</strong>:</p>
+<pre><code class="language-python">import pandas as pd
+
+# From DataFrame
+df = pd.DataFrame({'source': [1, 2, 3], 'target': [2, 3, 4], 'weight': [0.5, 1.0, 0.75]})
+G = nx.from_pandas_edgelist(df, 'source', 'target', edge_attr='weight')
+
+# To DataFrame
+df = nx.to_pandas_edgelist(G)</code></pre>
+
+<p><strong>Matrix Formats</strong>:</p>
+<pre><code class="language-python">import numpy as np
+
+# Adjacency matrix
+A = nx.to_numpy_array(G)
+G = nx.from_numpy_array(A)
+
+# Sparse matrix
+A = nx.to_scipy_sparse_array(G)
+G = nx.from_scipy_sparse_array(A)</code></pre>
+
+<p><strong>Reference</strong>: See <code>references/io.md</code> for complete documentation on all I/O formats including CSV, SQL databases, Cytoscape, DOT, and guidance on format selection for different use cases.</p>
+
+<h3>5. Visualization</h3>
+
+<p>Create clear and informative network visualizations:</p>
+
+<p><strong>Basic Visualization</strong>:</p>
+<pre><code class="language-python">import matplotlib.pyplot as plt
+
+# Simple draw
+nx.draw(G, with_labels=True)
+plt.show()
+
+# With layout
+pos = nx.spring_layout(G, seed=42)
+nx.draw(G, pos=pos, with_labels=True, node_color='lightblue', node_size=500)
+plt.show()</code></pre>
+
+<p><strong>Customization</strong>:</p>
+<pre><code class="language-python"># Color by degree
+node_colors = [G.degree(n) for n in G.nodes()]
+nx.draw(G, node_color=node_colors, cmap=plt.cm.viridis)
+
+# Size by centrality
+centrality = nx.betweenness_centrality(G)
+node_sizes = [3000 * centrality[n] for n in G.nodes()]
+nx.draw(G, node_size=node_sizes)
+
+# Edge weights
+edge_widths = [3 * G[u][v].get('weight', 1) for u, v in G.edges()]
+nx.draw(G, width=edge_widths)</code></pre>
+
+<p><strong>Layout Algorithms</strong>:</p>
+<pre><code class="language-python"># Spring layout (force-directed)
+pos = nx.spring_layout(G, seed=42)
+
+# Circular layout
+pos = nx.circular_layout(G)
+
+# Kamada-Kawai layout
+pos = nx.kamada_kawai_layout(G)
+
+# Spectral layout
+pos = nx.spectral_layout(G)</code></pre>
+
+<p><strong>Publication Quality</strong>:</p>
+<pre><code class="language-python">plt.figure(figsize=(12, 8))
+pos = nx.spring_layout(G, seed=42)
+nx.draw(G, pos=pos, node_color='lightblue', node_size=500,
+        edge_color='gray', with_labels=True, font_size=10)
+plt.title('Network Visualization', fontsize=16)
+plt.axis('off')
+plt.tight_layout()
+plt.savefig('network.png', dpi=300, bbox_inches='tight')
+plt.savefig('network.pdf', bbox_inches='tight')  # Vector format</code></pre>
+
+<p><strong>Reference</strong>: See <code>references/visualization.md</code> for extensive documentation on visualization techniques including layout algorithms, customization options, interactive visualizations with Plotly and PyVis, 3D networks, and publication-quality figure creation.</p>
+
+<h2>Working with NetworkX</h2>
+
+<h3>Installation</h3>
+
+<p>Ensure NetworkX is installed:</p>
+<pre><code class="language-python"># Check if installed
+import networkx as nx
+print(nx.__version__)
+
+# Install if needed (via bash)
+# uv pip install networkx
+# uv pip install networkx[default]  # With optional dependencies</code></pre>
+
+<h3>Common Workflow Pattern</h3>
+
+<p>Most NetworkX tasks follow this pattern:</p>
+
+<ul><li><strong>Create or Load Graph</strong>:</li>
+</ul><p>   <code>`</code>python</p>
+<p>   # From scratch</p>
+<p>   G = nx.Graph()</p>
+<p>   G.add_edges_from([(1, 2), (2, 3), (3, 4)])</p>
+
+<p>   # Or load from file/data</p>
+<p>   G = nx.read_edgelist('data.txt')</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Examine Structure</strong>:</li>
+</ul><p>   <code>`</code>python</p>
+<p>   print(f"Nodes: {G.number_of_nodes()}")</p>
+<p>   print(f"Edges: {G.number_of_edges()}")</p>
+<p>   print(f"Density: {nx.density(G)}")</p>
+<p>   print(f"Connected: {nx.is_connected(G)}")</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Analyze</strong>:</li>
+</ul><p>   <code>`</code>python</p>
+<p>   # Compute metrics</p>
+<p>   degree_cent = nx.degree_centrality(G)</p>
+<p>   avg_clustering = nx.average_clustering(G)</p>
+
+<p>   # Find paths</p>
+<p>   path = nx.shortest_path(G, source=1, target=4)</p>
+
+<p>   # Detect communities</p>
+<p>   communities = community.greedy_modularity_communities(G)</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Visualize</strong>:</li>
+</ul><p>   <code>`</code>python</p>
+<p>   pos = nx.spring_layout(G, seed=42)</p>
+<p>   nx.draw(G, pos=pos, with_labels=True)</p>
+<p>   plt.show()</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Export Results</strong>:</li>
+</ul><p>   <code>`</code>python</p>
+<p>   # Save graph</p>
+<p>   nx.write_graphml(G, 'analyzed_network.graphml')</p>
+
+<p>   # Save metrics</p>
+<p>   df = pd.DataFrame({</p>
+<p>       'node': list(degree_cent.keys()),</p>
+<p>       'centrality': list(degree_cent.values())</p>
+<p>   })</p>
+<p>   df.to_csv('centrality_results.csv', index=False)</p>
+<p>   <code>`</code></p>
+
+<h3>Important Considerations</h3>
+
+<p><strong>Floating Point Precision</strong>: When graphs contain floating-point numbers, all results are inherently approximate due to precision limitations. This can affect algorithm outcomes, particularly in minimum/maximum computations.</p>
+
+<p><strong>Memory and Performance</strong>: Each time a script runs, graph data must be loaded into memory. For large networks:</p>
+<ul><li>Use appropriate data structures (sparse matrices for large sparse graphs)</li>
+<li>Consider loading only necessary subgraphs</li>
+<li>Use efficient file formats (pickle for Python objects, compressed formats)</li>
+<li>Leverage approximate algorithms for very large networks (e.g., <code>k</code> parameter in centrality calculations)</li>
+</ul>
+<p><strong>Node and Edge Types</strong>:</p>
+<ul><li>Nodes can be any hashable Python object (numbers, strings, tuples, custom objects)</li>
+<li>Use meaningful identifiers for clarity</li>
+<li>When removing nodes, all incident edges are automatically removed</li>
+</ul>
+<p><strong>Random Seeds</strong>: Always set random seeds for reproducibility in random graph generation and force-directed layouts:</p>
+<pre><code class="language-python">G = nx.erdos_renyi_graph(n=100, p=0.1, seed=42)
+pos = nx.spring_layout(G, seed=42)</code></pre>
+
+<h2>Quick Reference</h2>
+
+<h3>Basic Operations</h3>
+<pre><code class="language-python"># Create
+G = nx.Graph()
+G.add_edge(1, 2)
+
+# Query
+G.number_of_nodes()
+G.number_of_edges()
+G.degree(1)
+list(G.neighbors(1))
+
+# Check
+G.has_node(1)
+G.has_edge(1, 2)
+nx.is_connected(G)
+
+# Modify
+G.remove_node(1)
+G.remove_edge(1, 2)
+G.clear()</code></pre>
+
+<h3>Essential Algorithms</h3>
+<pre><code class="language-python"># Paths
+nx.shortest_path(G, source, target)
+nx.all_pairs_shortest_path(G)
+
+# Centrality
+nx.degree_centrality(G)
+nx.betweenness_centrality(G)
+nx.closeness_centrality(G)
+nx.pagerank(G)
+
+# Clustering
+nx.clustering(G)
+nx.average_clustering(G)
+
+# Components
+nx.connected_components(G)
+nx.strongly_connected_components(G)  # Directed
+
+# Community
+community.greedy_modularity_communities(G)</code></pre>
+
+<h3>File I/O Quick Reference</h3>
+<pre><code class="language-python"># Read
+nx.read_edgelist('file.txt')
+nx.read_graphml('file.graphml')
+nx.read_gml('file.gml')
+
+# Write
+nx.write_edgelist(G, 'file.txt')
+nx.write_graphml(G, 'file.graphml')
+nx.write_gml(G, 'file.gml')
+
+# Pandas
+nx.from_pandas_edgelist(df, 'source', 'target')
+nx.to_pandas_edgelist(G)</code></pre>
+
+<h2>Resources</h2>
+
+<p>This skill includes comprehensive reference documentation:</p>
+
+<h3>references/graph-basics.md</h3>
+<p>Detailed guide on graph types, creating and modifying graphs, adding nodes and edges, managing attributes, examining structure, and working with subgraphs.</p>
+
+<h3>references/algorithms.md</h3>
+<p>Complete coverage of NetworkX algorithms including shortest paths, centrality measures, connectivity, clustering, community detection, flow algorithms, tree algorithms, matching, coloring, isomorphism, and graph traversal.</p>
+
+<h3>references/generators.md</h3>
+<p>Comprehensive documentation on graph generators including classic graphs, random models (Erdős-Rényi, Barabási-Albert, Watts-Strogatz), lattices, trees, social network models, and specialized generators.</p>
+
+<h3>references/io.md</h3>
+<p>Complete guide to reading and writing graphs in various formats: edge lists, adjacency lists, GraphML, GML, JSON, CSV, Pandas DataFrames, NumPy arrays, SciPy sparse matrices, database integration, and format selection guidelines.</p>
+
+<h3>references/visualization.md</h3>
+<p>Extensive documentation on visualization techniques including layout algorithms, customizing node and edge appearance, labels, interactive visualizations with Plotly and PyVis, 3D networks, bipartite layouts, and creating publication-quality figures.</p>
+
+<h2>Additional Resources</h2>
+
+<ul><li><strong>Official Documentation</strong>: https://networkx.org/documentation/latest/</li>
+<li><strong>Tutorial</strong>: https://networkx.org/documentation/latest/tutorial.html</li>
+<li><strong>Gallery</strong>: https://networkx.org/documentation/latest/auto_examples/index.html</li>
+<li><strong>GitHub</strong>: https://github.com/networkx/networkx</li></ul>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Algorithms</h3>
+  <h1>NetworkX Graph Algorithms</h1>
+
+<h2>Shortest Paths</h2>
+
+<h3>Single Source Shortest Paths</h3>
+<pre><code class="language-python"># Dijkstra's algorithm (weighted graphs)
+path = nx.shortest_path(G, source=1, target=5, weight='weight')
+length = nx.shortest_path_length(G, source=1, target=5, weight='weight')
+
+# All shortest paths from source
+paths = nx.single_source_shortest_path(G, source=1)
+lengths = nx.single_source_shortest_path_length(G, source=1)
+
+# Bellman-Ford (handles negative weights)
+path = nx.bellman_ford_path(G, source=1, target=5, weight='weight')</code></pre>
+
+<h3>All Pairs Shortest Paths</h3>
+<pre><code class="language-python"># All pairs (returns iterator)
+for source, paths in nx.all_pairs_shortest_path(G):
+    print(f"From {source}: {paths}")
+
+# Floyd-Warshall algorithm
+lengths = dict(nx.all_pairs_shortest_path_length(G))</code></pre>
+
+<h3>Specialized Shortest Path Algorithms</h3>
+<pre><code class="language-python"># A* algorithm (with heuristic)
+def heuristic(u, v):
+    # Custom heuristic function
+    return abs(u - v)
+
+path = nx.astar_path(G, source=1, target=5, heuristic=heuristic, weight='weight')
+
+# Average shortest path length
+avg_length = nx.average_shortest_path_length(G)</code></pre>
+
+<h2>Connectivity</h2>
+
+<h3>Connected Components (Undirected)</h3>
+<pre><code class="language-python"># Check if connected
+is_connected = nx.is_connected(G)
+
+# Number of components
+num_components = nx.number_connected_components(G)
+
+# Get all components (returns iterator of sets)
+components = list(nx.connected_components(G))
+largest_component = max(components, key=len)
+
+# Get component containing specific node
+component = nx.node_connected_component(G, node=1)</code></pre>
+
+<h3>Strong/Weak Connectivity (Directed)</h3>
+<pre><code class="language-python"># Strong connectivity (mutually reachable)
+is_strongly_connected = nx.is_strongly_connected(G)
+strong_components = list(nx.strongly_connected_components(G))
+largest_scc = max(strong_components, key=len)
+
+# Weak connectivity (ignoring direction)
+is_weakly_connected = nx.is_weakly_connected(G)
+weak_components = list(nx.weakly_connected_components(G))
+
+# Condensation (DAG of strongly connected components)
+condensed = nx.condensation(G)</code></pre>
+
+<h3>Cuts and Connectivity</h3>
+<pre><code class="language-python"># Minimum node/edge cut
+min_node_cut = nx.minimum_node_cut(G, s=1, t=5)
+min_edge_cut = nx.minimum_edge_cut(G, s=1, t=5)
+
+# Node/edge connectivity
+node_connectivity = nx.node_connectivity(G)
+edge_connectivity = nx.edge_connectivity(G)</code></pre>
+
+<h2>Centrality Measures</h2>
+
+<h3>Degree Centrality</h3>
+<pre><code class="language-python"># Fraction of nodes each node is connected to
+degree_cent = nx.degree_centrality(G)
+
+# For directed graphs
+in_degree_cent = nx.in_degree_centrality(G)
+out_degree_cent = nx.out_degree_centrality(G)</code></pre>
+
+<h3>Betweenness Centrality</h3>
+<pre><code class="language-python"># Fraction of shortest paths passing through node
+betweenness = nx.betweenness_centrality(G, weight='weight')
+
+# Edge betweenness
+edge_betweenness = nx.edge_betweenness_centrality(G, weight='weight')
+
+# Approximate for large graphs
+approx_betweenness = nx.betweenness_centrality(G, k=100)  # Sample 100 nodes</code></pre>
+
+<h3>Closeness Centrality</h3>
+<pre><code class="language-python"># Reciprocal of average shortest path length
+closeness = nx.closeness_centrality(G)
+
+# For disconnected graphs
+closeness = nx.closeness_centrality(G, wf_improved=True)</code></pre>
+
+<h3>Eigenvector Centrality</h3>
+<pre><code class="language-python"># Centrality based on connections to high-centrality nodes
+eigenvector = nx.eigenvector_centrality(G, max_iter=1000)
+
+# Katz centrality (variant with attenuation factor)
+katz = nx.katz_centrality(G, alpha=0.1, beta=1.0)</code></pre>
+
+<h3>PageRank</h3>
+<pre><code class="language-python"># Google's PageRank algorithm
+pagerank = nx.pagerank(G, alpha=0.85)
+
+# Personalized PageRank
+personalization = {node: 1.0 if node in [1, 2] else 0.0 for node in G}
+ppr = nx.pagerank(G, personalization=personalization)</code></pre>
+
+<h2>Clustering</h2>
+
+<h3>Clustering Coefficients</h3>
+<pre><code class="language-python"># Clustering coefficient for each node
+clustering = nx.clustering(G)
+
+# Average clustering coefficient
+avg_clustering = nx.average_clustering(G)
+
+# Weighted clustering
+weighted_clustering = nx.clustering(G, weight='weight')</code></pre>
+
+<h3>Transitivity</h3>
+<pre><code class="language-python"># Overall clustering (ratio of triangles to triads)
+transitivity = nx.transitivity(G)</code></pre>
+
+<h3>Triangles</h3>
+<pre><code class="language-python"># Count triangles per node
+triangles = nx.triangles(G)
+
+# Total number of triangles
+total_triangles = sum(triangles.values()) // 3</code></pre>
+
+<h2>Community Detection</h2>
+
+<h3>Modularity-Based</h3>
+<pre><code class="language-python">from networkx.algorithms import community
+
+# Greedy modularity maximization
+communities = community.greedy_modularity_communities(G)
+
+# Compute modularity
+modularity = community.modularity(G, communities)</code></pre>
+
+<h3>Label Propagation</h3>
+<pre><code class="language-python"># Fast community detection
+communities = community.label_propagation_communities(G)</code></pre>
+
+<h3>Girvan-Newman</h3>
+<pre><code class="language-python"># Hierarchical community detection via edge betweenness
+comp = community.girvan_newman(G)
+limited = itertools.takewhile(lambda c: len(c) &lt;= 10, comp)
+for communities in limited:
+    print(tuple(sorted(c) for c in communities))</code></pre>
+
+<h2>Matching and Covering</h2>
+
+<h3>Maximum Matching</h3>
+<pre><code class="language-python"># Maximum cardinality matching
+matching = nx.max_weight_matching(G)
+
+# Check if matching is valid
+is_matching = nx.is_matching(G, matching)
+is_perfect = nx.is_perfect_matching(G, matching)</code></pre>
+
+<h3>Minimum Vertex/Edge Cover</h3>
+<pre><code class="language-python"># Minimum set of nodes covering all edges
+min_vertex_cover = nx.approximation.min_weighted_vertex_cover(G)
+
+# Minimum edge dominating set
+min_edge_dom = nx.approximation.min_edge_dominating_set(G)</code></pre>
+
+<h2>Tree Algorithms</h2>
+
+<h3>Minimum Spanning Tree</h3>
+<pre><code class="language-python"># Kruskal's or Prim's algorithm
+mst = nx.minimum_spanning_tree(G, weight='weight')
+
+# Maximum spanning tree
+mst_max = nx.maximum_spanning_tree(G, weight='weight')
+
+# Enumerate all spanning trees
+all_spanning = nx.all_spanning_trees(G)</code></pre>
+
+<h3>Tree Properties</h3>
+<pre><code class="language-python"># Check if graph is tree
+is_tree = nx.is_tree(G)
+is_forest = nx.is_forest(G)
+
+# For directed graphs
+is_arborescence = nx.is_arborescence(G)</code></pre>
+
+<h2>Flow and Capacity</h2>
+
+<h3>Maximum Flow</h3>
+<pre><code class="language-python"># Maximum flow value
+flow_value = nx.maximum_flow_value(G, s=1, t=5, capacity='capacity')
+
+# Maximum flow with flow dict
+flow_value, flow_dict = nx.maximum_flow(G, s=1, t=5, capacity='capacity')
+
+# Minimum cut
+cut_value, partition = nx.minimum_cut(G, s=1, t=5, capacity='capacity')</code></pre>
+
+<h3>Cost Flow</h3>
+<pre><code class="language-python"># Minimum cost flow
+flow_dict = nx.min_cost_flow(G, demand='demand', capacity='capacity', weight='weight')
+cost = nx.cost_of_flow(G, flow_dict, weight='weight')</code></pre>
+
+<h2>Cycles</h2>
+
+<h3>Finding Cycles</h3>
+<pre><code class="language-python"># Simple cycles (for directed graphs)
+cycles = list(nx.simple_cycles(G))
+
+# Cycle basis (for undirected graphs)
+basis = nx.cycle_basis(G)
+
+# Check if acyclic
+is_dag = nx.is_directed_acyclic_graph(G)</code></pre>
+
+<h3>Topological Sorting</h3>
+<pre><code class="language-python"># Only for DAGs
+try:
+    topo_order = list(nx.topological_sort(G))
+except nx.NetworkXError:
+    print("Graph has cycles")
+
+# All topological sorts
+all_topo = nx.all_topological_sorts(G)</code></pre>
+
+<h2>Cliques</h2>
+
+<h3>Finding Cliques</h3>
+<pre><code class="language-python"># All maximal cliques
+cliques = list(nx.find_cliques(G))
+
+# Maximum clique (NP-complete, approximate)
+max_clique = nx.approximation.max_clique(G)
+
+# Clique number
+clique_number = nx.graph_clique_number(G)
+
+# Number of maximal cliques containing each node
+clique_counts = nx.node_clique_number(G)</code></pre>
+
+<h2>Graph Coloring</h2>
+
+<h3>Node Coloring</h3>
+<pre><code class="language-python"># Greedy coloring
+coloring = nx.greedy_color(G, strategy='largest_first')
+
+# Different strategies: 'largest_first', 'smallest_last', 'random_sequential'
+coloring = nx.greedy_color(G, strategy='smallest_last')</code></pre>
+
+<h2>Isomorphism</h2>
+
+<h3>Graph Isomorphism</h3>
+<pre><code class="language-python"># Check if graphs are isomorphic
+is_isomorphic = nx.is_isomorphic(G1, G2)
+
+# Get isomorphism mapping
+from networkx.algorithms import isomorphism
+GM = isomorphism.GraphMatcher(G1, G2)
+if GM.is_isomorphic():
+    mapping = GM.mapping</code></pre>
+
+<h3>Subgraph Isomorphism</h3>
+<pre><code class="language-python"># Check if G1 is subgraph isomorphic to G2
+is_subgraph_iso = nx.is_isomorphic(G1, G2.subgraph(nodes))</code></pre>
+
+<h2>Traversal Algorithms</h2>
+
+<h3>Depth-First Search (DFS)</h3>
+<pre><code class="language-python"># DFS edges
+dfs_edges = list(nx.dfs_edges(G, source=1))
+
+# DFS tree
+dfs_tree = nx.dfs_tree(G, source=1)
+
+# DFS predecessors
+dfs_pred = nx.dfs_predecessors(G, source=1)
+
+# Preorder and postorder
+preorder = list(nx.dfs_preorder_nodes(G, source=1))
+postorder = list(nx.dfs_postorder_nodes(G, source=1))</code></pre>
+
+<h3>Breadth-First Search (BFS)</h3>
+<pre><code class="language-python"># BFS edges
+bfs_edges = list(nx.bfs_edges(G, source=1))
+
+# BFS tree
+bfs_tree = nx.bfs_tree(G, source=1)
+
+# BFS predecessors and successors
+bfs_pred = nx.bfs_predecessors(G, source=1)
+bfs_succ = nx.bfs_successors(G, source=1)</code></pre>
+
+<h2>Efficiency Considerations</h2>
+
+<h3>Algorithm Complexity</h3>
+<ul><li>Many algorithms have parameters to control computation time</li>
+<li>For large graphs, consider approximate algorithms</li>
+<li>Use <code>k</code> parameter to sample nodes in centrality calculations</li>
+<li>Set <code>max_iter</code> for iterative algorithms</li>
+</ul>
+<h3>Memory Usage</h3>
+<ul><li>Iterator-based functions (e.g., <code>nx.simple_cycles()</code>) save memory</li>
+<li>Convert to list only when necessary</li>
+<li>Use generators for large result sets</li>
+</ul>
+<h3>Numerical Precision</h3>
+<p>When using weighted algorithms with floating-point numbers, results are approximate. Consider:</p>
+<ul><li>Using integer weights when possible</li>
+<li>Setting appropriate tolerance parameters</li>
+<li>Being aware of accumulated rounding errors in iterative algorithms</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Generators</h3>
+  <h1>NetworkX Graph Generators</h1>
+
+<h2>Classic Graphs</h2>
+
+<h3>Complete Graphs</h3>
+<pre><code class="language-python"># Complete graph (all nodes connected to all others)
+G = nx.complete_graph(n=10)
+
+# Complete bipartite graph
+G = nx.complete_bipartite_graph(n1=5, n2=7)
+
+# Complete multipartite graph
+G = nx.complete_multipartite_graph(3, 4, 5)  # Three partitions</code></pre>
+
+<h3>Cycle and Path Graphs</h3>
+<pre><code class="language-python"># Cycle graph (nodes arranged in circle)
+G = nx.cycle_graph(n=20)
+
+# Path graph (linear chain)
+G = nx.path_graph(n=15)
+
+# Circular ladder graph
+G = nx.circular_ladder_graph(n=10)</code></pre>
+
+<h3>Regular Graphs</h3>
+<pre><code class="language-python"># Empty graph (no edges)
+G = nx.empty_graph(n=10)
+
+# Null graph (no nodes)
+G = nx.null_graph()
+
+# Star graph (one central node connected to all others)
+G = nx.star_graph(n=19)  # Creates 20-node star
+
+# Wheel graph (cycle with central hub)
+G = nx.wheel_graph(n=10)</code></pre>
+
+<h3>Special Named Graphs</h3>
+<pre><code class="language-python"># Bull graph
+G = nx.bull_graph()
+
+# Chvatal graph
+G = nx.chvatal_graph()
+
+# Cubical graph
+G = nx.cubical_graph()
+
+# Diamond graph
+G = nx.diamond_graph()
+
+# Dodecahedral graph
+G = nx.dodecahedral_graph()
+
+# Heawood graph
+G = nx.heawood_graph()
+
+# House graph
+G = nx.house_graph()
+
+# Petersen graph
+G = nx.petersen_graph()
+
+# Karate club graph (classic social network)
+G = nx.karate_club_graph()</code></pre>
+
+<h2>Random Graphs</h2>
+
+<h3>Erdős-Rényi Graphs</h3>
+<pre><code class="language-python"># G(n, p) model: n nodes, edge probability p
+G = nx.erdos_renyi_graph(n=100, p=0.1, seed=42)
+
+# G(n, m) model: n nodes, exactly m edges
+G = nx.gnm_random_graph(n=100, m=500, seed=42)
+
+# Fast version (for large sparse graphs)
+G = nx.fast_gnp_random_graph(n=10000, p=0.0001, seed=42)</code></pre>
+
+<h3>Watts-Strogatz Small-World</h3>
+<pre><code class="language-python"># Small-world network with rewiring
+# n nodes, k nearest neighbors, rewiring probability p
+G = nx.watts_strogatz_graph(n=100, k=6, p=0.1, seed=42)
+
+# Connected version (guarantees connectivity)
+G = nx.connected_watts_strogatz_graph(n=100, k=6, p=0.1, tries=100, seed=42)</code></pre>
+
+<h3>Barabási-Albert Preferential Attachment</h3>
+<pre><code class="language-python"># Scale-free network (power-law degree distribution)
+# n nodes, m edges to attach from new node
+G = nx.barabasi_albert_graph(n=100, m=3, seed=42)
+
+# Extended version with parameters
+G = nx.extended_barabasi_albert_graph(n=100, m=3, p=0.5, q=0.2, seed=42)</code></pre>
+
+<h3>Power Law Degree Sequence</h3>
+<pre><code class="language-python"># Power law cluster graph
+G = nx.powerlaw_cluster_graph(n=100, m=3, p=0.1, seed=42)
+
+# Random power law tree
+G = nx.random_powerlaw_tree(n=100, gamma=3, seed=42, tries=1000)</code></pre>
+
+<h3>Configuration Model</h3>
+<pre><code class="language-python"># Graph with specified degree sequence
+degree_sequence = [3, 3, 3, 3, 2, 2, 2, 1, 1, 1]
+G = nx.configuration_model(degree_sequence, seed=42)
+
+# Remove self-loops and parallel edges
+G = nx.Graph(G)
+G.remove_edges_from(nx.selfloop_edges(G))</code></pre>
+
+<h3>Random Geometric Graphs</h3>
+<pre><code class="language-python"># Nodes in unit square, edges if distance &lt; radius
+G = nx.random_geometric_graph(n=100, radius=0.2, seed=42)
+
+# With positions
+pos = nx.get_node_attributes(G, 'pos')</code></pre>
+
+<h3>Random Regular Graphs</h3>
+<pre><code class="language-python"># Every node has exactly d neighbors
+G = nx.random_regular_graph(d=3, n=100, seed=42)</code></pre>
+
+<h3>Stochastic Block Model</h3>
+<pre><code class="language-python"># Community structure model
+sizes = [50, 50, 50]  # Three communities
+probs = [[0.25, 0.05, 0.02],  # Within and between community probabilities
+         [0.05, 0.35, 0.07],
+         [0.02, 0.07, 0.40]]
+G = nx.stochastic_block_model(sizes, probs, seed=42)</code></pre>
+
+<h2>Lattice and Grid Graphs</h2>
+
+<h3>Grid Graphs</h3>
+<pre><code class="language-python"># 2D grid
+G = nx.grid_2d_graph(m=5, n=7)  # 5x7 grid
+
+# 3D grid
+G = nx.grid_graph(dim=[5, 7, 3])  # 5x7x3 grid
+
+# Hexagonal lattice
+G = nx.hexagonal_lattice_graph(m=5, n=7)
+
+# Triangular lattice
+G = nx.triangular_lattice_graph(m=5, n=7)</code></pre>
+
+<h3>Hypercube</h3>
+<pre><code class="language-python"># n-dimensional hypercube
+G = nx.hypercube_graph(n=4)</code></pre>
+
+<h2>Tree Graphs</h2>
+
+<h3>Random Trees</h3>
+<pre><code class="language-python"># Random tree with n nodes
+G = nx.random_tree(n=100, seed=42)
+
+# Prefix tree (tries)
+G = nx.prefix_tree([[0, 1, 2], [0, 1, 3], [0, 4]])</code></pre>
+
+<h3>Balanced Trees</h3>
+<pre><code class="language-python"># Balanced r-ary tree of height h
+G = nx.balanced_tree(r=2, h=5)  # Binary tree, height 5
+
+# Full r-ary tree with n nodes
+G = nx.full_rary_tree(r=3, n=100)  # Ternary tree</code></pre>
+
+<h3>Barbell and Lollipop Graphs</h3>
+<pre><code class="language-python"># Two complete graphs connected by path
+G = nx.barbell_graph(m1=5, m2=3)  # Two K_5 graphs with 3-node path
+
+# Complete graph connected to path
+G = nx.lollipop_graph(m=7, n=5)  # K_7 with 5-node path</code></pre>
+
+<h2>Social Network Models</h2>
+
+<h3>Karate Club</h3>
+<pre><code class="language-python"># Zachary's karate club (classic social network)
+G = nx.karate_club_graph()</code></pre>
+
+<h3>Davis Southern Women</h3>
+<pre><code class="language-python"># Bipartite social network
+G = nx.davis_southern_women_graph()</code></pre>
+
+<h3>Florentine Families</h3>
+<pre><code class="language-python"># Historical marriage and business networks
+G = nx.florentine_families_graph()</code></pre>
+
+<h3>Les Misérables</h3>
+<pre><code class="language-python"># Character co-occurrence network
+G = nx.les_miserables_graph()</code></pre>
+
+<h2>Directed Graph Generators</h2>
+
+<h3>Random Directed Graphs</h3>
+<pre><code class="language-python"># Directed Erdős-Rényi
+G = nx.gnp_random_graph(n=100, p=0.1, directed=True, seed=42)
+
+# Scale-free directed
+G = nx.scale_free_graph(n=100, seed=42)</code></pre>
+
+<h3>DAG (Directed Acyclic Graph)</h3>
+<pre><code class="language-python"># Random DAG
+G = nx.gnp_random_graph(n=20, p=0.2, directed=True, seed=42)
+G = nx.DiGraph([(u, v) for (u, v) in G.edges() if u &lt; v])  # Remove backward edges</code></pre>
+
+<h3>Tournament Graphs</h3>
+<pre><code class="language-python"># Random tournament (complete directed graph)
+G = nx.random_tournament(n=10, seed=42)</code></pre>
+
+<h2>Duplication-Divergence Models</h2>
+
+<h3>Duplication Divergence Graph</h3>
+<pre><code class="language-python"># Biological network model (protein interaction networks)
+G = nx.duplication_divergence_graph(n=100, p=0.5, seed=42)</code></pre>
+
+<h2>Degree Sequence Generators</h2>
+
+<h3>Valid Degree Sequences</h3>
+<pre><code class="language-python"># Check if degree sequence is valid (graphical)
+sequence = [3, 3, 3, 3, 2, 2, 2, 1, 1, 1]
+is_valid = nx.is_graphical(sequence)
+
+# For directed graphs
+in_sequence = [2, 2, 2, 1, 1]
+out_sequence = [2, 2, 1, 2, 1]
+is_valid = nx.is_digraphical(in_sequence, out_sequence)</code></pre>
+
+<h3>Creating from Degree Sequence</h3>
+<pre><code class="language-python"># Havel-Hakimi algorithm
+G = nx.havel_hakimi_graph(degree_sequence)
+
+# Configuration model (allows multi-edges/self-loops)
+G = nx.configuration_model(degree_sequence)
+
+# Directed configuration model
+G = nx.directed_configuration_model(in_degree_sequence, out_degree_sequence)</code></pre>
+
+<h2>Bipartite Graphs</h2>
+
+<h3>Random Bipartite</h3>
+<pre><code class="language-python"># Random bipartite with two node sets
+G = nx.bipartite.random_graph(n=50, m=30, p=0.1, seed=42)
+
+# Configuration model for bipartite
+G = nx.bipartite.configuration_model(deg1=[3, 3, 2], deg2=[2, 2, 2, 2], seed=42)</code></pre>
+
+<h3>Bipartite Generators</h3>
+<pre><code class="language-python"># Complete bipartite
+G = nx.complete_bipartite_graph(n1=5, n2=7)
+
+# Gnmk random bipartite (n, m nodes, k edges)
+G = nx.bipartite.gnmk_random_graph(n=10, m=8, k=20, seed=42)</code></pre>
+
+<h2>Operators on Graphs</h2>
+
+<h3>Graph Operations</h3>
+<pre><code class="language-python"># Union
+G = nx.union(G1, G2)
+
+# Disjoint union
+G = nx.disjoint_union(G1, G2)
+
+# Compose (overlay)
+G = nx.compose(G1, G2)
+
+# Complement
+G = nx.complement(G1)
+
+# Cartesian product
+G = nx.cartesian_product(G1, G2)
+
+# Tensor (Kronecker) product
+G = nx.tensor_product(G1, G2)
+
+# Strong product
+G = nx.strong_product(G1, G2)</code></pre>
+
+<h2>Customization and Seeding</h2>
+
+<h3>Setting Random Seed</h3>
+<p>Always set seed for reproducible graphs:</p>
+<pre><code class="language-python">G = nx.erdos_renyi_graph(n=100, p=0.1, seed=42)</code></pre>
+
+<h3>Converting Graph Types</h3>
+<pre><code class="language-python"># Convert to specific type
+G_directed = G.to_directed()
+G_undirected = G.to_undirected()
+G_multi = nx.MultiGraph(G)</code></pre>
+
+<h2>Performance Considerations</h2>
+
+<h3>Fast Generators</h3>
+<p>For large graphs, use optimized generators:</p>
+<pre><code class="language-python"># Fast ER graph (sparse)
+G = nx.fast_gnp_random_graph(n=10000, p=0.0001, seed=42)</code></pre>
+
+<h3>Memory Efficiency</h3>
+<p>Some generators create graphs incrementally to save memory. For very large graphs, consider:</p>
+<ul><li>Using sparse representations</li>
+<li>Generating subgraphs as needed</li>
+<li>Working with adjacency lists or edge lists instead of full graphs</li>
+</ul>
+<h2>Validation and Properties</h2>
+
+<h3>Checking Generated Graphs</h3>
+<pre><code class="language-python"># Verify properties
+print(f"Nodes: {G.number_of_nodes()}")
+print(f"Edges: {G.number_of_edges()}")
+print(f"Density: {nx.density(G)}")
+print(f"Connected: {nx.is_connected(G)}")
+
+# Degree distribution
+degree_sequence = sorted([d for n, d in G.degree()], reverse=True)</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Graph Basics</h3>
+  <h1>NetworkX Graph Basics</h1>
+
+<h2>Graph Types</h2>
+
+<p>NetworkX supports four main graph classes:</p>
+
+<h3>Graph (Undirected)</h3>
+<pre><code class="language-python">import networkx as nx
+G = nx.Graph()</code></pre>
+<ul><li>Undirected graphs with single edges between nodes</li>
+<li>No parallel edges allowed</li>
+<li>Edges are bidirectional</li>
+</ul>
+<h3>DiGraph (Directed)</h3>
+<pre><code class="language-python">G = nx.DiGraph()</code></pre>
+<ul><li>Directed graphs with one-way connections</li>
+<li>Edge direction matters: (u, v) ≠ (v, u)</li>
+<li>Used for modeling directed relationships</li>
+</ul>
+<h3>MultiGraph (Undirected Multi-edge)</h3>
+<pre><code class="language-python">G = nx.MultiGraph()</code></pre>
+<ul><li>Allows multiple edges between same node pairs</li>
+<li>Useful for modeling multiple relationships</li>
+</ul>
+<h3>MultiDiGraph (Directed Multi-edge)</h3>
+<pre><code class="language-python">G = nx.MultiDiGraph()</code></pre>
+<ul><li>Directed graph with multiple edges between nodes</li>
+<li>Combines features of DiGraph and MultiGraph</li>
+</ul>
+<h2>Creating and Adding Nodes</h2>
+
+<h3>Single Node Addition</h3>
+<pre><code class="language-python">G.add_node(1)
+G.add_node("protein_A")
+G.add_node((x, y))  # Nodes can be any hashable type</code></pre>
+
+<h3>Bulk Node Addition</h3>
+<pre><code class="language-python">G.add_nodes_from([2, 3, 4])
+G.add_nodes_from(range(100, 110))</code></pre>
+
+<h3>Nodes with Attributes</h3>
+<pre><code class="language-python">G.add_node(1, time='5pm', color='red')
+G.add_nodes_from([
+    (4, {"color": "red"}),
+    (5, {"color": "blue", "weight": 1.5})
+])</code></pre>
+
+<h3>Important Node Properties</h3>
+<ul><li>Nodes can be any hashable Python object: strings, tuples, numbers, custom objects</li>
+<li>Node attributes stored as key-value pairs</li>
+<li>Use meaningful node identifiers for clarity</li>
+</ul>
+<h2>Creating and Adding Edges</h2>
+
+<h3>Single Edge Addition</h3>
+<pre><code class="language-python">G.add_edge(1, 2)
+G.add_edge('gene_A', 'gene_B')</code></pre>
+
+<h3>Bulk Edge Addition</h3>
+<pre><code class="language-python">G.add_edges_from([(1, 2), (1, 3), (2, 4)])
+G.add_edges_from(edge_list)</code></pre>
+
+<h3>Edges with Attributes</h3>
+<pre><code class="language-python">G.add_edge(1, 2, weight=4.7, relation='interacts')
+G.add_edges_from([
+    (1, 2, {'weight': 4.7}),
+    (2, 3, {'weight': 8.2, 'color': 'blue'})
+])</code></pre>
+
+<h3>Adding from Edge List with Attributes</h3>
+<pre><code class="language-python"># From pandas DataFrame
+import pandas as pd
+df = pd.DataFrame({'source': [1, 2], 'target': [2, 3], 'weight': [4.7, 8.2]})
+G = nx.from_pandas_edgelist(df, 'source', 'target', edge_attr='weight')</code></pre>
+
+<h2>Examining Graph Structure</h2>
+
+<h3>Basic Properties</h3>
+<pre><code class="language-python"># Get collections
+G.nodes              # NodeView of all nodes
+G.edges              # EdgeView of all edges
+G.adj                # AdjacencyView for neighbor relationships
+
+# Count elements
+G.number_of_nodes()  # Total node count
+G.number_of_edges()  # Total edge count
+len(G)              # Number of nodes (shorthand)
+
+# Degree information
+G.degree()          # DegreeView of all node degrees
+G.degree(1)         # Degree of specific node
+list(G.degree())    # List of (node, degree) pairs</code></pre>
+
+<h3>Checking Existence</h3>
+<pre><code class="language-python"># Check if node exists
+1 in G              # Returns True/False
+G.has_node(1)
+
+# Check if edge exists
+G.has_edge(1, 2)</code></pre>
+
+<h3>Accessing Neighbors</h3>
+<pre><code class="language-python"># Get neighbors of node 1
+list(G.neighbors(1))
+list(G[1])          # Dictionary-like access
+
+# For directed graphs
+list(G.predecessors(1))  # Incoming edges
+list(G.successors(1))    # Outgoing edges</code></pre>
+
+<h3>Iterating Over Elements</h3>
+<pre><code class="language-python"># Iterate over nodes
+for node in G.nodes:
+    print(node, G.nodes[node])  # Access node attributes
+
+# Iterate over edges
+for u, v in G.edges:
+    print(u, v, G[u][v])  # Access edge attributes
+
+# Iterate with attributes
+for node, attrs in G.nodes(data=True):
+    print(node, attrs)
+
+for u, v, attrs in G.edges(data=True):
+    print(u, v, attrs)</code></pre>
+
+<h2>Modifying Graphs</h2>
+
+<h3>Removing Elements</h3>
+<pre><code class="language-python"># Remove single node (also removes incident edges)
+G.remove_node(1)
+
+# Remove multiple nodes
+G.remove_nodes_from([1, 2, 3])
+
+# Remove edges
+G.remove_edge(1, 2)
+G.remove_edges_from([(1, 2), (2, 3)])</code></pre>
+
+<h3>Clearing Graph</h3>
+<pre><code class="language-python">G.clear()           # Remove all nodes and edges
+G.clear_edges()     # Remove only edges, keep nodes</code></pre>
+
+<h2>Attributes and Metadata</h2>
+
+<h3>Graph-Level Attributes</h3>
+<pre><code class="language-python">G.graph['name'] = 'Social Network'
+G.graph['date'] = '2025-01-15'
+print(G.graph)</code></pre>
+
+<h3>Node Attributes</h3>
+<pre><code class="language-python"># Set at creation
+G.add_node(1, time='5pm', weight=0.5)
+
+# Set after creation
+G.nodes[1]['time'] = '6pm'
+nx.set_node_attributes(G, {1: 'red', 2: 'blue'}, 'color')
+
+# Get attributes
+G.nodes[1]
+G.nodes[1]['time']
+nx.get_node_attributes(G, 'color')</code></pre>
+
+<h3>Edge Attributes</h3>
+<pre><code class="language-python"># Set at creation
+G.add_edge(1, 2, weight=4.7, color='red')
+
+# Set after creation
+G[1][2]['weight'] = 5.0
+nx.set_edge_attributes(G, {(1, 2): 10.5}, 'weight')
+
+# Get attributes
+G[1][2]
+G[1][2]['weight']
+G.edges[1, 2]
+nx.get_edge_attributes(G, 'weight')</code></pre>
+
+<h2>Subgraphs and Views</h2>
+
+<h3>Subgraph Creation</h3>
+<pre><code class="language-python"># Create subgraph from node list
+nodes_subset = [1, 2, 3, 4]
+H = G.subgraph(nodes_subset)  # Returns view (references original)
+
+# Create independent copy
+H = G.subgraph(nodes_subset).copy()
+
+# Edge-induced subgraph
+edge_subset = [(1, 2), (2, 3)]
+H = G.edge_subgraph(edge_subset)</code></pre>
+
+<h3>Graph Views</h3>
+<pre><code class="language-python"># Reverse view (for directed graphs)
+G_reversed = G.reverse()
+
+# Convert between directed/undirected
+G_undirected = G.to_undirected()
+G_directed = G.to_directed()</code></pre>
+
+<h2>Graph Information and Diagnostics</h2>
+
+<h3>Basic Information</h3>
+<pre><code class="language-python">print(nx.info(G))   # Summary of graph structure
+
+# Density (ratio of actual edges to possible edges)
+nx.density(G)
+
+# Check if graph is directed
+G.is_directed()
+
+# Check if graph is multigraph
+G.is_multigraph()</code></pre>
+
+<h3>Connectivity Checks</h3>
+<pre><code class="language-python"># For undirected graphs
+nx.is_connected(G)
+nx.number_connected_components(G)
+
+# For directed graphs
+nx.is_strongly_connected(G)
+nx.is_weakly_connected(G)</code></pre>
+
+<h2>Important Considerations</h2>
+
+<h3>Floating Point Precision</h3>
+<p>Once graphs contain floating point numbers, all results are inherently approximate due to precision limitations. Small arithmetic errors can affect algorithm outcomes, particularly in minimum/maximum computations.</p>
+
+<h3>Memory Considerations</h3>
+<p>Each time a script starts, graph data must be loaded into memory. For large datasets, this can cause performance issues. Consider:</p>
+<ul><li>Using efficient data formats (pickle for Python objects)</li>
+<li>Loading only necessary subgraphs</li>
+<li>Using graph databases for very large networks</li>
+</ul>
+<h3>Node and Edge Removal Behavior</h3>
+<p>When a node is removed, all edges incident with that node are automatically removed as well.</p>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Io</h3>
+  <h1>NetworkX Input/Output</h1>
+
+<h2>Reading Graphs from Files</h2>
+
+<h3>Adjacency List Format</h3>
+<pre><code class="language-python"># Read adjacency list (simple text format)
+G = nx.read_adjlist('graph.adjlist')
+
+# With node type conversion
+G = nx.read_adjlist('graph.adjlist', nodetype=int)
+
+# For directed graphs
+G = nx.read_adjlist('graph.adjlist', create_using=nx.DiGraph())
+
+# Write adjacency list
+nx.write_adjlist(G, 'graph.adjlist')</code></pre>
+
+<p>Example adjacency list format:</p>
+<pre><code># node neighbors
+0 1 2
+1 0 3 4
+2 0 3
+3 1 2 4
+4 1 3</code></pre>
+
+<h3>Edge List Format</h3>
+<pre><code class="language-python"># Read edge list
+G = nx.read_edgelist('graph.edgelist')
+
+# With node types and edge data
+G = nx.read_edgelist('graph.edgelist',
+                     nodetype=int,
+                     data=(('weight', float),))
+
+# Read weighted edge list
+G = nx.read_weighted_edgelist('weighted.edgelist')
+
+# Write edge list
+nx.write_edgelist(G, 'graph.edgelist')
+
+# Write weighted edge list
+nx.write_weighted_edgelist(G, 'weighted.edgelist')</code></pre>
+
+<p>Example edge list format:</p>
+<pre><code># source target
+0 1
+1 2
+2 3
+3 0</code></pre>
+
+<p>Example weighted edge list:</p>
+<pre><code># source target weight
+0 1 0.5
+1 2 1.0
+2 3 0.75</code></pre>
+
+<h3>GML (Graph Modelling Language)</h3>
+<pre><code class="language-python"># Read GML (preserves all attributes)
+G = nx.read_gml('graph.gml')
+
+# Write GML
+nx.write_gml(G, 'graph.gml')</code></pre>
+
+<h3>GraphML Format</h3>
+<pre><code class="language-python"># Read GraphML (XML-based format)
+G = nx.read_graphml('graph.graphml')
+
+# Write GraphML
+nx.write_graphml(G, 'graph.graphml')
+
+# With specific encoding
+nx.write_graphml(G, 'graph.graphml', encoding='utf-8')</code></pre>
+
+<h3>GEXF (Graph Exchange XML Format)</h3>
+<pre><code class="language-python"># Read GEXF
+G = nx.read_gexf('graph.gexf')
+
+# Write GEXF
+nx.write_gexf(G, 'graph.gexf')</code></pre>
+
+<h3>Pajek Format</h3>
+<pre><code class="language-python"># Read Pajek .net files
+G = nx.read_pajek('graph.net')
+
+# Write Pajek format
+nx.write_pajek(G, 'graph.net')</code></pre>
+
+<h3>LEDA Format</h3>
+<pre><code class="language-python"># Read LEDA format
+G = nx.read_leda('graph.leda')
+
+# Write LEDA format
+nx.write_leda(G, 'graph.leda')</code></pre>
+
+<h2>Working with Pandas</h2>
+
+<h3>From Pandas DataFrame</h3>
+<pre><code class="language-python">import pandas as pd
+
+# Create graph from edge list DataFrame
+df = pd.DataFrame({
+    'source': [1, 2, 3, 4],
+    'target': [2, 3, 4, 1],
+    'weight': [0.5, 1.0, 0.75, 0.25]
+})
+
+# Create graph
+G = nx.from_pandas_edgelist(df,
+                            source='source',
+                            target='target',
+                            edge_attr='weight')
+
+# With multiple edge attributes
+G = nx.from_pandas_edgelist(df,
+                            source='source',
+                            target='target',
+                            edge_attr=['weight', 'color', 'type'])
+
+# Create directed graph
+G = nx.from_pandas_edgelist(df,
+                            source='source',
+                            target='target',
+                            create_using=nx.DiGraph())</code></pre>
+
+<h3>To Pandas DataFrame</h3>
+<pre><code class="language-python"># Convert graph to edge list DataFrame
+df = nx.to_pandas_edgelist(G)
+
+# With specific edge attributes
+df = nx.to_pandas_edgelist(G, source='node1', target='node2')</code></pre>
+
+<h3>Adjacency Matrix with Pandas</h3>
+<pre><code class="language-python"># Create DataFrame from adjacency matrix
+df = nx.to_pandas_adjacency(G, dtype=int)
+
+# Create graph from adjacency DataFrame
+G = nx.from_pandas_adjacency(df)
+
+# For directed graphs
+G = nx.from_pandas_adjacency(df, create_using=nx.DiGraph())</code></pre>
+
+<h2>NumPy and SciPy Integration</h2>
+
+<h3>Adjacency Matrix</h3>
+<pre><code class="language-python">import numpy as np
+
+# To NumPy adjacency matrix
+A = nx.to_numpy_array(G, dtype=int)
+
+# With specific node order
+nodelist = [1, 2, 3, 4, 5]
+A = nx.to_numpy_array(G, nodelist=nodelist)
+
+# From NumPy array
+G = nx.from_numpy_array(A)
+
+# For directed graphs
+G = nx.from_numpy_array(A, create_using=nx.DiGraph())</code></pre>
+
+<h3>Sparse Matrix (SciPy)</h3>
+<pre><code class="language-python">from scipy import sparse
+
+# To sparse matrix
+A = nx.to_scipy_sparse_array(G)
+
+# With specific format (csr, csc, coo, etc.)
+A_csr = nx.to_scipy_sparse_array(G, format='csr')
+
+# From sparse matrix
+G = nx.from_scipy_sparse_array(A)</code></pre>
+
+<h2>JSON Format</h2>
+
+<h3>Node-Link Format</h3>
+<pre><code class="language-python">import json
+
+# To node-link format (good for d3.js)
+data = nx.node_link_data(G)
+with open('graph.json', 'w') as f:
+    json.dump(data, f)
+
+# From node-link format
+with open('graph.json', 'r') as f:
+    data = json.load(f)
+G = nx.node_link_graph(data)</code></pre>
+
+<h3>Adjacency Data Format</h3>
+<pre><code class="language-python"># To adjacency format
+data = nx.adjacency_data(G)
+with open('graph.json', 'w') as f:
+    json.dump(data, f)
+
+# From adjacency format
+with open('graph.json', 'r') as f:
+    data = json.load(f)
+G = nx.adjacency_graph(data)</code></pre>
+
+<h3>Tree Data Format</h3>
+<pre><code class="language-python"># For tree graphs
+data = nx.tree_data(G, root=0)
+with open('tree.json', 'w') as f:
+    json.dump(data, f)
+
+# From tree format
+with open('tree.json', 'r') as f:
+    data = json.load(f)
+G = nx.tree_graph(data)</code></pre>
+
+<h2>Pickle Format</h2>
+
+<h3>Binary Pickle</h3>
+<pre><code class="language-python">import pickle
+
+# Write pickle (preserves all Python objects)
+with open('graph.pkl', 'wb') as f:
+    pickle.dump(G, f)
+
+# Read pickle
+with open('graph.pkl', 'rb') as f:
+    G = pickle.load(f)
+
+# NetworkX convenience functions
+nx.write_gpickle(G, 'graph.gpickle')
+G = nx.read_gpickle('graph.gpickle')</code></pre>
+
+<h2>CSV Files</h2>
+
+<h3>Custom CSV Reading</h3>
+<pre><code class="language-python">import csv
+
+# Read edges from CSV
+G = nx.Graph()
+with open('edges.csv', 'r') as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        G.add_edge(row['source'], row['target'], weight=float(row['weight']))
+
+# Write edges to CSV
+with open('edges.csv', 'w', newline='') as f:
+    writer = csv.writer(f)
+    writer.writerow(['source', 'target', 'weight'])
+    for u, v, data in G.edges(data=True):
+        writer.writerow([u, v, data.get('weight', 1.0)])</code></pre>
+
+<h2>Database Integration</h2>
+
+<h3>SQL Databases</h3>
+<pre><code class="language-python">import sqlite3
+import pandas as pd
+
+# Read from SQL database via pandas
+conn = sqlite3.connect('network.db')
+df = pd.read_sql_query("SELECT source, target, weight FROM edges", conn)
+G = nx.from_pandas_edgelist(df, 'source', 'target', edge_attr='weight')
+conn.close()
+
+# Write to SQL database
+df = nx.to_pandas_edgelist(G)
+conn = sqlite3.connect('network.db')
+df.to_sql('edges', conn, if_exists='replace', index=False)
+conn.close()</code></pre>
+
+<h2>Graph Formats for Visualization</h2>
+
+<h3>DOT Format (Graphviz)</h3>
+<pre><code class="language-python"># Write DOT file for Graphviz
+nx.drawing.nx_pydot.write_dot(G, 'graph.dot')
+
+# Read DOT file
+G = nx.drawing.nx_pydot.read_dot('graph.dot')
+
+# Generate directly to image (requires Graphviz)
+from networkx.drawing.nx_pydot import to_pydot
+pydot_graph = to_pydot(G)
+pydot_graph.write_png('graph.png')</code></pre>
+
+<h2>Cytoscape Integration</h2>
+
+<h3>Cytoscape JSON</h3>
+<pre><code class="language-python"># Export for Cytoscape
+data = nx.cytoscape_data(G)
+with open('cytoscape.json', 'w') as f:
+    json.dump(data, f)
+
+# Import from Cytoscape
+with open('cytoscape.json', 'r') as f:
+    data = json.load(f)
+G = nx.cytoscape_graph(data)</code></pre>
+
+<h2>Specialized Formats</h2>
+
+<h3>Matrix Market Format</h3>
+<pre><code class="language-python">from scipy.io import mmread, mmwrite
+
+# Read Matrix Market
+A = mmread('graph.mtx')
+G = nx.from_scipy_sparse_array(A)
+
+# Write Matrix Market
+A = nx.to_scipy_sparse_array(G)
+mmwrite('graph.mtx', A)</code></pre>
+
+<h3>Shapefile (for Geographic Networks)</h3>
+<pre><code class="language-python"># Requires pyshp library
+# Read geographic network from shapefile
+G = nx.read_shp('roads.shp')
+
+# Write to shapefile
+nx.write_shp(G, 'network')</code></pre>
+
+<h2>Format Selection Guidelines</h2>
+
+<h3>Choose Based on Requirements</h3>
+
+<p><strong>Adjacency List</strong> - Simple, human-readable, no attributes</p>
+<ul><li>Best for: Simple unweighted graphs, quick viewing</li>
+</ul>
+<p><strong>Edge List</strong> - Simple, supports weights, human-readable</p>
+<ul><li>Best for: Weighted graphs, importing/exporting data</li>
+</ul>
+<p><strong>GML/GraphML</strong> - Full attribute preservation, XML-based</p>
+<ul><li>Best for: Complete graph serialization with all metadata</li>
+</ul>
+<p><strong>JSON</strong> - Web-friendly, JavaScript integration</p>
+<ul><li>Best for: Web applications, d3.js visualizations</li>
+</ul>
+<p><strong>Pickle</strong> - Fast, preserves Python objects, binary</p>
+<ul><li>Best for: Python-only storage, complex attributes</li>
+</ul>
+<p><strong>Pandas</strong> - Data analysis integration, DataFrame operations</p>
+<ul><li>Best for: Data processing pipelines, statistical analysis</li>
+</ul>
+<p><strong>NumPy/SciPy</strong> - Numerical computation, sparse matrices</p>
+<ul><li>Best for: Matrix operations, scientific computing</li>
+</ul>
+<p><strong>DOT</strong> - Visualization, Graphviz integration</p>
+<ul><li>Best for: Creating visual diagrams</li>
+</ul>
+<h2>Performance Considerations</h2>
+
+<h3>Large Graphs</h3>
+<p>For large graphs, consider:</p>
+<pre><code class="language-python"># Use compressed formats
+import gzip
+with gzip.open('graph.adjlist.gz', 'wt') as f:
+    nx.write_adjlist(G, f)
+
+with gzip.open('graph.adjlist.gz', 'rt') as f:
+    G = nx.read_adjlist(f)
+
+# Use binary formats (faster)
+nx.write_gpickle(G, 'graph.gpickle')  # Faster than text formats
+
+# Use sparse matrices for adjacency
+A = nx.to_scipy_sparse_array(G, format='csr')  # Memory efficient</code></pre>
+
+<h3>Incremental Loading</h3>
+<p>For very large graphs:</p>
+<pre><code class="language-python"># Load graph incrementally from edge list
+G = nx.Graph()
+with open('huge_graph.edgelist') as f:
+    for line in f:
+        u, v = line.strip().split()
+        G.add_edge(u, v)
+
+        # Process in chunks
+        if G.number_of_edges() % 100000 == 0:
+            print(f"Loaded {G.number_of_edges()} edges")</code></pre>
+
+<h2>Error Handling</h2>
+
+<h3>Robust File Reading</h3>
+<pre><code class="language-python">try:
+    G = nx.read_graphml('graph.graphml')
+except nx.NetworkXError as e:
+    print(f"Error reading GraphML: {e}")
+except FileNotFoundError:
+    print("File not found")
+    G = nx.Graph()
+
+# Check if file format is supported
+if os.path.exists('graph.txt'):
+    with open('graph.txt') as f:
+        first_line = f.readline()
+        # Detect format and read accordingly</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Visualization</h3>
+  <h1>NetworkX Graph Visualization</h1>
+
+<h2>Basic Drawing with Matplotlib</h2>
+
+<h3>Simple Visualization</h3>
+<pre><code class="language-python">import networkx as nx
+import matplotlib.pyplot as plt
+
+# Create and draw graph
+G = nx.karate_club_graph()
+nx.draw(G)
+plt.show()
+
+# Save to file
+nx.draw(G)
+plt.savefig('graph.png', dpi=300, bbox_inches='tight')
+plt.close()</code></pre>
+
+<h3>Drawing with Labels</h3>
+<pre><code class="language-python"># Draw with node labels
+nx.draw(G, with_labels=True)
+plt.show()
+
+# Custom labels
+labels = {i: f"Node {i}" for i in G.nodes()}
+nx.draw(G, labels=labels, with_labels=True)
+plt.show()</code></pre>
+
+<h2>Layout Algorithms</h2>
+
+<h3>Spring Layout (Force-Directed)</h3>
+<pre><code class="language-python"># Fruchterman-Reingold force-directed algorithm
+pos = nx.spring_layout(G, seed=42)
+nx.draw(G, pos=pos, with_labels=True)
+plt.show()
+
+# With parameters
+pos = nx.spring_layout(G, k=0.5, iterations=50, seed=42)</code></pre>
+
+<h3>Circular Layout</h3>
+<pre><code class="language-python"># Arrange nodes in circle
+pos = nx.circular_layout(G)
+nx.draw(G, pos=pos, with_labels=True)
+plt.show()</code></pre>
+
+<h3>Random Layout</h3>
+<pre><code class="language-python"># Random positioning
+pos = nx.random_layout(G, seed=42)
+nx.draw(G, pos=pos, with_labels=True)
+plt.show()</code></pre>
+
+<h3>Shell Layout</h3>
+<pre><code class="language-python"># Concentric circles
+pos = nx.shell_layout(G)
+nx.draw(G, pos=pos, with_labels=True)
+plt.show()
+
+# With custom shells
+shells = [[0, 1, 2], [3, 4, 5, 6], [7, 8, 9]]
+pos = nx.shell_layout(G, nlist=shells)</code></pre>
+
+<h3>Spectral Layout</h3>
+<pre><code class="language-python"># Use eigenvectors of graph Laplacian
+pos = nx.spectral_layout(G)
+nx.draw(G, pos=pos, with_labels=True)
+plt.show()</code></pre>
+
+<h3>Kamada-Kawai Layout</h3>
+<pre><code class="language-python"># Energy-based layout
+pos = nx.kamada_kawai_layout(G)
+nx.draw(G, pos=pos, with_labels=True)
+plt.show()</code></pre>
+
+<h3>Planar Layout</h3>
+<pre><code class="language-python"># For planar graphs only
+if nx.is_planar(G):
+    pos = nx.planar_layout(G)
+    nx.draw(G, pos=pos, with_labels=True)
+    plt.show()</code></pre>
+
+<h3>Tree Layouts</h3>
+<pre><code class="language-python"># For tree graphs
+if nx.is_tree(G):
+    pos = nx.nx_agraph.graphviz_layout(G, prog='dot')
+    nx.draw(G, pos=pos, with_labels=True)
+    plt.show()</code></pre>
+
+<h2>Customizing Node Appearance</h2>
+
+<h3>Node Colors</h3>
+<pre><code class="language-python"># Single color
+nx.draw(G, node_color='red')
+
+# Different colors per node
+node_colors = ['red' if G.degree(n) &gt; 5 else 'blue' for n in G.nodes()]
+nx.draw(G, node_color=node_colors)
+
+# Color by attribute
+colors = [G.nodes[n].get('value', 0) for n in G.nodes()]
+nx.draw(G, node_color=colors, cmap=plt.cm.viridis)
+plt.colorbar()
+plt.show()</code></pre>
+
+<h3>Node Sizes</h3>
+<pre><code class="language-python"># Size by degree
+node_sizes = [100 * G.degree(n) for n in G.nodes()]
+nx.draw(G, node_size=node_sizes)
+
+# Size by centrality
+centrality = nx.degree_centrality(G)
+node_sizes = [3000 * centrality[n] for n in G.nodes()]
+nx.draw(G, node_size=node_sizes)</code></pre>
+
+<h3>Node Shapes</h3>
+<pre><code class="language-python"># Draw nodes separately with different shapes
+pos = nx.spring_layout(G)
+
+# Circle nodes
+nx.draw_networkx_nodes(G, pos, nodelist=[0, 1, 2],
+                       node_shape='o', node_color='red')
+
+# Square nodes
+nx.draw_networkx_nodes(G, pos, nodelist=[3, 4, 5],
+                       node_shape='s', node_color='blue')
+
+nx.draw_networkx_edges(G, pos)
+nx.draw_networkx_labels(G, pos)
+plt.show()</code></pre>
+
+<h3>Node Borders</h3>
+<pre><code class="language-python">nx.draw(G, pos=pos,
+        node_color='lightblue',
+        edgecolors='black',  # Node border color
+        linewidths=2)        # Node border width
+plt.show()</code></pre>
+
+<h2>Customizing Edge Appearance</h2>
+
+<h3>Edge Colors</h3>
+<pre><code class="language-python"># Single color
+nx.draw(G, edge_color='gray')
+
+# Different colors per edge
+edge_colors = ['red' if G[u][v].get('weight', 1) &gt; 0.5 else 'blue'
+               for u, v in G.edges()]
+nx.draw(G, edge_color=edge_colors)
+
+# Color by weight
+edges = G.edges()
+weights = [G[u][v].get('weight', 1) for u, v in edges]
+nx.draw(G, edge_color=weights, edge_cmap=plt.cm.Reds)</code></pre>
+
+<h3>Edge Widths</h3>
+<pre><code class="language-python"># Width by weight
+edge_widths = [3 * G[u][v].get('weight', 1) for u, v in G.edges()]
+nx.draw(G, width=edge_widths)
+
+# Width by betweenness
+edge_betweenness = nx.edge_betweenness_centrality(G)
+edge_widths = [5 * edge_betweenness[(u, v)] for u, v in G.edges()]
+nx.draw(G, width=edge_widths)</code></pre>
+
+<h3>Edge Styles</h3>
+<pre><code class="language-python"># Dashed edges
+nx.draw(G, style='dashed')
+
+# Different styles per edge
+pos = nx.spring_layout(G)
+strong_edges = [(u, v) for u, v in G.edges() if G[u][v].get('weight', 0) &gt; 0.5]
+weak_edges = [(u, v) for u, v in G.edges() if G[u][v].get('weight', 0) &lt;= 0.5]
+
+nx.draw_networkx_nodes(G, pos)
+nx.draw_networkx_edges(G, pos, edgelist=strong_edges, style='solid', width=2)
+nx.draw_networkx_edges(G, pos, edgelist=weak_edges, style='dashed', width=1)
+plt.show()</code></pre>
+
+<h3>Directed Graphs (Arrows)</h3>
+<pre><code class="language-python"># Draw directed graph with arrows
+G_directed = nx.DiGraph([(1, 2), (2, 3), (3, 1)])
+pos = nx.spring_layout(G_directed)
+
+nx.draw(G_directed, pos=pos, with_labels=True,
+        arrows=True,
+        arrowsize=20,
+        arrowstyle='-&gt;',
+        connectionstyle='arc3,rad=0.1')
+plt.show()</code></pre>
+
+<h2>Labels and Annotations</h2>
+
+<h3>Node Labels</h3>
+<pre><code class="language-python">pos = nx.spring_layout(G)
+
+# Custom labels
+labels = {n: f"N{n}" for n in G.nodes()}
+nx.draw_networkx_labels(G, pos, labels=labels, font_size=12, font_color='white')
+
+# Font customization
+nx.draw_networkx_labels(G, pos,
+                       font_size=10,
+                       font_family='serif',
+                       font_weight='bold')</code></pre>
+
+<h3>Edge Labels</h3>
+<pre><code class="language-python">pos = nx.spring_layout(G)
+nx.draw_networkx_nodes(G, pos)
+nx.draw_networkx_edges(G, pos)
+
+# Edge labels from attributes
+edge_labels = nx.get_edge_attributes(G, 'weight')
+nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
+plt.show()
+
+# Custom edge labels
+edge_labels = {(u, v): f"{u}-{v}" for u, v in G.edges()}
+nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)</code></pre>
+
+<h2>Advanced Drawing Techniques</h2>
+
+<h3>Combining Draw Functions</h3>
+<pre><code class="language-python"># Full control by separating components
+pos = nx.spring_layout(G, seed=42)
+
+# Draw edges
+nx.draw_networkx_edges(G, pos, alpha=0.3, width=1)
+
+# Draw nodes
+nx.draw_networkx_nodes(G, pos,
+                       node_color='lightblue',
+                       node_size=500,
+                       edgecolors='black')
+
+# Draw labels
+nx.draw_networkx_labels(G, pos, font_size=10)
+
+# Remove axis
+plt.axis('off')
+plt.tight_layout()
+plt.show()</code></pre>
+
+<h3>Subgraph Highlighting</h3>
+<pre><code class="language-python">pos = nx.spring_layout(G)
+
+# Identify subgraph to highlight
+subgraph_nodes = [1, 2, 3, 4]
+subgraph = G.subgraph(subgraph_nodes)
+
+# Draw main graph
+nx.draw_networkx_nodes(G, pos, node_color='lightgray', node_size=300)
+nx.draw_networkx_edges(G, pos, alpha=0.2)
+
+# Highlight subgraph
+nx.draw_networkx_nodes(subgraph, pos, node_color='red', node_size=500)
+nx.draw_networkx_edges(subgraph, pos, edge_color='red', width=2)
+
+nx.draw_networkx_labels(G, pos)
+plt.axis('off')
+plt.show()</code></pre>
+
+<h3>Community Coloring</h3>
+<pre><code class="language-python">from networkx.algorithms import community
+
+# Detect communities
+communities = community.greedy_modularity_communities(G)
+
+# Assign colors
+color_map = {}
+colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange']
+for i, comm in enumerate(communities):
+    for node in comm:
+        color_map[node] = colors[i % len(colors)]
+
+node_colors = [color_map[n] for n in G.nodes()]
+
+pos = nx.spring_layout(G)
+nx.draw(G, pos=pos, node_color=node_colors, with_labels=True)
+plt.show()</code></pre>
+
+<h2>Creating Publication-Quality Figures</h2>
+
+<h3>High Resolution Export</h3>
+<pre><code class="language-python">plt.figure(figsize=(12, 8))
+pos = nx.spring_layout(G, seed=42)
+
+nx.draw(G, pos=pos,
+        node_color='lightblue',
+        node_size=500,
+        edge_color='gray',
+        width=1,
+        with_labels=True,
+        font_size=10)
+
+plt.title('Graph Visualization', fontsize=16)
+plt.axis('off')
+plt.tight_layout()
+plt.savefig('publication_graph.png', dpi=300, bbox_inches='tight')
+plt.savefig('publication_graph.pdf', bbox_inches='tight')  # Vector format
+plt.close()</code></pre>
+
+<h3>Multi-Panel Figures</h3>
+<pre><code class="language-python">fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+
+# Different layouts
+layouts = [nx.circular_layout(G), nx.spring_layout(G), nx.spectral_layout(G)]
+titles = ['Circular', 'Spring', 'Spectral']
+
+for ax, pos, title in zip(axes, layouts, titles):
+    nx.draw(G, pos=pos, ax=ax, with_labels=True, node_color='lightblue')
+    ax.set_title(title)
+    ax.axis('off')
+
+plt.tight_layout()
+plt.savefig('layouts_comparison.png', dpi=300)
+plt.close()</code></pre>
+
+<h2>Interactive Visualization Libraries</h2>
+
+<h3>Plotly (Interactive)</h3>
+<pre><code class="language-python">import plotly.graph_objects as go
+
+# Create positions
+pos = nx.spring_layout(G)
+
+# Edge trace
+edge_x = []
+edge_y = []
+for edge in G.edges():
+    x0, y0 = pos[edge[0]]
+    x1, y1 = pos[edge[1]]
+    edge_x.extend([x0, x1, None])
+    edge_y.extend([y0, y1, None])
+
+edge_trace = go.Scatter(
+    x=edge_x, y=edge_y,
+    line=dict(width=0.5, color='#888'),
+    hoverinfo='none',
+    mode='lines')
+
+# Node trace
+node_x = [pos[node][0] for node in G.nodes()]
+node_y = [pos[node][1] for node in G.nodes()]
+
+node_trace = go.Scatter(
+    x=node_x, y=node_y,
+    mode='markers',
+    hoverinfo='text',
+    marker=dict(
+        showscale=True,
+        colorscale='YlGnBu',
+        size=10,
+        colorbar=dict(thickness=15, title='Node Connections'),
+        line_width=2))
+
+# Color by degree
+node_adjacencies = [len(list(G.neighbors(node))) for node in G.nodes()]
+node_trace.marker.color = node_adjacencies
+
+fig = go.Figure(data=[edge_trace, node_trace],
+                layout=go.Layout(
+                    showlegend=False,
+                    hovermode='closest',
+                    margin=dict(b=0, l=0, r=0, t=0)))
+
+fig.show()</code></pre>
+
+<h3>PyVis (Interactive HTML)</h3>
+<pre><code class="language-python">from pyvis.network import Network
+
+# Create network
+net = Network(notebook=True, height='750px', width='100%')
+
+# Add nodes and edges from NetworkX
+net.from_nx(G)
+
+# Customize
+net.show_buttons(filter_=['physics'])
+
+# Save
+net.show('graph.html')</code></pre>
+
+<h3>Graphviz (via pydot)</h3>
+<pre><code class="language-python"># Requires graphviz and pydot
+from networkx.drawing.nx_pydot import graphviz_layout
+
+pos = graphviz_layout(G, prog='neato')  # neato, dot, fdp, sfdp, circo, twopi
+nx.draw(G, pos=pos, with_labels=True)
+plt.show()
+
+# Export to graphviz
+nx.drawing.nx_pydot.write_dot(G, 'graph.dot')</code></pre>
+
+<h2>Bipartite Graph Visualization</h2>
+
+<h3>Two-Set Layout</h3>
+<pre><code class="language-python">from networkx.algorithms import bipartite
+
+# Create bipartite graph
+B = nx.Graph()
+B.add_nodes_from([1, 2, 3, 4], bipartite=0)
+B.add_nodes_from(['a', 'b', 'c', 'd', 'e'], bipartite=1)
+B.add_edges_from([(1, 'a'), (1, 'b'), (2, 'b'), (2, 'c'), (3, 'd'), (4, 'e')])
+
+# Layout with two columns
+pos = {}
+top_nodes = [n for n, d in B.nodes(data=True) if d['bipartite'] == 0]
+bottom_nodes = [n for n, d in B.nodes(data=True) if d['bipartite'] == 1]
+
+pos.update({node: (0, i) for i, node in enumerate(top_nodes)})
+pos.update({node: (1, i) for i, node in enumerate(bottom_nodes)})
+
+nx.draw(B, pos=pos, with_labels=True,
+        node_color=['lightblue' if B.nodes[n]['bipartite'] == 0 else 'lightgreen'
+                   for n in B.nodes()])
+plt.show()</code></pre>
+
+<h2>3D Visualization</h2>
+
+<h3>3D Network Plot</h3>
+<pre><code class="language-python">import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+# 3D spring layout
+pos = nx.spring_layout(G, dim=3, seed=42)
+
+# Extract coordinates
+node_xyz = np.array([pos[v] for v in G.nodes()])
+edge_xyz = np.array([(pos[u], pos[v]) for u, v in G.edges()])
+
+# Create figure
+fig = plt.figure(figsize=(10, 8))
+ax = fig.add_subplot(111, projection='3d')
+
+# Plot edges
+for vizedge in edge_xyz:
+    ax.plot(*vizedge.T, color='gray', alpha=0.5)
+
+# Plot nodes
+ax.scatter(*node_xyz.T, s=100, c='lightblue', edgecolors='black')
+
+# Labels
+for i, (x, y, z) in enumerate(node_xyz):
+    ax.text(x, y, z, str(i))
+
+ax.set_axis_off()
+plt.show()</code></pre>
+
+<h2>Best Practices</h2>
+
+<h3>Performance</h3>
+<ul><li>For large graphs (>1000 nodes), use simpler layouts (circular, random)</li>
+<li>Use <code>alpha</code> parameter to make dense edges more visible</li>
+<li>Consider downsampling or showing subgraphs for very large networks</li>
+</ul>
+<h3>Aesthetics</h3>
+<ul><li>Use consistent color schemes</li>
+<li>Scale node sizes meaningfully (e.g., by degree or importance)</li>
+<li>Keep labels readable (adjust font size and position)</li>
+<li>Use white space effectively (adjust figure size)</li>
+</ul>
+<h3>Reproducibility</h3>
+<ul><li>Always set random seeds for layouts: <code>nx.spring_layout(G, seed=42)</code></li>
+<li>Save layout positions for consistency across multiple plots</li>
+<li>Document color/size mappings in legends or captions</li>
+</ul>
+<h3>File Formats</h3>
+<ul><li>PNG for raster images (web, presentations)</li>
+<li>PDF for vector graphics (publications, scalable)</li>
+<li>SVG for web and interactive applications</li>
+<li>HTML for interactive visualizations</li>
+</ul>
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

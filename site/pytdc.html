@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyTDC (Therapeutics Data Commons) — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="active">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / PyTDC (Therapeutics Data Commons)</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>PyTDC (Therapeutics Data Commons)</h1>
+    <p class="description">Therapeutics Data Commons. AI-ready drug discovery datasets (ADME, toxicity, DTI), benchmarks, scaffold splits, molecular oracles, for therapeutic ML and pharmacological prediction.</p>
+    <h1>PyTDC (Therapeutics Data Commons)</h1>
+
+<h2>Overview</h2>
+
+<p>PyTDC is an open-science platform providing AI-ready datasets and benchmarks for drug discovery and development. Access curated datasets spanning the entire therapeutics pipeline with standardized evaluation metrics and meaningful data splits, organized into three categories: single-instance prediction (molecular/protein properties), multi-instance prediction (drug-target interactions, DDI), and generation (molecule generation, retrosynthesis).</p>
+
+<h2>When to Use This Skill</h2>
+
+<p>This skill should be used when:</p>
+<ul><li>Working with drug discovery or therapeutic ML datasets</li>
+<li>Benchmarking machine learning models on standardized pharmaceutical tasks</li>
+<li>Predicting molecular properties (ADME, toxicity, bioactivity)</li>
+<li>Predicting drug-target or drug-drug interactions</li>
+<li>Generating novel molecules with desired properties</li>
+<li>Accessing curated datasets with proper train/test splits (scaffold, cold-split)</li>
+<li>Using molecular oracles for property optimization</li>
+</ul>
+<h2>Installation & Setup</h2>
+
+<p>Install PyTDC using pip:</p>
+
+<pre><code class="language-bash">uv pip install PyTDC</code></pre>
+
+<p>To upgrade to the latest version:</p>
+
+<pre><code class="language-bash">uv pip install PyTDC --upgrade</code></pre>
+
+<p>Core dependencies (automatically installed):</p>
+<ul><li>numpy, pandas, tqdm, seaborn, scikit_learn, fuzzywuzzy</li>
+</ul>
+<p>Additional packages are installed automatically as needed for specific features.</p>
+
+<h2>Quick Start</h2>
+
+<p>The basic pattern for accessing any TDC dataset follows this structure:</p>
+
+<pre><code class="language-python">from tdc.&lt;problem&gt; import &lt;Task&gt;
+data = &lt;Task&gt;(name='&lt;Dataset&gt;')
+split = data.get_split(method='scaffold', seed=1, frac=[0.7, 0.1, 0.2])
+df = data.get_data(format='df')</code></pre>
+
+<p>Where:</p>
+<ul><li><code><problem></code>: One of <code>single_pred</code>, <code>multi_pred</code>, or <code>generation</code></li>
+<li><code><Task></code>: Specific task category (e.g., ADME, DTI, MolGen)</li>
+<li><code><Dataset></code>: Dataset name within that task</li>
+</ul>
+<p><strong>Example - Loading ADME data:</strong></p>
+
+<pre><code class="language-python">from tdc.single_pred import ADME
+data = ADME(name='Caco2_Wang')
+split = data.get_split(method='scaffold')
+# Returns dict with 'train', 'valid', 'test' DataFrames</code></pre>
+
+<h2>Single-Instance Prediction Tasks</h2>
+
+<p>Single-instance prediction involves forecasting properties of individual biomedical entities (molecules, proteins, etc.).</p>
+
+<h3>Available Task Categories</h3>
+
+<h4>1. ADME (Absorption, Distribution, Metabolism, Excretion)</h4>
+
+<p>Predict pharmacokinetic properties of drug molecules.</p>
+
+<pre><code class="language-python">from tdc.single_pred import ADME
+data = ADME(name='Caco2_Wang')  # Intestinal permeability
+# Other datasets: HIA_Hou, Bioavailability_Ma, Lipophilicity_AstraZeneca, etc.</code></pre>
+
+<p><strong>Common ADME datasets:</strong></p>
+<ul><li>Caco2 - Intestinal permeability</li>
+<li>HIA - Human intestinal absorption</li>
+<li>Bioavailability - Oral bioavailability</li>
+<li>Lipophilicity - Octanol-water partition coefficient</li>
+<li>Solubility - Aqueous solubility</li>
+<li>BBB - Blood-brain barrier penetration</li>
+<li>CYP - Cytochrome P450 metabolism</li>
+</ul>
+<h4>2. Toxicity (Tox)</h4>
+
+<p>Predict toxicity and adverse effects of compounds.</p>
+
+<pre><code class="language-python">from tdc.single_pred import Tox
+data = Tox(name='hERG')  # Cardiotoxicity
+# Other datasets: AMES, DILI, Carcinogens_Lagunin, etc.</code></pre>
+
+<p><strong>Common toxicity datasets:</strong></p>
+<ul><li>hERG - Cardiac toxicity</li>
+<li>AMES - Mutagenicity</li>
+<li>DILI - Drug-induced liver injury</li>
+<li>Carcinogens - Carcinogenicity</li>
+<li>ClinTox - Clinical trial toxicity</li>
+</ul>
+<h4>3. HTS (High-Throughput Screening)</h4>
+
+<p>Bioactivity predictions from screening data.</p>
+
+<pre><code class="language-python">from tdc.single_pred import HTS
+data = HTS(name='SARSCoV2_Vitro_Touret')</code></pre>
+
+<h4>4. QM (Quantum Mechanics)</h4>
+
+<p>Quantum mechanical properties of molecules.</p>
+
+<pre><code class="language-python">from tdc.single_pred import QM
+data = QM(name='QM7')</code></pre>
+
+<h4>5. Other Single Prediction Tasks</h4>
+
+<ul><li><strong>Yields</strong>: Chemical reaction yield prediction</li>
+<li><strong>Epitope</strong>: Epitope prediction for biologics</li>
+<li><strong>Develop</strong>: Development-stage predictions</li>
+<li><strong>CRISPROutcome</strong>: Gene editing outcome prediction</li>
+</ul>
+<h3>Data Format</h3>
+
+<p>Single prediction datasets typically return DataFrames with columns:</p>
+<ul><li><code>Drug_ID</code> or <code>Compound_ID</code>: Unique identifier</li>
+<li><code>Drug</code> or <code>X</code>: SMILES string or molecular representation</li>
+<li><code>Y</code>: Target label (continuous or binary)</li>
+</ul>
+<h2>Multi-Instance Prediction Tasks</h2>
+
+<p>Multi-instance prediction involves forecasting properties of interactions between multiple biomedical entities.</p>
+
+<h3>Available Task Categories</h3>
+
+<h4>1. DTI (Drug-Target Interaction)</h4>
+
+<p>Predict binding affinity between drugs and protein targets.</p>
+
+<pre><code class="language-python">from tdc.multi_pred import DTI
+data = DTI(name='BindingDB_Kd')
+split = data.get_split()</code></pre>
+
+<p><strong>Available datasets:</strong></p>
+<ul><li>BindingDB_Kd - Dissociation constant (52,284 pairs)</li>
+<li>BindingDB_IC50 - Half-maximal inhibitory concentration (991,486 pairs)</li>
+<li>BindingDB_Ki - Inhibition constant (375,032 pairs)</li>
+<li>DAVIS, KIBA - Kinase binding datasets</li>
+</ul>
+<p><strong>Data format:</strong> Drug_ID, Target_ID, Drug (SMILES), Target (sequence), Y (binding affinity)</p>
+
+<h4>2. DDI (Drug-Drug Interaction)</h4>
+
+<p>Predict interactions between drug pairs.</p>
+
+<pre><code class="language-python">from tdc.multi_pred import DDI
+data = DDI(name='DrugBank')
+split = data.get_split()</code></pre>
+
+<p>Multi-class classification task predicting interaction types. Dataset contains 191,808 DDI pairs with 1,706 drugs.</p>
+
+<h4>3. PPI (Protein-Protein Interaction)</h4>
+
+<p>Predict protein-protein interactions.</p>
+
+<pre><code class="language-python">from tdc.multi_pred import PPI
+data = PPI(name='HuRI')</code></pre>
+
+<h4>4. Other Multi-Prediction Tasks</h4>
+
+<ul><li><strong>GDA</strong>: Gene-disease associations</li>
+<li><strong>DrugRes</strong>: Drug resistance prediction</li>
+<li><strong>DrugSyn</strong>: Drug synergy prediction</li>
+<li><strong>PeptideMHC</strong>: Peptide-MHC binding</li>
+<li><strong>AntibodyAff</strong>: Antibody affinity prediction</li>
+<li><strong>MTI</strong>: miRNA-target interactions</li>
+<li><strong>Catalyst</strong>: Catalyst prediction</li>
+<li><strong>TrialOutcome</strong>: Clinical trial outcome prediction</li>
+</ul>
+<h2>Generation Tasks</h2>
+
+<p>Generation tasks involve creating novel biomedical entities with desired properties.</p>
+
+<h3>1. Molecular Generation (MolGen)</h3>
+
+<p>Generate diverse, novel molecules with desirable chemical properties.</p>
+
+<pre><code class="language-python">from tdc.generation import MolGen
+data = MolGen(name='ChEMBL_V29')
+split = data.get_split()</code></pre>
+
+<p>Use with oracles to optimize for specific properties:</p>
+
+<pre><code class="language-python">from tdc import Oracle
+oracle = Oracle(name='GSK3B')
+score = oracle('CC(C)Cc1ccc(cc1)C(C)C(O)=O')  # Evaluate SMILES</code></pre>
+
+<p>See <code>references/oracles.md</code> for all available oracle functions.</p>
+
+<h3>2. Retrosynthesis (RetroSyn)</h3>
+
+<p>Predict reactants needed to synthesize a target molecule.</p>
+
+<pre><code class="language-python">from tdc.generation import RetroSyn
+data = RetroSyn(name='USPTO')
+split = data.get_split()</code></pre>
+
+<p>Dataset contains 1,939,253 reactions from USPTO database.</p>
+
+<h3>3. Paired Molecule Generation</h3>
+
+<p>Generate molecule pairs (e.g., prodrug-drug pairs).</p>
+
+<pre><code class="language-python">from tdc.generation import PairMolGen
+data = PairMolGen(name='Prodrug')</code></pre>
+
+<p>For detailed oracle documentation and molecular generation workflows, refer to <code>references/oracles.md</code> and <code>scripts/molecular_generation.py</code>.</p>
+
+<h2>Benchmark Groups</h2>
+
+<p>Benchmark groups provide curated collections of related datasets for systematic model evaluation.</p>
+
+<h3>ADMET Benchmark Group</h3>
+
+<pre><code class="language-python">from tdc.benchmark_group import admet_group
+group = admet_group(path='data/')
+
+# Get benchmark datasets
+benchmark = group.get('Caco2_Wang')
+predictions = {}
+
+for seed in [1, 2, 3, 4, 5]:
+    train, valid = benchmark['train'], benchmark['valid']
+    # Train model here
+    predictions[seed] = model.predict(benchmark['test'])
+
+# Evaluate with required 5 seeds
+results = group.evaluate(predictions)</code></pre>
+
+<p><strong>ADMET Group includes 22 datasets</strong> covering absorption, distribution, metabolism, excretion, and toxicity.</p>
+
+<h3>Other Benchmark Groups</h3>
+
+<p>Available benchmark groups include collections for:</p>
+<ul><li>ADMET properties</li>
+<li>Drug-target interactions</li>
+<li>Drug combination prediction</li>
+<li>And more specialized therapeutic tasks</li>
+</ul>
+<p>For benchmark evaluation workflows, see <code>scripts/benchmark_evaluation.py</code>.</p>
+
+<h2>Data Functions</h2>
+
+<p>TDC provides comprehensive data processing utilities organized into four categories.</p>
+
+<h3>1. Dataset Splits</h3>
+
+<p>Retrieve train/validation/test partitions with various strategies:</p>
+
+<pre><code class="language-python"># Scaffold split (default for most tasks)
+split = data.get_split(method='scaffold', seed=1, frac=[0.7, 0.1, 0.2])
+
+# Random split
+split = data.get_split(method='random', seed=42, frac=[0.8, 0.1, 0.1])
+
+# Cold split (for DTI/DDI tasks)
+split = data.get_split(method='cold_drug', seed=1)  # Unseen drugs in test
+split = data.get_split(method='cold_target', seed=1)  # Unseen targets in test</code></pre>
+
+<p><strong>Available split strategies:</strong></p>
+<ul><li><code>random</code>: Random shuffling</li>
+<li><code>scaffold</code>: Scaffold-based (for chemical diversity)</li>
+<li><code>cold_drug</code>, <code>cold_target</code>, <code>cold_drug_target</code>: For DTI tasks</li>
+<li><code>temporal</code>: Time-based splits for temporal datasets</li>
+</ul>
+<h3>2. Model Evaluation</h3>
+
+<p>Use standardized metrics for evaluation:</p>
+
+<pre><code class="language-python">from tdc import Evaluator
+
+# For binary classification
+evaluator = Evaluator(name='ROC-AUC')
+score = evaluator(y_true, y_pred)
+
+# For regression
+evaluator = Evaluator(name='RMSE')
+score = evaluator(y_true, y_pred)</code></pre>
+
+<p><strong>Available metrics:</strong> ROC-AUC, PR-AUC, F1, Accuracy, RMSE, MAE, R2, Spearman, Pearson, and more.</p>
+
+<h3>3. Data Processing</h3>
+
+<p>TDC provides 11 key processing utilities:</p>
+
+<pre><code class="language-python">from tdc.chem_utils import MolConvert
+
+# Molecule format conversion
+converter = MolConvert(src='SMILES', dst='PyG')
+pyg_graph = converter('CC(C)Cc1ccc(cc1)C(C)C(O)=O')</code></pre>
+
+<p><strong>Processing utilities include:</strong></p>
+<ul><li>Molecule format conversion (SMILES, SELFIES, PyG, DGL, ECFP, etc.)</li>
+<li>Molecule filters (PAINS, drug-likeness)</li>
+<li>Label binarization and unit conversion</li>
+<li>Data balancing (over/under-sampling)</li>
+<li>Negative sampling for pair data</li>
+<li>Graph transformation</li>
+<li>Entity retrieval (CID to SMILES, UniProt to sequence)</li>
+</ul>
+<p>For comprehensive utilities documentation, see <code>references/utilities.md</code>.</p>
+
+<h3>4. Molecule Generation Oracles</h3>
+
+<p>TDC provides 17+ oracle functions for molecular optimization:</p>
+
+<pre><code class="language-python">from tdc import Oracle
+
+# Single oracle
+oracle = Oracle(name='DRD2')
+score = oracle('CC(C)Cc1ccc(cc1)C(C)C(O)=O')
+
+# Multiple oracles
+oracle = Oracle(name='JNK3')
+scores = oracle(['SMILES1', 'SMILES2', 'SMILES3'])</code></pre>
+
+<p>For complete oracle documentation, see <code>references/oracles.md</code>.</p>
+
+<h2>Advanced Features</h2>
+
+<h3>Retrieve Available Datasets</h3>
+
+<pre><code class="language-python">from tdc.utils import retrieve_dataset_names
+
+# Get all ADME datasets
+adme_datasets = retrieve_dataset_names('ADME')
+
+# Get all DTI datasets
+dti_datasets = retrieve_dataset_names('DTI')</code></pre>
+
+<h3>Label Transformations</h3>
+
+<pre><code class="language-python"># Get label mapping
+label_map = data.get_label_map(name='DrugBank')
+
+# Convert labels
+from tdc.chem_utils import label_transform
+transformed = label_transform(y, from_unit='nM', to_unit='p')</code></pre>
+
+<h3>Database Queries</h3>
+
+<pre><code class="language-python">from tdc.utils import cid2smiles, uniprot2seq
+
+# Convert PubChem CID to SMILES
+smiles = cid2smiles(2244)
+
+# Convert UniProt ID to amino acid sequence
+sequence = uniprot2seq('P12345')</code></pre>
+
+<h2>Common Workflows</h2>
+
+<h3>Workflow 1: Train a Single Prediction Model</h3>
+
+<p>See <code>scripts/load_and_split_data.py</code> for a complete example:</p>
+
+<pre><code class="language-python">from tdc.single_pred import ADME
+from tdc import Evaluator
+
+# Load data
+data = ADME(name='Caco2_Wang')
+split = data.get_split(method='scaffold', seed=42)
+
+train, valid, test = split['train'], split['valid'], split['test']
+
+# Train model (user implements)
+# model.fit(train['Drug'], train['Y'])
+
+# Evaluate
+evaluator = Evaluator(name='MAE')
+# score = evaluator(test['Y'], predictions)</code></pre>
+
+<h3>Workflow 2: Benchmark Evaluation</h3>
+
+<p>See <code>scripts/benchmark_evaluation.py</code> for a complete example with multiple seeds and proper evaluation protocol.</p>
+
+<h3>Workflow 3: Molecular Generation with Oracles</h3>
+
+<p>See <code>scripts/molecular_generation.py</code> for an example of goal-directed generation using oracle functions.</p>
+
+<h2>Resources</h2>
+
+<p>This skill includes bundled resources for common TDC workflows:</p>
+
+<h3>scripts/</h3>
+
+<ul><li><code>load_and_split_data.py</code>: Template for loading and splitting TDC datasets with various strategies</li>
+<li><code>benchmark_evaluation.py</code>: Template for running benchmark group evaluations with proper 5-seed protocol</li>
+<li><code>molecular_generation.py</code>: Template for molecular generation using oracle functions</li>
+</ul>
+<h3>references/</h3>
+
+<ul><li><code>datasets.md</code>: Comprehensive catalog of all available datasets organized by task type</li>
+<li><code>oracles.md</code>: Complete documentation of all 17+ molecule generation oracles</li>
+<li><code>utilities.md</code>: Detailed guide to data processing, splitting, and evaluation utilities</li>
+</ul>
+<h2>Additional Resources</h2>
+
+<ul><li><strong>Official Website</strong>: https://tdcommons.ai</li>
+<li><strong>Documentation</strong>: https://tdc.readthedocs.io</li>
+<li><strong>GitHub</strong>: https://github.com/mims-harvard/TDC</li>
+<li><strong>Paper</strong>: NeurIPS 2021 - "Therapeutics Data Commons: Machine Learning Datasets and Tasks for Drug Discovery and Development"</li></ul>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Datasets</h3>
+  <h1>TDC Datasets Comprehensive Catalog</h1>
+
+<p>This document provides a comprehensive catalog of all available datasets in the Therapeutics Data Commons, organized by task category.</p>
+
+<h2>Single-Instance Prediction Datasets</h2>
+
+<h3>ADME (Absorption, Distribution, Metabolism, Excretion)</h3>
+
+<p><strong>Absorption:</strong></p>
+<ul><li><code>Caco2_Wang</code> - Caco-2 cell permeability (906 compounds)</li>
+<li><code>Caco2_AstraZeneca</code> - Caco-2 permeability from AstraZeneca (700 compounds)</li>
+<li><code>HIA_Hou</code> - Human intestinal absorption (578 compounds)</li>
+<li><code>Pgp_Broccatelli</code> - P-glycoprotein inhibition (1,212 compounds)</li>
+<li><code>Bioavailability_Ma</code> - Oral bioavailability (640 compounds)</li>
+<li><code>F20_edrug3d</code> - Oral bioavailability F>=20% (1,017 compounds)</li>
+<li><code>F30_edrug3d</code> - Oral bioavailability F>=30% (1,017 compounds)</li>
+</ul>
+<p><strong>Distribution:</strong></p>
+<ul><li><code>BBB_Martins</code> - Blood-brain barrier penetration (1,975 compounds)</li>
+<li><code>PPBR_AZ</code> - Plasma protein binding rate (1,797 compounds)</li>
+<li><code>VDss_Lombardo</code> - Volume of distribution at steady state (1,130 compounds)</li>
+</ul>
+<p><strong>Metabolism:</strong></p>
+<ul><li><code>CYP2C19_Veith</code> - CYP2C19 inhibition (12,665 compounds)</li>
+<li><code>CYP2D6_Veith</code> - CYP2D6 inhibition (13,130 compounds)</li>
+<li><code>CYP3A4_Veith</code> - CYP3A4 inhibition (12,328 compounds)</li>
+<li><code>CYP1A2_Veith</code> - CYP1A2 inhibition (12,579 compounds)</li>
+<li><code>CYP2C9_Veith</code> - CYP2C9 inhibition (12,092 compounds)</li>
+<li><code>CYP2C9_Substrate_CarbonMangels</code> - CYP2C9 substrate (666 compounds)</li>
+<li><code>CYP2D6_Substrate_CarbonMangels</code> - CYP2D6 substrate (664 compounds)</li>
+<li><code>CYP3A4_Substrate_CarbonMangels</code> - CYP3A4 substrate (667 compounds)</li>
+</ul>
+<p><strong>Excretion:</strong></p>
+<ul><li><code>Half_Life_Obach</code> - Half-life (667 compounds)</li>
+<li><code>Clearance_Hepatocyte_AZ</code> - Hepatocyte clearance (1,020 compounds)</li>
+<li><code>Clearance_Microsome_AZ</code> - Microsome clearance (1,102 compounds)</li>
+</ul>
+<p><strong>Solubility & Lipophilicity:</strong></p>
+<ul><li><code>Solubility_AqSolDB</code> - Aqueous solubility (9,982 compounds)</li>
+<li><code>Lipophilicity_AstraZeneca</code> - Lipophilicity (logD) (4,200 compounds)</li>
+<li><code>HydrationFreeEnergy_FreeSolv</code> - Hydration free energy (642 compounds)</li>
+</ul>
+<h3>Toxicity</h3>
+
+<p><strong>Organ Toxicity:</strong></p>
+<ul><li><code>hERG</code> - hERG channel inhibition/cardiotoxicity (648 compounds)</li>
+<li><code>hERG_Karim</code> - hERG blockers extended dataset (13,445 compounds)</li>
+<li><code>DILI</code> - Drug-induced liver injury (475 compounds)</li>
+<li><code>Skin_Reaction</code> - Skin reaction (404 compounds)</li>
+<li><code>Carcinogens_Lagunin</code> - Carcinogenicity (278 compounds)</li>
+<li><code>Respiratory_Toxicity</code> - Respiratory toxicity (278 compounds)</li>
+</ul>
+<p><strong>General Toxicity:</strong></p>
+<ul><li><code>AMES</code> - Ames mutagenicity (7,255 compounds)</li>
+<li><code>LD50_Zhu</code> - Acute toxicity LD50 (7,385 compounds)</li>
+<li><code>ClinTox</code> - Clinical trial toxicity (1,478 compounds)</li>
+<li><code>SkinSensitization</code> - Skin sensitization (278 compounds)</li>
+<li><code>EyeCorrosion</code> - Eye corrosion (278 compounds)</li>
+<li><code>EyeIrritation</code> - Eye irritation (278 compounds)</li>
+</ul>
+<p><strong>Environmental Toxicity:</strong></p>
+<ul><li><code>Tox21-AhR</code> - Nuclear receptor signaling (8,169 compounds)</li>
+<li><code>Tox21-AR</code> - Androgen receptor (9,362 compounds)</li>
+<li><code>Tox21-AR-LBD</code> - Androgen receptor ligand binding (8,343 compounds)</li>
+<li><code>Tox21-ARE</code> - Antioxidant response element (6,475 compounds)</li>
+<li><code>Tox21-aromatase</code> - Aromatase inhibition (6,733 compounds)</li>
+<li><code>Tox21-ATAD5</code> - DNA damage (8,163 compounds)</li>
+<li><code>Tox21-ER</code> - Estrogen receptor (7,257 compounds)</li>
+<li><code>Tox21-ER-LBD</code> - Estrogen receptor ligand binding (8,163 compounds)</li>
+<li><code>Tox21-HSE</code> - Heat shock response (8,162 compounds)</li>
+<li><code>Tox21-MMP</code> - Mitochondrial membrane potential (7,394 compounds)</li>
+<li><code>Tox21-p53</code> - p53 pathway (8,163 compounds)</li>
+<li><code>Tox21-PPAR-gamma</code> - PPAR gamma activation (7,396 compounds)</li>
+</ul>
+<h3>HTS (High-Throughput Screening)</h3>
+
+<p><strong>SARS-CoV-2:</strong></p>
+<ul><li><code>SARSCoV2_Vitro_Touret</code> - In vitro antiviral activity (1,484 compounds)</li>
+<li><code>SARSCoV2_3CLPro_Diamond</code> - 3CL protease inhibition (879 compounds)</li>
+<li><code>SARSCoV2_Vitro_AlabdulKareem</code> - In vitro screening (5,953 compounds)</li>
+</ul>
+<p><strong>Other Targets:</strong></p>
+<ul><li><code>Orexin1_Receptor_Butkiewicz</code> - Orexin receptor screening (4,675 compounds)</li>
+<li><code>M1_Receptor_Agonist_Butkiewicz</code> - M1 receptor agonist (1,700 compounds)</li>
+<li><code>M1_Receptor_Antagonist_Butkiewicz</code> - M1 receptor antagonist (1,700 compounds)</li>
+<li><code>HIV_Butkiewicz</code> - HIV inhibition (40,000+ compounds)</li>
+<li><code>ToxCast</code> - Environmental chemical screening (8,597 compounds)</li>
+</ul>
+<h3>QM (Quantum Mechanics)</h3>
+
+<ul><li><code>QM7</code> - Quantum mechanics properties (7,160 molecules)</li>
+<li><code>QM8</code> - Electronic spectra and excited states (21,786 molecules)</li>
+<li><code>QM9</code> - Geometric, energetic, electronic, thermodynamic properties (133,885 molecules)</li>
+</ul>
+<h3>Yields</h3>
+
+<ul><li><code>Buchwald-Hartwig</code> - Reaction yield prediction (3,955 reactions)</li>
+<li><code>USPTO_Yields</code> - Yield prediction from USPTO (853,879 reactions)</li>
+</ul>
+<h3>Epitope</h3>
+
+<ul><li><code>IEDBpep-DiseaseBinder</code> - Disease-associated epitope binding (6,080 peptides)</li>
+<li><code>IEDBpep-NonBinder</code> - Non-binding peptides (24,320 peptides)</li>
+</ul>
+<h3>Develop (Development)</h3>
+
+<ul><li><code>Manufacturing</code> - Manufacturing success prediction</li>
+<li><code>Formulation</code> - Formulation stability</li>
+</ul>
+<h3>CRISPROutcome</h3>
+
+<ul><li><code>CRISPROutcome_Doench</code> - Gene editing efficiency prediction (5,310 guide RNAs)</li>
+</ul>
+<h2>Multi-Instance Prediction Datasets</h2>
+
+<h3>DTI (Drug-Target Interaction)</h3>
+
+<p><strong>Binding Affinity:</strong></p>
+<ul><li><code>BindingDB_Kd</code> - Dissociation constant (52,284 pairs, 10,665 drugs, 1,413 proteins)</li>
+<li><code>BindingDB_IC50</code> - Half-maximal inhibitory concentration (991,486 pairs, 549,205 drugs, 5,078 proteins)</li>
+<li><code>BindingDB_Ki</code> - Inhibition constant (375,032 pairs, 174,662 drugs, 3,070 proteins)</li>
+</ul>
+<p><strong>Kinase Binding:</strong></p>
+<ul><li><code>DAVIS</code> - Davis kinase binding dataset (30,056 pairs, 68 drugs, 442 proteins)</li>
+<li><code>KIBA</code> - KIBA kinase binding dataset (118,254 pairs, 2,111 drugs, 229 proteins)</li>
+</ul>
+<p><strong>Binary Interaction:</strong></p>
+<ul><li><code>BindingDB_Patent</code> - Patent-derived DTI (8,503 pairs)</li>
+<li><code>BindingDB_Approval</code> - FDA-approved drug DTI (1,649 pairs)</li>
+</ul>
+<h3>DDI (Drug-Drug Interaction)</h3>
+
+<ul><li><code>DrugBank</code> - Drug-drug interactions (191,808 pairs, 1,706 drugs)</li>
+<li><code>TWOSIDES</code> - Side effect-based DDI (4,649,441 pairs, 645 drugs)</li>
+</ul>
+<h3>PPI (Protein-Protein Interaction)</h3>
+
+<ul><li><code>HuRI</code> - Human reference protein interactome (52,569 interactions)</li>
+<li><code>STRING</code> - Protein functional associations (19,247 interactions)</li>
+</ul>
+<h3>GDA (Gene-Disease Association)</h3>
+
+<ul><li><code>DisGeNET</code> - Gene-disease associations (81,746 pairs)</li>
+<li><code>PrimeKG_GDA</code> - Gene-disease from PrimeKG knowledge graph</li>
+</ul>
+<h3>DrugRes (Drug Response/Resistance)</h3>
+
+<ul><li><code>GDSC1</code> - Genomics of Drug Sensitivity in Cancer v1 (178,000 pairs)</li>
+<li><code>GDSC2</code> - Genomics of Drug Sensitivity in Cancer v2 (125,000 pairs)</li>
+</ul>
+<h3>DrugSyn (Drug Synergy)</h3>
+
+<ul><li><code>DrugComb</code> - Drug combination synergy (345,502 combinations)</li>
+<li><code>DrugCombDB</code> - Drug combination database (448,555 combinations)</li>
+<li><code>OncoPolyPharmacology</code> - Oncology drug combinations (22,737 combinations)</li>
+</ul>
+<h3>PeptideMHC</h3>
+
+<ul><li><code>MHC1_NetMHCpan</code> - MHC class I binding (184,983 pairs)</li>
+<li><code>MHC2_NetMHCIIpan</code> - MHC class II binding (134,281 pairs)</li>
+</ul>
+<h3>AntibodyAff (Antibody Affinity)</h3>
+
+<ul><li><code>Protein_SAbDab</code> - Antibody-antigen affinity (1,500+ pairs)</li>
+</ul>
+<h3>MTI (miRNA-Target Interaction)</h3>
+
+<ul><li><code>miRTarBase</code> - Experimentally validated miRNA-target interactions (380,639 pairs)</li>
+</ul>
+<h3>Catalyst</h3>
+
+<ul><li><code>USPTO_Catalyst</code> - Catalyst prediction for reactions (11,000+ reactions)</li>
+</ul>
+<h3>TrialOutcome</h3>
+
+<ul><li><code>TrialOutcome_WuXi</code> - Clinical trial outcome prediction (3,769 trials)</li>
+</ul>
+<h2>Generation Datasets</h2>
+
+<h3>MolGen (Molecular Generation)</h3>
+
+<ul><li><code>ChEMBL_V29</code> - Drug-like molecules from ChEMBL (1,941,410 molecules)</li>
+<li><code>ZINC</code> - ZINC database subset (100,000+ molecules)</li>
+<li><code>GuacaMol</code> - Goal-directed benchmark molecules</li>
+<li><code>Moses</code> - Molecular sets benchmark (1,936,962 molecules)</li>
+</ul>
+<h3>RetroSyn (Retrosynthesis)</h3>
+
+<ul><li><code>USPTO</code> - Retrosynthesis from USPTO patents (1,939,253 reactions)</li>
+<li><code>USPTO-50K</code> - Curated USPTO subset (50,000 reactions)</li>
+</ul>
+<h3>PairMolGen (Paired Molecule Generation)</h3>
+
+<ul><li><code>Prodrug</code> - Prodrug to drug transformations (1,000+ pairs)</li>
+<li><code>Metabolite</code> - Drug to metabolite transformations</li>
+</ul>
+<h2>Using retrieve_dataset_names</h2>
+
+<p>To programmatically access all available datasets for a specific task:</p>
+
+<pre><code class="language-python">from tdc.utils import retrieve_dataset_names
+
+# Get all datasets for a specific task
+adme_datasets = retrieve_dataset_names('ADME')
+tox_datasets = retrieve_dataset_names('Tox')
+dti_datasets = retrieve_dataset_names('DTI')
+hts_datasets = retrieve_dataset_names('HTS')</code></pre>
+
+<h2>Dataset Statistics</h2>
+
+<p>Access dataset statistics directly:</p>
+
+<pre><code class="language-python">from tdc.single_pred import ADME
+data = ADME(name='Caco2_Wang')
+
+# Print basic statistics
+data.print_stats()
+
+# Get label distribution
+data.label_distribution()</code></pre>
+
+<h2>Loading Datasets</h2>
+
+<p>All datasets follow the same loading pattern:</p>
+
+<pre><code class="language-python">from tdc.&lt;problem_type&gt; import &lt;TaskType&gt;
+data = &lt;TaskType&gt;(name='&lt;DatasetName&gt;')
+
+# Get full dataset
+df = data.get_data(format='df')  # or 'dict', 'DeepPurpose', etc.
+
+# Get train/valid/test split
+split = data.get_split(method='scaffold', seed=1, frac=[0.7, 0.1, 0.2])</code></pre>
+
+<h2>Notes</h2>
+
+<ul><li>Dataset sizes and statistics are approximate and may be updated</li>
+<li>New datasets are regularly added to TDC</li>
+<li>Some datasets may require additional dependencies</li>
+<li>Check the official TDC website for the most up-to-date dataset list: https://tdcommons.ai/overview/</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Oracles</h3>
+  <h1>TDC Molecule Generation Oracles</h1>
+
+<p>Oracles are functions that evaluate the quality of generated molecules across specific dimensions. TDC provides 17+ oracle functions for molecular optimization tasks in de novo drug design.</p>
+
+<h2>Overview</h2>
+
+<p>Oracles measure molecular properties and serve two main purposes:</p>
+
+<ul><li><strong>Goal-Directed Generation</strong>: Optimize molecules to maximize/minimize specific properties</li>
+<li><strong>Distribution Learning</strong>: Evaluate whether generated molecules match desired property distributions</li>
+</ul>
+<h2>Using Oracles</h2>
+
+<h3>Basic Usage</h3>
+
+<pre><code class="language-python">from tdc import Oracle
+
+# Initialize oracle
+oracle = Oracle(name='GSK3B')
+
+# Evaluate single molecule (SMILES string)
+score = oracle('CC(C)Cc1ccc(cc1)C(C)C(O)=O')
+
+# Evaluate multiple molecules
+scores = oracle(['SMILES1', 'SMILES2', 'SMILES3'])</code></pre>
+
+<h3>Oracle Categories</h3>
+
+<p>TDC oracles are organized into several categories based on the molecular property being evaluated.</p>
+
+<h2>Biochemical Oracles</h2>
+
+<p>Predict binding affinity or activity against biological targets.</p>
+
+<h3>Target-Specific Oracles</h3>
+
+<p><strong>DRD2 - Dopamine Receptor D2</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='DRD2')
+score = oracle(smiles)</code></pre>
+<ul><li>Measures binding affinity to DRD2 receptor</li>
+<li>Important for neurological and psychiatric drug development</li>
+<li>Higher scores indicate stronger binding</li>
+</ul>
+<p><strong>GSK3B - Glycogen Synthase Kinase-3 Beta</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='GSK3B')
+score = oracle(smiles)</code></pre>
+<ul><li>Predicts GSK3β inhibition</li>
+<li>Relevant for Alzheimer's, diabetes, and cancer research</li>
+<li>Higher scores indicate better inhibition</li>
+</ul>
+<p><strong>JNK3 - c-Jun N-terminal Kinase 3</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='JNK3')
+score = oracle(smiles)</code></pre>
+<ul><li>Measures JNK3 kinase inhibition</li>
+<li>Target for neurodegenerative diseases</li>
+<li>Higher scores indicate stronger inhibition</li>
+</ul>
+<p><strong>5HT2A - Serotonin 2A Receptor</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='5HT2A')
+score = oracle(smiles)</code></pre>
+<ul><li>Predicts serotonin receptor binding</li>
+<li>Important for psychiatric medications</li>
+<li>Higher scores indicate stronger binding</li>
+</ul>
+<p><strong>ACE - Angiotensin-Converting Enzyme</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='ACE')
+score = oracle(smiles)</code></pre>
+<ul><li>Measures ACE inhibition</li>
+<li>Target for hypertension treatment</li>
+<li>Higher scores indicate better inhibition</li>
+</ul>
+<p><strong>MAPK - Mitogen-Activated Protein Kinase</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='MAPK')
+score = oracle(smiles)</code></pre>
+<ul><li>Predicts MAPK inhibition</li>
+<li>Target for cancer and inflammatory diseases</li>
+</ul>
+<p><strong>CDK - Cyclin-Dependent Kinase</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='CDK')
+score = oracle(smiles)</code></pre>
+<ul><li>Measures CDK inhibition</li>
+<li>Important for cancer drug development</li>
+</ul>
+<p><strong>P38 - p38 MAP Kinase</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='P38')
+score = oracle(smiles)</code></pre>
+<ul><li>Predicts p38 MAPK inhibition</li>
+<li>Target for inflammatory diseases</li>
+</ul>
+<p><strong>PARP1 - Poly (ADP-ribose) Polymerase 1</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='PARP1')
+score = oracle(smiles)</code></pre>
+<ul><li>Measures PARP1 inhibition</li>
+<li>Target for cancer treatment (DNA repair mechanism)</li>
+</ul>
+<p><strong>PIK3CA - Phosphatidylinositol-4,5-Bisphosphate 3-Kinase</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='PIK3CA')
+score = oracle(smiles)</code></pre>
+<ul><li>Predicts PIK3CA inhibition</li>
+<li>Important target in oncology</li>
+</ul>
+<h2>Physicochemical Oracles</h2>
+
+<p>Evaluate drug-like properties and ADME characteristics.</p>
+
+<h3>Drug-Likeness Oracles</h3>
+
+<p><strong>QED - Quantitative Estimate of Drug-likeness</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='QED')
+score = oracle(smiles)</code></pre>
+<ul><li>Combines multiple physicochemical properties</li>
+<li>Score ranges from 0 (non-drug-like) to 1 (drug-like)</li>
+<li>Based on Bickerton et al. criteria</li>
+</ul>
+<p><strong>Lipinski - Rule of Five</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='Lipinski')
+score = oracle(smiles)</code></pre>
+<ul><li>Number of Lipinski rule violations</li>
+<li>Rules: MW ≤ 500, logP ≤ 5, HBD ≤ 5, HBA ≤ 10</li>
+<li>Score of 0 means fully compliant</li>
+</ul>
+<h3>Molecular Properties</h3>
+
+<p><strong>SA - Synthetic Accessibility</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='SA')
+score = oracle(smiles)</code></pre>
+<ul><li>Estimates ease of synthesis</li>
+<li>Score ranges from 1 (easy) to 10 (difficult)</li>
+<li>Lower scores indicate easier synthesis</li>
+</ul>
+<p><strong>LogP - Octanol-Water Partition Coefficient</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='LogP')
+score = oracle(smiles)</code></pre>
+<ul><li>Measures lipophilicity</li>
+<li>Important for membrane permeability</li>
+<li>Typical drug-like range: 0-5</li>
+</ul>
+<p><strong>MW - Molecular Weight</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='MW')
+score = oracle(smiles)</code></pre>
+<ul><li>Returns molecular weight in Daltons</li>
+<li>Drug-like range typically 150-500 Da</li>
+</ul>
+<h2>Composite Oracles</h2>
+
+<p>Combine multiple properties for multi-objective optimization.</p>
+
+<p><strong>Isomer Meta</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='Isomer_Meta')
+score = oracle(smiles)</code></pre>
+<ul><li>Evaluates specific isomeric properties</li>
+<li>Used for stereochemistry optimization</li>
+</ul>
+<p><strong>Median Molecules</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='Median1', 'Median2')
+score = oracle(smiles)</code></pre>
+<ul><li>Tests ability to generate molecules with median properties</li>
+<li>Useful for distribution learning benchmarks</li>
+</ul>
+<p><strong>Rediscovery</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='Rediscovery')
+score = oracle(smiles)</code></pre>
+<ul><li>Measures similarity to known reference molecules</li>
+<li>Tests ability to regenerate existing drugs</li>
+</ul>
+<p><strong>Similarity</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='Similarity')
+score = oracle(smiles)</code></pre>
+<ul><li>Computes structural similarity to target molecules</li>
+<li>Based on molecular fingerprints (typically Tanimoto similarity)</li>
+</ul>
+<p><strong>Uniqueness</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='Uniqueness')
+scores = oracle(smiles_list)</code></pre>
+<ul><li>Measures diversity in generated molecule set</li>
+<li>Returns fraction of unique molecules</li>
+</ul>
+<p><strong>Novelty</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='Novelty')
+scores = oracle(smiles_list, training_set)</code></pre>
+<ul><li>Measures how different generated molecules are from training set</li>
+<li>Higher scores indicate more novel structures</li>
+</ul>
+<h2>Specialized Oracles</h2>
+
+<p><strong>ASKCOS - Retrosynthesis Scoring</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='ASKCOS')
+score = oracle(smiles)</code></pre>
+<ul><li>Evaluates synthetic feasibility using retrosynthesis</li>
+<li>Requires ASKCOS backend (IBM RXN)</li>
+<li>Scores based on retrosynthetic route availability</li>
+</ul>
+<p><strong>Docking Score</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='Docking')
+score = oracle(smiles)</code></pre>
+<ul><li>Molecular docking score against target protein</li>
+<li>Requires protein structure and docking software</li>
+<li>Lower scores typically indicate better binding</li>
+</ul>
+<p><strong>Vina - AutoDock Vina Score</strong></p>
+<pre><code class="language-python">oracle = Oracle(name='Vina')
+score = oracle(smiles)</code></pre>
+<ul><li>Uses AutoDock Vina for protein-ligand docking</li>
+<li>Predicts binding affinity in kcal/mol</li>
+<li>More negative scores indicate stronger binding</li>
+</ul>
+<h2>Multi-Objective Optimization</h2>
+
+<p>Combine multiple oracles for multi-property optimization:</p>
+
+<pre><code class="language-python">from tdc import Oracle
+
+# Initialize multiple oracles
+qed_oracle = Oracle(name='QED')
+sa_oracle = Oracle(name='SA')
+drd2_oracle = Oracle(name='DRD2')
+
+# Define custom scoring function
+def multi_objective_score(smiles):
+    qed = qed_oracle(smiles)
+    sa = 1 / (1 + sa_oracle(smiles))  # Invert SA (lower is better)
+    drd2 = drd2_oracle(smiles)
+
+    # Weighted combination
+    return 0.3 * qed + 0.3 * sa + 0.4 * drd2
+
+# Evaluate molecule
+score = multi_objective_score('CC(C)Cc1ccc(cc1)C(C)C(O)=O')</code></pre>
+
+<h2>Oracle Performance Considerations</h2>
+
+<h3>Speed</h3>
+<ul><li><strong>Fast</strong>: QED, SA, LogP, MW, Lipinski (rule-based calculations)</li>
+<li><strong>Medium</strong>: Target-specific ML models (DRD2, GSK3B, etc.)</li>
+<li><strong>Slow</strong>: Docking-based oracles (Vina, ASKCOS)</li>
+</ul>
+<h3>Reliability</h3>
+<ul><li>Oracles are ML models trained on specific datasets</li>
+<li>May not generalize to all chemical spaces</li>
+<li>Use multiple oracles to validate results</li>
+</ul>
+<h3>Batch Processing</h3>
+<pre><code class="language-python"># Efficient batch evaluation
+oracle = Oracle(name='GSK3B')
+smiles_list = ['SMILES1', 'SMILES2', ..., 'SMILES1000']
+scores = oracle(smiles_list)  # Faster than individual calls</code></pre>
+
+<h2>Common Workflows</h2>
+
+<h3>Goal-Directed Generation</h3>
+<pre><code class="language-python">from tdc import Oracle
+from tdc.generation import MolGen
+
+# Load training data
+data = MolGen(name='ChEMBL_V29')
+train_smiles = data.get_data()['Drug'].tolist()
+
+# Initialize oracle
+oracle = Oracle(name='GSK3B')
+
+# Generate molecules (user implements generative model)
+# generated_smiles = generator.generate(n=1000)
+
+# Evaluate generated molecules
+scores = oracle(generated_smiles)
+best_molecules = [(s, score) for s, score in zip(generated_smiles, scores)]
+best_molecules.sort(key=lambda x: x[1], reverse=True)
+
+print(f"Top 10 molecules:")
+for smiles, score in best_molecules[:10]:
+    print(f"{smiles}: {score:.3f}")</code></pre>
+
+<h3>Distribution Learning</h3>
+<pre><code class="language-python">from tdc import Oracle
+import numpy as np
+
+# Initialize oracle
+oracle = Oracle(name='QED')
+
+# Evaluate training set
+train_scores = oracle(train_smiles)
+train_mean = np.mean(train_scores)
+train_std = np.std(train_scores)
+
+# Evaluate generated set
+gen_scores = oracle(generated_smiles)
+gen_mean = np.mean(gen_scores)
+gen_std = np.std(gen_scores)
+
+# Compare distributions
+print(f"Training: μ={train_mean:.3f}, σ={train_std:.3f}")
+print(f"Generated: μ={gen_mean:.3f}, σ={gen_std:.3f}")</code></pre>
+
+<h2>Integration with TDC Benchmarks</h2>
+
+<pre><code class="language-python">from tdc.generation import MolGen
+
+# Use with GuacaMol benchmark
+data = MolGen(name='GuacaMol')
+
+# Oracles are automatically integrated
+# Each GuacaMol task has associated oracle
+benchmark_results = data.evaluate_guacamol(
+    generated_molecules=your_molecules,
+    oracle_name='GSK3B'
+)</code></pre>
+
+<h2>Notes</h2>
+
+<ul><li>Oracle scores are predictions, not experimental measurements</li>
+<li>Always validate top candidates experimentally</li>
+<li>Different oracles may have different score ranges and interpretations</li>
+<li>Some oracles require additional dependencies or API access</li>
+<li>Check oracle documentation for specific details: https://tdcommons.ai/functions/oracles/</li>
+</ul>
+<h2>Adding Custom Oracles</h2>
+
+<p>To create custom oracle functions:</p>
+
+<pre><code class="language-python">class CustomOracle:
+    def __init__(self):
+        # Initialize your model/method
+        pass
+
+    def __call__(self, smiles):
+        # Implement your scoring logic
+        # Return score or list of scores
+        pass
+
+# Use like built-in oracles
+custom_oracle = CustomOracle()
+score = custom_oracle('CC(C)Cc1ccc(cc1)C(C)C(O)=O')</code></pre>
+
+<h2>References</h2>
+
+<ul><li>TDC Oracles Documentation: https://tdcommons.ai/functions/oracles/</li>
+<li>GuacaMol Paper: "GuacaMol: Benchmarking Models for de Novo Molecular Design"</li>
+<li>MOSES Paper: "Molecular Sets (MOSES): A Benchmarking Platform for Molecular Generation Models"</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Utilities</h3>
+  <h1>TDC Utilities and Data Functions</h1>
+
+<p>This document provides comprehensive documentation for TDC's data processing, evaluation, and utility functions.</p>
+
+<h2>Overview</h2>
+
+<p>TDC provides utilities organized into four main categories:</p>
+<ul><li><strong>Dataset Splits</strong> - Train/validation/test partitioning strategies</li>
+<li><strong>Model Evaluation</strong> - Standardized performance metrics</li>
+<li><strong>Data Processing</strong> - Molecule conversion, filtering, and transformation</li>
+<li><strong>Entity Retrieval</strong> - Database queries and conversions</li>
+</ul>
+<h2>1. Dataset Splits</h2>
+
+<p>Dataset splitting is crucial for evaluating model generalization. TDC provides multiple splitting strategies designed for therapeutic ML.</p>
+
+<h3>Basic Split Usage</h3>
+
+<pre><code class="language-python">from tdc.single_pred import ADME
+
+data = ADME(name='Caco2_Wang')
+
+# Get split with default parameters
+split = data.get_split()
+# Returns: {'train': DataFrame, 'valid': DataFrame, 'test': DataFrame}
+
+# Customize split parameters
+split = data.get_split(
+    method='scaffold',
+    seed=42,
+    frac=[0.7, 0.1, 0.2]
+)</code></pre>
+
+<h3>Split Methods</h3>
+
+<h4>Random Split</h4>
+<p>Random shuffling of data - suitable for general ML tasks.</p>
+
+<pre><code class="language-python">split = data.get_split(method='random', seed=1)</code></pre>
+
+<p><strong>When to use:</strong></p>
+<ul><li>Baseline model evaluation</li>
+<li>When chemical/temporal structure is not important</li>
+<li>Quick prototyping</li>
+</ul>
+<p><strong>Not recommended for:</strong></p>
+<ul><li>Realistic drug discovery scenarios</li>
+<li>Evaluating generalization to new chemical matter</li>
+</ul>
+<h4>Scaffold Split</h4>
+<p>Splits based on molecular scaffolds (Bemis-Murcko scaffolds) - ensures test molecules are structurally distinct from training.</p>
+
+<pre><code class="language-python">split = data.get_split(method='scaffold', seed=1)</code></pre>
+
+<p><strong>When to use:</strong></p>
+<ul><li>Default for most single prediction tasks</li>
+<li>Evaluating generalization to new chemical series</li>
+<li>Realistic drug discovery scenarios</li>
+</ul>
+<p><strong>How it works:</strong></p>
+<ul><li>Extract Bemis-Murcko scaffold from each molecule</li>
+<li>Group molecules by scaffold</li>
+<li>Assign scaffolds to train/valid/test sets</li>
+<li>Ensures test molecules have unseen scaffolds</li>
+</ul>
+<h4>Cold Splits (DTI/DDI Tasks)</h4>
+<p>For multi-instance prediction, cold splits ensure test set contains unseen drugs, targets, or both.</p>
+
+<p><strong>Cold Drug Split:</strong></p>
+<pre><code class="language-python">from tdc.multi_pred import DTI
+data = DTI(name='BindingDB_Kd')
+split = data.get_split(method='cold_drug', seed=1)</code></pre>
+<ul><li>Test set contains drugs not seen during training</li>
+<li>Evaluates generalization to new compounds</li>
+</ul>
+<p><strong>Cold Target Split:</strong></p>
+<pre><code class="language-python">split = data.get_split(method='cold_target', seed=1)</code></pre>
+<ul><li>Test set contains targets not seen during training</li>
+<li>Evaluates generalization to new proteins</li>
+</ul>
+<p><strong>Cold Drug-Target Split:</strong></p>
+<pre><code class="language-python">split = data.get_split(method='cold_drug_target', seed=1)</code></pre>
+<ul><li>Test set contains novel drug-target pairs</li>
+<li>Most challenging evaluation scenario</li>
+</ul>
+<h4>Temporal Split</h4>
+<p>For datasets with temporal information - ensures test data is from later time points.</p>
+
+<pre><code class="language-python">split = data.get_split(method='temporal', seed=1)</code></pre>
+
+<p><strong>When to use:</strong></p>
+<ul><li>Datasets with time stamps</li>
+<li>Simulating prospective prediction</li>
+<li>Clinical trial outcome prediction</li>
+</ul>
+<h3>Custom Split Fractions</h3>
+
+<pre><code class="language-python"># 80% train, 10% valid, 10% test
+split = data.get_split(method='scaffold', frac=[0.8, 0.1, 0.1])
+
+# 70% train, 15% valid, 15% test
+split = data.get_split(method='scaffold', frac=[0.7, 0.15, 0.15])</code></pre>
+
+<h3>Stratified Splits</h3>
+
+<p>For classification tasks with imbalanced labels:</p>
+
+<pre><code class="language-python">split = data.get_split(method='scaffold', stratified=True)</code></pre>
+
+<p>Maintains label distribution across train/valid/test sets.</p>
+
+<h2>2. Model Evaluation</h2>
+
+<p>TDC provides standardized evaluation metrics for different task types.</p>
+
+<h3>Basic Evaluator Usage</h3>
+
+<pre><code class="language-python">from tdc import Evaluator
+
+# Initialize evaluator
+evaluator = Evaluator(name='ROC-AUC')
+
+# Evaluate predictions
+score = evaluator(y_true, y_pred)</code></pre>
+
+<h3>Classification Metrics</h3>
+
+<h4>ROC-AUC</h4>
+<p>Receiver Operating Characteristic - Area Under Curve</p>
+
+<pre><code class="language-python">evaluator = Evaluator(name='ROC-AUC')
+score = evaluator(y_true, y_pred_proba)</code></pre>
+
+<p><strong>Best for:</strong></p>
+<ul><li>Binary classification</li>
+<li>Imbalanced datasets</li>
+<li>Overall discriminative ability</li>
+</ul>
+<p><strong>Range:</strong> 0-1 (higher is better, 0.5 is random)</p>
+
+<h4>PR-AUC</h4>
+<p>Precision-Recall Area Under Curve</p>
+
+<pre><code class="language-python">evaluator = Evaluator(name='PR-AUC')
+score = evaluator(y_true, y_pred_proba)</code></pre>
+
+<p><strong>Best for:</strong></p>
+<ul><li>Highly imbalanced datasets</li>
+<li>When positive class is rare</li>
+<li>Complements ROC-AUC</li>
+</ul>
+<p><strong>Range:</strong> 0-1 (higher is better)</p>
+
+<h4>F1 Score</h4>
+<p>Harmonic mean of precision and recall</p>
+
+<pre><code class="language-python">evaluator = Evaluator(name='F1')
+score = evaluator(y_true, y_pred_binary)</code></pre>
+
+<p><strong>Best for:</strong></p>
+<ul><li>Balance between precision and recall</li>
+<li>Multi-class classification</li>
+</ul>
+<p><strong>Range:</strong> 0-1 (higher is better)</p>
+
+<h4>Accuracy</h4>
+<p>Fraction of correct predictions</p>
+
+<pre><code class="language-python">evaluator = Evaluator(name='Accuracy')
+score = evaluator(y_true, y_pred_binary)</code></pre>
+
+<p><strong>Best for:</strong></p>
+<ul><li>Balanced datasets</li>
+<li>Simple baseline metric</li>
+</ul>
+<p><strong>Not recommended for:</strong> Imbalanced datasets</p>
+
+<h4>Cohen's Kappa</h4>
+<p>Agreement between predictions and ground truth, accounting for chance</p>
+
+<pre><code class="language-python">evaluator = Evaluator(name='Kappa')
+score = evaluator(y_true, y_pred_binary)</code></pre>
+
+<p><strong>Range:</strong> -1 to 1 (higher is better, 0 is random)</p>
+
+<h3>Regression Metrics</h3>
+
+<h4>RMSE - Root Mean Squared Error</h4>
+<pre><code class="language-python">evaluator = Evaluator(name='RMSE')
+score = evaluator(y_true, y_pred)</code></pre>
+
+<p><strong>Best for:</strong></p>
+<ul><li>Continuous predictions</li>
+<li>Penalizes large errors heavily</li>
+</ul>
+<p><strong>Range:</strong> 0-∞ (lower is better)</p>
+
+<h4>MAE - Mean Absolute Error</h4>
+<pre><code class="language-python">evaluator = Evaluator(name='MAE')
+score = evaluator(y_true, y_pred)</code></pre>
+
+<p><strong>Best for:</strong></p>
+<ul><li>Continuous predictions</li>
+<li>More robust to outliers than RMSE</li>
+</ul>
+<p><strong>Range:</strong> 0-∞ (lower is better)</p>
+
+<h4>R² - Coefficient of Determination</h4>
+<pre><code class="language-python">evaluator = Evaluator(name='R2')
+score = evaluator(y_true, y_pred)</code></pre>
+
+<p><strong>Best for:</strong></p>
+<ul><li>Variance explained by model</li>
+<li>Comparing different models</li>
+</ul>
+<p><strong>Range:</strong> -∞ to 1 (higher is better, 1 is perfect)</p>
+
+<h4>MSE - Mean Squared Error</h4>
+<pre><code class="language-python">evaluator = Evaluator(name='MSE')
+score = evaluator(y_true, y_pred)</code></pre>
+
+<p><strong>Range:</strong> 0-∞ (lower is better)</p>
+
+<h3>Ranking Metrics</h3>
+
+<h4>Spearman Correlation</h4>
+<p>Rank correlation coefficient</p>
+
+<pre><code class="language-python">evaluator = Evaluator(name='Spearman')
+score = evaluator(y_true, y_pred)</code></pre>
+
+<p><strong>Best for:</strong></p>
+<ul><li>Ranking tasks</li>
+<li>Non-linear relationships</li>
+<li>Ordinal data</li>
+</ul>
+<p><strong>Range:</strong> -1 to 1 (higher is better)</p>
+
+<h4>Pearson Correlation</h4>
+<p>Linear correlation coefficient</p>
+
+<pre><code class="language-python">evaluator = Evaluator(name='Pearson')
+score = evaluator(y_true, y_pred)</code></pre>
+
+<p><strong>Best for:</strong></p>
+<ul><li>Linear relationships</li>
+<li>Continuous data</li>
+</ul>
+<p><strong>Range:</strong> -1 to 1 (higher is better)</p>
+
+<h3>Multi-Label Classification</h3>
+
+<pre><code class="language-python">evaluator = Evaluator(name='Micro-F1')
+score = evaluator(y_true_multilabel, y_pred_multilabel)</code></pre>
+
+<p>Available: <code>Micro-F1</code>, <code>Macro-F1</code>, <code>Micro-AUPR</code>, <code>Macro-AUPR</code></p>
+
+<h3>Benchmark Group Evaluation</h3>
+
+<p>For benchmark groups, evaluation requires multiple seeds:</p>
+
+<pre><code class="language-python">from tdc.benchmark_group import admet_group
+
+group = admet_group(path='data/')
+benchmark = group.get('Caco2_Wang')
+
+# Predictions must be dict with seeds as keys
+predictions = {}
+for seed in [1, 2, 3, 4, 5]:
+    # Train model and predict
+    predictions[seed] = model_predictions
+
+# Evaluate with mean and std across seeds
+results = group.evaluate(predictions)
+print(results)  # {'Caco2_Wang': [mean_score, std_score]}</code></pre>
+
+<h2>3. Data Processing</h2>
+
+<p>TDC provides 11 comprehensive data processing utilities.</p>
+
+<h3>Molecule Format Conversion</h3>
+
+<p>Convert between ~15 molecular representations.</p>
+
+<pre><code class="language-python">from tdc.chem_utils import MolConvert
+
+# SMILES to PyTorch Geometric
+converter = MolConvert(src='SMILES', dst='PyG')
+pyg_graph = converter('CC(C)Cc1ccc(cc1)C(C)C(O)=O')
+
+# SMILES to DGL
+converter = MolConvert(src='SMILES', dst='DGL')
+dgl_graph = converter('CC(C)Cc1ccc(cc1)C(C)C(O)=O')
+
+# SMILES to Morgan Fingerprint (ECFP)
+converter = MolConvert(src='SMILES', dst='ECFP')
+fingerprint = converter('CC(C)Cc1ccc(cc1)C(C)C(O)=O')</code></pre>
+
+<p><strong>Available formats:</strong></p>
+<ul><li><strong>Text</strong>: SMILES, SELFIES, InChI</li>
+<li><strong>Fingerprints</strong>: ECFP (Morgan), MACCS, RDKit, AtomPair, TopologicalTorsion</li>
+<li><strong>Graphs</strong>: PyG (PyTorch Geometric), DGL (Deep Graph Library)</li>
+<li><strong>3D</strong>: Graph3D, Coulomb Matrix, Distance Matrix</li>
+</ul>
+<p><strong>Batch conversion:</strong></p>
+<pre><code class="language-python">converter = MolConvert(src='SMILES', dst='PyG')
+graphs = converter(['SMILES1', 'SMILES2', 'SMILES3'])</code></pre>
+
+<h3>Molecule Filters</h3>
+
+<p>Remove non-drug-like molecules using curated chemical rules.</p>
+
+<pre><code class="language-python">from tdc.chem_utils import MolFilter
+
+# Initialize filter with rules
+mol_filter = MolFilter(
+    rules=['PAINS', 'BMS'],  # Chemical filter rules
+    property_filters_dict={
+        'MW': (150, 500),      # Molecular weight range
+        'LogP': (-0.4, 5.6),   # Lipophilicity range
+        'HBD': (0, 5),         # H-bond donors
+        'HBA': (0, 10)         # H-bond acceptors
+    }
+)
+
+# Filter molecules
+filtered_smiles = mol_filter(smiles_list)</code></pre>
+
+<p><strong>Available filter rules:</strong></p>
+<ul><li><code>PAINS</code> - Pan-Assay Interference Compounds</li>
+<li><code>BMS</code> - Bristol-Myers Squibb HTS deck filters</li>
+<li><code>Glaxo</code> - GlaxoSmithKline filters</li>
+<li><code>Dundee</code> - University of Dundee filters</li>
+<li><code>Inpharmatica</code> - Inpharmatica filters</li>
+<li><code>LINT</code> - Pfizer LINT filters</li>
+</ul>
+<h3>Label Distribution Visualization</h3>
+
+<pre><code class="language-python"># Visualize label distribution
+data.label_distribution()
+
+# Print statistics
+data.print_stats()</code></pre>
+
+<p>Displays histogram and computes mean, median, std for continuous labels.</p>
+
+<h3>Label Binarization</h3>
+
+<p>Convert continuous labels to binary using threshold.</p>
+
+<pre><code class="language-python">from tdc.utils import binarize
+
+# Binarize with threshold
+binary_labels = binarize(y_continuous, threshold=5.0, order='ascending')
+# order='ascending': values &gt;= threshold become 1
+# order='descending': values &lt;= threshold become 1</code></pre>
+
+<h3>Label Units Conversion</h3>
+
+<p>Transform between measurement units.</p>
+
+<pre><code class="language-python">from tdc.chem_utils import label_transform
+
+# Convert nM to pKd
+y_pkd = label_transform(y_nM, from_unit='nM', to_unit='p')
+
+# Convert μM to nM
+y_nM = label_transform(y_uM, from_unit='uM', to_unit='nM')</code></pre>
+
+<p><strong>Available conversions:</strong></p>
+<ul><li>Binding affinity: nM, μM, pKd, pKi, pIC50</li>
+<li>Log transformations</li>
+<li>Natural log conversions</li>
+</ul>
+<h3>Label Meaning</h3>
+
+<p>Get interpretable descriptions for labels.</p>
+
+<pre><code class="language-python"># Get label mapping
+label_map = data.get_label_map(name='DrugBank')
+print(label_map)
+# {0: 'No interaction', 1: 'Increased effect', 2: 'Decreased effect', ...}</code></pre>
+
+<h3>Data Balancing</h3>
+
+<p>Handle class imbalance via over/under-sampling.</p>
+
+<pre><code class="language-python">from tdc.utils import balance
+
+# Oversample minority class
+X_balanced, y_balanced = balance(X, y, method='oversample')
+
+# Undersample majority class
+X_balanced, y_balanced = balance(X, y, method='undersample')</code></pre>
+
+<h3>Graph Transformation for Pair Data</h3>
+
+<p>Convert paired data to graph representations.</p>
+
+<pre><code class="language-python">from tdc.utils import create_graph_from_pairs
+
+# Create graph from drug-drug pairs
+graph = create_graph_from_pairs(
+    pairs=ddi_pairs,  # [(drug1, drug2, label), ...]
+    format='edge_list'  # or 'PyG', 'DGL'
+)</code></pre>
+
+<h3>Negative Sampling</h3>
+
+<p>Generate negative samples for binary tasks.</p>
+
+<pre><code class="language-python">from tdc.utils import negative_sample
+
+# Generate negative samples for DTI
+negative_pairs = negative_sample(
+    positive_pairs=known_interactions,
+    all_drugs=drug_list,
+    all_targets=target_list,
+    ratio=1.0  # Negative:positive ratio
+)</code></pre>
+
+<p><strong>Use cases:</strong></p>
+<ul><li>Drug-target interaction prediction</li>
+<li>Drug-drug interaction tasks</li>
+<li>Creating balanced datasets</li>
+</ul>
+<h3>Entity Retrieval</h3>
+
+<p>Convert between database identifiers.</p>
+
+<h4>PubChem CID to SMILES</h4>
+<pre><code class="language-python">from tdc.utils import cid2smiles
+
+smiles = cid2smiles(2244)  # Aspirin
+# Returns: 'CC(=O)Oc1ccccc1C(=O)O'</code></pre>
+
+<h4>UniProt ID to Amino Acid Sequence</h4>
+<pre><code class="language-python">from tdc.utils import uniprot2seq
+
+sequence = uniprot2seq('P12345')
+# Returns: 'MVKVYAPASS...'</code></pre>
+
+<h4>Batch Retrieval</h4>
+<pre><code class="language-python"># Multiple CIDs
+smiles_list = [cid2smiles(cid) for cid in [2244, 5090, 6323]]
+
+# Multiple UniProt IDs
+sequences = [uniprot2seq(uid) for uid in ['P12345', 'Q9Y5S9']]</code></pre>
+
+<h2>4. Advanced Utilities</h2>
+
+<h3>Retrieve Dataset Names</h3>
+
+<pre><code class="language-python">from tdc.utils import retrieve_dataset_names
+
+# Get all datasets for a task
+adme_datasets = retrieve_dataset_names('ADME')
+dti_datasets = retrieve_dataset_names('DTI')
+tox_datasets = retrieve_dataset_names('Tox')
+
+print(f"ADME datasets: {adme_datasets}")</code></pre>
+
+<h3>Fuzzy Search</h3>
+
+<p>TDC supports fuzzy matching for dataset names:</p>
+
+<pre><code class="language-python">from tdc.single_pred import ADME
+
+# These all work (typo-tolerant)
+data = ADME(name='Caco2_Wang')
+data = ADME(name='caco2_wang')
+data = ADME(name='Caco2')  # Partial match</code></pre>
+
+<h3>Data Format Options</h3>
+
+<pre><code class="language-python"># Pandas DataFrame (default)
+df = data.get_data(format='df')
+
+# Dictionary
+data_dict = data.get_data(format='dict')
+
+# DeepPurpose format (for DeepPurpose library)
+dp_format = data.get_data(format='DeepPurpose')
+
+# PyG/DGL graphs (if applicable)
+graphs = data.get_data(format='PyG')</code></pre>
+
+<h3>Data Loader Utilities</h3>
+
+<pre><code class="language-python">from tdc.utils import create_fold
+
+# Create cross-validation folds
+folds = create_fold(data, fold=5, seed=42)
+# Returns list of (train_idx, test_idx) tuples
+
+# Iterate through folds
+for i, (train_idx, test_idx) in enumerate(folds):
+    train_data = data.iloc[train_idx]
+    test_data = data.iloc[test_idx]
+    # Train and evaluate</code></pre>
+
+<h2>Common Workflows</h2>
+
+<h3>Workflow 1: Complete Data Pipeline</h3>
+
+<pre><code class="language-python">from tdc.single_pred import ADME
+from tdc import Evaluator
+from tdc.chem_utils import MolConvert, MolFilter
+
+# 1. Load data
+data = ADME(name='Caco2_Wang')
+
+# 2. Filter molecules
+mol_filter = MolFilter(rules=['PAINS'])
+filtered_data = data.get_data()
+filtered_data = filtered_data[
+    filtered_data['Drug'].apply(lambda x: mol_filter([x]))
+]
+
+# 3. Split data
+split = data.get_split(method='scaffold', seed=42)
+train, valid, test = split['train'], split['valid'], split['test']
+
+# 4. Convert to graph representations
+converter = MolConvert(src='SMILES', dst='PyG')
+train_graphs = converter(train['Drug'].tolist())
+
+# 5. Train model (user implements)
+# model.fit(train_graphs, train['Y'])
+
+# 6. Evaluate
+evaluator = Evaluator(name='MAE')
+# score = evaluator(test['Y'], predictions)</code></pre>
+
+<h3>Workflow 2: Multi-Task Learning Preparation</h3>
+
+<pre><code class="language-python">from tdc.benchmark_group import admet_group
+from tdc.chem_utils import MolConvert
+
+# Load benchmark group
+group = admet_group(path='data/')
+
+# Get multiple datasets
+datasets = ['Caco2_Wang', 'HIA_Hou', 'Bioavailability_Ma']
+all_data = {}
+
+for dataset_name in datasets:
+    benchmark = group.get(dataset_name)
+    all_data[dataset_name] = benchmark
+
+# Prepare for multi-task learning
+converter = MolConvert(src='SMILES', dst='ECFP')
+# Process each dataset...</code></pre>
+
+<h3>Workflow 3: DTI Cold Split Evaluation</h3>
+
+<pre><code class="language-python">from tdc.multi_pred import DTI
+from tdc import Evaluator
+
+# Load DTI data
+data = DTI(name='BindingDB_Kd')
+
+# Cold drug split
+split = data.get_split(method='cold_drug', seed=42)
+train, test = split['train'], split['test']
+
+# Verify no drug overlap
+train_drugs = set(train['Drug_ID'])
+test_drugs = set(test['Drug_ID'])
+assert len(train_drugs &amp; test_drugs) == 0, "Drug leakage detected!"
+
+# Train and evaluate
+# model.fit(train)
+evaluator = Evaluator(name='RMSE')
+# score = evaluator(test['Y'], predictions)</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Always use meaningful splits</strong> - Use scaffold or cold splits for realistic evaluation</li>
+<li><strong>Multiple seeds</strong> - Run experiments with multiple seeds for robust results</li>
+<li><strong>Appropriate metrics</strong> - Choose metrics that match your task and dataset characteristics</li>
+<li><strong>Data filtering</strong> - Remove PAINS and non-drug-like molecules before training</li>
+<li><strong>Format conversion</strong> - Convert molecules to appropriate format for your model</li>
+<li><strong>Batch processing</strong> - Use batch operations for efficiency with large datasets</li>
+</ul>
+<h2>Performance Tips</h2>
+
+<ul><li>Convert molecules in batch mode for faster processing</li>
+<li>Cache converted representations to avoid recomputation</li>
+<li>Use appropriate data formats for your framework (PyG, DGL, etc.)</li>
+<li>Filter data early in the pipeline to reduce computation</li>
+</ul>
+<h2>References</h2>
+
+<ul><li>TDC Documentation: https://tdc.readthedocs.io</li>
+<li>Data Functions: https://tdcommons.ai/fct_overview/</li>
+<li>Evaluation Metrics: https://tdcommons.ai/functions/model_eval/</li>
+<li>Data Splits: https://tdcommons.ai/functions/data_split/</li>
+</ul>
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

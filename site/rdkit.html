@@ -1,0 +1,2423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RDKit Cheminformatics Toolkit — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="active">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / RDKit Cheminformatics Toolkit</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>RDKit Cheminformatics Toolkit</h1>
+    <p class="description">Cheminformatics toolkit for fine-grained molecular control. SMILES/SDF parsing, descriptors (MW, LogP, TPSA), fingerprints, substructure search, 2D/3D generation, similarity, reactions. For standard w</p>
+    <h1>RDKit Cheminformatics Toolkit</h1>
+
+<h2>Overview</h2>
+
+<p>RDKit is a comprehensive cheminformatics library providing Python APIs for molecular analysis and manipulation. This skill provides guidance for reading/writing molecular structures, calculating descriptors, fingerprinting, substructure searching, chemical reactions, 2D/3D coordinate generation, and molecular visualization. Use this skill for drug discovery, computational chemistry, and cheminformatics research tasks.</p>
+
+<h2>Core Capabilities</h2>
+
+<h3>1. Molecular I/O and Creation</h3>
+
+<p><strong>Reading Molecules:</strong></p>
+
+<p>Read molecular structures from various formats:</p>
+
+<pre><code class="language-python">from rdkit import Chem
+
+# From SMILES strings
+mol = Chem.MolFromSmiles('Cc1ccccc1')  # Returns Mol object or None
+
+# From MOL files
+mol = Chem.MolFromMolFile('path/to/file.mol')
+
+# From MOL blocks (string data)
+mol = Chem.MolFromMolBlock(mol_block_string)
+
+# From InChI
+mol = Chem.MolFromInchi('InChI=1S/C6H6/c1-2-4-6-5-3-1/h1-6H')</code></pre>
+
+<p><strong>Writing Molecules:</strong></p>
+
+<p>Convert molecules to text representations:</p>
+
+<pre><code class="language-python"># To canonical SMILES
+smiles = Chem.MolToSmiles(mol)
+
+# To MOL block
+mol_block = Chem.MolToMolBlock(mol)
+
+# To InChI
+inchi = Chem.MolToInchi(mol)</code></pre>
+
+<p><strong>Batch Processing:</strong></p>
+
+<p>For processing multiple molecules, use Supplier/Writer objects:</p>
+
+<pre><code class="language-python"># Read SDF files
+suppl = Chem.SDMolSupplier('molecules.sdf')
+for mol in suppl:
+    if mol is not None:  # Check for parsing errors
+        # Process molecule
+        pass
+
+# Read SMILES files
+suppl = Chem.SmilesMolSupplier('molecules.smi', titleLine=False)
+
+# For large files or compressed data
+with gzip.open('molecules.sdf.gz') as f:
+    suppl = Chem.ForwardSDMolSupplier(f)
+    for mol in suppl:
+        # Process molecule
+        pass
+
+# Multithreaded processing for large datasets
+suppl = Chem.MultithreadedSDMolSupplier('molecules.sdf')
+
+# Write molecules to SDF
+writer = Chem.SDWriter('output.sdf')
+for mol in molecules:
+    writer.write(mol)
+writer.close()</code></pre>
+
+<p><strong>Important Notes:</strong></p>
+<ul><li>All <code>MolFrom*</code> functions return <code>None</code> on failure with error messages</li>
+<li>Always check for <code>None</code> before processing molecules</li>
+<li>Molecules are automatically sanitized on import (validates valence, perceives aromaticity)</li>
+</ul>
+<h3>2. Molecular Sanitization and Validation</h3>
+
+<p>RDKit automatically sanitizes molecules during parsing, executing 13 steps including valence checking, aromaticity perception, and chirality assignment.</p>
+
+<p><strong>Sanitization Control:</strong></p>
+
+<pre><code class="language-python"># Disable automatic sanitization
+mol = Chem.MolFromSmiles('C1=CC=CC=C1', sanitize=False)
+
+# Manual sanitization
+Chem.SanitizeMol(mol)
+
+# Detect problems before sanitization
+problems = Chem.DetectChemistryProblems(mol)
+for problem in problems:
+    print(problem.GetType(), problem.Message())
+
+# Partial sanitization (skip specific steps)
+from rdkit.Chem import rdMolStandardize
+Chem.SanitizeMol(mol, sanitizeOps=Chem.SANITIZE_ALL ^ Chem.SANITIZE_PROPERTIES)</code></pre>
+
+<p><strong>Common Sanitization Issues:</strong></p>
+<ul><li>Atoms with explicit valence exceeding maximum allowed will raise exceptions</li>
+<li>Invalid aromatic rings will cause kekulization errors</li>
+<li>Radical electrons may not be properly assigned without explicit specification</li>
+</ul>
+<h3>3. Molecular Analysis and Properties</h3>
+
+<p><strong>Accessing Molecular Structure:</strong></p>
+
+<pre><code class="language-python"># Iterate atoms and bonds
+for atom in mol.GetAtoms():
+    print(atom.GetSymbol(), atom.GetIdx(), atom.GetDegree())
+
+for bond in mol.GetBonds():
+    print(bond.GetBeginAtomIdx(), bond.GetEndAtomIdx(), bond.GetBondType())
+
+# Ring information
+ring_info = mol.GetRingInfo()
+ring_info.NumRings()
+ring_info.AtomRings()  # Returns tuples of atom indices
+
+# Check if atom is in ring
+atom = mol.GetAtomWithIdx(0)
+atom.IsInRing()
+atom.IsInRingSize(6)  # Check for 6-membered rings
+
+# Find smallest set of smallest rings (SSSR)
+from rdkit.Chem import GetSymmSSSR
+rings = GetSymmSSSR(mol)</code></pre>
+
+<p><strong>Stereochemistry:</strong></p>
+
+<pre><code class="language-python"># Find chiral centers
+from rdkit.Chem import FindMolChiralCenters
+chiral_centers = FindMolChiralCenters(mol, includeUnassigned=True)
+# Returns list of (atom_idx, chirality) tuples
+
+# Assign stereochemistry from 3D coordinates
+from rdkit.Chem import AssignStereochemistryFrom3D
+AssignStereochemistryFrom3D(mol)
+
+# Check bond stereochemistry
+bond = mol.GetBondWithIdx(0)
+stereo = bond.GetStereo()  # STEREONONE, STEREOZ, STEREOE, etc.</code></pre>
+
+<p><strong>Fragment Analysis:</strong></p>
+
+<pre><code class="language-python"># Get disconnected fragments
+frags = Chem.GetMolFrags(mol, asMols=True)
+
+# Fragment on specific bonds
+from rdkit.Chem import FragmentOnBonds
+frag_mol = FragmentOnBonds(mol, [bond_idx1, bond_idx2])
+
+# Count ring systems
+from rdkit.Chem.Scaffolds import MurckoScaffold
+scaffold = MurckoScaffold.GetScaffoldForMol(mol)</code></pre>
+
+<h3>4. Molecular Descriptors and Properties</h3>
+
+<p><strong>Basic Descriptors:</strong></p>
+
+<pre><code class="language-python">from rdkit.Chem import Descriptors
+
+# Molecular weight
+mw = Descriptors.MolWt(mol)
+exact_mw = Descriptors.ExactMolWt(mol)
+
+# LogP (lipophilicity)
+logp = Descriptors.MolLogP(mol)
+
+# Topological polar surface area
+tpsa = Descriptors.TPSA(mol)
+
+# Number of hydrogen bond donors/acceptors
+hbd = Descriptors.NumHDonors(mol)
+hba = Descriptors.NumHAcceptors(mol)
+
+# Number of rotatable bonds
+rot_bonds = Descriptors.NumRotatableBonds(mol)
+
+# Number of aromatic rings
+aromatic_rings = Descriptors.NumAromaticRings(mol)</code></pre>
+
+<p><strong>Batch Descriptor Calculation:</strong></p>
+
+<pre><code class="language-python"># Calculate all descriptors at once
+all_descriptors = Descriptors.CalcMolDescriptors(mol)
+# Returns dictionary: {'MolWt': 180.16, 'MolLogP': 1.23, ...}
+
+# Get list of available descriptor names
+descriptor_names = [desc[0] for desc in Descriptors._descList]</code></pre>
+
+<p><strong>Lipinski's Rule of Five:</strong></p>
+
+<pre><code class="language-python"># Check drug-likeness
+mw = Descriptors.MolWt(mol) &lt;= 500
+logp = Descriptors.MolLogP(mol) &lt;= 5
+hbd = Descriptors.NumHDonors(mol) &lt;= 5
+hba = Descriptors.NumHAcceptors(mol) &lt;= 10
+
+is_drug_like = mw and logp and hbd and hba</code></pre>
+
+<h3>5. Fingerprints and Molecular Similarity</h3>
+
+<p><strong>Fingerprint Types:</strong></p>
+
+<pre><code class="language-python">from rdkit.Chem import rdFingerprintGenerator
+from rdkit.Chem import MACCSkeys
+
+# RDKit topological fingerprint
+rdk_gen = rdFingerprintGenerator.GetRDKitFPGenerator(minPath=1, maxPath=7, fpSize=2048)
+fp = rdk_gen.GetFingerprint(mol)
+
+# Morgan fingerprints (circular fingerprints, similar to ECFP)
+# Modern API using rdFingerprintGenerator
+morgan_gen = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048)
+fp = morgan_gen.GetFingerprint(mol)
+# Count-based fingerprint
+fp_count = morgan_gen.GetCountFingerprint(mol)
+
+# MACCS keys (166-bit structural key)
+fp = MACCSkeys.GenMACCSKeys(mol)
+
+# Atom pair fingerprints
+ap_gen = rdFingerprintGenerator.GetAtomPairGenerator()
+fp = ap_gen.GetFingerprint(mol)
+
+# Topological torsion fingerprints
+tt_gen = rdFingerprintGenerator.GetTopologicalTorsionGenerator()
+fp = tt_gen.GetFingerprint(mol)
+
+# Avalon fingerprints (if available)
+from rdkit.Avalon import pyAvalonTools
+fp = pyAvalonTools.GetAvalonFP(mol)</code></pre>
+
+<p><strong>Similarity Calculation:</strong></p>
+
+<pre><code class="language-python">from rdkit import DataStructs
+from rdkit.Chem import rdFingerprintGenerator
+
+# Generate fingerprints using generator
+mfpgen = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048)
+fp1 = mfpgen.GetFingerprint(mol1)
+fp2 = mfpgen.GetFingerprint(mol2)
+
+# Calculate Tanimoto similarity
+similarity = DataStructs.TanimotoSimilarity(fp1, fp2)
+
+# Calculate similarity for multiple molecules
+fps = [mfpgen.GetFingerprint(m) for m in [mol2, mol3, mol4]]
+similarities = DataStructs.BulkTanimotoSimilarity(fp1, fps)
+
+# Other similarity metrics
+dice = DataStructs.DiceSimilarity(fp1, fp2)
+cosine = DataStructs.CosineSimilarity(fp1, fp2)</code></pre>
+
+<p><strong>Clustering and Diversity:</strong></p>
+
+<pre><code class="language-python"># Butina clustering based on fingerprint similarity
+from rdkit.ML.Cluster import Butina
+
+# Calculate distance matrix
+dists = []
+mfpgen = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048)
+fps = [mfpgen.GetFingerprint(mol) for mol in mols]
+for i in range(len(fps)):
+    sims = DataStructs.BulkTanimotoSimilarity(fps[i], fps[:i])
+    dists.extend([1-sim for sim in sims])
+
+# Cluster with distance cutoff
+clusters = Butina.ClusterData(dists, len(fps), distThresh=0.3, isDistData=True)</code></pre>
+
+<h3>6. Substructure Searching and SMARTS</h3>
+
+<p><strong>Basic Substructure Matching:</strong></p>
+
+<pre><code class="language-python"># Define query using SMARTS
+query = Chem.MolFromSmarts('[#6]1:[#6]:[#6]:[#6]:[#6]:[#6]:1')  # Benzene ring
+
+# Check if molecule contains substructure
+has_match = mol.HasSubstructMatch(query)
+
+# Get all matches (returns tuple of tuples with atom indices)
+matches = mol.GetSubstructMatches(query)
+
+# Get only first match
+match = mol.GetSubstructMatch(query)</code></pre>
+
+<p><strong>Common SMARTS Patterns:</strong></p>
+
+<pre><code class="language-python"># Primary alcohols
+primary_alcohol = Chem.MolFromSmarts('[CH2][OH1]')
+
+# Carboxylic acids
+carboxylic_acid = Chem.MolFromSmarts('C(=O)[OH]')
+
+# Amides
+amide = Chem.MolFromSmarts('C(=O)N')
+
+# Aromatic heterocycles
+aromatic_n = Chem.MolFromSmarts('[nR]')  # Aromatic nitrogen in ring
+
+# Macrocycles (rings &gt; 12 atoms)
+macrocycle = Chem.MolFromSmarts('[r{12-}]')</code></pre>
+
+<p><strong>Matching Rules:</strong></p>
+<ul><li>Unspecified properties in query match any value in target</li>
+<li>Hydrogens are ignored unless explicitly specified</li>
+<li>Charged query atom won't match uncharged target atom</li>
+<li>Aromatic query atom won't match aliphatic target atom (unless query is generic)</li>
+</ul>
+<h3>7. Chemical Reactions</h3>
+
+<p><strong>Reaction SMARTS:</strong></p>
+
+<pre><code class="language-python">from rdkit.Chem import AllChem
+
+# Define reaction using SMARTS: reactants &gt;&gt; products
+rxn = AllChem.ReactionFromSmarts('[C:1]=[O:2]&gt;&gt;[C:1][O:2]')  # Ketone reduction
+
+# Apply reaction to molecules
+reactants = (mol1,)
+products = rxn.RunReactants(reactants)
+
+# Products is tuple of tuples (one tuple per product set)
+for product_set in products:
+    for product in product_set:
+        # Sanitize product
+        Chem.SanitizeMol(product)</code></pre>
+
+<p><strong>Reaction Features:</strong></p>
+<ul><li>Atom mapping preserves specific atoms between reactants and products</li>
+<li>Dummy atoms in products are replaced by corresponding reactant atoms</li>
+<li>"Any" bonds inherit bond order from reactants</li>
+<li>Chirality preserved unless explicitly changed</li>
+</ul>
+<p><strong>Reaction Similarity:</strong></p>
+
+<pre><code class="language-python"># Generate reaction fingerprints
+fp = AllChem.CreateDifferenceFingerprintForReaction(rxn)
+
+# Compare reactions
+similarity = DataStructs.TanimotoSimilarity(fp1, fp2)</code></pre>
+
+<h3>8. 2D and 3D Coordinate Generation</h3>
+
+<p><strong>2D Coordinate Generation:</strong></p>
+
+<pre><code class="language-python">from rdkit.Chem import AllChem
+
+# Generate 2D coordinates for depiction
+AllChem.Compute2DCoords(mol)
+
+# Align molecule to template structure
+template = Chem.MolFromSmiles('c1ccccc1')
+AllChem.Compute2DCoords(template)
+AllChem.GenerateDepictionMatching2DStructure(mol, template)</code></pre>
+
+<p><strong>3D Coordinate Generation and Conformers:</strong></p>
+
+<pre><code class="language-python"># Generate single 3D conformer using ETKDG
+AllChem.EmbedMolecule(mol, randomSeed=42)
+
+# Generate multiple conformers
+conf_ids = AllChem.EmbedMultipleConfs(mol, numConfs=10, randomSeed=42)
+
+# Optimize geometry with force field
+AllChem.UFFOptimizeMolecule(mol)  # UFF force field
+AllChem.MMFFOptimizeMolecule(mol)  # MMFF94 force field
+
+# Optimize all conformers
+for conf_id in conf_ids:
+    AllChem.MMFFOptimizeMolecule(mol, confId=conf_id)
+
+# Calculate RMSD between conformers
+from rdkit.Chem import AllChem
+rms = AllChem.GetConformerRMS(mol, conf_id1, conf_id2)
+
+# Align molecules
+AllChem.AlignMol(probe_mol, ref_mol)</code></pre>
+
+<p><strong>Constrained Embedding:</strong></p>
+
+<pre><code class="language-python"># Embed with part of molecule constrained to specific coordinates
+AllChem.ConstrainedEmbed(mol, core_mol)</code></pre>
+
+<h3>9. Molecular Visualization</h3>
+
+<p><strong>Basic Drawing:</strong></p>
+
+<pre><code class="language-python">from rdkit.Chem import Draw
+
+# Draw single molecule to PIL image
+img = Draw.MolToImage(mol, size=(300, 300))
+img.save('molecule.png')
+
+# Draw to file directly
+Draw.MolToFile(mol, 'molecule.png')
+
+# Draw multiple molecules in grid
+mols = [mol1, mol2, mol3, mol4]
+img = Draw.MolsToGridImage(mols, molsPerRow=2, subImgSize=(200, 200))</code></pre>
+
+<p><strong>Highlighting Substructures:</strong></p>
+
+<pre><code class="language-python"># Highlight substructure match
+query = Chem.MolFromSmarts('c1ccccc1')
+match = mol.GetSubstructMatch(query)
+
+img = Draw.MolToImage(mol, highlightAtoms=match)
+
+# Custom highlight colors
+highlight_colors = {atom_idx: (1, 0, 0) for atom_idx in match}  # Red
+img = Draw.MolToImage(mol, highlightAtoms=match,
+                      highlightAtomColors=highlight_colors)</code></pre>
+
+<p><strong>Customizing Visualization:</strong></p>
+
+<pre><code class="language-python">from rdkit.Chem.Draw import rdMolDraw2D
+
+# Create drawer with custom options
+drawer = rdMolDraw2D.MolDraw2DCairo(300, 300)
+opts = drawer.drawOptions()
+
+# Customize options
+opts.addAtomIndices = True
+opts.addStereoAnnotation = True
+opts.bondLineWidth = 2
+
+# Draw molecule
+drawer.DrawMolecule(mol)
+drawer.FinishDrawing()
+
+# Save to file
+with open('molecule.png', 'wb') as f:
+    f.write(drawer.GetDrawingText())</code></pre>
+
+<p><strong>Jupyter Notebook Integration:</strong></p>
+
+<pre><code class="language-python"># Enable inline display in Jupyter
+from rdkit.Chem.Draw import IPythonConsole
+
+# Customize default display
+IPythonConsole.ipython_useSVG = True  # Use SVG instead of PNG
+IPythonConsole.molSize = (300, 300)   # Default size
+
+# Molecules now display automatically
+mol  # Shows molecule image</code></pre>
+
+<p><strong>Visualizing Fingerprint Bits:</strong></p>
+
+<pre><code class="language-python"># Show what molecular features a fingerprint bit represents
+from rdkit.Chem import Draw
+
+# For Morgan fingerprints
+bit_info = {}
+fp = AllChem.GetMorganFingerprintAsBitVect(mol, radius=2, bitInfo=bit_info)
+
+# Draw environment for specific bit
+img = Draw.DrawMorganBit(mol, bit_id, bit_info)</code></pre>
+
+<h3>10. Molecular Modification</h3>
+
+<p><strong>Adding/Removing Hydrogens:</strong></p>
+
+<pre><code class="language-python"># Add explicit hydrogens
+mol_h = Chem.AddHs(mol)
+
+# Remove explicit hydrogens
+mol = Chem.RemoveHs(mol_h)</code></pre>
+
+<p><strong>Kekulization and Aromaticity:</strong></p>
+
+<pre><code class="language-python"># Convert aromatic bonds to alternating single/double
+Chem.Kekulize(mol)
+
+# Set aromaticity
+Chem.SetAromaticity(mol)</code></pre>
+
+<p><strong>Replacing Substructures:</strong></p>
+
+<pre><code class="language-python"># Replace substructure with another structure
+query = Chem.MolFromSmarts('c1ccccc1')  # Benzene
+replacement = Chem.MolFromSmiles('C1CCCCC1')  # Cyclohexane
+
+new_mol = Chem.ReplaceSubstructs(mol, query, replacement)[0]</code></pre>
+
+<p><strong>Neutralizing Charges:</strong></p>
+
+<pre><code class="language-python"># Remove formal charges by adding/removing hydrogens
+from rdkit.Chem.MolStandardize import rdMolStandardize
+
+# Using Uncharger
+uncharger = rdMolStandardize.Uncharger()
+mol_neutral = uncharger.uncharge(mol)</code></pre>
+
+<h3>11. Working with Molecular Hashes and Standardization</h3>
+
+<p><strong>Molecular Hashing:</strong></p>
+
+<pre><code class="language-python">from rdkit.Chem import rdMolHash
+
+# Generate Murcko scaffold hash
+scaffold_hash = rdMolHash.MolHash(mol, rdMolHash.HashFunction.MurckoScaffold)
+
+# Canonical SMILES hash
+canonical_hash = rdMolHash.MolHash(mol, rdMolHash.HashFunction.CanonicalSmiles)
+
+# Regioisomer hash (ignores stereochemistry)
+regio_hash = rdMolHash.MolHash(mol, rdMolHash.HashFunction.Regioisomer)</code></pre>
+
+<p><strong>Randomized SMILES:</strong></p>
+
+<pre><code class="language-python"># Generate random SMILES representations (for data augmentation)
+from rdkit.Chem import MolToRandomSmilesVect
+
+random_smiles = MolToRandomSmilesVect(mol, numSmiles=10, randomSeed=42)</code></pre>
+
+<h3>12. Pharmacophore and 3D Features</h3>
+
+<p><strong>Pharmacophore Features:</strong></p>
+
+<pre><code class="language-python">from rdkit.Chem import ChemicalFeatures
+from rdkit import RDConfig
+import os
+
+# Load feature factory
+fdef_path = os.path.join(RDConfig.RDDataDir, 'BaseFeatures.fdef')
+factory = ChemicalFeatures.BuildFeatureFactory(fdef_path)
+
+# Get pharmacophore features
+features = factory.GetFeaturesForMol(mol)
+
+for feat in features:
+    print(feat.GetFamily(), feat.GetType(), feat.GetAtomIds())</code></pre>
+
+<h2>Common Workflows</h2>
+
+<h3>Drug-likeness Analysis</h3>
+
+<pre><code class="language-python">from rdkit import Chem
+from rdkit.Chem import Descriptors
+
+def analyze_druglikeness(smiles):
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return None
+
+    # Calculate Lipinski descriptors
+    results = {
+        'MW': Descriptors.MolWt(mol),
+        'LogP': Descriptors.MolLogP(mol),
+        'HBD': Descriptors.NumHDonors(mol),
+        'HBA': Descriptors.NumHAcceptors(mol),
+        'TPSA': Descriptors.TPSA(mol),
+        'RotBonds': Descriptors.NumRotatableBonds(mol)
+    }
+
+    # Check Lipinski's Rule of Five
+    results['Lipinski'] = (
+        results['MW'] &lt;= 500 and
+        results['LogP'] &lt;= 5 and
+        results['HBD'] &lt;= 5 and
+        results['HBA'] &lt;= 10
+    )
+
+    return results</code></pre>
+
+<h3>Similarity Screening</h3>
+
+<pre><code class="language-python">from rdkit import Chem
+from rdkit.Chem import AllChem
+from rdkit import DataStructs
+
+def similarity_screen(query_smiles, database_smiles, threshold=0.7):
+    query_mol = Chem.MolFromSmiles(query_smiles)
+    query_fp = AllChem.GetMorganFingerprintAsBitVect(query_mol, 2)
+
+    hits = []
+    for idx, smiles in enumerate(database_smiles):
+        mol = Chem.MolFromSmiles(smiles)
+        if mol:
+            fp = AllChem.GetMorganFingerprintAsBitVect(mol, 2)
+            sim = DataStructs.TanimotoSimilarity(query_fp, fp)
+            if sim &gt;= threshold:
+                hits.append((idx, smiles, sim))
+
+    return sorted(hits, key=lambda x: x[2], reverse=True)</code></pre>
+
+<h3>Substructure Filtering</h3>
+
+<pre><code class="language-python">from rdkit import Chem
+
+def filter_by_substructure(smiles_list, pattern_smarts):
+    query = Chem.MolFromSmarts(pattern_smarts)
+
+    hits = []
+    for smiles in smiles_list:
+        mol = Chem.MolFromSmiles(smiles)
+        if mol and mol.HasSubstructMatch(query):
+            hits.append(smiles)
+
+    return hits</code></pre>
+
+<h2>Best Practices</h2>
+
+<h3>Error Handling</h3>
+
+<p>Always check for <code>None</code> when parsing molecules:</p>
+
+<pre><code class="language-python">mol = Chem.MolFromSmiles(smiles)
+if mol is None:
+    print(f"Failed to parse: {smiles}")
+    continue</code></pre>
+
+<h3>Performance Optimization</h3>
+
+<p><strong>Use binary formats for storage:</strong></p>
+
+<pre><code class="language-python">import pickle
+
+# Pickle molecules for fast loading
+with open('molecules.pkl', 'wb') as f:
+    pickle.dump(mols, f)
+
+# Load pickled molecules (much faster than reparsing)
+with open('molecules.pkl', 'rb') as f:
+    mols = pickle.load(f)</code></pre>
+
+<p><strong>Use bulk operations:</strong></p>
+
+<pre><code class="language-python"># Calculate fingerprints for all molecules at once
+fps = [AllChem.GetMorganFingerprintAsBitVect(mol, 2) for mol in mols]
+
+# Use bulk similarity calculations
+similarities = DataStructs.BulkTanimotoSimilarity(fps[0], fps[1:])</code></pre>
+
+<h3>Thread Safety</h3>
+
+<p>RDKit operations are generally thread-safe for:</p>
+<ul><li>Molecule I/O (SMILES, mol blocks)</li>
+<li>Coordinate generation</li>
+<li>Fingerprinting and descriptors</li>
+<li>Substructure searching</li>
+<li>Reactions</li>
+<li>Drawing</li>
+</ul>
+<p><strong>Not thread-safe:</strong> MolSuppliers when accessed concurrently.</p>
+
+<h3>Memory Management</h3>
+
+<p>For large datasets:</p>
+
+<pre><code class="language-python"># Use ForwardSDMolSupplier to avoid loading entire file
+with open('large.sdf') as f:
+    suppl = Chem.ForwardSDMolSupplier(f)
+    for mol in suppl:
+        # Process one molecule at a time
+        pass
+
+# Use MultithreadedSDMolSupplier for parallel processing
+suppl = Chem.MultithreadedSDMolSupplier('large.sdf', numWriterThreads=4)</code></pre>
+
+<h2>Common Pitfalls</h2>
+
+<ul><li><strong>Forgetting to check for None:</strong> Always validate molecules after parsing</li>
+<li><strong>Sanitization failures:</strong> Use <code>DetectChemistryProblems()</code> to debug</li>
+<li><strong>Missing hydrogens:</strong> Use <code>AddHs()</code> when calculating properties that depend on hydrogen</li>
+<li><strong>2D vs 3D:</strong> Generate appropriate coordinates before visualization or 3D analysis</li>
+<li><strong>SMARTS matching rules:</strong> Remember that unspecified properties match anything</li>
+<li><strong>Thread safety with MolSuppliers:</strong> Don't share supplier objects across threads</li>
+</ul>
+<h2>Resources</h2>
+
+<h3>references/</h3>
+
+<p>This skill includes detailed API reference documentation:</p>
+
+<ul><li><code>api_reference.md</code> - Comprehensive listing of RDKit modules, functions, and classes organized by functionality</li>
+<li><code>descriptors_reference.md</code> - Complete list of available molecular descriptors with descriptions</li>
+<li><code>smarts_patterns.md</code> - Common SMARTS patterns for functional groups and structural features</li>
+</ul>
+<p>Load these references when needing specific API details, parameter information, or pattern examples.</p>
+
+<h3>scripts/</h3>
+
+<p>Example scripts for common RDKit workflows:</p>
+
+<ul><li><code>molecular_properties.py</code> - Calculate comprehensive molecular properties and descriptors</li>
+<li><code>similarity_search.py</code> - Perform fingerprint-based similarity screening</li>
+<li><code>substructure_filter.py</code> - Filter molecules by substructure patterns</li>
+</ul>
+<p>These scripts can be executed directly or used as templates for custom workflows.</p>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Api Reference</h3>
+  <h1>RDKit API Reference</h1>
+
+<p>This document provides a comprehensive reference for RDKit's Python API, organized by functionality.</p>
+
+<h2>Core Module: rdkit.Chem</h2>
+
+<p>The fundamental module for working with molecules.</p>
+
+<h3>Molecule I/O</h3>
+
+<p><strong>Reading Molecules:</strong></p>
+
+<ul><li><code>Chem.MolFromSmiles(smiles, sanitize=True)</code> - Parse SMILES string</li>
+<li><code>Chem.MolFromSmarts(smarts)</code> - Parse SMARTS pattern</li>
+<li><code>Chem.MolFromMolFile(filename, sanitize=True, removeHs=True)</code> - Read MOL file</li>
+<li><code>Chem.MolFromMolBlock(molblock, sanitize=True, removeHs=True)</code> - Parse MOL block string</li>
+<li><code>Chem.MolFromMol2File(filename, sanitize=True, removeHs=True)</code> - Read MOL2 file</li>
+<li><code>Chem.MolFromMol2Block(molblock, sanitize=True, removeHs=True)</code> - Parse MOL2 block</li>
+<li><code>Chem.MolFromPDBFile(filename, sanitize=True, removeHs=True)</code> - Read PDB file</li>
+<li><code>Chem.MolFromPDBBlock(pdbblock, sanitize=True, removeHs=True)</code> - Parse PDB block</li>
+<li><code>Chem.MolFromInchi(inchi, sanitize=True, removeHs=True)</code> - Parse InChI string</li>
+<li><code>Chem.MolFromSequence(seq, sanitize=True)</code> - Create molecule from peptide sequence</li>
+</ul>
+<p><strong>Writing Molecules:</strong></p>
+
+<ul><li><code>Chem.MolToSmiles(mol, isomericSmiles=True, canonical=True)</code> - Convert to SMILES</li>
+<li><code>Chem.MolToSmarts(mol, isomericSmarts=False)</code> - Convert to SMARTS</li>
+<li><code>Chem.MolToMolBlock(mol, includeStereo=True, confId=-1)</code> - Convert to MOL block</li>
+<li><code>Chem.MolToMolFile(mol, filename, includeStereo=True, confId=-1)</code> - Write MOL file</li>
+<li><code>Chem.MolToPDBBlock(mol, confId=-1)</code> - Convert to PDB block</li>
+<li><code>Chem.MolToPDBFile(mol, filename, confId=-1)</code> - Write PDB file</li>
+<li><code>Chem.MolToInchi(mol, options='')</code> - Convert to InChI</li>
+<li><code>Chem.MolToInchiKey(mol, options='')</code> - Generate InChI key</li>
+<li><code>Chem.MolToSequence(mol)</code> - Convert to peptide sequence</li>
+</ul>
+<p><strong>Batch I/O:</strong></p>
+
+<ul><li><code>Chem.SDMolSupplier(filename, sanitize=True, removeHs=True)</code> - SDF file reader</li>
+<li><code>Chem.ForwardSDMolSupplier(fileobj, sanitize=True, removeHs=True)</code> - Forward-only SDF reader</li>
+<li><code>Chem.MultithreadedSDMolSupplier(filename, numWriterThreads=1)</code> - Parallel SDF reader</li>
+<li><code>Chem.SmilesMolSupplier(filename, delimiter=' ', titleLine=True)</code> - SMILES file reader</li>
+<li><code>Chem.SDWriter(filename)</code> - SDF file writer</li>
+<li><code>Chem.SmilesWriter(filename, delimiter=' ', includeHeader=True)</code> - SMILES file writer</li>
+</ul>
+<h3>Molecular Manipulation</h3>
+
+<p><strong>Sanitization:</strong></p>
+
+<ul><li><code>Chem.SanitizeMol(mol, sanitizeOps=SANITIZE_ALL, catchErrors=False)</code> - Sanitize molecule</li>
+<li><code>Chem.DetectChemistryProblems(mol, sanitizeOps=SANITIZE_ALL)</code> - Detect sanitization issues</li>
+<li><code>Chem.AssignStereochemistry(mol, cleanIt=True, force=False)</code> - Assign stereochemistry</li>
+<li><code>Chem.FindPotentialStereo(mol)</code> - Find potential stereocenters</li>
+<li><code>Chem.AssignStereochemistryFrom3D(mol, confId=-1)</code> - Assign stereo from 3D coords</li>
+</ul>
+<p><strong>Hydrogen Management:</strong></p>
+
+<ul><li><code>Chem.AddHs(mol, explicitOnly=False, addCoords=False)</code> - Add explicit hydrogens</li>
+<li><code>Chem.RemoveHs(mol, implicitOnly=False, updateExplicitCount=False)</code> - Remove hydrogens</li>
+<li><code>Chem.RemoveAllHs(mol)</code> - Remove all hydrogens</li>
+</ul>
+<p><strong>Aromaticity:</strong></p>
+
+<ul><li><code>Chem.SetAromaticity(mol, model=AROMATICITY_RDKIT)</code> - Set aromaticity model</li>
+<li><code>Chem.Kekulize(mol, clearAromaticFlags=False)</code> - Kekulize aromatic bonds</li>
+<li><code>Chem.SetConjugation(mol)</code> - Set conjugation flags</li>
+</ul>
+<p><strong>Fragments:</strong></p>
+
+<ul><li><code>Chem.GetMolFrags(mol, asMols=False, sanitizeFrags=True)</code> - Get disconnected fragments</li>
+<li><code>Chem.FragmentOnBonds(mol, bondIndices, addDummies=True)</code> - Fragment on specific bonds</li>
+<li><code>Chem.ReplaceSubstructs(mol, query, replacement, replaceAll=False)</code> - Replace substructures</li>
+<li><code>Chem.DeleteSubstructs(mol, query, onlyFrags=False)</code> - Delete substructures</li>
+</ul>
+<p><strong>Stereochemistry:</strong></p>
+
+<ul><li><code>Chem.FindMolChiralCenters(mol, includeUnassigned=False, useLegacyImplementation=False)</code> - Find chiral centers</li>
+<li><code>Chem.FindPotentialStereo(mol, cleanIt=True)</code> - Find potential stereocenters</li>
+</ul>
+<h3>Substructure Searching</h3>
+
+<p><strong>Basic Matching:</strong></p>
+
+<ul><li><code>mol.HasSubstructMatch(query, useChirality=False)</code> - Check for substructure match</li>
+<li><code>mol.GetSubstructMatch(query, useChirality=False)</code> - Get first match</li>
+<li><code>mol.GetSubstructMatches(query, uniquify=True, useChirality=False)</code> - Get all matches</li>
+<li><code>mol.GetSubstructMatches(query, maxMatches=1000)</code> - Limit number of matches</li>
+</ul>
+<h3>Molecular Properties</h3>
+
+<p><strong>Atom Methods:</strong></p>
+
+<ul><li><code>atom.GetSymbol()</code> - Atomic symbol</li>
+<li><code>atom.GetAtomicNum()</code> - Atomic number</li>
+<li><code>atom.GetDegree()</code> - Number of bonds</li>
+<li><code>atom.GetTotalDegree()</code> - Including hydrogens</li>
+<li><code>atom.GetFormalCharge()</code> - Formal charge</li>
+<li><code>atom.GetNumRadicalElectrons()</code> - Radical electrons</li>
+<li><code>atom.GetIsAromatic()</code> - Aromaticity flag</li>
+<li><code>atom.GetHybridization()</code> - Hybridization (SP, SP2, SP3, etc.)</li>
+<li><code>atom.GetIdx()</code> - Atom index</li>
+<li><code>atom.IsInRing()</code> - In any ring</li>
+<li><code>atom.IsInRingSize(size)</code> - In ring of specific size</li>
+<li><code>atom.GetChiralTag()</code> - Chirality tag</li>
+</ul>
+<p><strong>Bond Methods:</strong></p>
+
+<ul><li><code>bond.GetBondType()</code> - Bond type (SINGLE, DOUBLE, TRIPLE, AROMATIC)</li>
+<li><code>bond.GetBeginAtomIdx()</code> - Starting atom index</li>
+<li><code>bond.GetEndAtomIdx()</code> - Ending atom index</li>
+<li><code>bond.GetIsConjugated()</code> - Conjugation flag</li>
+<li><code>bond.GetIsAromatic()</code> - Aromaticity flag</li>
+<li><code>bond.IsInRing()</code> - In any ring</li>
+<li><code>bond.GetStereo()</code> - Stereochemistry (STEREONONE, STEREOZ, STEREOE, etc.)</li>
+</ul>
+<p><strong>Molecule Methods:</strong></p>
+
+<ul><li><code>mol.GetNumAtoms(onlyExplicit=True)</code> - Number of atoms</li>
+<li><code>mol.GetNumHeavyAtoms()</code> - Number of heavy atoms</li>
+<li><code>mol.GetNumBonds()</code> - Number of bonds</li>
+<li><code>mol.GetAtoms()</code> - Iterator over atoms</li>
+<li><code>mol.GetBonds()</code> - Iterator over bonds</li>
+<li><code>mol.GetAtomWithIdx(idx)</code> - Get specific atom</li>
+<li><code>mol.GetBondWithIdx(idx)</code> - Get specific bond</li>
+<li><code>mol.GetRingInfo()</code> - Ring information object</li>
+</ul>
+<p><strong>Ring Information:</strong></p>
+
+<ul><li><code>Chem.GetSymmSSSR(mol)</code> - Get smallest set of smallest rings</li>
+<li><code>Chem.GetSSSR(mol)</code> - Alias for GetSymmSSSR</li>
+<li><code>ring_info.NumRings()</code> - Number of rings</li>
+<li><code>ring_info.AtomRings()</code> - Tuples of atom indices in rings</li>
+<li><code>ring_info.BondRings()</code> - Tuples of bond indices in rings</li>
+</ul>
+<h2>rdkit.Chem.AllChem</h2>
+
+<p>Extended chemistry functionality.</p>
+
+<h3>2D/3D Coordinate Generation</h3>
+
+<ul><li><code>AllChem.Compute2DCoords(mol, canonOrient=True, clearConfs=True)</code> - Generate 2D coordinates</li>
+<li><code>AllChem.EmbedMolecule(mol, maxAttempts=0, randomSeed=-1, useRandomCoords=False)</code> - Generate 3D conformer</li>
+<li><code>AllChem.EmbedMultipleConfs(mol, numConfs=10, maxAttempts=0, randomSeed=-1)</code> - Generate multiple conformers</li>
+<li><code>AllChem.ConstrainedEmbed(mol, core, useTethers=True)</code> - Constrained embedding</li>
+<li><code>AllChem.GenerateDepictionMatching2DStructure(mol, reference, refPattern=None)</code> - Align to template</li>
+</ul>
+<h3>Force Field Optimization</h3>
+
+<ul><li><code>AllChem.UFFOptimizeMolecule(mol, maxIters=200, confId=-1)</code> - UFF optimization</li>
+<li><code>AllChem.MMFFOptimizeMolecule(mol, maxIters=200, confId=-1, mmffVariant='MMFF94')</code> - MMFF optimization</li>
+<li><code>AllChem.UFFGetMoleculeForceField(mol, confId=-1)</code> - Get UFF force field object</li>
+<li><code>AllChem.MMFFGetMoleculeForceField(mol, pyMMFFMolProperties, confId=-1)</code> - Get MMFF force field</li>
+</ul>
+<h3>Conformer Analysis</h3>
+
+<ul><li><code>AllChem.GetConformerRMS(mol, confId1, confId2, prealigned=False)</code> - Calculate RMSD</li>
+<li><code>AllChem.GetConformerRMSMatrix(mol, prealigned=False)</code> - RMSD matrix</li>
+<li><code>AllChem.AlignMol(prbMol, refMol, prbCid=-1, refCid=-1)</code> - Align molecules</li>
+<li><code>AllChem.AlignMolConformers(mol)</code> - Align all conformers</li>
+</ul>
+<h3>Reactions</h3>
+
+<ul><li><code>AllChem.ReactionFromSmarts(smarts, useSmiles=False)</code> - Create reaction from SMARTS</li>
+<li><code>reaction.RunReactants(reactants)</code> - Apply reaction</li>
+<li><code>reaction.RunReactant(reactant, reactionIdx)</code> - Apply to specific reactant</li>
+<li><code>AllChem.CreateDifferenceFingerprintForReaction(reaction)</code> - Reaction fingerprint</li>
+</ul>
+<h3>Fingerprints</h3>
+
+<ul><li><code>AllChem.GetMorganFingerprint(mol, radius, useFeatures=False)</code> - Morgan fingerprint</li>
+<li><code>AllChem.GetMorganFingerprintAsBitVect(mol, radius, nBits=2048)</code> - Morgan bit vector</li>
+<li><code>AllChem.GetHashedMorganFingerprint(mol, radius, nBits=2048)</code> - Hashed Morgan</li>
+<li><code>AllChem.GetErGFingerprint(mol)</code> - ErG fingerprint</li>
+</ul>
+<h2>rdkit.Chem.Descriptors</h2>
+
+<p>Molecular descriptor calculations.</p>
+
+<h3>Common Descriptors</h3>
+
+<ul><li><code>Descriptors.MolWt(mol)</code> - Molecular weight</li>
+<li><code>Descriptors.ExactMolWt(mol)</code> - Exact molecular weight</li>
+<li><code>Descriptors.HeavyAtomMolWt(mol)</code> - Heavy atom molecular weight</li>
+<li><code>Descriptors.MolLogP(mol)</code> - LogP (lipophilicity)</li>
+<li><code>Descriptors.MolMR(mol)</code> - Molar refractivity</li>
+<li><code>Descriptors.TPSA(mol)</code> - Topological polar surface area</li>
+<li><code>Descriptors.NumHDonors(mol)</code> - Hydrogen bond donors</li>
+<li><code>Descriptors.NumHAcceptors(mol)</code> - Hydrogen bond acceptors</li>
+<li><code>Descriptors.NumRotatableBonds(mol)</code> - Rotatable bonds</li>
+<li><code>Descriptors.NumAromaticRings(mol)</code> - Aromatic rings</li>
+<li><code>Descriptors.NumSaturatedRings(mol)</code> - Saturated rings</li>
+<li><code>Descriptors.NumAliphaticRings(mol)</code> - Aliphatic rings</li>
+<li><code>Descriptors.NumAromaticHeterocycles(mol)</code> - Aromatic heterocycles</li>
+<li><code>Descriptors.NumRadicalElectrons(mol)</code> - Radical electrons</li>
+<li><code>Descriptors.NumValenceElectrons(mol)</code> - Valence electrons</li>
+</ul>
+<h3>Batch Calculation</h3>
+
+<ul><li><code>Descriptors.CalcMolDescriptors(mol)</code> - Calculate all descriptors as dictionary</li>
+</ul>
+<h3>Descriptor Lists</h3>
+
+<ul><li><code>Descriptors._descList</code> - List of (name, function) tuples for all descriptors</li>
+</ul>
+<h2>rdkit.Chem.Draw</h2>
+
+<p>Molecular visualization.</p>
+
+<h3>Image Generation</h3>
+
+<ul><li><code>Draw.MolToImage(mol, size=(300,300), kekulize=True, wedgeBonds=True, highlightAtoms=None)</code> - Generate PIL image</li>
+<li><code>Draw.MolToFile(mol, filename, size=(300,300), kekulize=True, wedgeBonds=True)</code> - Save to file</li>
+<li><code>Draw.MolsToGridImage(mols, molsPerRow=3, subImgSize=(200,200), legends=None)</code> - Grid of molecules</li>
+<li><code>Draw.MolsMatrixToGridImage(mols, molsPerRow=3, subImgSize=(200,200), legends=None)</code> - Nested grid</li>
+<li><code>Draw.ReactionToImage(rxn, subImgSize=(200,200))</code> - Reaction image</li>
+</ul>
+<h3>Fingerprint Visualization</h3>
+
+<ul><li><code>Draw.DrawMorganBit(mol, bitId, bitInfo, whichExample=0)</code> - Visualize Morgan bit</li>
+<li><code>Draw.DrawMorganBits(bits, mol, bitInfo, molsPerRow=3)</code> - Multiple Morgan bits</li>
+<li><code>Draw.DrawRDKitBit(mol, bitId, bitInfo, whichExample=0)</code> - Visualize RDKit bit</li>
+</ul>
+<h3>IPython Integration</h3>
+
+<ul><li><code>Draw.IPythonConsole</code> - Module for Jupyter integration</li>
+<li><code>Draw.IPythonConsole.ipython_useSVG</code> - Use SVG (True) or PNG (False)</li>
+<li><code>Draw.IPythonConsole.molSize</code> - Default molecule image size</li>
+</ul>
+<h3>Drawing Options</h3>
+
+<ul><li><code>rdMolDraw2D.MolDrawOptions()</code> - Get drawing options object</li>
+</ul><p>  - <code>.addAtomIndices</code> - Show atom indices</p>
+<p>  - <code>.addBondIndices</code> - Show bond indices</p>
+<p>  - <code>.addStereoAnnotation</code> - Show stereochemistry</p>
+<p>  - <code>.bondLineWidth</code> - Line width</p>
+<p>  - <code>.highlightBondWidthMultiplier</code> - Highlight width</p>
+<p>  - <code>.minFontSize</code> - Minimum font size</p>
+<p>  - <code>.maxFontSize</code> - Maximum font size</p>
+
+<h2>rdkit.Chem.rdMolDescriptors</h2>
+
+<p>Additional descriptor calculations.</p>
+
+<ul><li><code>rdMolDescriptors.CalcNumRings(mol)</code> - Number of rings</li>
+<li><code>rdMolDescriptors.CalcNumAromaticRings(mol)</code> - Aromatic rings</li>
+<li><code>rdMolDescriptors.CalcNumAliphaticRings(mol)</code> - Aliphatic rings</li>
+<li><code>rdMolDescriptors.CalcNumSaturatedRings(mol)</code> - Saturated rings</li>
+<li><code>rdMolDescriptors.CalcNumHeterocycles(mol)</code> - Heterocycles</li>
+<li><code>rdMolDescriptors.CalcNumAromaticHeterocycles(mol)</code> - Aromatic heterocycles</li>
+<li><code>rdMolDescriptors.CalcNumSpiroAtoms(mol)</code> - Spiro atoms</li>
+<li><code>rdMolDescriptors.CalcNumBridgeheadAtoms(mol)</code> - Bridgehead atoms</li>
+<li><code>rdMolDescriptors.CalcFractionCsp3(mol)</code> - Fraction of sp3 carbons</li>
+<li><code>rdMolDescriptors.CalcLabuteASA(mol)</code> - Labute accessible surface area</li>
+<li><code>rdMolDescriptors.CalcTPSA(mol)</code> - TPSA</li>
+<li><code>rdMolDescriptors.CalcMolFormula(mol)</code> - Molecular formula</li>
+</ul>
+<h2>rdkit.Chem.Scaffolds</h2>
+
+<p>Scaffold analysis.</p>
+
+<h3>Murcko Scaffolds</h3>
+
+<ul><li><code>MurckoScaffold.GetScaffoldForMol(mol)</code> - Get Murcko scaffold</li>
+<li><code>MurckoScaffold.MakeScaffoldGeneric(mol)</code> - Generic scaffold</li>
+<li><code>MurckoScaffold.MurckoDecompose(mol)</code> - Decompose to scaffold and sidechains</li>
+</ul>
+<h2>rdkit.Chem.rdMolHash</h2>
+
+<p>Molecular hashing and standardization.</p>
+
+<ul><li><code>rdMolHash.MolHash(mol, hashFunction)</code> - Generate hash</li>
+</ul><p>  - <code>rdMolHash.HashFunction.AnonymousGraph</code> - Anonymized structure</p>
+<p>  - <code>rdMolHash.HashFunction.CanonicalSmiles</code> - Canonical SMILES</p>
+<p>  - <code>rdMolHash.HashFunction.ElementGraph</code> - Element graph</p>
+<p>  - <code>rdMolHash.HashFunction.MurckoScaffold</code> - Murcko scaffold</p>
+<p>  - <code>rdMolHash.HashFunction.Regioisomer</code> - Regioisomer (no stereo)</p>
+<p>  - <code>rdMolHash.HashFunction.NetCharge</code> - Net charge</p>
+<p>  - <code>rdMolHash.HashFunction.HetAtomProtomer</code> - Heteroatom protomer</p>
+<p>  - <code>rdMolHash.HashFunction.HetAtomTautomer</code> - Heteroatom tautomer</p>
+
+<h2>rdkit.Chem.MolStandardize</h2>
+
+<p>Molecule standardization.</p>
+
+<ul><li><code>rdMolStandardize.Normalize(mol)</code> - Normalize functional groups</li>
+<li><code>rdMolStandardize.Reionize(mol)</code> - Fix ionization state</li>
+<li><code>rdMolStandardize.RemoveFragments(mol)</code> - Remove small fragments</li>
+<li><code>rdMolStandardize.Cleanup(mol)</code> - Full cleanup (normalize + reionize + remove)</li>
+<li><code>rdMolStandardize.Uncharger()</code> - Create uncharger object</li>
+</ul><p>  - <code>.uncharge(mol)</code> - Remove charges</p>
+<ul><li><code>rdMolStandardize.TautomerEnumerator()</code> - Enumerate tautomers</li>
+</ul><p>  - <code>.Enumerate(mol)</code> - Generate tautomers</p>
+<p>  - <code>.Canonicalize(mol)</code> - Get canonical tautomer</p>
+
+<h2>rdkit.DataStructs</h2>
+
+<p>Fingerprint similarity and operations.</p>
+
+<h3>Similarity Metrics</h3>
+
+<ul><li><code>DataStructs.TanimotoSimilarity(fp1, fp2)</code> - Tanimoto coefficient</li>
+<li><code>DataStructs.DiceSimilarity(fp1, fp2)</code> - Dice coefficient</li>
+<li><code>DataStructs.CosineSimilarity(fp1, fp2)</code> - Cosine similarity</li>
+<li><code>DataStructs.SokalSimilarity(fp1, fp2)</code> - Sokal similarity</li>
+<li><code>DataStructs.KulczynskiSimilarity(fp1, fp2)</code> - Kulczynski similarity</li>
+<li><code>DataStructs.McConnaugheySimilarity(fp1, fp2)</code> - McConnaughey similarity</li>
+</ul>
+<h3>Bulk Operations</h3>
+
+<ul><li><code>DataStructs.BulkTanimotoSimilarity(fp, fps)</code> - Tanimoto for list of fingerprints</li>
+<li><code>DataStructs.BulkDiceSimilarity(fp, fps)</code> - Dice for list</li>
+<li><code>DataStructs.BulkCosineSimilarity(fp, fps)</code> - Cosine for list</li>
+</ul>
+<h3>Distance Metrics</h3>
+
+<ul><li><code>DataStructs.TanimotoDistance(fp1, fp2)</code> - 1 - Tanimoto</li>
+<li><code>DataStructs.DiceDistance(fp1, fp2)</code> - 1 - Dice</li>
+</ul>
+<h2>rdkit.Chem.AtomPairs</h2>
+
+<p>Atom pair fingerprints.</p>
+
+<ul><li><code>Pairs.GetAtomPairFingerprint(mol, minLength=1, maxLength=30)</code> - Atom pair fingerprint</li>
+<li><code>Pairs.GetAtomPairFingerprintAsBitVect(mol, minLength=1, maxLength=30, nBits=2048)</code> - As bit vector</li>
+<li><code>Pairs.GetHashedAtomPairFingerprint(mol, nBits=2048, minLength=1, maxLength=30)</code> - Hashed version</li>
+</ul>
+<h2>rdkit.Chem.Torsions</h2>
+
+<p>Topological torsion fingerprints.</p>
+
+<ul><li><code>Torsions.GetTopologicalTorsionFingerprint(mol, targetSize=4)</code> - Torsion fingerprint</li>
+<li><code>Torsions.GetTopologicalTorsionFingerprintAsIntVect(mol, targetSize=4)</code> - As int vector</li>
+<li><code>Torsions.GetHashedTopologicalTorsionFingerprint(mol, nBits=2048, targetSize=4)</code> - Hashed version</li>
+</ul>
+<h2>rdkit.Chem.MACCSkeys</h2>
+
+<p>MACCS structural keys.</p>
+
+<ul><li><code>MACCSkeys.GenMACCSKeys(mol)</code> - Generate 166-bit MACCS keys</li>
+</ul>
+<h2>rdkit.Chem.ChemicalFeatures</h2>
+
+<p>Pharmacophore features.</p>
+
+<ul><li><code>ChemicalFeatures.BuildFeatureFactory(featureFile)</code> - Create feature factory</li>
+<li><code>factory.GetFeaturesForMol(mol)</code> - Get pharmacophore features</li>
+<li><code>feature.GetFamily()</code> - Feature family (Donor, Acceptor, etc.)</li>
+<li><code>feature.GetType()</code> - Feature type</li>
+<li><code>feature.GetAtomIds()</code> - Atoms involved in feature</li>
+</ul>
+<h2>rdkit.ML.Cluster.Butina</h2>
+
+<p>Clustering algorithms.</p>
+
+<ul><li><code>Butina.ClusterData(distances, nPts, distThresh, isDistData=True)</code> - Butina clustering</li>
+</ul><p>  - Returns tuple of tuples with cluster members</p>
+
+<h2>rdkit.Chem.rdFingerprintGenerator</h2>
+
+<p>Modern fingerprint generation API (RDKit 2020.09+).</p>
+
+<ul><li><code>rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048)</code> - Morgan generator</li>
+<li><code>rdFingerprintGenerator.GetRDKitFPGenerator(minPath=1, maxPath=7, fpSize=2048)</code> - RDKit FP generator</li>
+<li><code>rdFingerprintGenerator.GetAtomPairGenerator(minDistance=1, maxDistance=30)</code> - Atom pair generator</li>
+<li><code>generator.GetFingerprint(mol)</code> - Generate fingerprint</li>
+<li><code>generator.GetCountFingerprint(mol)</code> - Count-based fingerprint</li>
+</ul>
+<h2>Common Parameters</h2>
+
+<h3>Sanitization Operations</h3>
+
+<ul><li><code>SANITIZE_NONE</code> - No sanitization</li>
+<li><code>SANITIZE_ALL</code> - All operations (default)</li>
+<li><code>SANITIZE_CLEANUP</code> - Basic cleanup</li>
+<li><code>SANITIZE_PROPERTIES</code> - Calculate properties</li>
+<li><code>SANITIZE_SYMMRINGS</code> - Symmetrize rings</li>
+<li><code>SANITIZE_KEKULIZE</code> - Kekulize aromatic rings</li>
+<li><code>SANITIZE_FINDRADICALS</code> - Find radical electrons</li>
+<li><code>SANITIZE_SETAROMATICITY</code> - Set aromaticity</li>
+<li><code>SANITIZE_SETCONJUGATION</code> - Set conjugation</li>
+<li><code>SANITIZE_SETHYBRIDIZATION</code> - Set hybridization</li>
+<li><code>SANITIZE_CLEANUPCHIRALITY</code> - Cleanup chirality</li>
+</ul>
+<h3>Bond Types</h3>
+
+<ul><li><code>BondType.SINGLE</code> - Single bond</li>
+<li><code>BondType.DOUBLE</code> - Double bond</li>
+<li><code>BondType.TRIPLE</code> - Triple bond</li>
+<li><code>BondType.AROMATIC</code> - Aromatic bond</li>
+<li><code>BondType.DATIVE</code> - Dative bond</li>
+<li><code>BondType.UNSPECIFIED</code> - Unspecified</li>
+</ul>
+<h3>Hybridization</h3>
+
+<ul><li><code>HybridizationType.S</code> - S</li>
+<li><code>HybridizationType.SP</code> - SP</li>
+<li><code>HybridizationType.SP2</code> - SP2</li>
+<li><code>HybridizationType.SP3</code> - SP3</li>
+<li><code>HybridizationType.SP3D</code> - SP3D</li>
+<li><code>HybridizationType.SP3D2</code> - SP3D2</li>
+</ul>
+<h3>Chirality</h3>
+
+<ul><li><code>ChiralType.CHI_UNSPECIFIED</code> - Unspecified</li>
+<li><code>ChiralType.CHI_TETRAHEDRAL_CW</code> - Clockwise</li>
+<li><code>ChiralType.CHI_TETRAHEDRAL_CCW</code> - Counter-clockwise</li>
+</ul>
+<h2>Installation</h2>
+
+<pre><code class="language-bash"># Using conda (recommended)
+conda install -c conda-forge rdkit
+
+# Using pip
+pip install rdkit-pypi</code></pre>
+
+<h2>Importing</h2>
+
+<pre><code class="language-python"># Core functionality
+from rdkit import Chem
+from rdkit.Chem import AllChem
+
+# Descriptors
+from rdkit.Chem import Descriptors
+
+# Drawing
+from rdkit.Chem import Draw
+
+# Similarity
+from rdkit import DataStructs</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Descriptors Reference</h3>
+  <h1>RDKit Molecular Descriptors Reference</h1>
+
+<p>Complete reference for molecular descriptors available in RDKit's <code>Descriptors</code> module.</p>
+
+<h2>Usage</h2>
+
+<pre><code class="language-python">from rdkit import Chem
+from rdkit.Chem import Descriptors
+
+mol = Chem.MolFromSmiles('CCO')
+
+# Calculate individual descriptor
+mw = Descriptors.MolWt(mol)
+
+# Calculate all descriptors at once
+all_desc = Descriptors.CalcMolDescriptors(mol)</code></pre>
+
+<h2>Molecular Weight and Mass</h2>
+
+<h3>MolWt</h3>
+<p>Average molecular weight of the molecule.</p>
+<pre><code class="language-python">Descriptors.MolWt(mol)</code></pre>
+
+<h3>ExactMolWt</h3>
+<p>Exact molecular weight using isotopic composition.</p>
+<pre><code class="language-python">Descriptors.ExactMolWt(mol)</code></pre>
+
+<h3>HeavyAtomMolWt</h3>
+<p>Average molecular weight ignoring hydrogens.</p>
+<pre><code class="language-python">Descriptors.HeavyAtomMolWt(mol)</code></pre>
+
+<h2>Lipophilicity</h2>
+
+<h3>MolLogP</h3>
+<p>Wildman-Crippen LogP (octanol-water partition coefficient).</p>
+<pre><code class="language-python">Descriptors.MolLogP(mol)</code></pre>
+
+<h3>MolMR</h3>
+<p>Wildman-Crippen molar refractivity.</p>
+<pre><code class="language-python">Descriptors.MolMR(mol)</code></pre>
+
+<h2>Polar Surface Area</h2>
+
+<h3>TPSA</h3>
+<p>Topological polar surface area (TPSA) based on fragment contributions.</p>
+<pre><code class="language-python">Descriptors.TPSA(mol)</code></pre>
+
+<h3>LabuteASA</h3>
+<p>Labute's Approximate Surface Area (ASA).</p>
+<pre><code class="language-python">Descriptors.LabuteASA(mol)</code></pre>
+
+<h2>Hydrogen Bonding</h2>
+
+<h3>NumHDonors</h3>
+<p>Number of hydrogen bond donors (N-H and O-H).</p>
+<pre><code class="language-python">Descriptors.NumHDonors(mol)</code></pre>
+
+<h3>NumHAcceptors</h3>
+<p>Number of hydrogen bond acceptors (N and O).</p>
+<pre><code class="language-python">Descriptors.NumHAcceptors(mol)</code></pre>
+
+<h3>NOCount</h3>
+<p>Number of N and O atoms.</p>
+<pre><code class="language-python">Descriptors.NOCount(mol)</code></pre>
+
+<h3>NHOHCount</h3>
+<p>Number of N-H and O-H bonds.</p>
+<pre><code class="language-python">Descriptors.NHOHCount(mol)</code></pre>
+
+<h2>Atom Counts</h2>
+
+<h3>HeavyAtomCount</h3>
+<p>Number of heavy atoms (non-hydrogen).</p>
+<pre><code class="language-python">Descriptors.HeavyAtomCount(mol)</code></pre>
+
+<h3>NumHeteroatoms</h3>
+<p>Number of heteroatoms (non-C and non-H).</p>
+<pre><code class="language-python">Descriptors.NumHeteroatoms(mol)</code></pre>
+
+<h3>NumValenceElectrons</h3>
+<p>Total number of valence electrons.</p>
+<pre><code class="language-python">Descriptors.NumValenceElectrons(mol)</code></pre>
+
+<h3>NumRadicalElectrons</h3>
+<p>Number of radical electrons.</p>
+<pre><code class="language-python">Descriptors.NumRadicalElectrons(mol)</code></pre>
+
+<h2>Ring Descriptors</h2>
+
+<h3>RingCount</h3>
+<p>Number of rings.</p>
+<pre><code class="language-python">Descriptors.RingCount(mol)</code></pre>
+
+<h3>NumAromaticRings</h3>
+<p>Number of aromatic rings.</p>
+<pre><code class="language-python">Descriptors.NumAromaticRings(mol)</code></pre>
+
+<h3>NumSaturatedRings</h3>
+<p>Number of saturated rings.</p>
+<pre><code class="language-python">Descriptors.NumSaturatedRings(mol)</code></pre>
+
+<h3>NumAliphaticRings</h3>
+<p>Number of aliphatic (non-aromatic) rings.</p>
+<pre><code class="language-python">Descriptors.NumAliphaticRings(mol)</code></pre>
+
+<h3>NumAromaticCarbocycles</h3>
+<p>Number of aromatic carbocycles (rings with only carbons).</p>
+<pre><code class="language-python">Descriptors.NumAromaticCarbocycles(mol)</code></pre>
+
+<h3>NumAromaticHeterocycles</h3>
+<p>Number of aromatic heterocycles (rings with heteroatoms).</p>
+<pre><code class="language-python">Descriptors.NumAromaticHeterocycles(mol)</code></pre>
+
+<h3>NumSaturatedCarbocycles</h3>
+<p>Number of saturated carbocycles.</p>
+<pre><code class="language-python">Descriptors.NumSaturatedCarbocycles(mol)</code></pre>
+
+<h3>NumSaturatedHeterocycles</h3>
+<p>Number of saturated heterocycles.</p>
+<pre><code class="language-python">Descriptors.NumSaturatedHeterocycles(mol)</code></pre>
+
+<h3>NumAliphaticCarbocycles</h3>
+<p>Number of aliphatic carbocycles.</p>
+<pre><code class="language-python">Descriptors.NumAliphaticCarbocycles(mol)</code></pre>
+
+<h3>NumAliphaticHeterocycles</h3>
+<p>Number of aliphatic heterocycles.</p>
+<pre><code class="language-python">Descriptors.NumAliphaticHeterocycles(mol)</code></pre>
+
+<h2>Rotatable Bonds</h2>
+
+<h3>NumRotatableBonds</h3>
+<p>Number of rotatable bonds (flexibility).</p>
+<pre><code class="language-python">Descriptors.NumRotatableBonds(mol)</code></pre>
+
+<h2>Aromatic Atoms</h2>
+
+<h3>NumAromaticAtoms</h3>
+<p>Number of aromatic atoms.</p>
+<pre><code class="language-python">Descriptors.NumAromaticAtoms(mol)</code></pre>
+
+<h2>Fraction Descriptors</h2>
+
+<h3>FractionCsp3</h3>
+<p>Fraction of carbons that are sp3 hybridized.</p>
+<pre><code class="language-python">Descriptors.FractionCsp3(mol)</code></pre>
+
+<h2>Complexity Descriptors</h2>
+
+<h3>BertzCT</h3>
+<p>Bertz complexity index.</p>
+<pre><code class="language-python">Descriptors.BertzCT(mol)</code></pre>
+
+<h3>Ipc</h3>
+<p>Information content (complexity measure).</p>
+<pre><code class="language-python">Descriptors.Ipc(mol)</code></pre>
+
+<h2>Kappa Shape Indices</h2>
+
+<p>Molecular shape descriptors based on graph invariants.</p>
+
+<h3>Kappa1</h3>
+<p>First kappa shape index.</p>
+<pre><code class="language-python">Descriptors.Kappa1(mol)</code></pre>
+
+<h3>Kappa2</h3>
+<p>Second kappa shape index.</p>
+<pre><code class="language-python">Descriptors.Kappa2(mol)</code></pre>
+
+<h3>Kappa3</h3>
+<p>Third kappa shape index.</p>
+<pre><code class="language-python">Descriptors.Kappa3(mol)</code></pre>
+
+<h2>Chi Connectivity Indices</h2>
+
+<p>Molecular connectivity indices.</p>
+
+<h3>Chi0, Chi1, Chi2, Chi3, Chi4</h3>
+<p>Simple chi connectivity indices.</p>
+<pre><code class="language-python">Descriptors.Chi0(mol)
+Descriptors.Chi1(mol)
+Descriptors.Chi2(mol)
+Descriptors.Chi3(mol)
+Descriptors.Chi4(mol)</code></pre>
+
+<h3>Chi0n, Chi1n, Chi2n, Chi3n, Chi4n</h3>
+<p>Valence-modified chi connectivity indices.</p>
+<pre><code class="language-python">Descriptors.Chi0n(mol)
+Descriptors.Chi1n(mol)
+Descriptors.Chi2n(mol)
+Descriptors.Chi3n(mol)
+Descriptors.Chi4n(mol)</code></pre>
+
+<h3>Chi0v, Chi1v, Chi2v, Chi3v, Chi4v</h3>
+<p>Valence chi connectivity indices.</p>
+<pre><code class="language-python">Descriptors.Chi0v(mol)
+Descriptors.Chi1v(mol)
+Descriptors.Chi2v(mol)
+Descriptors.Chi3v(mol)
+Descriptors.Chi4v(mol)</code></pre>
+
+<h2>Hall-Kier Alpha</h2>
+
+<h3>HallKierAlpha</h3>
+<p>Hall-Kier alpha value (molecular flexibility).</p>
+<pre><code class="language-python">Descriptors.HallKierAlpha(mol)</code></pre>
+
+<h2>Balaban's J Index</h2>
+
+<h3>BalabanJ</h3>
+<p>Balaban's J index (branching descriptor).</p>
+<pre><code class="language-python">Descriptors.BalabanJ(mol)</code></pre>
+
+<h2>EState Indices</h2>
+
+<p>Electrotopological state indices.</p>
+
+<h3>MaxEStateIndex</h3>
+<p>Maximum E-state value.</p>
+<pre><code class="language-python">Descriptors.MaxEStateIndex(mol)</code></pre>
+
+<h3>MinEStateIndex</h3>
+<p>Minimum E-state value.</p>
+<pre><code class="language-python">Descriptors.MinEStateIndex(mol)</code></pre>
+
+<h3>MaxAbsEStateIndex</h3>
+<p>Maximum absolute E-state value.</p>
+<pre><code class="language-python">Descriptors.MaxAbsEStateIndex(mol)</code></pre>
+
+<h3>MinAbsEStateIndex</h3>
+<p>Minimum absolute E-state value.</p>
+<pre><code class="language-python">Descriptors.MinAbsEStateIndex(mol)</code></pre>
+
+<h2>Partial Charges</h2>
+
+<h3>MaxPartialCharge</h3>
+<p>Maximum partial charge.</p>
+<pre><code class="language-python">Descriptors.MaxPartialCharge(mol)</code></pre>
+
+<h3>MinPartialCharge</h3>
+<p>Minimum partial charge.</p>
+<pre><code class="language-python">Descriptors.MinPartialCharge(mol)</code></pre>
+
+<h3>MaxAbsPartialCharge</h3>
+<p>Maximum absolute partial charge.</p>
+<pre><code class="language-python">Descriptors.MaxAbsPartialCharge(mol)</code></pre>
+
+<h3>MinAbsPartialCharge</h3>
+<p>Minimum absolute partial charge.</p>
+<pre><code class="language-python">Descriptors.MinAbsPartialCharge(mol)</code></pre>
+
+<h2>Fingerprint Density</h2>
+
+<p>Measures the density of molecular fingerprints.</p>
+
+<h3>FpDensityMorgan1</h3>
+<p>Morgan fingerprint density at radius 1.</p>
+<pre><code class="language-python">Descriptors.FpDensityMorgan1(mol)</code></pre>
+
+<h3>FpDensityMorgan2</h3>
+<p>Morgan fingerprint density at radius 2.</p>
+<pre><code class="language-python">Descriptors.FpDensityMorgan2(mol)</code></pre>
+
+<h3>FpDensityMorgan3</h3>
+<p>Morgan fingerprint density at radius 3.</p>
+<pre><code class="language-python">Descriptors.FpDensityMorgan3(mol)</code></pre>
+
+<h2>PEOE VSA Descriptors</h2>
+
+<p>Partial Equalization of Orbital Electronegativities (PEOE) VSA descriptors.</p>
+
+<h3>PEOE_VSA1 through PEOE_VSA14</h3>
+<p>MOE-type descriptors using partial charges and surface area contributions.</p>
+<pre><code class="language-python">Descriptors.PEOE_VSA1(mol)
+# ... through PEOE_VSA14</code></pre>
+
+<h2>SMR VSA Descriptors</h2>
+
+<p>Molecular refractivity VSA descriptors.</p>
+
+<h3>SMR_VSA1 through SMR_VSA10</h3>
+<p>MOE-type descriptors using MR contributions and surface area.</p>
+<pre><code class="language-python">Descriptors.SMR_VSA1(mol)
+# ... through SMR_VSA10</code></pre>
+
+<h2>SLogP VSA Descriptors</h2>
+
+<p>LogP VSA descriptors.</p>
+
+<h3>SLogP_VSA1 through SLogP_VSA12</h3>
+<p>MOE-type descriptors using LogP contributions and surface area.</p>
+<pre><code class="language-python">Descriptors.SLogP_VSA1(mol)
+# ... through SLogP_VSA12</code></pre>
+
+<h2>EState VSA Descriptors</h2>
+
+<h3>EState_VSA1 through EState_VSA11</h3>
+<p>MOE-type descriptors using E-state indices and surface area.</p>
+<pre><code class="language-python">Descriptors.EState_VSA1(mol)
+# ... through EState_VSA11</code></pre>
+
+<h2>VSA Descriptors</h2>
+
+<p>van der Waals surface area descriptors.</p>
+
+<h3>VSA_EState1 through VSA_EState10</h3>
+<p>EState VSA descriptors.</p>
+<pre><code class="language-python">Descriptors.VSA_EState1(mol)
+# ... through VSA_EState10</code></pre>
+
+<h2>BCUT Descriptors</h2>
+
+<p>Burden-CAS-University of Texas eigenvalue descriptors.</p>
+
+<h3>BCUT2D_MWHI</h3>
+<p>Highest eigenvalue of Burden matrix weighted by molecular weight.</p>
+<pre><code class="language-python">Descriptors.BCUT2D_MWHI(mol)</code></pre>
+
+<h3>BCUT2D_MWLOW</h3>
+<p>Lowest eigenvalue of Burden matrix weighted by molecular weight.</p>
+<pre><code class="language-python">Descriptors.BCUT2D_MWLOW(mol)</code></pre>
+
+<h3>BCUT2D_CHGHI</h3>
+<p>Highest eigenvalue weighted by partial charges.</p>
+<pre><code class="language-python">Descriptors.BCUT2D_CHGHI(mol)</code></pre>
+
+<h3>BCUT2D_CHGLO</h3>
+<p>Lowest eigenvalue weighted by partial charges.</p>
+<pre><code class="language-python">Descriptors.BCUT2D_CHGLO(mol)</code></pre>
+
+<h3>BCUT2D_LOGPHI</h3>
+<p>Highest eigenvalue weighted by LogP.</p>
+<pre><code class="language-python">Descriptors.BCUT2D_LOGPHI(mol)</code></pre>
+
+<h3>BCUT2D_LOGPLOW</h3>
+<p>Lowest eigenvalue weighted by LogP.</p>
+<pre><code class="language-python">Descriptors.BCUT2D_LOGPLOW(mol)</code></pre>
+
+<h3>BCUT2D_MRHI</h3>
+<p>Highest eigenvalue weighted by molar refractivity.</p>
+<pre><code class="language-python">Descriptors.BCUT2D_MRHI(mol)</code></pre>
+
+<h3>BCUT2D_MRLOW</h3>
+<p>Lowest eigenvalue weighted by molar refractivity.</p>
+<pre><code class="language-python">Descriptors.BCUT2D_MRLOW(mol)</code></pre>
+
+<h2>Autocorrelation Descriptors</h2>
+
+<h3>AUTOCORR2D</h3>
+<p>2D autocorrelation descriptors (if enabled).</p>
+<p>Various autocorrelation indices measuring spatial distribution of properties.</p>
+
+<h2>MQN Descriptors</h2>
+
+<p>Molecular Quantum Numbers - 42 simple descriptors.</p>
+
+<h3>mqn1 through mqn42</h3>
+<p>Integer descriptors counting various molecular features.</p>
+<pre><code class="language-python"># Access via CalcMolDescriptors
+desc = Descriptors.CalcMolDescriptors(mol)
+mqns = {k: v for k, v in desc.items() if k.startswith('mqn')}</code></pre>
+
+<h2>QED</h2>
+
+<h3>qed</h3>
+<p>Quantitative Estimate of Drug-likeness.</p>
+<pre><code class="language-python">Descriptors.qed(mol)</code></pre>
+
+<h2>Lipinski's Rule of Five</h2>
+
+<p>Check drug-likeness using Lipinski's criteria:</p>
+
+<pre><code class="language-python">def lipinski_rule_of_five(mol):
+    mw = Descriptors.MolWt(mol) &lt;= 500
+    logp = Descriptors.MolLogP(mol) &lt;= 5
+    hbd = Descriptors.NumHDonors(mol) &lt;= 5
+    hba = Descriptors.NumHAcceptors(mol) &lt;= 10
+    return mw and logp and hbd and hba</code></pre>
+
+<h2>Batch Descriptor Calculation</h2>
+
+<p>Calculate all descriptors at once:</p>
+
+<pre><code class="language-python">from rdkit import Chem
+from rdkit.Chem import Descriptors
+
+mol = Chem.MolFromSmiles('CCO')
+
+# Get all descriptors as dictionary
+all_descriptors = Descriptors.CalcMolDescriptors(mol)
+
+# Access specific descriptor
+mw = all_descriptors['MolWt']
+logp = all_descriptors['MolLogP']
+
+# Get list of available descriptor names
+from rdkit.Chem import Descriptors
+descriptor_names = [desc[0] for desc in Descriptors._descList]</code></pre>
+
+<h2>Descriptor Categories Summary</h2>
+
+<ul><li><strong>Physicochemical</strong>: MolWt, MolLogP, MolMR, TPSA</li>
+<li><strong>Topological</strong>: BertzCT, BalabanJ, Kappa indices</li>
+<li><strong>Electronic</strong>: Partial charges, E-state indices</li>
+<li><strong>Shape</strong>: Kappa indices, BCUT descriptors</li>
+<li><strong>Connectivity</strong>: Chi indices</li>
+<li><strong>2D Fingerprints</strong>: FpDensity descriptors</li>
+<li><strong>Atom counts</strong>: Heavy atoms, heteroatoms, rings</li>
+<li><strong>Drug-likeness</strong>: QED, Lipinski parameters</li>
+<li><strong>Flexibility</strong>: NumRotatableBonds, HallKierAlpha</li>
+<li><strong>Surface area</strong>: VSA-based descriptors</li>
+</ul>
+<h2>Common Use Cases</h2>
+
+<h3>Drug-likeness Screening</h3>
+
+<pre><code class="language-python">def screen_druglikeness(mol):
+    return {
+        'MW': Descriptors.MolWt(mol),
+        'LogP': Descriptors.MolLogP(mol),
+        'HBD': Descriptors.NumHDonors(mol),
+        'HBA': Descriptors.NumHAcceptors(mol),
+        'TPSA': Descriptors.TPSA(mol),
+        'RotBonds': Descriptors.NumRotatableBonds(mol),
+        'AromaticRings': Descriptors.NumAromaticRings(mol),
+        'QED': Descriptors.qed(mol)
+    }</code></pre>
+
+<h3>Lead-like Filtering</h3>
+
+<pre><code class="language-python">def is_leadlike(mol):
+    mw = 250 &lt;= Descriptors.MolWt(mol) &lt;= 350
+    logp = Descriptors.MolLogP(mol) &lt;= 3.5
+    rot_bonds = Descriptors.NumRotatableBonds(mol) &lt;= 7
+    return mw and logp and rot_bonds</code></pre>
+
+<h3>Diversity Analysis</h3>
+
+<pre><code class="language-python">def molecular_complexity(mol):
+    return {
+        'BertzCT': Descriptors.BertzCT(mol),
+        'NumRings': Descriptors.RingCount(mol),
+        'NumRotBonds': Descriptors.NumRotatableBonds(mol),
+        'FractionCsp3': Descriptors.FractionCsp3(mol),
+        'NumAromaticRings': Descriptors.NumAromaticRings(mol)
+    }</code></pre>
+
+<h2>Tips</h2>
+
+<ul><li><strong>Use batch calculation</strong> for multiple descriptors to avoid redundant computations</li>
+<li><strong>Check for None</strong> - some descriptors may return None for invalid molecules</li>
+<li><strong>Normalize descriptors</strong> for machine learning applications</li>
+<li><strong>Select relevant descriptors</strong> - not all 200+ descriptors are useful for every task</li>
+<li><strong>Consider 3D descriptors</strong> separately (require 3D coordinates)</li>
+<li><strong>Validate ranges</strong> - check if descriptor values are in expected ranges</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Smarts Patterns</h3>
+  <h1>Common SMARTS Patterns for RDKit</h1>
+
+<p>This document provides a collection of commonly used SMARTS patterns for substructure searching in RDKit.</p>
+
+<h2>Functional Groups</h2>
+
+<h3>Alcohols</h3>
+
+<pre><code class="language-python"># Primary alcohol
+'[CH2][OH1]'
+
+# Secondary alcohol
+'[CH1]([OH1])[CH3,CH2]'
+
+# Tertiary alcohol
+'[C]([OH1])([C])([C])[C]'
+
+# Any alcohol
+'[OH1][C]'
+
+# Phenol
+'c[OH1]'</code></pre>
+
+<h3>Aldehydes and Ketones</h3>
+
+<pre><code class="language-python"># Aldehyde
+'[CH1](=O)'
+
+# Ketone
+'[C](=O)[C]'
+
+# Any carbonyl
+'[C](=O)'</code></pre>
+
+<h3>Carboxylic Acids and Derivatives</h3>
+
+<pre><code class="language-python"># Carboxylic acid
+'C(=O)[OH1]'
+'[CX3](=O)[OX2H1]'  # More specific
+
+# Ester
+'C(=O)O[C]'
+'[CX3](=O)[OX2][C]'  # More specific
+
+# Amide
+'C(=O)N'
+'[CX3](=O)[NX3]'  # More specific
+
+# Acyl chloride
+'C(=O)Cl'
+
+# Anhydride
+'C(=O)OC(=O)'</code></pre>
+
+<h3>Amines</h3>
+
+<pre><code class="language-python"># Primary amine
+'[NH2][C]'
+
+# Secondary amine
+'[NH1]([C])[C]'
+
+# Tertiary amine
+'[N]([C])([C])[C]'
+
+# Aromatic amine (aniline)
+'c[NH2]'
+
+# Any amine
+'[NX3]'</code></pre>
+
+<h3>Ethers</h3>
+
+<pre><code class="language-python"># Aliphatic ether
+'[C][O][C]'
+
+# Aromatic ether
+'c[O][C,c]'</code></pre>
+
+<h3>Halides</h3>
+
+<pre><code class="language-python"># Alkyl halide
+'[C][F,Cl,Br,I]'
+
+# Aryl halide
+'c[F,Cl,Br,I]'
+
+# Specific halides
+'[C]F'  # Fluoride
+'[C]Cl'  # Chloride
+'[C]Br'  # Bromide
+'[C]I'  # Iodide</code></pre>
+
+<h3>Nitriles and Nitro Groups</h3>
+
+<pre><code class="language-python"># Nitrile
+'C#N'
+
+# Nitro group
+'[N+](=O)[O-]'
+
+# Nitro on aromatic
+'c[N+](=O)[O-]'</code></pre>
+
+<h3>Thiols and Sulfides</h3>
+
+<pre><code class="language-python"># Thiol
+'[C][SH1]'
+
+# Sulfide
+'[C][S][C]'
+
+# Disulfide
+'[C][S][S][C]'
+
+# Sulfoxide
+'[C][S](=O)[C]'
+
+# Sulfone
+'[C][S](=O)(=O)[C]'</code></pre>
+
+<h2>Ring Systems</h2>
+
+<h3>Simple Rings</h3>
+
+<pre><code class="language-python"># Benzene ring
+'c1ccccc1'
+'[#6]1:[#6]:[#6]:[#6]:[#6]:[#6]:1'  # Explicit atoms
+
+# Cyclohexane
+'C1CCCCC1'
+
+# Cyclopentane
+'C1CCCC1'
+
+# Any 3-membered ring
+'[r3]'
+
+# Any 4-membered ring
+'[r4]'
+
+# Any 5-membered ring
+'[r5]'
+
+# Any 6-membered ring
+'[r6]'
+
+# Any 7-membered ring
+'[r7]'</code></pre>
+
+<h3>Aromatic Rings</h3>
+
+<pre><code class="language-python"># Aromatic carbon in ring
+'[cR]'
+
+# Aromatic nitrogen in ring (pyridine, etc.)
+'[nR]'
+
+# Aromatic oxygen in ring (furan, etc.)
+'[oR]'
+
+# Aromatic sulfur in ring (thiophene, etc.)
+'[sR]'
+
+# Any aromatic ring
+'a1aaaaa1'</code></pre>
+
+<h3>Heterocycles</h3>
+
+<pre><code class="language-python"># Pyridine
+'n1ccccc1'
+
+# Pyrrole
+'n1cccc1'
+
+# Furan
+'o1cccc1'
+
+# Thiophene
+'s1cccc1'
+
+# Imidazole
+'n1cncc1'
+
+# Pyrimidine
+'n1cnccc1'
+
+# Thiazole
+'n1ccsc1'
+
+# Oxazole
+'n1ccoc1'</code></pre>
+
+<h3>Fused Rings</h3>
+
+<pre><code class="language-python"># Naphthalene
+'c1ccc2ccccc2c1'
+
+# Indole
+'c1ccc2[nH]ccc2c1'
+
+# Quinoline
+'n1cccc2ccccc12'
+
+# Benzimidazole
+'c1ccc2[nH]cnc2c1'
+
+# Purine
+'n1cnc2ncnc2c1'</code></pre>
+
+<h3>Macrocycles</h3>
+
+<pre><code class="language-python"># Rings with 8 or more atoms
+'[r{8-}]'
+
+# Rings with 9-15 atoms
+'[r{9-15}]'
+
+# Rings with more than 12 atoms (macrocycles)
+'[r{12-}]'</code></pre>
+
+<h2>Specific Structural Features</h2>
+
+<h3>Aliphatic vs Aromatic</h3>
+
+<pre><code class="language-python"># Aliphatic carbon
+'[C]'
+
+# Aromatic carbon
+'[c]'
+
+# Aliphatic carbon in ring
+'[CR]'
+
+# Aromatic carbon (alternative)
+'[cR]'</code></pre>
+
+<h3>Stereochemistry</h3>
+
+<pre><code class="language-python"># Tetrahedral center with clockwise chirality
+'[C@]'
+
+# Tetrahedral center with counterclockwise chirality
+'[C@@]'
+
+# Any chiral center
+'[C@,C@@]'
+
+# E double bond
+'C/C=C/C'
+
+# Z double bond
+'C/C=C\\C'</code></pre>
+
+<h3>Hybridization</h3>
+
+<pre><code class="language-python"># SP hybridization (triple bond)
+'[CX2]'
+
+# SP2 hybridization (double bond or aromatic)
+'[CX3]'
+
+# SP3 hybridization (single bonds)
+'[CX4]'</code></pre>
+
+<h3>Charge</h3>
+
+<pre><code class="language-python"># Positive charge
+'[+]'
+
+# Negative charge
+'[-]'
+
+# Specific charge
+'[+1]'
+'[-1]'
+'[+2]'
+
+# Positively charged nitrogen
+'[N+]'
+
+# Negatively charged oxygen
+'[O-]'
+
+# Carboxylate anion
+'C(=O)[O-]'
+
+# Ammonium cation
+'[N+]([C])([C])([C])[C]'</code></pre>
+
+<h2>Pharmacophore Features</h2>
+
+<h3>Hydrogen Bond Donors</h3>
+
+<pre><code class="language-python"># Hydroxyl
+'[OH]'
+
+# Amine
+'[NH,NH2]'
+
+# Amide NH
+'[N][C](=O)'
+
+# Any H-bond donor
+'[OH,NH,NH2,NH3+]'</code></pre>
+
+<h3>Hydrogen Bond Acceptors</h3>
+
+<pre><code class="language-python"># Carbonyl oxygen
+'[O]=[C,S,P]'
+
+# Ether oxygen
+'[OX2]'
+
+# Ester oxygen
+'C(=O)[O]'
+
+# Nitrogen acceptor
+'[N;!H0]'
+
+# Any H-bond acceptor
+'[O,N]'</code></pre>
+
+<h3>Hydrophobic Groups</h3>
+
+<pre><code class="language-python"># Alkyl chain (4+ carbons)
+'CCCC'
+
+# Branched alkyl
+'C(C)(C)C'
+
+# Aromatic rings (hydrophobic)
+'c1ccccc1'</code></pre>
+
+<h3>Aromatic Interactions</h3>
+
+<pre><code class="language-python"># Benzene for pi-pi stacking
+'c1ccccc1'
+
+# Heterocycle for pi-pi
+'[a]1[a][a][a][a][a]1'
+
+# Any aromatic ring
+'[aR]'</code></pre>
+
+<h2>Drug-like Fragments</h2>
+
+<h3>Lipinski Fragments</h3>
+
+<pre><code class="language-python"># Aromatic ring with substituents
+'c1cc(*)ccc1'
+
+# Aliphatic chain
+'CCCC'
+
+# Ether linkage
+'[C][O][C]'
+
+# Amine (basic center)
+'[N]([C])([C])'</code></pre>
+
+<h3>Common Scaffolds</h3>
+
+<pre><code class="language-python"># Benzamide
+'c1ccccc1C(=O)N'
+
+# Sulfonamide
+'S(=O)(=O)N'
+
+# Urea
+'[N][C](=O)[N]'
+
+# Guanidine
+'[N]C(=[N])[N]'
+
+# Phosphate
+'P(=O)([O-])([O-])[O-]'</code></pre>
+
+<h3>Privileged Structures</h3>
+
+<pre><code class="language-python"># Biphenyl
+'c1ccccc1-c2ccccc2'
+
+# Benzopyran
+'c1ccc2OCCCc2c1'
+
+# Piperazine
+'N1CCNCC1'
+
+# Piperidine
+'N1CCCCC1'
+
+# Morpholine
+'N1CCOCC1'</code></pre>
+
+<h2>Reactive Groups</h2>
+
+<h3>Electrophiles</h3>
+
+<pre><code class="language-python"># Acyl chloride
+'C(=O)Cl'
+
+# Alkyl halide
+'[C][Cl,Br,I]'
+
+# Epoxide
+'C1OC1'
+
+# Michael acceptor
+'C=C[C](=O)'</code></pre>
+
+<h3>Nucleophiles</h3>
+
+<pre><code class="language-python"># Primary amine
+'[NH2][C]'
+
+# Thiol
+'[SH][C]'
+
+# Alcohol
+'[OH][C]'</code></pre>
+
+<h2>Toxicity Alerts (PAINS)</h2>
+
+<pre><code class="language-python"># Rhodanine
+'S1C(=O)NC(=S)C1'
+
+# Catechol
+'c1ccc(O)c(O)c1'
+
+# Quinone
+'O=C1C=CC(=O)C=C1'
+
+# Hydroquinone
+'OC1=CC=C(O)C=C1'
+
+# Alkyl halide (reactive)
+'[C][I,Br]'
+
+# Michael acceptor (reactive)
+'C=CC(=O)[C,N]'</code></pre>
+
+<h2>Metal Binding</h2>
+
+<pre><code class="language-python"># Carboxylate (metal chelator)
+'C(=O)[O-]'
+
+# Hydroxamic acid
+'C(=O)N[OH]'
+
+# Catechol (iron chelator)
+'c1c(O)c(O)ccc1'
+
+# Thiol (metal binding)
+'[SH]'
+
+# Histidine-like (metal binding)
+'c1ncnc1'</code></pre>
+
+<h2>Size and Complexity Filters</h2>
+
+<pre><code class="language-python"># Long aliphatic chains (&gt;6 carbons)
+'CCCCCCC'
+
+# Highly branched (quaternary carbon)
+'C(C)(C)(C)C'
+
+# Multiple rings
+'[R]~[R]'  # Two rings connected
+
+# Spiro center
+'[C]12[C][C][C]1[C][C]2'</code></pre>
+
+<h2>Special Patterns</h2>
+
+<h3>Atom Counts</h3>
+
+<pre><code class="language-python"># Any atom
+'[*]'
+
+# Heavy atom (not H)
+'[!H]'
+
+# Carbon
+'[C,c]'
+
+# Heteroatom
+'[!C;!H]'
+
+# Halogen
+'[F,Cl,Br,I]'</code></pre>
+
+<h3>Bond Types</h3>
+
+<pre><code class="language-python"># Single bond
+'C-C'
+
+# Double bond
+'C=C'
+
+# Triple bond
+'C#C'
+
+# Aromatic bond
+'c:c'
+
+# Any bond
+'C~C'</code></pre>
+
+<h3>Ring Membership</h3>
+
+<pre><code class="language-python"># In any ring
+'[R]'
+
+# Not in ring
+'[!R]'
+
+# In exactly one ring
+'[R1]'
+
+# In exactly two rings
+'[R2]'
+
+# Ring bond
+'[R]~[R]'</code></pre>
+
+<h3>Degree and Connectivity</h3>
+
+<pre><code class="language-python"># Total degree 1 (terminal atom)
+'[D1]'
+
+# Total degree 2 (chain)
+'[D2]'
+
+# Total degree 3 (branch point)
+'[D3]'
+
+# Total degree 4 (highly branched)
+'[D4]'
+
+# Connected to exactly 2 carbons
+'[C]([C])[C]'</code></pre>
+
+<h2>Usage Examples</h2>
+
+<pre><code class="language-python">from rdkit import Chem
+
+# Create SMARTS query
+pattern = Chem.MolFromSmarts('[CH2][OH1]')  # Primary alcohol
+
+# Search molecule
+mol = Chem.MolFromSmiles('CCO')
+matches = mol.GetSubstructMatches(pattern)
+
+# Multiple patterns
+patterns = {
+    'alcohol': '[OH1][C]',
+    'amine': '[NH2,NH1][C]',
+    'carboxylic_acid': 'C(=O)[OH1]'
+}
+
+# Check for functional groups
+for name, smarts in patterns.items():
+    query = Chem.MolFromSmarts(smarts)
+    if mol.HasSubstructMatch(query):
+        print(f"Found {name}")</code></pre>
+
+<h2>Tips for Writing SMARTS</h2>
+
+<ul><li><strong>Be specific when needed:</strong> Use atom properties [CX3] instead of just [C]</li>
+<li><strong>Use brackets for clarity:</strong> [C] is different from C (aromatic)</li>
+<li><strong>Consider aromaticity:</strong> lowercase letters (c, n, o) are aromatic</li>
+<li><strong>Check ring membership:</strong> [R] for in-ring, [!R] for not in-ring</li>
+<li><strong>Use recursive SMARTS:</strong> $(...) for complex patterns</li>
+<li><strong>Test patterns:</strong> Always validate SMARTS on known molecules</li>
+<li><strong>Start simple:</strong> Build complex patterns incrementally</li>
+</ul>
+<h2>Common SMARTS Syntax</h2>
+
+<ul><li><code>[C]</code> - Aliphatic carbon</li>
+<li><code>[c]</code> - Aromatic carbon</li>
+<li><code>[CX4]</code> - Carbon with 4 connections (sp3)</li>
+<li><code>[CX3]</code> - Carbon with 3 connections (sp2)</li>
+<li><code>[CX2]</code> - Carbon with 2 connections (sp)</li>
+<li><code>[CH3]</code> - Methyl group</li>
+<li><code>[R]</code> - In ring</li>
+<li><code>[r6]</code> - In 6-membered ring</li>
+<li><code>[r{5-7}]</code> - In 5, 6, or 7-membered ring</li>
+<li><code>[D2]</code> - Degree 2 (2 neighbors)</li>
+<li><code>[+]</code> - Positive charge</li>
+<li><code>[-]</code> - Negative charge</li>
+<li><code>[!C]</code> - Not carbon</li>
+<li><code>[#6]</code> - Element with atomic number 6 (carbon)</li>
+<li><code>~</code> - Any bond type</li>
+<li><code>-</code> - Single bond</li>
+<li><code>=</code> - Double bond</li>
+<li><code>#</code> - Triple bond</li>
+<li><code>:</code> - Aromatic bond</li>
+<li><code>@</code> - Clockwise chirality</li>
+<li><code>@@</code> - Counter-clockwise chirality</li>
+</ul>
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

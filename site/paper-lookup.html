@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paper Lookup — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="active">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / Paper Lookup</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>Paper Lookup</h1>
+    <p class="description">Search 10 academic paper databases via their REST APIs to find research papers, preprints, and scholarly articles. Covers biomedical literature (PubMed, PMC full text), preprint servers (bioRxiv, medR</p>
+    <h1>Paper Lookup</h1>
+
+<p>You have access to 10 academic paper databases through their REST APIs. Your job is to figure out which database(s) best serve the user's query, call them, and return the results.</p>
+
+<h2>Core Workflow</h2>
+
+<ul><li><strong>Understand the query</strong> -- What is the user looking for? A specific paper by DOI? Papers on a topic? An author's publications? Open access PDFs? Full text? This determines which database(s) to hit.</li>
+</ul>
+<ul><li><strong>Select database(s)</strong> -- Use the database selection guide below. Many queries benefit from hitting multiple databases -- for example, searching PubMed for papers and then checking Unpaywall for open access copies.</li>
+</ul>
+<ul><li><strong>Read the reference file</strong> -- Each database has a reference file in <code>references/</code> with endpoint details, query formats, and example calls. Read the relevant file(s) before making API calls.</li>
+</ul>
+<ul><li><strong>Make the API call(s)</strong> -- See the <strong>Making API Calls</strong> section below for which HTTP fetch tool to use on your platform.</li>
+</ul>
+<ul><li><strong>Return results</strong> -- Always return:</li>
+</ul><p>   - The <strong>raw JSON</strong> (or parsed XML for arXiv) response from each database</p>
+<p>   - A <strong>list of databases queried</strong> with the specific endpoints used</p>
+<p>   - If a query returned no results, say so explicitly rather than omitting it</p>
+
+<h2>Database Selection Guide</h2>
+
+<p>Match the user's intent to the right database(s).</p>
+
+<h3>By Use Case</h3>
+
+<p>| User is asking about... | Primary database(s) | Also consider |</p>
+<p>|---|---|---|</p>
+<p>| Papers on a biomedical topic | PubMed | Semantic Scholar, OpenAlex |</p>
+<p>| Full text of a biomedical article | PMC | CORE |</p>
+<p>| Biology preprints | bioRxiv | Semantic Scholar, OpenAlex |</p>
+<p>| Health/medical preprints | medRxiv | Semantic Scholar, OpenAlex |</p>
+<p>| Physics, math, or CS preprints | arXiv | Semantic Scholar, OpenAlex |</p>
+<p>| Papers across all fields | OpenAlex | Semantic Scholar, Crossref |</p>
+<p>| A specific paper by DOI | Crossref | Unpaywall, Semantic Scholar |</p>
+<p>| Open access PDF for a paper | Unpaywall | CORE, PMC |</p>
+<p>| Citation graph (who cites whom) | Semantic Scholar | OpenAlex |</p>
+<p>| Author's publications | Semantic Scholar | OpenAlex |</p>
+<p>| Paper recommendations | Semantic Scholar | -- |</p>
+<p>| Full text (any field) | CORE | PMC (biomedical only) |</p>
+<p>| Journal/publisher metadata | Crossref | OpenAlex |</p>
+<p>| Funder information | Crossref | OpenAlex |</p>
+<p>| Convert between PMID/PMCID/DOI | PMC (ID Converter) | Crossref |</p>
+<p>| Recent preprints by date | bioRxiv, medRxiv | arXiv |</p>
+
+<h3>Cross-Database Queries</h3>
+
+<p>| User is asking about... | Databases to query |</p>
+<p>|---|---|</p>
+<p>| Everything about a paper (metadata + citations + OA) | Crossref + Semantic Scholar + Unpaywall |</p>
+<p>| Comprehensive literature search | PubMed + OpenAlex + Semantic Scholar |</p>
+<p>| Find and read a paper | PubMed (find) + Unpaywall (OA link) + PMC or CORE (full text) |</p>
+<p>| Preprint and its published version | bioRxiv/medRxiv + Crossref |</p>
+<p>| Author overview with citation metrics | Semantic Scholar + OpenAlex |</p>
+
+<p>When a query spans multiple needs (e.g., "find papers about CRISPR and get me the PDFs"), query the relevant databases in parallel.</p>
+
+<h2>Common Identifier Formats</h2>
+
+<p>Different databases use different identifier systems. If a query fails, the identifier format may be wrong.</p>
+
+<p>| Identifier | Format | Example | Used by |</p>
+<p>|---|---|---|---|</p>
+<p>| DOI | <code>10.xxxx/xxxxx</code> | <code>10.1038/nature12373</code> | All databases |</p>
+<p>| PMID | Integer | <code>34567890</code> | PubMed, PMC, Semantic Scholar |</p>
+<p>| PMCID | <code>PMC</code> + digits | <code>PMC7029759</code> | PMC, Europe PMC |</p>
+<p>| arXiv ID | <code>YYMM.NNNNN</code> | <code>2103.15348</code> | arXiv, Semantic Scholar |</p>
+<p>| OpenAlex ID | <code>W</code> + digits | <code>W2741809807</code> | OpenAlex |</p>
+<p>| Semantic Scholar ID | 40-char hex | <code>649def34f8be...</code> | Semantic Scholar |</p>
+<p>| ORCID | <code>0000-XXXX-XXXX-XXXX</code> | <code>0000-0001-6187-6610</code> | OpenAlex, Crossref |</p>
+<p>| ISSN | <code>XXXX-XXXX</code> | <code>0028-0836</code> | Crossref, OpenAlex |</p>
+
+<p><strong>Cross-referencing IDs:</strong> Semantic Scholar accepts DOI, PMID, PMCID, and arXiv ID via prefixes (e.g., <code>DOI:10.1038/nature12373</code>, <code>PMID:34567890</code>, <code>ARXIV:2103.15348</code>). OpenAlex accepts DOI and PMID via prefixes (<code>doi:10.1038/...</code>, <code>pmid:34567890</code>). Use the PMC ID Converter to translate between PMID, PMCID, and DOI.</p>
+
+<h2>API Keys and Access</h2>
+
+<p>Most of these databases are fully open. A few benefit from API keys for higher rate limits.</p>
+
+<h3>Databases requiring or benefiting from API keys</h3>
+
+<p>| Database | Env Variable | Required? | Registration |</p>
+<p>|---|---|---|---|</p>
+<p>| NCBI (PubMed, PMC) | <code>NCBI_API_KEY</code> | No (3 req/s without, 10 with) | https://www.ncbi.nlm.nih.gov/account/settings/ |</p>
+<p>| CORE | <code>CORE_API_KEY</code> | Yes for full text | https://core.ac.uk/services/api |</p>
+<p>| Semantic Scholar | <code>S2_API_KEY</code> | No (shared pool without) | https://www.semanticscholar.org/product/api#api-key-form |</p>
+<p>| OpenAlex | <code>OPENALEX_API_KEY</code> | Recommended | https://openalex.org/settings/api |</p>
+
+<h3>Fully open databases (no key needed)</h3>
+
+<p>| Database | Notes |</p>
+<p>|---|---|</p>
+<p>| bioRxiv / medRxiv | No auth, no documented rate limits |</p>
+<p>| arXiv | No auth, max 1 request per 3 seconds |</p>
+<p>| Crossref | No auth; add <code>mailto</code> param for polite pool (2x rate limit) |</p>
+<p>| Unpaywall | No auth; requires <code>email</code> parameter |</p>
+
+<h3>Loading API keys</h3>
+
+<ul><li><strong>Check the environment first</strong> -- the key may already be exported (e.g., <code>$NCBI_API_KEY</code>).</li>
+<li><strong>Fall back to <code>.env</code></strong> -- check <code>.env</code> in the current working directory.</li>
+<li><strong>Proceed without</strong> -- most APIs still work at lower rate limits. Tell the user which key is missing and how to get one.</li>
+</ul>
+<h2>Making API Calls</h2>
+
+<p>Use your environment's HTTP fetch tool to call REST endpoints:</p>
+
+<p>| Platform | HTTP Fetch Tool | Fallback |</p>
+<p>|---|---|---|</p>
+<p>| Claude Code | <code>WebFetch</code> | <code>curl</code> via Bash |</p>
+<p>| Gemini CLI | <code>web_fetch</code> | <code>curl</code> via shell |</p>
+<p>| Windsurf | <code>read_url_content</code> | <code>curl</code> via terminal |</p>
+<p>| Cursor | No dedicated fetch tool | <code>curl</code> via <code>run_terminal_cmd</code> |</p>
+<p>| Codex CLI | No dedicated fetch tool | <code>curl</code> via <code>shell</code> |</p>
+<p>| Cline | No dedicated fetch tool | <code>curl</code> via <code>execute_command</code> |</p>
+
+<p>If the fetch tool fails, fall back to <code>curl</code> via whatever shell tool is available.</p>
+
+<h3>Special cases</h3>
+
+<ul><li><strong>arXiv returns Atom XML</strong>, not JSON. Parse it or use <code>curl</code> and extract the relevant fields. Consider piping through a simple parser if available.</li>
+<li><strong>PMC eFetch returns JATS XML</strong> for full text. This is expected -- full text articles are in XML format.</li>
+<li><strong>Crossref and Unpaywall</strong> benefit from including a <code>mailto</code> parameter or email for the polite/fast pool.</li>
+</ul>
+<h3>Request guidelines</h3>
+
+<ul><li>For <strong>NCBI APIs</strong> (PubMed, PMC): max 3 req/sec without key, 10 with key. Make requests sequentially.</li>
+<li>For <strong>arXiv</strong>: max 1 request every 3 seconds. Be patient.</li>
+<li>For <strong>Crossref</strong>: 5 req/sec (public), 10 req/sec (polite pool with <code>mailto</code>).</li>
+<li>For other APIs with no strict limits, you can query multiple databases in parallel.</li>
+<li>If you get HTTP 429 (rate limit), wait briefly and retry once.</li>
+</ul>
+<h3>Error recovery</h3>
+
+<ul><li><strong>Check the identifier format</strong> -- use the Common Identifier Formats table. A PMID won't work in arXiv, an arXiv ID won't work in PubMed directly.</li>
+<li><strong>Try alternative identifiers</strong> -- if a DOI fails in one database, try the title or PMID instead.</li>
+<li><strong>Try a different database</strong> -- if PubMed returns nothing for a CS paper, try Semantic Scholar or OpenAlex.</li>
+<li><strong>Report the failure</strong> -- tell the user which database failed, the error, and what you tried instead.</li>
+</ul>
+<h2>Output Format</h2>
+
+<p>Structure your response like this:</p>
+
+<pre><code>## Databases Queried
+- **PubMed** -- esearch + esummary for "CRISPR gene therapy"
+- **Unpaywall** -- DOI lookup for 10.1038/...
+
+## Results
+
+### PubMed
+[raw JSON response or formatted results]
+
+### Unpaywall
+[raw JSON response]</code></pre>
+
+<p>If results are very large, present the most relevant portion and note that more data is available. But default to showing the full raw JSON -- the user asked for it.</p>
+
+<h2>Available Databases</h2>
+
+<p>Read the relevant reference file before making any API call.</p>
+
+<h3>Biomedical Literature</h3>
+<p>| Database | Reference File | What it covers |</p>
+<p>|---|---|---|</p>
+<p>| PubMed | <code>references/pubmed.md</code> | 37M+ biomedical citations, abstracts, MeSH terms |</p>
+<p>| PMC | <code>references/pmc.md</code> | 10M+ full-text biomedical articles (JATS XML), ID conversion |</p>
+
+<h3>Preprint Servers</h3>
+<p>| Database | Reference File | What it covers |</p>
+<p>|---|---|---|</p>
+<p>| bioRxiv | <code>references/biorxiv.md</code> | Biology preprints (browse by date/DOI, no keyword search) |</p>
+<p>| medRxiv | <code>references/medrxiv.md</code> | Health sciences preprints (browse by date/DOI, no keyword search) |</p>
+<p>| arXiv | <code>references/arxiv.md</code> | Physics, math, CS, biology, economics preprints (keyword search, Atom XML) |</p>
+
+<h3>Multidisciplinary Indexes</h3>
+<p>| Database | Reference File | What it covers |</p>
+<p>|---|---|---|</p>
+<p>| OpenAlex | <code>references/openalex.md</code> | 250M+ works, authors, institutions, topics, citation data |</p>
+<p>| Crossref | <code>references/crossref.md</code> | 150M+ DOI metadata, journals, funders, references |</p>
+<p>| Semantic Scholar | <code>references/semantic-scholar.md</code> | 200M+ papers, citation graphs, AI-generated TLDRs, recommendations |</p>
+
+<h3>Open Access & Full Text</h3>
+<p>| Database | Reference File | What it covers |</p>
+<p>|---|---|---|</p>
+<p>| CORE | <code>references/core.md</code> | 37M+ full texts from OA repositories worldwide |</p>
+<p>| Unpaywall | <code>references/unpaywall.md</code> | OA status and PDF links for any DOI |</p>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Arxiv</h3>
+  <h1>arXiv API</h1>
+
+<p>arXiv is a preprint server for physics, mathematics, computer science, quantitative biology, quantitative finance, statistics, electrical engineering, and economics.</p>
+
+<p><strong>Important:</strong> The arXiv API returns <strong>Atom XML</strong>, not JSON. There is no JSON option.</p>
+
+<h2>Base URL</h2>
+
+<pre><code>https://export.arxiv.org/api/query</code></pre>
+
+<h2>Authentication</h2>
+
+<p>None required. Fully public.</p>
+
+<h2>Query Parameters</h2>
+
+<pre><code>GET https://export.arxiv.org/api/query?search_query={query}&amp;start={n}&amp;max_results={n}</code></pre>
+
+<p>| Parameter | Required | Default | Description |</p>
+<p>|-----------|----------|---------|-------------|</p>
+<p>| <code>search_query</code> | Yes* | -- | Search using field prefixes + boolean operators |</p>
+<p>| <code>id_list</code> | Yes* | -- | Comma-separated arXiv IDs (e.g., <code>2103.15348,2005.14165</code>) |</p>
+<p>| <code>start</code> | No | 0 | Pagination offset (0-based) |</p>
+<p>| <code>max_results</code> | No | 10 | Results per request (max 2000; absolute max 30000) |</p>
+<p>| <code>sortBy</code> | No | <code>relevance</code> | <code>relevance</code>, <code>lastUpdatedDate</code>, <code>submittedDate</code> |</p>
+<p>| <code>sortOrder</code> | No | <code>descending</code> | <code>ascending</code> or <code>descending</code> |</p>
+
+<p>*At least one of <code>search_query</code> or <code>id_list</code> must be provided. They can be combined (intersection).</p>
+
+<h2>Search Field Prefixes</h2>
+
+<p>| Prefix | Searches |</p>
+<p>|--------|----------|</p>
+<p>| <code>ti:</code> | Title |</p>
+<p>| <code>au:</code> | Author |</p>
+<p>| <code>abs:</code> | Abstract |</p>
+<p>| <code>co:</code> | Comment |</p>
+<p>| <code>jr:</code> | Journal reference |</p>
+<p>| <code>cat:</code> | Subject category |</p>
+<p>| <code>rn:</code> | Report number |</p>
+<p>| <code>all:</code> | All fields |</p>
+
+<h2>Boolean Operators</h2>
+
+<ul><li><code>AND</code> -- both conditions</li>
+<li><code>OR</code> -- either condition</li>
+<li><code>ANDNOT</code> -- exclude</li>
+<li>Parentheses for grouping (URL-encode as <code>%28</code> / <code>%29</code>)</li>
+<li>Quoted phrases (URL-encode as <code>%22</code>)</li>
+</ul>
+<h2>Example Queries</h2>
+
+<p><strong>Search all fields:</strong></p>
+<pre><code>https://export.arxiv.org/api/query?search_query=all:transformer+attention&amp;max_results=5</code></pre>
+
+<p><strong>Author + category:</strong></p>
+<pre><code>https://export.arxiv.org/api/query?search_query=au:hinton+AND+cat:cs.LG&amp;max_results=10</code></pre>
+
+<p><strong>Title search:</strong></p>
+<pre><code>https://export.arxiv.org/api/query?search_query=ti:%22attention+is+all+you+need%22</code></pre>
+
+<p><strong>By ID:</strong></p>
+<pre><code>https://export.arxiv.org/api/query?id_list=2103.15348</code></pre>
+
+<p><strong>Multiple IDs:</strong></p>
+<pre><code>https://export.arxiv.org/api/query?id_list=2103.15348,2005.14165,1706.03762</code></pre>
+
+<p><strong>Date range:</strong></p>
+<pre><code>https://export.arxiv.org/api/query?search_query=cat:cs.AI+AND+submittedDate:[202401010000+TO+202412312359]</code></pre>
+
+<h2>Response Format (Atom XML)</h2>
+
+<pre><code class="language-xml">&lt;feed xmlns="http://www.w3.org/2005/Atom"&gt;
+  &lt;opensearch:totalResults&gt;1234&lt;/opensearch:totalResults&gt;
+  &lt;opensearch:startIndex&gt;0&lt;/opensearch:startIndex&gt;
+  &lt;opensearch:itemsPerPage&gt;10&lt;/opensearch:itemsPerPage&gt;
+
+  &lt;entry&gt;
+    &lt;id&gt;http://arxiv.org/abs/1706.03762v7&lt;/id&gt;
+    &lt;title&gt;Attention Is All You Need&lt;/title&gt;
+    &lt;summary&gt;The dominant sequence transduction models are based on...&lt;/summary&gt;
+    &lt;published&gt;2017-06-12T17:57:34Z&lt;/published&gt;
+    &lt;updated&gt;2023-08-02T00:00:12Z&lt;/updated&gt;
+    &lt;author&gt;&lt;name&gt;Ashish Vaswani&lt;/name&gt;&lt;/author&gt;
+    &lt;author&gt;&lt;name&gt;Noam Shazeer&lt;/name&gt;&lt;/author&gt;
+    &lt;!-- more authors --&gt;
+    &lt;category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/&gt;
+    &lt;arxiv:primary_category term="cs.CL"/&gt;
+    &lt;link rel="alternate" href="http://arxiv.org/abs/1706.03762v7"/&gt;
+    &lt;link rel="related" type="application/pdf" href="http://arxiv.org/pdf/1706.03762v7"/&gt;
+    &lt;arxiv:doi&gt;10.48550/arXiv.1706.03762&lt;/arxiv:doi&gt;
+    &lt;arxiv:comment&gt;15 pages, 5 figures&lt;/arxiv:comment&gt;
+    &lt;arxiv:journal_ref&gt;Advances in Neural Information Processing Systems 30 (NIPS 2017)&lt;/arxiv:journal_ref&gt;
+  &lt;/entry&gt;
+&lt;/feed&gt;</code></pre>
+
+<h3>Key XML elements per entry</h3>
+
+<p>| Element | Description |</p>
+<p>|---------|-------------|</p>
+<p>| <code><id></code> | arXiv URL: <code>http://arxiv.org/abs/{id}</code> |</p>
+<p>| <code><title></code> | Paper title |</p>
+<p>| <code><summary></code> | Abstract |</p>
+<p>| <code><published></code> | Original submission date (ISO 8601) |</p>
+<p>| <code><updated></code> | Date of latest version |</p>
+<p>| <code><author><name></code> | One per author |</p>
+<p>| <code><category term="..."></code> | Subject categories |</p>
+<p>| <code><arxiv:primary_category></code> | Primary classification |</p>
+<p>| <code><link rel="alternate"></code> | Abstract page URL |</p>
+<p>| <code><link rel="related" title="pdf"></code> | PDF URL |</p>
+<p>| <code><arxiv:doi></code> | DOI (when available) |</p>
+<p>| <code><arxiv:comment></code> | Author comments |</p>
+<p>| <code><arxiv:journal_ref></code> | Journal reference |</p>
+
+<h2>Parsing Tips</h2>
+
+<p>Since arXiv returns XML, you'll need to parse it. With <code>curl</code>, you can pipe the output and extract what you need. The XML namespace is <code>http://www.w3.org/2005/Atom</code> with arXiv extensions in <code>http://arxiv.org/schemas/atom</code>.</p>
+
+<p>For practical extraction, the key data is in <code><entry></code> elements. Each entry's <code><id></code> contains the arXiv ID in the URL path.</p>
+
+<h2>Common Categories</h2>
+
+<p>| Category | Field |</p>
+<p>|----------|-------|</p>
+<p>| <code>cs.AI</code> | Artificial Intelligence |</p>
+<p>| <code>cs.CL</code> | Computation and Language (NLP) |</p>
+<p>| <code>cs.CV</code> | Computer Vision |</p>
+<p>| <code>cs.LG</code> | Machine Learning |</p>
+<p>| <code>stat.ML</code> | Machine Learning (Statistics) |</p>
+<p>| <code>q-bio</code> | Quantitative Biology |</p>
+<p>| <code>physics</code> | Physics (all subcategories) |</p>
+<p>| <code>math</code> | Mathematics (all subcategories) |</p>
+<p>| <code>econ</code> | Economics |</p>
+<p>| <code>eess</code> | Electrical Engineering and Systems Science |</p>
+
+<p>Full list: https://arxiv.org/category_taxonomy</p>
+
+<h2>Rate Limits</h2>
+
+<ul><li><strong>1 request every 3 seconds</strong> (hard limit)</li>
+<li>Single connection at a time</li>
+<li>Search results are cached daily -- same query won't show new results within 24 hours</li>
+<li>For bulk data, use the OAI-PMH interface instead</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Biorxiv</h3>
+  <h1>bioRxiv API</h1>
+
+<p>bioRxiv is a preprint server for biology. The API provides metadata for preprints, including title, authors, abstract, DOI, and publication status.</p>
+
+<p><strong>Important:</strong> The bioRxiv API has <strong>no keyword search</strong>. It supports date-range browsing and DOI lookup only. For keyword search of bioRxiv preprints, use Semantic Scholar, OpenAlex, or CORE instead.</p>
+
+<h2>Base URL</h2>
+
+<pre><code>https://api.biorxiv.org</code></pre>
+
+<h2>Authentication</h2>
+
+<p>None required. Fully public API.</p>
+
+<h2>Key Endpoints</h2>
+
+<h3>1. Content Detail -- Browse by date range</h3>
+
+<pre><code>GET /details/biorxiv/{interval}/{cursor}/{format}</code></pre>
+
+<p>| Parameter | Values | Description |</p>
+<p>|-----------|--------|-------------|</p>
+<p>| <code>interval</code> | <code>YYYY-MM-DD/YYYY-MM-DD</code> | Date range (inclusive). Keep ranges narrow (1-3 days) to avoid timeouts. |</p>
+<p>| | <code>N</code> (integer) | N most recent preprints |</p>
+<p>| | <code>Nd</code> (integer + "d") | Last N days |</p>
+<p>| <code>cursor</code> | Integer (default <code>0</code>) | Pagination offset (100 results per page) |</p>
+<p>| <code>format</code> | <code>json</code> (default), <code>xml</code> | Response format |</p>
+
+<p>Optional query parameter: <code>?category=neuroscience</code> (filter by category, use underscores for spaces)</p>
+
+<p><strong>Examples:</strong></p>
+<pre><code>https://api.biorxiv.org/details/biorxiv/2024-01-01/2024-01-31/0
+https://api.biorxiv.org/details/biorxiv/5
+https://api.biorxiv.org/details/biorxiv/10d
+https://api.biorxiv.org/details/biorxiv/2024-01-01/2024-01-31?category=neuroscience</code></pre>
+
+<h3>2. Content Detail -- DOI lookup</h3>
+
+<pre><code>GET /details/biorxiv/{doi}/na/{format}</code></pre>
+
+<p><strong>Example:</strong></p>
+<pre><code>https://api.biorxiv.org/details/biorxiv/10.1101/2024.01.16.575895/na/json</code></pre>
+
+<h3>3. Published Article Links</h3>
+
+<pre><code>GET /pubs/biorxiv/{interval}/{cursor}
+GET /pubs/biorxiv/{doi}/na</code></pre>
+
+<p>Links preprints to their published journal versions. Accepts both preprint DOI and published DOI.</p>
+
+<h3>4. Publisher Filter</h3>
+
+<pre><code>GET /publisher/{prefix}/{interval}/{cursor}</code></pre>
+
+<p>Find bioRxiv papers published by a specific publisher (by DOI prefix).</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>https://api.biorxiv.org/publisher/10.15252/2024-01-01/2024-06-01/0</code></pre>
+
+<h2>Response Format</h2>
+
+<pre><code class="language-json">{
+  "messages": [{
+    "status": "ok",
+    "count": 100,
+    "total": "1029",
+    "cursor": 0
+  }],
+  "collection": [{
+    "title": "Paper title...",
+    "authors": "Surname, A.; Surname, B.",
+    "author_corresponding": "Full Name",
+    "author_corresponding_institution": "Institution",
+    "doi": "10.1101/2024.01.16.575895",
+    "date": "2024-01-20",
+    "version": "1",
+    "type": "new results",
+    "license": "cc_no",
+    "category": "cancer biology",
+    "jatsxml": "https://www.biorxiv.org/content/early/.../source.xml",
+    "abstract": "Full abstract text...",
+    "published": "10.1158/2159-8290.CD-24-0187",
+    "server": "bioRxiv"
+  }]
+}</code></pre>
+
+<ul><li><code>published</code> is <code>"NA"</code> if not yet published in a journal, or the published DOI if it has been.</li>
+<li><code>type</code> values: <code>new results</code>, <code>confirmatory results</code>, <code>contradictory results</code></li>
+</ul>
+<h2>Pagination</h2>
+
+<p>All multi-result endpoints return <strong>100 results per page</strong>. Use <code>cursor</code> to paginate. The <code>messages</code> object tells you the <code>total</code> count.</p>
+
+<h2>Rate Limits</h2>
+
+<p>No documented rate limits. No authentication required. Be reasonable with request frequency.</p>
+
+<h2>Categories</h2>
+
+<p><code>animal-behavior-and-cognition</code>, <code>biochemistry</code>, <code>bioengineering</code>, <code>bioinformatics</code>, <code>biophysics</code>, <code>cancer-biology</code>, <code>cell-biology</code>, <code>clinical-trials</code>, <code>developmental-biology</code>, <code>ecology</code>, <code>epidemiology</code>, <code>evolutionary-biology</code>, <code>genetics</code>, <code>genomics</code>, <code>immunology</code>, <code>microbiology</code>, <code>molecular-biology</code>, <code>neuroscience</code>, <code>paleontology</code>, <code>pathology</code>, <code>pharmacology-and-toxicology</code>, <code>physiology</code>, <code>plant-biology</code>, <code>scientific-communication-and-education</code>, <code>synthetic-biology</code>, <code>systems-biology</code>, <code>zoology</code></p>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Core</h3>
+  <h1>CORE API</h1>
+
+<p>CORE aggregates open access research from 15,000+ repositories worldwide. It provides <strong>full text</strong> for 37M+ articles and metadata for 368M+ papers.</p>
+
+<h2>Base URL</h2>
+
+<pre><code>https://api.core.ac.uk/v3</code></pre>
+
+<p><strong>Important:</strong> GET search paths require a <strong>trailing slash</strong> (e.g., <code>/v3/search/works/</code> not <code>/v3/search/works</code>).</p>
+
+<h2>Authentication</h2>
+
+<ul><li><strong>Header:</strong> <code>Authorization: Bearer YOUR_API_KEY</code></li>
+<li><strong>Query param:</strong> <code>?api_key=YOUR_API_KEY</code></li>
+<li>Register at: https://core.ac.uk/services/api</li>
+</ul>
+<p><strong>Without auth:</strong> Basic metadata queries work, but full text is NOT available (returns "Not available for public API users").</p>
+
+<h2>Rate Limits (token-based)</h2>
+
+<p>| User Type | Daily Tokens | Per-Minute Max |</p>
+<p>|-----------|-------------|----------------|</p>
+<p>| Unauthenticated | 100/day | 10/min |</p>
+<p>| Registered Personal | 1,000/day | 25/min |</p>
+<p>| Registered Academic | 5,000/day | 10/min |</p>
+
+<p>Simple queries cost 1 token. Downloads and scroll pagination cost 3-5 tokens.</p>
+
+<h2>Key Endpoints</h2>
+
+<h3>1. Search works</h3>
+
+<pre><code>GET /v3/search/works/?q={query}&amp;limit={n}&amp;offset={n}</code></pre>
+
+<p>| Parameter | Default | Description |</p>
+<p>|-----------|---------|-------------|</p>
+<p>| <code>q</code> | required | Search query (supports field lookups, boolean operators) |</p>
+<p>| <code>limit</code> | 10 | Results per page (max 100) |</p>
+<p>| <code>offset</code> | 0 | Pagination offset |</p>
+<p>| <code>scroll</code> | false | Enable scroll pagination for >10,000 results |</p>
+<p>| <code>sort</code> | relevance | <code>relevance</code> or <code>recency</code> |</p>
+
+<p><strong>POST alternative</strong> (for complex queries):</p>
+<pre><code>POST /v3/search/works
+Content-Type: application/json
+
+{"q": "machine learning", "limit": 10, "offset": 0}</code></pre>
+
+<p><strong>Example:</strong></p>
+<pre><code>https://api.core.ac.uk/v3/search/works/?q=CRISPR+gene+therapy&amp;limit=10</code></pre>
+
+<h3>2. Query language</h3>
+
+<p>| Operator | Example | Description |</p>
+<p>|----------|---------|-------------|</p>
+<p>| AND | <code>title:"AI" AND authors:"Smith"</code> | Both conditions |</p>
+<p>| OR | <code>title:"AI" OR fullText:"Deep Learning"</code> | Either condition |</p>
+<p>| Grouping | <code>(title:"AI" OR title:"ML") AND yearPublished>"2020"</code> | Precedence |</p>
+<p>| Field lookup | <code>title:"Machine Learning"</code> | Search specific field |</p>
+<p>| Range | <code>yearPublished>2018</code> | Numeric comparison |</p>
+<p>| Exists | <code>_exists_:fullText</code> | Field must exist |</p>
+<p>| Phrase | <code>title:"Attention is all you need"</code> | Exact phrase |</p>
+
+<p><strong>Searchable fields:</strong> <code>abstract</code>, <code>arxivId</code>, <code>authors</code>, <code>contributors</code>, <code>createdDate</code>, <code>dataProviders</code>, <code>depositedDate</code>, <code>documentType</code>, <code>doi</code>, <code>fullText</code>, <code>id</code>, <code>language</code>, <code>license</code>, <code>oai</code>, <code>title</code>, <code>yearPublished</code></p>
+
+<h3>3. Get work by ID</h3>
+
+<pre><code>GET /v3/works/{id}</code></pre>
+
+<p><code>id</code> is a CORE Work ID (integer). Example: <code>/v3/works/267312</code></p>
+
+<h3>4. Get output by ID</h3>
+
+<pre><code>GET /v3/outputs/{id}</code></pre>
+
+<h3>5. Download full text</h3>
+
+<pre><code>GET /v3/outputs/{id}/download</code></pre>
+
+<p>Returns binary PDF. Requires authentication.</p>
+
+<pre><code>GET /v3/works/tei/{id}</code></pre>
+
+<p>Returns TEI XML format.</p>
+
+<h3>6. Search outputs</h3>
+
+<pre><code>GET /v3/search/outputs/?q={query}&amp;limit={n}&amp;offset={n}</code></pre>
+
+<p>Search by DOI: <code>q=doi:10.1038/nature12373</code></p>
+
+<h2>Response Format</h2>
+
+<h3>Search response</h3>
+<pre><code class="language-json">{
+  "totalHits": 2281337,
+  "limit": 10,
+  "offset": 0,
+  "scrollId": null,
+  "results": [...]
+}</code></pre>
+
+<h3>Work object (key fields)</h3>
+<pre><code class="language-json">{
+  "id": 8848131,
+  "title": "Attention Is All You Need",
+  "authors": [{"name": "Ashish Vaswani"}, ...],
+  "abstract": "The dominant sequence...",
+  "doi": "10.48550/arXiv.1706.03762",
+  "arxivId": "1706.03762",
+  "yearPublished": 2017,
+  "downloadUrl": "https://core.ac.uk/download/...",
+  "fullText": "Full text content (when authenticated)...",
+  "language": {"code": "en", "name": "English"},
+  "documentType": "research",
+  "citationCount": 145678,
+  "dataProviders": [{"name": "arXiv"}],
+  "links": [{"type": "download", "url": "..."}]
+}</code></pre>
+
+<h2>Pagination</h2>
+
+<ul><li><strong>Standard:</strong> <code>offset</code> + <code>limit</code> (max 10,000 results)</li>
+<li><strong>Scroll:</strong> Set <code>scroll=true</code>. Response includes <code>scrollId</code>. Use in subsequent requests to page beyond 10,000 (costs more tokens).</li>
+</ul>
+<h2>Error Handling</h2>
+
+<p>Under heavy load, the API may return partial shard failure messages. These are transient -- retry after a brief wait.</p>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Crossref</h3>
+  <h1>Crossref API</h1>
+
+<p>Crossref is the DOI registration agency for scholarly content. It provides metadata for 150M+ works including journal articles, books, conference papers, datasets, and preprints.</p>
+
+<h2>Base URL</h2>
+
+<pre><code>https://api.crossref.org</code></pre>
+
+<h2>Authentication</h2>
+
+<p>None required. Add <code>mailto=you@example.com</code> to get into the <strong>polite pool</strong> (2x faster rate limits).</p>
+
+<h2>Rate Limits</h2>
+
+<p>| Pool | Rate | Concurrency |</p>
+<p>|------|------|-------------|</p>
+<p>| Public (no mailto) | 5 req/sec | 1 concurrent |</p>
+<p>| Polite (with mailto) | 10 req/sec | 3 concurrent |</p>
+
+<p>HTTP 429 = temporarily blocked.</p>
+
+<h2>Key Endpoints</h2>
+
+<h3>1. Search works</h3>
+
+<pre><code>GET /works?query={text}&amp;rows={n}&amp;mailto=you@example.com</code></pre>
+
+<p>| Parameter | Default | Description |</p>
+<p>|-----------|---------|-------------|</p>
+<p>| <code>query</code> | -- | Free-text search across all fields |</p>
+<p>| <code>query.author</code> | -- | Search author names |</p>
+<p>| <code>query.bibliographic</code> | -- | Search titles, authors, ISSNs, years |</p>
+<p>| <code>query.affiliation</code> | -- | Search affiliations |</p>
+<p>| <code>query.container-title</code> | -- | Search journal names |</p>
+<p>| <code>filter</code> | -- | Comma-separated <code>name:value</code> pairs |</p>
+<p>| <code>sort</code> | <code>score</code> | <code>score</code>, <code>published</code>, <code>issued</code>, <code>deposited</code>, <code>updated</code>, <code>is-referenced-by-count</code>, <code>references-count</code> |</p>
+<p>| <code>order</code> | <code>desc</code> | <code>asc</code> or <code>desc</code> |</p>
+<p>| <code>rows</code> | 20 | Results per page (max 1000) |</p>
+<p>| <code>offset</code> | 0 | Skip N results (max 10,000) |</p>
+<p>| <code>cursor</code> | -- | Use <code>*</code> for cursor-based deep pagination |</p>
+<p>| <code>select</code> | -- | Comma-separated field names to return |</p>
+<p>| <code>facet</code> | -- | Facet counts, e.g. <code>type-name:10</code> |</p>
+<p>| <code>sample</code> | -- | Return N random items (max 100) |</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>https://api.crossref.org/works?query=CRISPR+gene+therapy&amp;filter=from-pub-date:2024-01-01,type:journal-article,has-abstract:true&amp;rows=5&amp;sort=published&amp;order=desc&amp;mailto=you@example.com</code></pre>
+
+<h3>2. Get work by DOI</h3>
+
+<pre><code>GET /works/{doi}?mailto=you@example.com</code></pre>
+
+<p>URL-encode the DOI: <code>10.1038/nature12373</code> becomes <code>10.1038%2Fnature12373</code></p>
+
+<p><strong>Example:</strong></p>
+<pre><code>https://api.crossref.org/works/10.1038%2Fnature12373?mailto=you@example.com</code></pre>
+
+<h3>3. Journals</h3>
+
+<pre><code>GET /journals?query={name}&amp;rows={n}
+GET /journals/{issn}
+GET /journals/{issn}/works?query={text}&amp;rows={n}</code></pre>
+
+<h3>4. Funders</h3>
+
+<pre><code>GET /funders?query={name}
+GET /funders/{id}
+GET /funders/{id}/works?rows={n}</code></pre>
+
+<p>Funder IDs are from the Funder Registry (e.g., <code>100000001</code> for NSF).</p>
+
+<h3>5. Members (publishers)</h3>
+
+<pre><code>GET /members?query={name}
+GET /members/{id}/works?rows={n}</code></pre>
+
+<h2>Key Filters</h2>
+
+<h3>Date filters (accept <code>YYYY</code>, <code>YYYY-MM</code>, <code>YYYY-MM-DD</code>)</h3>
+<p>| Filter | Description |</p>
+<p>|--------|-------------|</p>
+<p>| <code>from-pub-date</code> / <code>until-pub-date</code> | Publication date |</p>
+<p>| <code>from-print-pub-date</code> / <code>until-print-pub-date</code> | Print publication date |</p>
+<p>| <code>from-online-pub-date</code> / <code>until-online-pub-date</code> | Online publication date |</p>
+<p>| <code>from-posted-date</code> / <code>until-posted-date</code> | Posted date (preprints) |</p>
+
+<h3>Boolean filters</h3>
+<p>| Filter | Description |</p>
+<p>|--------|-------------|</p>
+<p>| <code>has-abstract</code> | Has an abstract |</p>
+<p>| <code>has-orcid</code> | Has ORCID IDs |</p>
+<p>| <code>has-funder</code> | Has funder info |</p>
+<p>| <code>has-full-text</code> | Has full-text links |</p>
+<p>| <code>has-references</code> | Has reference list |</p>
+<p>| <code>has-license</code> | Has license info |</p>
+
+<h3>Value filters</h3>
+<p>| Filter | Description |</p>
+<p>|--------|-------------|</p>
+<p>| <code>type</code> | <code>journal-article</code>, <code>posted-content</code>, <code>book-chapter</code>, <code>proceedings-article</code>, etc. |</p>
+<p>| <code>issn</code> | Journal ISSN |</p>
+<p>| <code>doi</code> | Specific DOI |</p>
+<p>| <code>orcid</code> | Contributor ORCID |</p>
+<p>| <code>funder</code> | Funder Registry ID |</p>
+<p>| <code>member</code> | Crossref member ID |</p>
+<p>| <code>prefix</code> | DOI prefix |</p>
+<p>| <code>license.url</code> | License URL |</p>
+<p>| <code>update-type</code> | <code>correction</code>, <code>retraction</code> |</p>
+
+<p><strong>Syntax:</strong> <code>filter=name1:value1,name2:value2</code></p>
+
+<h2>Pagination</h2>
+
+<h3>Offset-based (max 10,000)</h3>
+<pre><code>/works?query=cancer&amp;rows=100&amp;offset=200</code></pre>
+
+<h3>Cursor-based (unlimited)</h3>
+<ul><li>First request: <code>?cursor=*&rows=100</code></li>
+<li>Response includes <code>next-cursor</code></li>
+<li>Next request: <code>?cursor={next-cursor-value}&rows=100</code></li>
+<li>Cursors expire after 5 minutes</li>
+</ul>
+<h2>Response Format</h2>
+
+<h3>List response</h3>
+<pre><code class="language-json">{
+  "status": "ok",
+  "message-type": "work-list",
+  "message": {
+    "total-results": 2779116,
+    "items-per-page": 20,
+    "next-cursor": "...",
+    "items": [...]
+  }
+}</code></pre>
+
+<h3>Work object (key fields)</h3>
+<pre><code class="language-json">{
+  "DOI": "10.1038/nature12373",
+  "title": ["Nanometre-scale thermometry in a living cell"],
+  "author": [{"given": "G.", "family": "Kucsko", "sequence": "first"}],
+  "publisher": "Springer Science and Business Media LLC",
+  "type": "journal-article",
+  "published": {"date-parts": [[2013, 7, 31]]},
+  "container-title": ["Nature"],
+  "ISSN": ["0028-0836", "1476-4687"],
+  "volume": "500",
+  "issue": "7460",
+  "page": "54-58",
+  "is-referenced-by-count": 1745,
+  "references-count": 30,
+  "abstract": "&lt;p&gt;Abstract text with HTML tags...&lt;/p&gt;",
+  "license": [{"URL": "...", "content-version": "vor"}],
+  "link": [{"URL": "...", "content-type": "application/pdf"}],
+  "reference": [{"key": "...", "doi-asserted-by": "crossref", "DOI": "..."}],
+  "subject": ["Multidisciplinary"],
+  "language": "en"
+}</code></pre>
+
+<p>Note: <code>title</code> and <code>container-title</code> are arrays. <code>published.date-parts</code> is <code>[[year, month, day]]</code>. Abstract may contain HTML tags.</p>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Medrxiv</h3>
+  <h1>medRxiv API</h1>
+
+<p>medRxiv is a preprint server for health sciences. The API is identical to bioRxiv's API -- same endpoints, same response format -- just use <code>medrxiv</code> as the server parameter.</p>
+
+<p><strong>Important:</strong> Like bioRxiv, there is <strong>no keyword search</strong>. Use Semantic Scholar, OpenAlex, or PubMed for keyword searches of medRxiv content.</p>
+
+<h2>Base URL</h2>
+
+<pre><code>https://api.biorxiv.org</code></pre>
+
+<p>(Same base URL as bioRxiv -- the server is specified in the path.)</p>
+
+<h2>Authentication</h2>
+
+<p>None required. Fully public API.</p>
+
+<h2>Key Endpoints</h2>
+
+<h3>1. Content Detail -- Browse by date range</h3>
+
+<pre><code>GET /details/medrxiv/{interval}/{cursor}/{format}</code></pre>
+
+<p>| Parameter | Values | Description |</p>
+<p>|-----------|--------|-------------|</p>
+<p>| <code>interval</code> | <code>YYYY-MM-DD/YYYY-MM-DD</code> | Date range (inclusive) |</p>
+<p>| | <code>N</code> (integer) | N most recent preprints |</p>
+<p>| | <code>Nd</code> (integer + "d") | Last N days |</p>
+<p>| <code>cursor</code> | Integer (default <code>0</code>) | Pagination offset (100 per page) |</p>
+<p>| <code>format</code> | <code>json</code> (default), <code>xml</code> | Response format |</p>
+
+<p>Optional: <code>?category=cardiovascular%20medicine</code> (use URL-encoding for spaces)</p>
+
+<p><strong>Examples:</strong></p>
+<pre><code>https://api.biorxiv.org/details/medrxiv/2024-01-01/2024-01-31/0
+https://api.biorxiv.org/details/medrxiv/5
+https://api.biorxiv.org/details/medrxiv/10d</code></pre>
+
+<h3>2. Content Detail -- DOI lookup</h3>
+
+<pre><code>GET /details/medrxiv/{doi}/na/{format}</code></pre>
+
+<p><strong>Example:</strong></p>
+<pre><code>https://api.biorxiv.org/details/medrxiv/10.1101/2021.04.29.21256344/na/json</code></pre>
+
+<h3>3. Published Article Links</h3>
+
+<pre><code>GET /pubs/medrxiv/{interval}/{cursor}
+GET /pubs/medrxiv/{doi}/na</code></pre>
+
+<p>Links preprints to their published journal versions. Accepts both preprint DOI and published DOI.</p>
+
+<h2>Response Format</h2>
+
+<p>Same as bioRxiv:</p>
+
+<pre><code class="language-json">{
+  "messages": [{
+    "status": "ok",
+    "count": 100,
+    "total": "502",
+    "cursor": 0
+  }],
+  "collection": [{
+    "title": "Paper title...",
+    "authors": "Surname, A.; Surname, B.",
+    "author_corresponding": "Full Name",
+    "author_corresponding_institution": "Institution",
+    "doi": "10.1101/2021.04.29.21256344",
+    "date": "2021-05-03",
+    "version": "1",
+    "type": "PUBLISHAHEADOFPRINT",
+    "license": "cc_by_nc_nd",
+    "category": "cardiovascular medicine",
+    "abstract": "Full abstract text...",
+    "published": "10.1371/journal.pone.0256482",
+    "server": "medRxiv"
+  }]
+}</code></pre>
+
+<h2>Pagination</h2>
+
+<p>100 results per page. Use <code>cursor</code> parameter to paginate.</p>
+
+<h2>Rate Limits</h2>
+
+<p>No documented rate limits. No authentication required.</p>
+
+<h2>Categories</h2>
+
+<p><code>addiction-medicine</code>, <code>allergy-and-immunology</code>, <code>anesthesia</code>, <code>cardiovascular-medicine</code>, <code>dentistry-and-oral-medicine</code>, <code>dermatology</code>, <code>emergency-medicine</code>, <code>endocrinology</code>, <code>epidemiology</code>, <code>forensic-medicine</code>, <code>gastroenterology</code>, <code>genetic-and-genomic-medicine</code>, <code>geriatric-medicine</code>, <code>health-economics</code>, <code>health-informatics</code>, <code>health-policy</code>, <code>health-systems-and-quality-improvement</code>, <code>hematology</code>, <code>hiv-aids</code>, <code>infectious-diseases</code>, <code>intensive-care-and-critical-care-medicine</code>, <code>medical-education</code>, <code>medical-ethics</code>, <code>nephrology</code>, <code>neurology</code>, <code>nursing</code>, <code>nutrition</code>, <code>obstetrics-and-gynecology</code>, <code>occupational-and-environmental-health</code>, <code>oncology</code>, <code>ophthalmology</code>, <code>orthopedics</code>, <code>otolaryngology</code>, <code>pain-medicine</code>, <code>palliative-medicine</code>, <code>pathology</code>, <code>pediatrics</code>, <code>pharmacology-and-therapeutics</code>, <code>primary-care-research</code>, <code>psychiatry-and-clinical-psychology</code>, <code>public-and-global-health</code>, <code>radiology-and-imaging</code>, <code>rehabilitation-medicine-and-physical-therapy</code>, <code>respiratory-medicine</code>, <code>rheumatology</code>, <code>sexual-and-reproductive-health</code>, <code>sports-medicine</code>, <code>surgery</code>, <code>toxicology</code>, <code>transplantation</code>, <code>urology</code></p>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Openalex</h3>
+  <h1>OpenAlex API</h1>
+
+<p>OpenAlex is a comprehensive index of 250M+ scholarly works, authors, institutions, sources, and topics. It's the broadest multidisciplinary database in this skill.</p>
+
+<h2>Base URL</h2>
+
+<pre><code>https://api.openalex.org</code></pre>
+
+<h2>Authentication</h2>
+
+<ul><li><strong>API key recommended</strong> (free). Get one at https://openalex.org/settings/api</li>
+<li>Pass as: <code>?api_key=YOUR_KEY</code></li>
+<li>Legacy polite pool still works: add <code>?mailto=you@example.com</code> for better rate limits</li>
+</ul>
+<h2>Rate Limits</h2>
+
+<ul><li><strong>100 requests/second</strong> max</li>
+<li>Usage-based pricing with $1/day free allowance</li>
+<li>Single entity lookups by ID/DOI are free (unlimited)</li>
+<li>List + filter queries: ~$0.0001 each (~10,000/day free)</li>
+<li>Search queries: ~$0.001 each (~1,000/day free)</li>
+</ul>
+<h2>Key Endpoints</h2>
+
+<h3>1. Get a single work</h3>
+
+<pre><code>GET /works/{id}</code></pre>
+
+<p>Accepts multiple ID formats:</p>
+<pre><code>/works/W2741809807                              (OpenAlex ID)
+/works/doi:10.7717/peerj.4375                  (DOI)
+/works/pmid:29456894                            (PMID)
+/works/https://doi.org/10.7717/peerj.4375      (full DOI URL)</code></pre>
+
+<h3>2. Search works</h3>
+
+<pre><code>GET /works?search={query}&amp;per_page={n}&amp;page={n}</code></pre>
+
+<p>| Parameter | Default | Description |</p>
+<p>|-----------|---------|-------------|</p>
+<p>| <code>search</code> | -- | Full-text search (title, abstract, fulltext). Supports boolean: <code>AND</code>, <code>OR</code>, <code>NOT</code> (uppercase) |</p>
+<p>| <code>search.exact</code> | -- | No stemming |</p>
+<p>| <code>search.semantic</code> | -- | AI embedding search (beta, 1 req/s, max 50 results) |</p>
+<p>| <code>filter</code> | -- | Comma-separated <code>field:value</code> pairs |</p>
+<p>| <code>sort</code> | relevance | <code>cited_by_count:desc</code>, <code>publication_date:desc</code>, <code>relevance_score:desc</code> |</p>
+<p>| <code>per_page</code> | 25 | Results per page (max 100) |</p>
+<p>| <code>page</code> | 1 | Page number (max <code>page * per_page</code> = 10,000) |</p>
+<p>| <code>cursor</code> | -- | Use <code>*</code> for first page of deep pagination |</p>
+<p>| <code>select</code> | -- | Comma-separated fields to return |</p>
+<p>| <code>group_by</code> | -- | Aggregate by field |</p>
+
+<p><strong>Advanced search:</strong> Supports wildcards (<code>machin*</code>), fuzzy (<code>machin~1</code>), proximity (<code>"climate change"~5</code>), boolean grouping.</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>https://api.openalex.org/works?search=CRISPR+gene+therapy&amp;filter=from_publication_date:2023-01-01&amp;sort=cited_by_count:desc&amp;per_page=10</code></pre>
+
+<h3>3. Filter works</h3>
+
+<pre><code>GET /works?filter={filters}</code></pre>
+
+<p>Key filter fields:</p>
+<p>| Filter | Example | Description |</p>
+<p>|--------|---------|-------------|</p>
+<p>| <code>from_publication_date</code> | <code>2023-01-01</code> | Published after date |</p>
+<p>| <code>to_publication_date</code> | <code>2024-12-31</code> | Published before date |</p>
+<p>| <code>publication_year</code> | <code>2024</code> | Exact year |</p>
+<p>| <code>type</code> | <code>article</code> | Work type |</p>
+<p>| <code>cited_by_count</code> | <code>>100</code> | Citation threshold |</p>
+<p>| <code>is_oa</code> | <code>true</code> | Open access only |</p>
+<p>| <code>has_abstract</code> | <code>true</code> | Has abstract |</p>
+<p>| <code>authorships.author.id</code> | <code>A5048491430</code> | By author ID |</p>
+<p>| <code>primary_location.source.id</code> | <code>S137773608</code> | By journal/source |</p>
+<p>| <code>institutions.country_code</code> | <code>us</code> | By country |</p>
+<p>| <code>concepts.id</code> | <code>C41008148</code> | By concept/topic |</p>
+<p>| <code>doi</code> | <code>10.1038/nature12373</code> | By DOI |</p>
+
+<p><strong>Operators:</strong> <code>></code>, <code><</code>, <code>!</code> (negation), <code>|</code> (OR within filter)</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>https://api.openalex.org/works?filter=from_publication_date:2024-01-01,type:article,is_oa:true,cited_by_count:&gt;50</code></pre>
+
+<h3>4. Other entities</h3>
+
+<pre><code>GET /authors?search={name}
+GET /authors/{id}
+GET /sources?search={name}          (journals, repositories)
+GET /sources/{id}
+GET /institutions?search={name}
+GET /institutions/{id}
+GET /topics/{id}</code></pre>
+
+<p>Authors and institutions accept similar filter/sort/pagination parameters.</p>
+
+<h3>5. Cursor pagination (for >10,000 results)</h3>
+
+<pre><code>GET /works?filter=publication_year:2024&amp;cursor=*&amp;per_page=100</code></pre>
+
+<p>Response includes <code>meta.next_cursor</code>. Pass it as <code>cursor={value}</code> in the next request. Stop when <code>next_cursor</code> is null.</p>
+
+<h2>Response Format</h2>
+
+<h3>Work object (key fields)</h3>
+
+<pre><code class="language-json">{
+  "id": "https://openalex.org/W2741809807",
+  "doi": "https://doi.org/10.7717/peerj.4375",
+  "title": "The state of OA",
+  "publication_year": 2018,
+  "publication_date": "2018-02-13",
+  "type": "article",
+  "language": "en",
+  "is_retracted": false,
+  "cited_by_count": 1169,
+  "open_access": {
+    "is_oa": true,
+    "oa_status": "gold",
+    "oa_url": "https://doi.org/10.7717/peerj.4375"
+  },
+  "authorships": [{
+    "author": {"id": "https://openalex.org/A5048491430", "display_name": "Heather Piwowar"},
+    "institutions": [{"display_name": "Impactstory"}]
+  }],
+  "primary_location": {
+    "source": {"display_name": "PeerJ", "issn_l": "2167-8359"}
+  },
+  "abstract_inverted_index": {"Despite": [0], "growing": [1], "interest": [2], ...},
+  "referenced_works": ["https://openalex.org/W123...", ...],
+  "ids": {"openalex": "...", "doi": "...", "pmid": "..."}
+}</code></pre>
+
+<h3>Abstract inverted index</h3>
+
+<p>Abstracts are stored as <code>{word: [positions]}</code>. To reconstruct:</p>
+<pre><code class="language-python">def reconstruct(inverted_index):
+    positions = {}
+    for word, indices in inverted_index.items():
+        for idx in indices:
+            positions[idx] = word
+    return ' '.join(positions[i] for i in sorted(positions.keys()))</code></pre>
+
+<h3>List response</h3>
+
+<pre><code class="language-json">{
+  "meta": {"count": 3771834, "page": 1, "per_page": 10},
+  "results": [...]
+}</code></pre>
+
+<h2>Error Format</h2>
+
+<p>HTTP 403 for invalid API key, 429 for rate limit exceeded. Error responses include a message field.</p>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Pmc</h3>
+  <h1>PMC (PubMed Central)</h1>
+
+<p>PMC is a <strong>full-text archive</strong> of biomedical and life sciences articles. It is separate from PubMed -- PubMed has citations/abstracts, PMC has full text. Not all PubMed articles are in PMC, and vice versa.</p>
+
+<h2>E-utilities for PMC</h2>
+
+<h3>Base URL</h3>
+
+<pre><code>https://eutils.ncbi.nlm.nih.gov/entrez/eutils/</code></pre>
+
+<p>Same E-utilities as PubMed, but with <code>db=pmc</code>.</p>
+
+<h3>eSearch -- Search PMC</h3>
+
+<pre><code>GET /esearch.fcgi?db=pmc&amp;term={query}&amp;retmode=json</code></pre>
+
+<p>Same parameters as PubMed eSearch. Returns PMC UIDs (numeric, e.g., <code>13033346</code>). You need to prepend "PMC" to get a PMCID (e.g., <code>PMC13033346</code>).</p>
+
+<h3>eFetch -- Get Full Text XML</h3>
+
+<pre><code>GET /efetch.fcgi?db=pmc&amp;id={pmcid}&amp;retmode=xml</code></pre>
+
+<p>| rettype | retmode | Returns |</p>
+<p>|---------|---------|---------|</p>
+<p>| <em>(omit)</em> | <code>xml</code> | <strong>Full text JATS XML</strong> (body, figures, references) |</p>
+<p>| <code>medline</code> | <code>text</code> | MEDLINE format |</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pmc&amp;id=7029759&amp;retmode=xml</code></pre>
+
+<p>The XML uses JATS (Journal Article Tag Suite) format:</p>
+<ul><li><code><front></code> -- journal metadata, article metadata, author info</li>
+<li><code><body></code> -- full article text with <code><sec></code> sections, <code><p></code> paragraphs, <code><fig></code> figures</li>
+<li><code><back></code> -- <code><ref-list></code> with all references</li>
+</ul>
+<p>Pass numeric IDs only (not "PMC7029759", just "7029759").</p>
+
+<h2>BioC API -- Structured Full Text</h2>
+
+<p>An alternative way to get full text in a structured passage format.</p>
+
+<h3>Base URL</h3>
+
+<pre><code>https://www.ncbi.nlm.nih.gov/research/bionlp/RESTful/pmcoa.cgi/</code></pre>
+
+<h3>Endpoint</h3>
+
+<pre><code>GET /BioC_{format}/{id}/{encoding}</code></pre>
+
+<p>| Parameter | Values |</p>
+<p>|-----------|--------|</p>
+<p>| <code>format</code> | <code>json</code> or <code>xml</code> |</p>
+<p>| <code>id</code> | PMID (e.g., <code>17299597</code>) or PMCID (e.g., <code>PMC7029759</code>) |</p>
+<p>| <code>encoding</code> | <code>unicode</code> or <code>ascii</code> |</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>https://www.ncbi.nlm.nih.gov/research/bionlp/RESTful/pmcoa.cgi/BioC_json/PMC7029759/unicode</code></pre>
+
+<p><strong>Response structure (JSON):</strong></p>
+<pre><code class="language-json">{
+  "source": "PMC",
+  "documents": [{
+    "id": "PMC7029759",
+    "infons": {"license": "...", "doi": "..."},
+    "passages": [
+      {
+        "offset": 0,
+        "infons": {"section_type": "TITLE"},
+        "text": "Article title..."
+      },
+      {
+        "offset": 42,
+        "infons": {"section_type": "ABSTRACT"},
+        "text": "Abstract text..."
+      },
+      {
+        "offset": 500,
+        "infons": {"section_type": "INTRO"},
+        "text": "Introduction text..."
+      }
+    ]
+  }]
+}</code></pre>
+
+<p>Section types: <code>TITLE</code>, <code>ABSTRACT</code>, <code>INTRO</code>, <code>METHODS</code>, <code>RESULTS</code>, <code>DISCUSS</code>, <code>CONCL</code>, <code>REF</code>, <code>SUPPL</code>, <code>FIG</code>, <code>TABLE</code></p>
+
+<p><strong>Coverage:</strong> ~3 million articles from the PMC Open Access Subset.</p>
+
+<h2>PMC ID Converter API</h2>
+
+<p>Converts between PMID, PMCID, DOI, and Manuscript ID.</p>
+
+<h3>Base URL</h3>
+
+<pre><code>https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/</code></pre>
+
+<h3>Parameters</h3>
+
+<p>| Parameter | Required | Description |</p>
+<p>|-----------|----------|-------------|</p>
+<p>| <code>ids</code> | Yes | Up to 200 comma-separated IDs |</p>
+<p>| <code>idtype</code> | No | <code>pmcid</code>, <code>pmid</code>, <code>mid</code>, <code>doi</code> (default: auto-detect) |</p>
+<p>| <code>format</code> | No | <code>json</code>, <code>xml</code>, <code>csv</code> (default: xml) |</p>
+<p>| <code>tool</code> | Recommended | Your application name |</p>
+<p>| <code>email</code> | Recommended | Your contact email |</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/?ids=PMC7029759&amp;format=json</code></pre>
+
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  "status": "ok",
+  "records": [{
+    "pmcid": "PMC7029759",
+    "pmid": "32117569",
+    "doi": "10.12688/f1000research.22211.2"
+  }]
+}</code></pre>
+
+<p>Only returns results for articles that are in PMC. If an article is in PubMed but not PMC, no PMCID will be returned.</p>
+
+<h2>Rate Limits</h2>
+
+<p>| Service | Limit |</p>
+<p>|---------|-------|</p>
+<p>| E-utilities (<code>db=pmc</code>) | 3/sec without key, 10/sec with key |</p>
+<p>| BioC API | Follow general NCBI policy (3/sec without key) |</p>
+<p>| ID Converter | Follow general NCBI policy |</p>
+
+<p>Include <code>tool</code> and <code>email</code> parameters on E-utility requests. Large batch jobs should run outside peak hours (Mon-Fri 5AM-9PM ET).</p>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Pubmed</h3>
+  <h1>PubMed (NCBI E-utilities)</h1>
+
+<p>PubMed provides citations, abstracts, and metadata for 37M+ biomedical and life science articles. It does NOT contain full text -- for that, use PMC.</p>
+
+<h2>Base URL</h2>
+
+<pre><code>https://eutils.ncbi.nlm.nih.gov/entrez/eutils/</code></pre>
+
+<h2>Authentication</h2>
+
+<ul><li><strong>API key optional</strong> but recommended. Without: 3 req/sec. With: 10 req/sec.</li>
+<li>Pass as: <code>&api_key=YOUR_KEY</code></li>
+<li>Also include <code>&tool=your_app_name&email=your@email.com</code> on all requests.</li>
+</ul>
+<h2>Key Endpoints</h2>
+
+<h3>1. eSearch -- Search and get PMIDs</h3>
+
+<pre><code>GET /esearch.fcgi?db=pubmed&amp;term={query}&amp;retmode=json</code></pre>
+
+<p>| Parameter | Required | Default | Description |</p>
+<p>|-----------|----------|---------|-------------|</p>
+<p>| <code>db</code> | Yes | -- | <code>pubmed</code> |</p>
+<p>| <code>term</code> | Yes | -- | Search query. Supports PubMed syntax: field tags <code>[AU]</code>, <code>[TI]</code>, <code>[TA]</code>, <code>[MH]</code> (MeSH), boolean AND/OR/NOT |</p>
+<p>| <code>retmax</code> | No | 20 | Max PMIDs returned (max 10,000) |</p>
+<p>| <code>retstart</code> | No | 0 | Pagination offset |</p>
+<p>| <code>retmode</code> | No | <code>xml</code> | <code>json</code> or <code>xml</code> |</p>
+<p>| <code>rettype</code> | No | <code>uilist</code> | <code>uilist</code> (IDs) or <code>count</code> (count only) |</p>
+<p>| <code>sort</code> | No | <code>relevance</code> | <code>relevance</code>, <code>pub_date</code>, <code>Author</code>, <code>JournalName</code> |</p>
+<p>| <code>datetype</code> | No | -- | <code>pdat</code> (publication), <code>mdat</code> (modification), <code>edat</code> (entrez) |</p>
+<p>| <code>mindate</code> / <code>maxdate</code> | No | -- | Date range <code>YYYY/MM/DD</code> |</p>
+<p>| <code>reldate</code> | No | -- | Items from last N days |</p>
+<p>| <code>usehistory</code> | No | -- | <code>y</code> to store on History Server for large result sets |</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&amp;term=CRISPR+gene+therapy&amp;retmode=json&amp;retmax=5&amp;sort=pub_date</code></pre>
+
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  "esearchresult": {
+    "count": "224107",
+    "retmax": "5",
+    "retstart": "0",
+    "idlist": ["39984857", "39984678", "39984543", "39984210", "39983901"]
+  }
+}</code></pre>
+
+<h3>2. eSummary -- Get document summaries</h3>
+
+<pre><code>GET /esummary.fcgi?db=pubmed&amp;id={pmids}&amp;retmode=json</code></pre>
+
+<p>| Parameter | Required | Description |</p>
+<p>|-----------|----------|-------------|</p>
+<p>| <code>db</code> | Yes | <code>pubmed</code> |</p>
+<p>| <code>id</code> | Yes | Comma-separated PMIDs (max 10,000) |</p>
+<p>| <code>retmode</code> | No | <code>json</code> or <code>xml</code> |</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&amp;id=39984857,39984678&amp;retmode=json</code></pre>
+
+<p><strong>Response fields:</strong> <code>uid</code>, <code>pubdate</code>, <code>source</code> (journal), <code>authors</code>, <code>title</code>, <code>volume</code>, <code>issue</code>, <code>pages</code>, <code>fulljournalname</code>, <code>elocationid</code> (DOI), <code>articleids</code> (PMC, DOI, etc.), <code>pubtype</code>, <code>pmcrefcount</code></p>
+
+<h3>3. eFetch -- Retrieve full records (abstracts, MEDLINE)</h3>
+
+<pre><code>GET /efetch.fcgi?db=pubmed&amp;id={pmids}&amp;rettype={type}&amp;retmode={mode}</code></pre>
+
+<p>| rettype | retmode | Returns |</p>
+<p>|---------|---------|---------|</p>
+<p>| <em>(omit)</em> | <code>xml</code> | Full PubMed XML (citation + abstract) |</p>
+<p>| <code>medline</code> | <code>text</code> | MEDLINE format |</p>
+<p>| <code>abstract</code> | <code>text</code> | Plain text abstract |</p>
+<p>| <code>uilist</code> | <code>text</code> | PMID list |</p>
+
+<p><strong>Example -- get abstracts as XML:</strong></p>
+<pre><code>https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&amp;id=39984857&amp;retmode=xml</code></pre>
+
+<p>The XML contains <code><PubmedArticle></code> with <code><MedlineCitation></code> (title, abstract, MeSH terms, authors) and <code><PubmedData></code> (article IDs, publication history).</p>
+
+<h3>4. eLink -- Find related articles</h3>
+
+<pre><code>GET /elink.fcgi?dbfrom=pubmed&amp;db=pubmed&amp;id={pmid}&amp;cmd=neighbor_score&amp;retmode=json</code></pre>
+
+<p>Returns related PMIDs with relevance scores.</p>
+
+<h2>Search Syntax Tips</h2>
+
+<ul><li><strong>Field tags:</strong> <code>aspirin[TI]</code> (title), <code>Smith J[AU]</code> (author), <code>Nature[TA]</code> (journal), <code>neoplasms[MH]</code> (MeSH heading)</li>
+<li><strong>Boolean:</strong> <code>CRISPR AND (therapy OR treatment)</code></li>
+<li><strong>Date range:</strong> <code>2020/01/01:2024/12/31[PDAT]</code></li>
+<li><strong>Publication type:</strong> <code>review[PT]</code>, <code>clinical trial[PT]</code></li>
+<li><strong>Organism:</strong> <code>humans[MH]</code>, <code>mice[MH]</code></li>
+</ul>
+<h2>Rate Limits</h2>
+
+<ul><li><strong>3 requests/second</strong> without API key</li>
+<li><strong>10 requests/second</strong> with API key</li>
+<li>Include <code>tool</code> and <code>email</code> parameters on every request</li>
+<li>Large batch jobs should run outside peak hours (Mon-Fri 5AM-9PM ET)</li>
+</ul>
+<h2>Error Format</h2>
+
+<pre><code class="language-json">{"error": "API rate limit exceeded", "count": "11"}</code></pre>
+
+<p>HTTP 400 for bad requests, 429 for rate limiting.</p>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Semantic Scholar</h3>
+  <h1>Semantic Scholar API</h1>
+
+<p>Semantic Scholar indexes 200M+ papers across all academic fields with AI-powered features: citation context, influential citations, TLDRs, and paper recommendations.</p>
+
+<h2>Base URLs</h2>
+
+<pre><code>https://api.semanticscholar.org/graph/v1       (Academic Graph)
+https://api.semanticscholar.org/recommendations/v1  (Recommendations)</code></pre>
+
+<h2>Authentication</h2>
+
+<ul><li><strong>Without key:</strong> Shared rate pool (frequently hits 429 errors). Works but unreliable.</li>
+<li><strong>With key:</strong> 1 req/sec per key (higher on request).</li>
+<li>Header: <code>x-api-key: YOUR_KEY</code></li>
+<li>Get a free key at: https://www.semanticscholar.org/product/api#api-key-form</li>
+</ul>
+<h2>The <code>fields</code> Parameter</h2>
+
+<p>Almost every endpoint accepts <code>fields</code> -- a comma-separated list (no spaces) of fields to include. Without it, you only get <code>paperId</code> + <code>title</code>.</p>
+
+<p><strong>Paper fields:</strong></p>
+<p><code>paperId</code>, <code>corpusId</code>, <code>externalIds</code>, <code>url</code>, <code>title</code>, <code>abstract</code>, <code>venue</code>, <code>publicationVenue</code>, <code>year</code>, <code>referenceCount</code>, <code>citationCount</code>, <code>influentialCitationCount</code>, <code>isOpenAccess</code>, <code>openAccessPdf</code>, <code>fieldsOfStudy</code>, <code>s2FieldsOfStudy</code>, <code>publicationTypes</code>, <code>publicationDate</code>, <code>journal</code>, <code>authors</code>, <code>citations</code>, <code>references</code>, <code>tldr</code>, <code>embedding</code></p>
+
+<p><strong>Author fields:</strong></p>
+<p><code>authorId</code>, <code>externalIds</code>, <code>url</code>, <code>name</code>, <code>affiliations</code>, <code>homepage</code>, <code>paperCount</code>, <code>citationCount</code>, <code>hIndex</code>, <code>papers</code></p>
+
+<h2>Paper ID Formats</h2>
+
+<p>The <code>{paper_id}</code> parameter accepts:</p>
+<ul><li><code>649def34f8be52c8b66281af98ae884c09aef38b</code> (S2 hash)</li>
+<li><code>CorpusId:215416146</code></li>
+<li><code>DOI:10.1038/s41586-021-03819-2</code></li>
+<li><code>ARXIV:2005.14165</code></li>
+<li><code>PMID:19872477</code></li>
+<li><code>PMCID:2323736</code></li>
+<li><code>ACL:W12-3903</code></li>
+</ul>
+<h2>Key Endpoints</h2>
+
+<h3>1. Paper search (relevance)</h3>
+
+<pre><code>GET /graph/v1/paper/search?query={text}&amp;fields={fields}&amp;offset={n}&amp;limit={n}</code></pre>
+
+<p>| Parameter | Default | Description |</p>
+<p>|-----------|---------|-------------|</p>
+<p>| <code>query</code> | required | Plain-text search |</p>
+<p>| <code>fields</code> | paperId,title | Comma-separated |</p>
+<p>| <code>offset</code> | 0 | Pagination start |</p>
+<p>| <code>limit</code> | 100 | Max 100 |</p>
+<p>| <code>year</code> | -- | <code>2019</code> or <code>2016-2020</code> |</p>
+<p>| <code>publicationDateOrYear</code> | -- | <code>YYYY-MM-DD:YYYY-MM-DD</code> |</p>
+<p>| <code>fieldsOfStudy</code> | -- | e.g., <code>Computer Science,Medicine</code> |</p>
+<p>| <code>publicationTypes</code> | -- | e.g., <code>JournalArticle,Conference</code> |</p>
+<p>| <code>openAccessPdf</code> | -- | Filter for OA papers |</p>
+<p>| <code>minCitationCount</code> | -- | Minimum citations |</p>
+<p>| <code>venue</code> | -- | Comma-separated venues |</p>
+
+<p><strong>Max 1,000 results</strong> accessible via offset.</p>
+
+<p><strong>Example:</strong></p>
+<pre><code>https://api.semanticscholar.org/graph/v1/paper/search?query=CRISPR+gene+therapy&amp;fields=title,year,abstract,citationCount,authors,openAccessPdf&amp;limit=10&amp;year=2023-2024</code></pre>
+
+<h3>2. Paper bulk search (boolean queries, large result sets)</h3>
+
+<pre><code>GET /graph/v1/paper/search/bulk?query={text}&amp;fields={fields}&amp;sort={field}:{order}&amp;token={token}</code></pre>
+
+<ul><li>Supports boolean operators: <code>+</code> (AND), <code>|</code> (OR), <code>-</code> (NOT), <code>"..."</code> (phrase), <code>*</code> (wildcard), <code>()</code> (grouping)</li>
+<li>Token-based pagination (up to 10M papers)</li>
+<li>Returns up to 1,000 per call</li>
+<li>Sortable: <code>citationCount:desc</code>, <code>publicationDate:desc</code>, <code>paperId:asc</code></li>
+</ul>
+<h3>3. Paper details (by ID)</h3>
+
+<pre><code>GET /graph/v1/paper/{paper_id}?fields={fields}</code></pre>
+
+<p><strong>Example:</strong></p>
+<pre><code>https://api.semanticscholar.org/graph/v1/paper/DOI:10.1038/s41586-021-03819-2?fields=title,year,abstract,citationCount,referenceCount,isOpenAccess,openAccessPdf,authors,tldr</code></pre>
+
+<p><strong>Response:</strong></p>
+<pre><code class="language-json">{
+  "paperId": "dc32a984b651256a8ec282be52310e6bd33d9815",
+  "title": "Highly accurate protein structure prediction with AlphaFold",
+  "year": 2021,
+  "citationCount": 34260,
+  "isOpenAccess": true,
+  "openAccessPdf": {"url": "https://...pdf", "status": "HYBRID"},
+  "tldr": {"text": "This work develops AlphaFold, a system that..."},
+  "authors": [{"authorId": "47921134", "name": "J. Jumper"}, ...]
+}</code></pre>
+
+<h3>4. Paper citations</h3>
+
+<pre><code>GET /graph/v1/paper/{paper_id}/citations?fields={fields}&amp;offset={n}&amp;limit={n}</code></pre>
+
+<p>Returns papers that cite this paper. <code>limit</code> max 1000.</p>
+
+<p>Citation-specific fields: <code>contexts</code>, <code>intents</code>, <code>isInfluential</code></p>
+
+<h3>5. Paper references</h3>
+
+<pre><code>GET /graph/v1/paper/{paper_id}/references?fields={fields}&amp;offset={n}&amp;limit={n}</code></pre>
+
+<p>Returns papers cited by this paper. Same pagination as citations.</p>
+
+<h3>6. Paper title match</h3>
+
+<pre><code>GET /graph/v1/paper/search/match?query={exact title}&amp;fields={fields}</code></pre>
+
+<p>Returns single best match with <code>matchScore</code>. 404 if no match.</p>
+
+<h3>7. Author search</h3>
+
+<pre><code>GET /graph/v1/author/search?query={name}&amp;fields={fields}&amp;offset={n}&amp;limit={n}</code></pre>
+
+<h3>8. Author details</h3>
+
+<pre><code>GET /graph/v1/author/{author_id}?fields={fields}</code></pre>
+
+<h3>9. Author's papers</h3>
+
+<pre><code>GET /graph/v1/author/{author_id}/papers?fields={fields}&amp;offset={n}&amp;limit={n}</code></pre>
+
+<h3>10. Paper recommendations</h3>
+
+<pre><code>GET /recommendations/v1/papers/forpaper/{paper_id}?fields={fields}&amp;limit={n}&amp;from={pool}</code></pre>
+
+<p><code>from</code>: <code>recent</code> (default) or <code>all-cs</code>. <code>limit</code> max 500.</p>
+
+<h3>11. Multi-paper recommendations (POST)</h3>
+
+<pre><code>POST /recommendations/v1/papers/
+Content-Type: application/json
+
+{
+  "positivePaperIds": ["paperId1", "paperId2"],
+  "negativePaperIds": ["paperId3"]
+}</code></pre>
+
+<h3>12. Paper batch (POST)</h3>
+
+<pre><code>POST /graph/v1/paper/batch?fields={fields}
+Content-Type: application/json
+
+{"ids": ["DOI:10.1038/nature12373", "ARXIV:2005.14165"]}</code></pre>
+
+<p>Max 500 IDs per request.</p>
+
+<h2>Pagination</h2>
+
+<p>| Endpoint | Max per page | Max total | Method |</p>
+<p>|----------|-------------|-----------|--------|</p>
+<p>| Relevance search | 100 | 1,000 | offset/next |</p>
+<p>| Bulk search | 1,000 | 10,000,000 | token |</p>
+<p>| Citations/References | 1,000 | all | offset/next |</p>
+<p>| Author search | 1,000 | -- | offset/next |</p>
+
+<h2>Publication Types</h2>
+
+<p><code>Review</code>, <code>JournalArticle</code>, <code>CaseReport</code>, <code>ClinicalTrial</code>, <code>Conference</code>, <code>Dataset</code>, <code>Editorial</code>, <code>LettersAndComments</code>, <code>MetaAnalysis</code>, <code>News</code>, <code>Study</code>, <code>Book</code>, <code>BookSection</code></p>
+
+<h2>Fields of Study</h2>
+
+<p><code>Computer Science</code>, <code>Medicine</code>, <code>Chemistry</code>, <code>Biology</code>, <code>Materials Science</code>, <code>Physics</code>, <code>Geology</code>, <code>Psychology</code>, <code>Art</code>, <code>History</code>, <code>Geography</code>, <code>Sociology</code>, <code>Business</code>, <code>Political Science</code>, <code>Economics</code>, <code>Philosophy</code>, <code>Mathematics</code>, <code>Engineering</code>, <code>Environmental Science</code>, <code>Agricultural and Food Sciences</code>, <code>Education</code>, <code>Law</code>, <code>Linguistics</code></p>
+
+<h2>Error Format</h2>
+
+<pre><code class="language-json">{"message": "Too Many Requests", "code": "429"}</code></pre>
+
+<p>HTTP 404 for not found, 429 for rate limit.</p>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Unpaywall</h3>
+  <h1>Unpaywall API</h1>
+
+<p>Unpaywall tells you whether a legal, free copy of a scholarly article exists. Given a DOI, it returns open access status, PDF links, and location details.</p>
+
+<h2>Base URL</h2>
+
+<pre><code>https://api.unpaywall.org/v2</code></pre>
+
+<h2>Authentication</h2>
+
+<p>No API key. You must include your <strong>email address</strong> as a query parameter: <code>?email=you@example.com</code></p>
+
+<p><strong>Important:</strong> Use a real email address. Unpaywall rejects placeholder emails like <code>test@example.com</code> with HTTP 422.</p>
+
+<h2>Rate Limits</h2>
+
+<p>100,000 calls per day. For heavier use, download the database snapshot.</p>
+
+<h2>Key Endpoints</h2>
+
+<h3>1. DOI Lookup</h3>
+
+<pre><code>GET /v2/{doi}?email=you@example.com</code></pre>
+
+<p><strong>Example:</strong></p>
+<pre><code>https://api.unpaywall.org/v2/10.1038/nature12373?email=you@example.com</code></pre>
+
+<h3>2. Search (unreliable)</h3>
+
+<pre><code>GET /v2/search?query={text}&amp;email=you@example.com</code></pre>
+
+<p><strong>Warning:</strong> The search endpoint has been returning HTTP 500 errors as of March 2026. It may be deprecated or intermittently broken. Use DOI lookups instead -- find papers via PubMed/OpenAlex/Semantic Scholar first, then check OA status per-DOI.</p>
+
+<p>| Parameter | Description |</p>
+<p>|-----------|-------------|</p>
+<p>| <code>query</code> | Search text. Supports quoted phrases, <code>OR</code>, <code>-</code> negation |</p>
+<p>| <code>is_oa</code> | <code>true</code> or <code>false</code> -- filter by OA status |</p>
+<p>| <code>page</code> | Page number (1-indexed), 50 results per page |</p>
+
+<h2>Response Format</h2>
+
+<h3>DOI Lookup response</h3>
+<pre><code class="language-json">{
+  "doi": "10.1038/nature12373",
+  "doi_url": "https://doi.org/10.1038/nature12373",
+  "title": "Nanometre-scale thermometry in a living cell",
+  "year": 2013,
+  "published_date": "2013-07-31",
+  "genre": "journal-article",
+  "publisher": "Springer Nature",
+  "is_oa": true,
+  "oa_status": "green",
+  "best_oa_location": {
+    "url": "https://dash.harvard.edu/bitstream/1/...",
+    "url_for_pdf": "https://dash.harvard.edu/bitstream/1/...pdf",
+    "url_for_landing_page": "https://dash.harvard.edu/handle/...",
+    "host_type": "repository",
+    "version": "acceptedVersion",
+    "license": "cc-by",
+    "is_best": true,
+    "oa_date": "2016-01-01"
+  },
+  "first_oa_location": {...},
+  "oa_locations": [...],
+  "has_repository_copy": true,
+  "journal_name": "Nature",
+  "journal_issns": "0028-0836,1476-4687",
+  "journal_issn_l": "0028-0836",
+  "journal_is_oa": false,
+  "journal_is_in_doaj": false,
+  "z_authors": [
+    {"raw_author_name": "G. Kucsko", "author_position": "first"},
+    {"raw_author_name": "P. C. Maurer", "author_position": "middle"}
+  ]
+}</code></pre>
+
+<h3>OA Status values</h3>
+<p>| Status | Meaning |</p>
+<p>|--------|---------|</p>
+<p>| <code>gold</code> | Published in a fully OA journal |</p>
+<p>| <code>hybrid</code> | OA in a subscription journal (publisher-hosted) |</p>
+<p>| <code>bronze</code> | Free to read on publisher site but no OA license |</p>
+<p>| <code>green</code> | Available via a repository (e.g., institutional, preprint) |</p>
+<p>| <code>closed</code> | No free legal copy found |</p>
+
+<h3>OA Location fields</h3>
+<p>| Field | Description |</p>
+<p>|-------|-------------|</p>
+<p>| <code>url</code> | Best URL (PDF if available, else landing page) |</p>
+<p>| <code>url_for_pdf</code> | Direct PDF URL (null if no PDF) |</p>
+<p>| <code>url_for_landing_page</code> | Landing page URL |</p>
+<p>| <code>host_type</code> | <code>publisher</code> or <code>repository</code> |</p>
+<p>| <code>version</code> | <code>submittedVersion</code>, <code>acceptedVersion</code>, <code>publishedVersion</code> |</p>
+<p>| <code>license</code> | e.g., <code>cc-by</code>, <code>cc-by-nc</code>, <code>implied-oa</code>, or null |</p>
+<p>| <code>is_best</code> | Whether this is the <code>best_oa_location</code> |</p>
+<p>| <code>oa_date</code> | When first available at this location |</p>
+
+<h3>Search response</h3>
+<pre><code class="language-json">{
+  "results": [
+    {
+      "response": {...},
+      "score": 42.5,
+      "snippet": "...text with &lt;b&gt;highlighted&lt;/b&gt; matches..."
+    }
+  ]
+}</code></pre>
+
+<h2>Typical Workflow</h2>
+
+<ul><li>You have a DOI from PubMed, Crossref, or another source</li>
+<li>Call Unpaywall with the DOI</li>
+<li>Check <code>is_oa</code> -- if true, use <code>best_oa_location.url_for_pdf</code> for the free PDF</li>
+<li>Check <code>oa_status</code> to understand what kind of OA it is</li>
+<li>If closed, <code>oa_locations</code> will be empty -- the article requires a subscription</li>
+</ul>
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

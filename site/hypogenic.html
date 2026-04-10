@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hypogenic — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="active">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / Hypogenic</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>Hypogenic</h1>
+    <p class="description">Automated LLM-driven hypothesis generation and testing on tabular datasets. Use when you want to systematically explore hypotheses about patterns in empirical data (e.g., deception detection, content </p>
+    <h1>Hypogenic</h1>
+
+<h2>Overview</h2>
+
+<p>Hypogenic provides automated hypothesis generation and testing using large language models to accelerate scientific discovery. The framework supports three approaches: HypoGeniC (data-driven hypothesis generation), HypoRefine (synergistic literature and data integration), and Union methods (mechanistic combination of literature and data-driven hypotheses).</p>
+
+<h2>Quick Start</h2>
+
+<p>Get started with Hypogenic in minutes:</p>
+
+<pre><code class="language-bash"># Install the package
+uv pip install hypogenic
+
+# Clone example datasets
+git clone https://github.com/ChicagoHAI/HypoGeniC-datasets.git ./data
+
+# Run basic hypothesis generation
+hypogenic_generation --config ./data/your_task/config.yaml --method hypogenic --num_hypotheses 20
+
+# Run inference on generated hypotheses
+hypogenic_inference --config ./data/your_task/config.yaml --hypotheses output/hypotheses.json</code></pre>
+
+<p><strong>Or use Python API:</strong></p>
+
+<pre><code class="language-python">from hypogenic import BaseTask
+
+# Create task with your configuration
+task = BaseTask(config_path="./data/your_task/config.yaml")
+
+# Generate hypotheses
+task.generate_hypotheses(method="hypogenic", num_hypotheses=20)
+
+# Run inference
+results = task.inference(hypothesis_bank="./output/hypotheses.json")</code></pre>
+
+<h2>When to Use This Skill</h2>
+
+<p>Use this skill when working on:</p>
+<ul><li>Generating scientific hypotheses from observational datasets</li>
+<li>Testing multiple competing hypotheses systematically</li>
+<li>Combining literature insights with empirical patterns</li>
+<li>Accelerating research discovery through automated hypothesis ideation</li>
+<li>Domains requiring hypothesis-driven analysis: deception detection, AI-generated content identification, mental health indicators, predictive modeling, or other empirical research</li>
+</ul>
+<h2>Key Features</h2>
+
+<p><strong>Automated Hypothesis Generation</strong></p>
+<ul><li>Generate 10-20+ testable hypotheses from data in minutes</li>
+<li>Iterative refinement based on validation performance</li>
+<li>Support for both API-based (OpenAI, Anthropic) and local LLMs</li>
+</ul>
+<p><strong>Literature Integration</strong></p>
+<ul><li>Extract insights from research papers via PDF processing</li>
+<li>Combine theoretical foundations with empirical patterns</li>
+<li>Systematic literature-to-hypothesis pipeline with GROBID</li>
+</ul>
+<p><strong>Performance Optimization</strong></p>
+<ul><li>Redis caching reduces API costs for repeated experiments</li>
+<li>Parallel processing for large-scale hypothesis testing</li>
+<li>Adaptive refinement focuses on challenging examples</li>
+</ul>
+<p><strong>Flexible Configuration</strong></p>
+<ul><li>Template-based prompt engineering with variable injection</li>
+<li>Custom label extraction for domain-specific tasks</li>
+<li>Modular architecture for easy extension</li>
+</ul>
+<p><strong>Proven Results</strong></p>
+<ul><li>8.97% improvement over few-shot baselines</li>
+<li>15.75% improvement over literature-only approaches</li>
+<li>80-84% hypothesis diversity (non-redundant insights)</li>
+<li>Human evaluators report significant decision-making improvements</li>
+</ul>
+<h2>Core Capabilities</h2>
+
+<h3>1. HypoGeniC: Data-Driven Hypothesis Generation</h3>
+
+<p>Generate hypotheses solely from observational data through iterative refinement.</p>
+
+<p><strong>Process:</strong></p>
+<ul><li>Initialize with a small data subset to generate candidate hypotheses</li>
+<li>Iteratively refine hypotheses based on performance</li>
+<li>Replace poorly-performing hypotheses with new ones from challenging examples</li>
+</ul>
+<p><strong>Best for:</strong> Exploratory research without existing literature, pattern discovery in novel datasets</p>
+
+<h3>2. HypoRefine: Literature and Data Integration</h3>
+
+<p>Synergistically combine existing literature with empirical data through an agentic framework.</p>
+
+<p><strong>Process:</strong></p>
+<ul><li>Extract insights from relevant research papers (typically 10 papers)</li>
+<li>Generate theory-grounded hypotheses from literature</li>
+<li>Generate data-driven hypotheses from observational patterns</li>
+<li>Refine both hypothesis banks through iterative improvement</li>
+</ul>
+<p><strong>Best for:</strong> Research with established theoretical foundations, validating or extending existing theories</p>
+
+<h3>3. Union Methods</h3>
+
+<p>Mechanistically combine literature-only hypotheses with framework outputs.</p>
+
+<p><strong>Variants:</strong></p>
+<ul><li><strong>Literature ∪ HypoGeniC</strong>: Combines literature hypotheses with data-driven generation</li>
+<li><strong>Literature ∪ HypoRefine</strong>: Combines literature hypotheses with integrated approach</li>
+</ul>
+<p><strong>Best for:</strong> Comprehensive hypothesis coverage, eliminating redundancy while maintaining diverse perspectives</p>
+
+<h2>Installation</h2>
+
+<p>Install via pip:</p>
+<pre><code class="language-bash">uv pip install hypogenic</code></pre>
+
+<p><strong>Optional dependencies:</strong></p>
+<ul><li><strong>Redis server</strong> (port 6832): Enables caching of LLM responses to significantly reduce API costs during iterative hypothesis generation</li>
+<li><strong>s2orc-doc2json</strong>: Required for processing literature PDFs in HypoRefine workflows</li>
+<li><strong>GROBID</strong>: Required for PDF preprocessing (see Literature Processing section)</li>
+</ul>
+<p><strong>Clone example datasets:</strong></p>
+<pre><code class="language-bash"># For HypoGeniC examples
+git clone https://github.com/ChicagoHAI/HypoGeniC-datasets.git ./data
+
+# For HypoRefine/Union examples
+git clone https://github.com/ChicagoHAI/Hypothesis-agent-datasets.git ./data</code></pre>
+
+<h2>Dataset Format</h2>
+
+<p>Datasets must follow HuggingFace datasets format with specific naming conventions:</p>
+
+<p><strong>Required files:</strong></p>
+<ul><li><code><TASK>_train.json</code>: Training data</li>
+<li><code><TASK>_val.json</code>: Validation data  </li>
+<li><code><TASK>_test.json</code>: Test data</li>
+</ul>
+<p><strong>Required keys in JSON:</strong></p>
+<ul><li><code>text_features_1</code> through <code>text_features_n</code>: Lists of strings containing feature values</li>
+<li><code>label</code>: List of strings containing ground truth labels</li>
+</ul>
+<p><strong>Example (headline click prediction):</strong></p>
+<pre><code class="language-json">{
+  "headline_1": [
+    "What Up, Comet? You Just Got *PROBED*",
+    "Scientists Made a Breakthrough in Quantum Computing"
+  ],
+  "headline_2": [
+    "Scientists Everywhere Were Holding Their Breath Today. Here's Why.",
+    "New Quantum Computer Achieves Milestone"
+  ],
+  "label": [
+    "Headline 2 has more clicks than Headline 1",
+    "Headline 1 has more clicks than Headline 2"
+  ]
+}</code></pre>
+
+<p><strong>Important notes:</strong></p>
+<ul><li>All lists must have the same length</li>
+<li>Label format must match your <code>extract_label()</code> function output format</li>
+<li>Feature keys can be customized to match your domain (e.g., <code>review_text</code>, <code>post_content</code>, etc.)</li>
+</ul>
+<h2>Configuration</h2>
+
+<p>Each task requires a <code>config.yaml</code> file specifying:</p>
+
+<p><strong>Required elements:</strong></p>
+<ul><li>Dataset paths (train/val/test)</li>
+<li>Prompt templates for:</li>
+</ul><p>  - Observations generation</p>
+<p>  - Batched hypothesis generation</p>
+<p>  - Hypothesis inference</p>
+<p>  - Relevance checking</p>
+<p>  - Adaptive methods (for HypoRefine)</p>
+
+<p><strong>Template capabilities:</strong></p>
+<ul><li>Dataset placeholders for dynamic variable injection (e.g., <code>${text_features_1}</code>, <code>${num_hypotheses}</code>)</li>
+<li>Custom label extraction functions for domain-specific parsing</li>
+<li>Role-based prompt structure (system, user, assistant roles)</li>
+</ul>
+<p><strong>Configuration structure:</strong></p>
+<pre><code class="language-yaml">task_name: your_task_name
+
+train_data_path: ./your_task_train.json
+val_data_path: ./your_task_val.json
+test_data_path: ./your_task_test.json
+
+prompt_templates:
+  # Extra keys for reusable prompt components
+  observations: |
+    Feature 1: ${text_features_1}
+    Feature 2: ${text_features_2}
+    Observation: ${label}
+  
+  # Required templates
+  batched_generation:
+    system: "Your system prompt here"
+    user: "Your user prompt with ${num_hypotheses} placeholder"
+  
+  inference:
+    system: "Your inference system prompt"
+    user: "Your inference user prompt"
+  
+  # Optional templates for advanced features
+  few_shot_baseline: {...}
+  is_relevant: {...}
+  adaptive_inference: {...}
+  adaptive_selection: {...}</code></pre>
+
+<p>Refer to <code>references/config_template.yaml</code> for a complete example configuration.</p>
+
+<h2>Literature Processing (HypoRefine/Union Methods)</h2>
+
+<p>To use literature-based hypothesis generation, you must preprocess PDF papers:</p>
+
+<p><strong>Step 1: Setup GROBID</strong> (first time only)</p>
+<pre><code class="language-bash">bash ./modules/setup_grobid.sh</code></pre>
+
+<p><strong>Step 2: Add PDF files</strong></p>
+<p>Place research papers in <code>literature/YOUR_TASK_NAME/raw/</code></p>
+
+<p><strong>Step 3: Process PDFs</strong></p>
+<pre><code class="language-bash"># Start GROBID service
+bash ./modules/run_grobid.sh
+
+# Process PDFs for your task
+cd examples
+python pdf_preprocess.py --task_name YOUR_TASK_NAME</code></pre>
+
+<p>This converts PDFs to structured format for hypothesis extraction. Automated literature search will be supported in future releases.</p>
+
+<h2>CLI Usage</h2>
+
+<h3>Hypothesis Generation</h3>
+
+<pre><code class="language-bash">hypogenic_generation --help</code></pre>
+
+<p><strong>Key parameters:</strong></p>
+<ul><li>Task configuration file path</li>
+<li>Model selection (API-based or local)</li>
+<li>Generation method (HypoGeniC, HypoRefine, or Union)</li>
+<li>Number of hypotheses to generate</li>
+<li>Output directory for hypothesis banks</li>
+</ul>
+<h3>Hypothesis Inference</h3>
+
+<pre><code class="language-bash">hypogenic_inference --help</code></pre>
+
+<p><strong>Key parameters:</strong></p>
+<ul><li>Task configuration file path</li>
+<li>Hypothesis bank file path</li>
+<li>Test dataset path</li>
+<li>Inference method (default or multi-hypothesis)</li>
+<li>Output file for results</li>
+</ul>
+<h2>Python API Usage</h2>
+
+<p>For programmatic control and custom workflows, use Hypogenic directly in your Python code:</p>
+
+<h3>Basic HypoGeniC Generation</h3>
+
+<pre><code class="language-python">from hypogenic import BaseTask
+
+# Clone example datasets first
+# git clone https://github.com/ChicagoHAI/HypoGeniC-datasets.git ./data
+
+# Load your task with custom extract_label function
+task = BaseTask(
+    config_path="./data/your_task/config.yaml",
+    extract_label=lambda text: extract_your_label(text)
+)
+
+# Generate hypotheses
+task.generate_hypotheses(
+    method="hypogenic",
+    num_hypotheses=20,
+    output_path="./output/hypotheses.json"
+)
+
+# Run inference
+results = task.inference(
+    hypothesis_bank="./output/hypotheses.json",
+    test_data="./data/your_task/your_task_test.json"
+)</code></pre>
+
+<h3>HypoRefine/Union Methods</h3>
+
+<pre><code class="language-python"># For literature-integrated approaches
+# git clone https://github.com/ChicagoHAI/Hypothesis-agent-datasets.git ./data
+
+# Generate with HypoRefine
+task.generate_hypotheses(
+    method="hyporefine",
+    num_hypotheses=15,
+    literature_path="./literature/your_task/",
+    output_path="./output/"
+)
+# This generates 3 hypothesis banks:
+# - HypoRefine (integrated approach)
+# - Literature-only hypotheses
+# - Literature∪HypoRefine (union)</code></pre>
+
+<h3>Multi-Hypothesis Inference</h3>
+
+<pre><code class="language-python">from examples.multi_hyp_inference import run_multi_hypothesis_inference
+
+# Test multiple hypotheses simultaneously
+results = run_multi_hypothesis_inference(
+    config_path="./data/your_task/config.yaml",
+    hypothesis_bank="./output/hypotheses.json",
+    test_data="./data/your_task/your_task_test.json"
+)</code></pre>
+
+<h3>Custom Label Extraction</h3>
+
+<p>The <code>extract_label()</code> function is critical for parsing LLM outputs. Implement it based on your task:</p>
+
+<pre><code class="language-python">def extract_label(llm_output: str) -&gt; str:
+    """Extract predicted label from LLM inference text.
+    
+    Default behavior: searches for 'final answer:\s+(.*)' pattern.
+    Customize for your domain-specific output format.
+    """
+    import re
+    match = re.search(r'final answer:\s+(.*)', llm_output, re.IGNORECASE)
+    if match:
+        return match.group(1).strip()
+    return llm_output.strip()</code></pre>
+
+<p><strong>Important:</strong> Extracted labels must match the format of <code>label</code> values in your dataset for correct accuracy calculation.</p>
+
+<h2>Workflow Examples</h2>
+
+<h3>Example 1: Data-Driven Hypothesis Generation (HypoGeniC)</h3>
+
+<p><strong>Scenario:</strong> Detecting AI-generated content without prior theoretical framework</p>
+
+<p><strong>Steps:</strong></p>
+<ul><li>Prepare dataset with text samples and labels (human vs. AI-generated)</li>
+<li>Create <code>config.yaml</code> with appropriate prompt templates</li>
+<li>Run hypothesis generation:</li>
+</ul><p>   <code>`</code>bash</p>
+<p>   hypogenic_generation --config config.yaml --method hypogenic --num_hypotheses 20</p>
+<p>   <code>`</code></p>
+<ul><li>Run inference on test set:</li>
+</ul><p>   <code>`</code>bash</p>
+<p>   hypogenic_inference --config config.yaml --hypotheses output/hypotheses.json --test_data data/test.json</p>
+<p>   <code>`</code></p>
+<ul><li>Analyze results for patterns like formality, grammatical precision, and tone differences</li>
+</ul>
+<h3>Example 2: Literature-Informed Hypothesis Testing (HypoRefine)</h3>
+
+<p><strong>Scenario:</strong> Deception detection in hotel reviews building on existing research</p>
+
+<p><strong>Steps:</strong></p>
+<ul><li>Collect 10 relevant papers on linguistic deception cues</li>
+<li>Prepare dataset with genuine and fraudulent reviews</li>
+<li>Configure <code>config.yaml</code> with literature processing and data generation templates</li>
+<li>Run HypoRefine:</li>
+</ul><p>   <code>`</code>bash</p>
+<p>   hypogenic_generation --config config.yaml --method hyporefine --papers papers/ --num_hypotheses 15</p>
+<p>   <code>`</code></p>
+<ul><li>Test hypotheses examining pronoun frequency, detail specificity, and other linguistic patterns</li>
+<li>Compare literature-based and data-driven hypothesis performance</li>
+</ul>
+<h3>Example 3: Comprehensive Hypothesis Coverage (Union Method)</h3>
+
+<p><strong>Scenario:</strong> Mental stress detection maximizing hypothesis diversity</p>
+
+<p><strong>Steps:</strong></p>
+<ul><li>Generate literature hypotheses from mental health research papers</li>
+<li>Generate data-driven hypotheses from social media posts</li>
+<li>Run Union method to combine and deduplicate:</li>
+</ul><p>   <code>`</code>bash</p>
+<p>   hypogenic_generation --config config.yaml --method union --literature_hypotheses lit_hyp.json</p>
+<p>   <code>`</code></p>
+<ul><li>Inference captures both theoretical constructs (posting behavior changes) and data patterns (emotional language shifts)</li>
+</ul>
+<h2>Performance Optimization</h2>
+
+<p><strong>Caching:</strong> Enable Redis caching to reduce API costs and computation time for repeated LLM calls</p>
+
+<p><strong>Parallel Processing:</strong> Leverage multiple workers for large-scale hypothesis generation and testing</p>
+
+<p><strong>Adaptive Refinement:</strong> Use challenging examples to iteratively improve hypothesis quality</p>
+
+<h2>Expected Outcomes</h2>
+
+<p>Research using hypogenic has demonstrated:</p>
+<ul><li>14.19% accuracy improvement in AI-content detection tasks</li>
+<li>7.44% accuracy improvement in deception detection tasks</li>
+<li>80-84% of hypothesis pairs offering distinct, non-redundant insights</li>
+<li>High helpfulness ratings from human evaluators across multiple research domains</li>
+</ul>
+<h2>Troubleshooting</h2>
+
+<p><strong>Issue:</strong> Generated hypotheses are too generic</p>
+<p><strong>Solution:</strong> Refine prompt templates in <code>config.yaml</code> to request more specific, testable hypotheses</p>
+
+<p><strong>Issue:</strong> Poor inference performance</p>
+<p><strong>Solution:</strong> Ensure dataset has sufficient training examples, adjust hypothesis generation parameters, or increase number of hypotheses</p>
+
+<p><strong>Issue:</strong> Label extraction failures</p>
+<p><strong>Solution:</strong> Implement custom <code>extract_label()</code> function for domain-specific output parsing</p>
+
+<p><strong>Issue:</strong> GROBID PDF processing fails</p>
+<p><strong>Solution:</strong> Ensure GROBID service is running (<code>bash ./modules/run_grobid.sh</code>) and PDFs are valid research papers</p>
+
+<h2>Creating Custom Tasks</h2>
+
+<p>To add a new task or dataset to Hypogenic:</p>
+
+<h3>Step 1: Prepare Your Dataset</h3>
+
+<p>Create three JSON files following the required format:</p>
+<ul><li><code>your_task_train.json</code></li>
+<li><code>your_task_val.json</code></li>
+<li><code>your_task_test.json</code></li>
+</ul>
+<p>Each file must have keys for text features (<code>text_features_1</code>, etc.) and <code>label</code>.</p>
+
+<h3>Step 2: Create config.yaml</h3>
+
+<p>Define your task configuration with:</p>
+<ul><li>Task name and dataset paths</li>
+<li>Prompt templates for observations, generation, inference</li>
+<li>Any extra keys for reusable prompt components</li>
+<li>Placeholder variables (e.g., <code>${text_features_1}</code>, <code>${num_hypotheses}</code>)</li>
+</ul>
+<h3>Step 3: Implement extract_label Function</h3>
+
+<p>Create a custom label extraction function that parses LLM outputs for your domain:</p>
+
+<pre><code class="language-python">from hypogenic import BaseTask
+
+def extract_my_label(llm_output: str) -&gt; str:
+    """Custom label extraction for your task.
+    
+    Must return labels in same format as dataset 'label' field.
+    """
+    # Example: Extract from specific format
+    if "Final prediction:" in llm_output:
+        return llm_output.split("Final prediction:")[-1].strip()
+    
+    # Fallback to default pattern
+    import re
+    match = re.search(r'final answer:\s+(.*)', llm_output, re.IGNORECASE)
+    return match.group(1).strip() if match else llm_output.strip()
+
+# Use your custom task
+task = BaseTask(
+    config_path="./your_task/config.yaml",
+    extract_label=extract_my_label
+)</code></pre>
+
+<h3>Step 4: (Optional) Process Literature</h3>
+
+<p>For HypoRefine/Union methods:</p>
+<ul><li>Create <code>literature/your_task_name/raw/</code> directory</li>
+<li>Add relevant research paper PDFs</li>
+<li>Run GROBID preprocessing</li>
+<li>Process with <code>pdf_preprocess.py</code></li>
+</ul>
+<h3>Step 5: Generate and Test</h3>
+
+<p>Run hypothesis generation and inference using CLI or Python API:</p>
+
+<pre><code class="language-bash"># CLI approach
+hypogenic_generation --config your_task/config.yaml --method hypogenic --num_hypotheses 20
+hypogenic_inference --config your_task/config.yaml --hypotheses output/hypotheses.json
+
+# Or use Python API (see Python API Usage section)</code></pre>
+
+<h2>Repository Structure</h2>
+
+<p>Understanding the repository layout:</p>
+
+<pre><code>hypothesis-generation/
+├── hypogenic/              # Core package code
+├── hypogenic_cmd/          # CLI entry points
+├── hypothesis_agent/       # HypoRefine agent framework
+├── literature/            # Literature processing utilities
+├── modules/               # GROBID and preprocessing modules
+├── examples/              # Example scripts
+│   ├── generation.py      # Basic HypoGeniC generation
+│   ├── union_generation.py # HypoRefine/Union generation
+│   ├── inference.py       # Single hypothesis inference
+│   ├── multi_hyp_inference.py # Multiple hypothesis inference
+│   └── pdf_preprocess.py  # Literature PDF processing
+├── data/                  # Example datasets (clone separately)
+├── tests/                 # Unit tests
+└── IO_prompting/          # Prompt templates and experiments</code></pre>
+
+<p><strong>Key directories:</strong></p>
+<ul><li><strong>hypogenic/</strong>: Main package with BaseTask and generation logic</li>
+<li><strong>examples/</strong>: Reference implementations for common workflows</li>
+<li><strong>literature/</strong>: Tools for PDF processing and literature extraction</li>
+<li><strong>modules/</strong>: External tool integrations (GROBID, etc.)</li>
+</ul>
+<h2>Related Publications</h2>
+
+<h3>HypoBench (2025)</h3>
+
+<p>Liu, H., Huang, S., Hu, J., Zhou, Y., & Tan, C. (2025). HypoBench: Towards Systematic and Principled Benchmarking for Hypothesis Generation. arXiv preprint arXiv:2504.11524.</p>
+
+<ul><li><strong>Paper:</strong> https://arxiv.org/abs/2504.11524</li>
+<li><strong>Description:</strong> Benchmarking framework for systematic evaluation of hypothesis generation methods</li>
+</ul>
+<p><strong>BibTeX:</strong></p>
+<pre><code class="language-bibtex">@misc{liu2025hypobenchsystematicprincipledbenchmarking,
+      title={HypoBench: Towards Systematic and Principled Benchmarking for Hypothesis Generation}, 
+      author={Haokun Liu and Sicong Huang and Jingyu Hu and Yangqiaoyu Zhou and Chenhao Tan},
+      year={2025},
+      eprint={2504.11524},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2504.11524}, 
+}</code></pre>
+
+<h3>Literature Meets Data (2024)</h3>
+
+<p>Liu, H., Zhou, Y., Li, M., Yuan, C., & Tan, C. (2024). Literature Meets Data: A Synergistic Approach to Hypothesis Generation. arXiv preprint arXiv:2410.17309.</p>
+
+<ul><li><strong>Paper:</strong> https://arxiv.org/abs/2410.17309</li>
+<li><strong>Code:</strong> https://github.com/ChicagoHAI/hypothesis-generation</li>
+<li><strong>Description:</strong> Introduces HypoRefine and demonstrates synergistic combination of literature-based and data-driven hypothesis generation</li>
+</ul>
+<p><strong>BibTeX:</strong></p>
+<pre><code class="language-bibtex">@misc{liu2024literaturemeetsdatasynergistic,
+      title={Literature Meets Data: A Synergistic Approach to Hypothesis Generation}, 
+      author={Haokun Liu and Yangqiaoyu Zhou and Mingxuan Li and Chenfei Yuan and Chenhao Tan},
+      year={2024},
+      eprint={2410.17309},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2410.17309}, 
+}</code></pre>
+
+<h3>Hypothesis Generation with Large Language Models (2024)</h3>
+
+<p>Zhou, Y., Liu, H., Srivastava, T., Mei, H., & Tan, C. (2024). Hypothesis Generation with Large Language Models. In Proceedings of EMNLP Workshop of NLP for Science.</p>
+
+<ul><li><strong>Paper:</strong> https://aclanthology.org/2024.nlp4science-1.10/</li>
+<li><strong>Description:</strong> Original HypoGeniC framework for data-driven hypothesis generation</li>
+</ul>
+<p><strong>BibTeX:</strong></p>
+<pre><code class="language-bibtex">@inproceedings{zhou2024hypothesisgenerationlargelanguage,
+      title={Hypothesis Generation with Large Language Models}, 
+      author={Yangqiaoyu Zhou and Haokun Liu and Tejes Srivastava and Hongyuan Mei and Chenhao Tan},
+      booktitle = {Proceedings of EMNLP Workshop of NLP for Science},
+      year={2024},
+      url={https://aclanthology.org/2024.nlp4science-1.10/},
+}</code></pre>
+
+<h2>Additional Resources</h2>
+
+<h3>Official Links</h3>
+
+<ul><li><strong>GitHub Repository:</strong> https://github.com/ChicagoHAI/hypothesis-generation</li>
+<li><strong>PyPI Package:</strong> https://pypi.org/project/hypogenic/</li>
+<li><strong>License:</strong> MIT License</li>
+<li><strong>Issues & Support:</strong> https://github.com/ChicagoHAI/hypothesis-generation/issues</li>
+</ul>
+<h3>Example Datasets</h3>
+
+<p>Clone these repositories for ready-to-use examples:</p>
+
+<pre><code class="language-bash"># HypoGeniC examples (data-driven only)
+git clone https://github.com/ChicagoHAI/HypoGeniC-datasets.git ./data
+
+# HypoRefine/Union examples (literature + data)
+git clone https://github.com/ChicagoHAI/Hypothesis-agent-datasets.git ./data</code></pre>
+
+<h3>Community & Contributions</h3>
+
+<ul><li><strong>Contributors:</strong> 7+ active contributors</li>
+<li><strong>Stars:</strong> 89+ on GitHub</li>
+<li><strong>Topics:</strong> research-tool, interpretability, hypothesis-generation, scientific-discovery, llm-application</li>
+</ul>
+<p>For contributions or questions, visit the GitHub repository and check the issues page.</p>
+
+<h2>Local Resources</h2>
+
+<h3>references/</h3>
+
+<p><code>config_template.yaml</code> - Complete example configuration file with all required prompt templates and parameters. This includes:</p>
+<ul><li>Full YAML structure for task configuration</li>
+<li>Example prompt templates for all methods</li>
+<li>Placeholder variable documentation</li>
+<li>Role-based prompt examples</li>
+</ul>
+<h3>scripts/</h3>
+
+<p>Scripts directory is available for:</p>
+<ul><li>Custom data preparation utilities</li>
+<li>Format conversion tools</li>
+<li>Analysis and evaluation scripts</li>
+<li>Integration with external tools</li>
+</ul>
+<h3>assets/</h3>
+
+<p>Assets directory is available for:</p>
+<ul><li>Example datasets and templates</li>
+<li>Sample hypothesis banks</li>
+<li>Visualization outputs</li>
+<li>Documentation supplements</li></ul>
+    
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,1811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Datamol Cheminformatics Skill — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="active">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / Datamol Cheminformatics Skill</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>Datamol Cheminformatics Skill</h1>
+    <p class="description">Pythonic wrapper around RDKit with simplified interface and sensible defaults. Preferred for standard drug discovery including SMILES parsing, standardization, descriptors, fingerprints, clustering, 3</p>
+    <h1>Datamol Cheminformatics Skill</h1>
+
+<h2>Overview</h2>
+
+<p>Datamol is a Python library that provides a lightweight, Pythonic abstraction layer over RDKit for molecular cheminformatics. Simplify complex molecular operations with sensible defaults, efficient parallelization, and modern I/O capabilities. All molecular objects are native <code>rdkit.Chem.Mol</code> instances, ensuring full compatibility with the RDKit ecosystem.</p>
+
+<p><strong>Key capabilities</strong>:</p>
+<ul><li>Molecular format conversion (SMILES, SELFIES, InChI)</li>
+<li>Structure standardization and sanitization</li>
+<li>Molecular descriptors and fingerprints</li>
+<li>3D conformer generation and analysis</li>
+<li>Clustering and diversity selection</li>
+<li>Scaffold and fragment analysis</li>
+<li>Chemical reaction application</li>
+<li>Visualization and alignment</li>
+<li>Batch processing with parallelization</li>
+<li>Cloud storage support via fsspec</li>
+</ul>
+<h2>Installation and Setup</h2>
+
+<p>Guide users to install datamol:</p>
+
+<pre><code class="language-bash">uv pip install datamol</code></pre>
+
+<p><strong>Import convention</strong>:</p>
+<pre><code class="language-python">import datamol as dm</code></pre>
+
+<h2>Core Workflows</h2>
+
+<h3>1. Basic Molecule Handling</h3>
+
+<p><strong>Creating molecules from SMILES</strong>:</p>
+<pre><code class="language-python">import datamol as dm
+
+# Single molecule
+mol = dm.to_mol("CCO")  # Ethanol
+
+# From list of SMILES
+smiles_list = ["CCO", "c1ccccc1", "CC(=O)O"]
+mols = [dm.to_mol(smi) for smi in smiles_list]
+
+# Error handling
+mol = dm.to_mol("invalid_smiles")  # Returns None
+if mol is None:
+    print("Failed to parse SMILES")</code></pre>
+
+<p><strong>Converting molecules to SMILES</strong>:</p>
+<pre><code class="language-python"># Canonical SMILES
+smiles = dm.to_smiles(mol)
+
+# Isomeric SMILES (includes stereochemistry)
+smiles = dm.to_smiles(mol, isomeric=True)
+
+# Other formats
+inchi = dm.to_inchi(mol)
+inchikey = dm.to_inchikey(mol)
+selfies = dm.to_selfies(mol)</code></pre>
+
+<p><strong>Standardization and sanitization</strong> (always recommend for user-provided molecules):</p>
+<pre><code class="language-python"># Sanitize molecule
+mol = dm.sanitize_mol(mol)
+
+# Full standardization (recommended for datasets)
+mol = dm.standardize_mol(
+    mol,
+    disconnect_metals=True,
+    normalize=True,
+    reionize=True
+)
+
+# For SMILES strings directly
+clean_smiles = dm.standardize_smiles(smiles)</code></pre>
+
+<h3>2. Reading and Writing Molecular Files</h3>
+
+<p>Refer to <code>references/io_module.md</code> for comprehensive I/O documentation.</p>
+
+<p><strong>Reading files</strong>:</p>
+<pre><code class="language-python"># SDF files (most common in chemistry)
+df = dm.read_sdf("compounds.sdf", mol_column='mol')
+
+# SMILES files
+df = dm.read_smi("molecules.smi", smiles_column='smiles', mol_column='mol')
+
+# CSV with SMILES column
+df = dm.read_csv("data.csv", smiles_column="SMILES", mol_column="mol")
+
+# Excel files
+df = dm.read_excel("compounds.xlsx", sheet_name=0, mol_column="mol")
+
+# Universal reader (auto-detects format)
+df = dm.open_df("file.sdf")  # Works with .sdf, .csv, .xlsx, .parquet, .json</code></pre>
+
+<p><strong>Writing files</strong>:</p>
+<pre><code class="language-python"># Save as SDF
+dm.to_sdf(mols, "output.sdf")
+# Or from DataFrame
+dm.to_sdf(df, "output.sdf", mol_column="mol")
+
+# Save as SMILES file
+dm.to_smi(mols, "output.smi")
+
+# Excel with rendered molecule images
+dm.to_xlsx(df, "output.xlsx", mol_columns=["mol"])</code></pre>
+
+<p><strong>Remote file support</strong> (S3, GCS, HTTP):</p>
+<pre><code class="language-python"># Read from cloud storage
+df = dm.read_sdf("s3://bucket/compounds.sdf")
+df = dm.read_csv("https://example.com/data.csv")
+
+# Write to cloud storage
+dm.to_sdf(mols, "s3://bucket/output.sdf")</code></pre>
+
+<h3>3. Molecular Descriptors and Properties</h3>
+
+<p>Refer to <code>references/descriptors_viz.md</code> for detailed descriptor documentation.</p>
+
+<p><strong>Computing descriptors for a single molecule</strong>:</p>
+<pre><code class="language-python"># Get standard descriptor set
+descriptors = dm.descriptors.compute_many_descriptors(mol)
+# Returns: {'mw': 46.07, 'logp': -0.03, 'hbd': 1, 'hba': 1,
+#           'tpsa': 20.23, 'n_aromatic_atoms': 0, ...}</code></pre>
+
+<p><strong>Batch descriptor computation</strong> (recommended for datasets):</p>
+<pre><code class="language-python"># Compute for all molecules in parallel
+desc_df = dm.descriptors.batch_compute_many_descriptors(
+    mols,
+    n_jobs=-1,      # Use all CPU cores
+    progress=True   # Show progress bar
+)</code></pre>
+
+<p><strong>Specific descriptors</strong>:</p>
+<pre><code class="language-python"># Aromaticity
+n_aromatic = dm.descriptors.n_aromatic_atoms(mol)
+aromatic_ratio = dm.descriptors.n_aromatic_atoms_proportion(mol)
+
+# Stereochemistry
+n_stereo = dm.descriptors.n_stereo_centers(mol)
+n_unspec = dm.descriptors.n_stereo_centers_unspecified(mol)
+
+# Flexibility
+n_rigid = dm.descriptors.n_rigid_bonds(mol)</code></pre>
+
+<p><strong>Drug-likeness filtering (Lipinski's Rule of Five)</strong>:</p>
+<pre><code class="language-python"># Filter compounds
+def is_druglike(mol):
+    desc = dm.descriptors.compute_many_descriptors(mol)
+    return (
+        desc['mw'] &lt;= 500 and
+        desc['logp'] &lt;= 5 and
+        desc['hbd'] &lt;= 5 and
+        desc['hba'] &lt;= 10
+    )
+
+druglike_mols = [mol for mol in mols if is_druglike(mol)]</code></pre>
+
+<h3>4. Molecular Fingerprints and Similarity</h3>
+
+<p><strong>Generating fingerprints</strong>:</p>
+<pre><code class="language-python"># ECFP (Extended Connectivity Fingerprint, default)
+fp = dm.to_fp(mol, fp_type='ecfp', radius=2, n_bits=2048)
+
+# Other fingerprint types
+fp_maccs = dm.to_fp(mol, fp_type='maccs')
+fp_topological = dm.to_fp(mol, fp_type='topological')
+fp_atompair = dm.to_fp(mol, fp_type='atompair')</code></pre>
+
+<p><strong>Similarity calculations</strong>:</p>
+<pre><code class="language-python"># Pairwise distances within a set
+distance_matrix = dm.pdist(mols, n_jobs=-1)
+
+# Distances between two sets
+distances = dm.cdist(query_mols, library_mols, n_jobs=-1)
+
+# Find most similar molecules
+from scipy.spatial.distance import squareform
+dist_matrix = squareform(dm.pdist(mols))
+# Lower distance = higher similarity (Tanimoto distance = 1 - Tanimoto similarity)</code></pre>
+
+<h3>5. Clustering and Diversity Selection</h3>
+
+<p>Refer to <code>references/core_api.md</code> for clustering details.</p>
+
+<p><strong>Butina clustering</strong>:</p>
+<pre><code class="language-python"># Cluster molecules by structural similarity
+clusters = dm.cluster_mols(
+    mols,
+    cutoff=0.2,    # Tanimoto distance threshold (0=identical, 1=completely different)
+    n_jobs=-1      # Parallel processing
+)
+
+# Each cluster is a list of molecule indices
+for i, cluster in enumerate(clusters):
+    print(f"Cluster {i}: {len(cluster)} molecules")
+    cluster_mols = [mols[idx] for idx in cluster]</code></pre>
+
+<p><strong>Important</strong>: Butina clustering builds a full distance matrix - suitable for ~1000 molecules, not for 10,000+.</p>
+
+<p><strong>Diversity selection</strong>:</p>
+<pre><code class="language-python"># Pick diverse subset
+diverse_mols = dm.pick_diverse(
+    mols,
+    npick=100  # Select 100 diverse molecules
+)
+
+# Pick cluster centroids
+centroids = dm.pick_centroids(
+    mols,
+    npick=50   # Select 50 representative molecules
+)</code></pre>
+
+<h3>6. Scaffold Analysis</h3>
+
+<p>Refer to <code>references/fragments_scaffolds.md</code> for complete scaffold documentation.</p>
+
+<p><strong>Extracting Murcko scaffolds</strong>:</p>
+<pre><code class="language-python"># Get Bemis-Murcko scaffold (core structure)
+scaffold = dm.to_scaffold_murcko(mol)
+scaffold_smiles = dm.to_smiles(scaffold)</code></pre>
+
+<p><strong>Scaffold-based analysis</strong>:</p>
+<pre><code class="language-python"># Group compounds by scaffold
+from collections import Counter
+
+scaffolds = [dm.to_scaffold_murcko(mol) for mol in mols]
+scaffold_smiles = [dm.to_smiles(s) for s in scaffolds]
+
+# Count scaffold frequency
+scaffold_counts = Counter(scaffold_smiles)
+most_common = scaffold_counts.most_common(10)
+
+# Create scaffold-to-molecules mapping
+scaffold_groups = {}
+for mol, scaf_smi in zip(mols, scaffold_smiles):
+    if scaf_smi not in scaffold_groups:
+        scaffold_groups[scaf_smi] = []
+    scaffold_groups[scaf_smi].append(mol)</code></pre>
+
+<p><strong>Scaffold-based train/test splitting</strong> (for ML):</p>
+<pre><code class="language-python"># Ensure train and test sets have different scaffolds
+scaffold_to_mols = {}
+for mol, scaf in zip(mols, scaffold_smiles):
+    if scaf not in scaffold_to_mols:
+        scaffold_to_mols[scaf] = []
+    scaffold_to_mols[scaf].append(mol)
+
+# Split scaffolds into train/test
+import random
+scaffolds = list(scaffold_to_mols.keys())
+random.shuffle(scaffolds)
+split_idx = int(0.8 * len(scaffolds))
+train_scaffolds = scaffolds[:split_idx]
+test_scaffolds = scaffolds[split_idx:]
+
+# Get molecules for each split
+train_mols = [mol for scaf in train_scaffolds for mol in scaffold_to_mols[scaf]]
+test_mols = [mol for scaf in test_scaffolds for mol in scaffold_to_mols[scaf]]</code></pre>
+
+<h3>7. Molecular Fragmentation</h3>
+
+<p>Refer to <code>references/fragments_scaffolds.md</code> for fragmentation details.</p>
+
+<p><strong>BRICS fragmentation</strong> (16 bond types):</p>
+<pre><code class="language-python"># Fragment molecule
+fragments = dm.fragment.brics(mol)
+# Returns: set of fragment SMILES with attachment points like '[1*]CCN'</code></pre>
+
+<p><strong>RECAP fragmentation</strong> (11 bond types):</p>
+<pre><code class="language-python">fragments = dm.fragment.recap(mol)</code></pre>
+
+<p><strong>Fragment analysis</strong>:</p>
+<pre><code class="language-python"># Find common fragments across compound library
+from collections import Counter
+
+all_fragments = []
+for mol in mols:
+    frags = dm.fragment.brics(mol)
+    all_fragments.extend(frags)
+
+fragment_counts = Counter(all_fragments)
+common_frags = fragment_counts.most_common(20)
+
+# Fragment-based scoring
+def fragment_score(mol, reference_fragments):
+    mol_frags = dm.fragment.brics(mol)
+    overlap = mol_frags.intersection(reference_fragments)
+    return len(overlap) / len(mol_frags) if mol_frags else 0</code></pre>
+
+<h3>8. 3D Conformer Generation</h3>
+
+<p>Refer to <code>references/conformers_module.md</code> for detailed conformer documentation.</p>
+
+<p><strong>Generating conformers</strong>:</p>
+<pre><code class="language-python"># Generate 3D conformers
+mol_3d = dm.conformers.generate(
+    mol,
+    n_confs=50,           # Number to generate (auto if None)
+    rms_cutoff=0.5,       # Filter similar conformers (Ångströms)
+    minimize_energy=True,  # Minimize with UFF force field
+    method='ETKDGv3'      # Embedding method (recommended)
+)
+
+# Access conformers
+n_conformers = mol_3d.GetNumConformers()
+conf = mol_3d.GetConformer(0)  # Get first conformer
+positions = conf.GetPositions()  # Nx3 array of atom coordinates</code></pre>
+
+<p><strong>Conformer clustering</strong>:</p>
+<pre><code class="language-python"># Cluster conformers by RMSD
+clusters = dm.conformers.cluster(
+    mol_3d,
+    rms_cutoff=1.0,
+    centroids=False
+)
+
+# Get representative conformers
+centroids = dm.conformers.return_centroids(mol_3d, clusters)</code></pre>
+
+<p><strong>SASA calculation</strong>:</p>
+<pre><code class="language-python"># Calculate solvent accessible surface area
+sasa_values = dm.conformers.sasa(mol_3d, n_jobs=-1)
+
+# Access SASA from conformer properties
+conf = mol_3d.GetConformer(0)
+sasa = conf.GetDoubleProp('rdkit_free_sasa')</code></pre>
+
+<h3>9. Visualization</h3>
+
+<p>Refer to <code>references/descriptors_viz.md</code> for visualization documentation.</p>
+
+<p><strong>Basic molecule grid</strong>:</p>
+<pre><code class="language-python"># Visualize molecules
+dm.viz.to_image(
+    mols[:20],
+    legends=[dm.to_smiles(m) for m in mols[:20]],
+    n_cols=5,
+    mol_size=(300, 300)
+)
+
+# Save to file
+dm.viz.to_image(mols, outfile="molecules.png")
+
+# SVG for publications
+dm.viz.to_image(mols, outfile="molecules.svg", use_svg=True)</code></pre>
+
+<p><strong>Aligned visualization</strong> (for SAR analysis):</p>
+<pre><code class="language-python"># Align molecules by common substructure
+dm.viz.to_image(
+    similar_mols,
+    align=True,  # Enable MCS alignment
+    legends=activity_labels,
+    n_cols=4
+)</code></pre>
+
+<p><strong>Highlighting substructures</strong>:</p>
+<pre><code class="language-python"># Highlight specific atoms and bonds
+dm.viz.to_image(
+    mol,
+    highlight_atom=[0, 1, 2, 3],  # Atom indices
+    highlight_bond=[0, 1, 2]      # Bond indices
+)</code></pre>
+
+<p><strong>Conformer visualization</strong>:</p>
+<pre><code class="language-python"># Display multiple conformers
+dm.viz.conformers(
+    mol_3d,
+    n_confs=10,
+    align_conf=True,
+    n_cols=3
+)</code></pre>
+
+<h3>10. Chemical Reactions</h3>
+
+<p>Refer to <code>references/reactions_data.md</code> for reactions documentation.</p>
+
+<p><strong>Applying reactions</strong>:</p>
+<pre><code class="language-python">from rdkit.Chem import rdChemReactions
+
+# Define reaction from SMARTS
+rxn_smarts = '[C:1](=[O:2])[OH:3]&gt;&gt;[C:1](=[O:2])[Cl:3]'
+rxn = rdChemReactions.ReactionFromSmarts(rxn_smarts)
+
+# Apply to molecule
+reactant = dm.to_mol("CC(=O)O")  # Acetic acid
+product = dm.reactions.apply_reaction(
+    rxn,
+    (reactant,),
+    sanitize=True
+)
+
+# Convert to SMILES
+product_smiles = dm.to_smiles(product)</code></pre>
+
+<p><strong>Batch reaction application</strong>:</p>
+<pre><code class="language-python"># Apply reaction to library
+products = []
+for mol in reactant_mols:
+    try:
+        prod = dm.reactions.apply_reaction(rxn, (mol,))
+        if prod is not None:
+            products.append(prod)
+    except Exception as e:
+        print(f"Reaction failed: {e}")</code></pre>
+
+<h2>Parallelization</h2>
+
+<p>Datamol includes built-in parallelization for many operations. Use <code>n_jobs</code> parameter:</p>
+<ul><li><code>n_jobs=1</code>: Sequential (no parallelization)</li>
+<li><code>n_jobs=-1</code>: Use all available CPU cores</li>
+<li><code>n_jobs=4</code>: Use 4 cores</li>
+</ul>
+<p><strong>Functions supporting parallelization</strong>:</p>
+<ul><li><code>dm.read_sdf(..., n_jobs=-1)</code></li>
+<li><code>dm.descriptors.batch_compute_many_descriptors(..., n_jobs=-1)</code></li>
+<li><code>dm.cluster_mols(..., n_jobs=-1)</code></li>
+<li><code>dm.pdist(..., n_jobs=-1)</code></li>
+<li><code>dm.conformers.sasa(..., n_jobs=-1)</code></li>
+</ul>
+<p><strong>Progress bars</strong>: Many batch operations support <code>progress=True</code> parameter.</p>
+
+<h2>Common Workflows and Patterns</h2>
+
+<h3>Complete Pipeline: Data Loading → Filtering → Analysis</h3>
+
+<pre><code class="language-python">import datamol as dm
+import pandas as pd
+
+# 1. Load molecules
+df = dm.read_sdf("compounds.sdf")
+
+# 2. Standardize
+df['mol'] = df['mol'].apply(lambda m: dm.standardize_mol(m) if m else None)
+df = df[df['mol'].notna()]  # Remove failed molecules
+
+# 3. Compute descriptors
+desc_df = dm.descriptors.batch_compute_many_descriptors(
+    df['mol'].tolist(),
+    n_jobs=-1,
+    progress=True
+)
+
+# 4. Filter by drug-likeness
+druglike = (
+    (desc_df['mw'] &lt;= 500) &amp;
+    (desc_df['logp'] &lt;= 5) &amp;
+    (desc_df['hbd'] &lt;= 5) &amp;
+    (desc_df['hba'] &lt;= 10)
+)
+filtered_df = df[druglike]
+
+# 5. Cluster and select diverse subset
+diverse_mols = dm.pick_diverse(
+    filtered_df['mol'].tolist(),
+    npick=100
+)
+
+# 6. Visualize results
+dm.viz.to_image(
+    diverse_mols,
+    legends=[dm.to_smiles(m) for m in diverse_mols],
+    outfile="diverse_compounds.png",
+    n_cols=10
+)</code></pre>
+
+<h3>Structure-Activity Relationship (SAR) Analysis</h3>
+
+<pre><code class="language-python"># Group by scaffold
+scaffolds = [dm.to_scaffold_murcko(mol) for mol in mols]
+scaffold_smiles = [dm.to_smiles(s) for s in scaffolds]
+
+# Create DataFrame with activities
+sar_df = pd.DataFrame({
+    'mol': mols,
+    'scaffold': scaffold_smiles,
+    'activity': activities  # User-provided activity data
+})
+
+# Analyze each scaffold series
+for scaffold, group in sar_df.groupby('scaffold'):
+    if len(group) &gt;= 3:  # Need multiple examples
+        print(f"\nScaffold: {scaffold}")
+        print(f"Count: {len(group)}")
+        print(f"Activity range: {group['activity'].min():.2f} - {group['activity'].max():.2f}")
+
+        # Visualize with activities as legends
+        dm.viz.to_image(
+            group['mol'].tolist(),
+            legends=[f"Activity: {act:.2f}" for act in group['activity']],
+            align=True  # Align by common substructure
+        )</code></pre>
+
+<h3>Virtual Screening Pipeline</h3>
+
+<pre><code class="language-python"># 1. Generate fingerprints for query and library
+query_fps = [dm.to_fp(mol) for mol in query_actives]
+library_fps = [dm.to_fp(mol) for mol in library_mols]
+
+# 2. Calculate similarities
+from scipy.spatial.distance import cdist
+import numpy as np
+
+distances = dm.cdist(query_actives, library_mols, n_jobs=-1)
+
+# 3. Find closest matches (min distance to any query)
+min_distances = distances.min(axis=0)
+similarities = 1 - min_distances  # Convert distance to similarity
+
+# 4. Rank and select top hits
+top_indices = np.argsort(similarities)[::-1][:100]  # Top 100
+top_hits = [library_mols[i] for i in top_indices]
+top_scores = [similarities[i] for i in top_indices]
+
+# 5. Visualize hits
+dm.viz.to_image(
+    top_hits[:20],
+    legends=[f"Sim: {score:.3f}" for score in top_scores[:20]],
+    outfile="screening_hits.png"
+)</code></pre>
+
+<h2>Reference Documentation</h2>
+
+<p>For detailed API documentation, consult these reference files:</p>
+
+<ul><li><strong><code>references/core_api.md</code></strong>: Core namespace functions (conversions, standardization, fingerprints, clustering)</li>
+<li><strong><code>references/io_module.md</code></strong>: File I/O operations (read/write SDF, CSV, Excel, remote files)</li>
+<li><strong><code>references/conformers_module.md</code></strong>: 3D conformer generation, clustering, SASA calculations</li>
+<li><strong><code>references/descriptors_viz.md</code></strong>: Molecular descriptors and visualization functions</li>
+<li><strong><code>references/fragments_scaffolds.md</code></strong>: Scaffold extraction, BRICS/RECAP fragmentation</li>
+<li><strong><code>references/reactions_data.md</code></strong>: Chemical reactions and toy datasets</li>
+</ul>
+<h2>Best Practices</h2>
+
+<ul><li><strong>Always standardize molecules</strong> from external sources:</li>
+</ul><p>   <code>`</code>python</p>
+<p>   mol = dm.standardize_mol(mol, disconnect_metals=True, normalize=True, reionize=True)</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Check for None values</strong> after molecule parsing:</li>
+</ul><p>   <code>`</code>python</p>
+<p>   mol = dm.to_mol(smiles)</p>
+<p>   if mol is None:</p>
+<p>       # Handle invalid SMILES</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Use parallel processing</strong> for large datasets:</li>
+</ul><p>   <code>`</code>python</p>
+<p>   result = dm.operation(..., n_jobs=-1, progress=True)</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Leverage fsspec</strong> for cloud storage:</li>
+</ul><p>   <code>`</code>python</p>
+<p>   df = dm.read_sdf("s3://bucket/compounds.sdf")</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Use appropriate fingerprints</strong> for similarity:</li>
+</ul><p>   - ECFP (Morgan): General purpose, structural similarity</p>
+<p>   - MACCS: Fast, smaller feature space</p>
+<p>   - Atom pairs: Considers atom pairs and distances</p>
+
+<ul><li><strong>Consider scale limitations</strong>:</li>
+</ul><p>   - Butina clustering: ~1,000 molecules (full distance matrix)</p>
+<p>   - For larger datasets: Use diversity selection or hierarchical methods</p>
+
+<ul><li><strong>Scaffold splitting for ML</strong>: Ensure proper train/test separation by scaffold</li>
+</ul>
+<ul><li><strong>Align molecules</strong> when visualizing SAR series</li>
+</ul>
+<h2>Error Handling</h2>
+
+<pre><code class="language-python"># Safe molecule creation
+def safe_to_mol(smiles):
+    try:
+        mol = dm.to_mol(smiles)
+        if mol is not None:
+            mol = dm.standardize_mol(mol)
+        return mol
+    except Exception as e:
+        print(f"Failed to process {smiles}: {e}")
+        return None
+
+# Safe batch processing
+valid_mols = []
+for smiles in smiles_list:
+    mol = safe_to_mol(smiles)
+    if mol is not None:
+        valid_mols.append(mol)</code></pre>
+
+<h2>Integration with Machine Learning</h2>
+
+<pre><code class="language-python"># Feature generation
+X = np.array([dm.to_fp(mol) for mol in mols])
+
+# Or descriptors
+desc_df = dm.descriptors.batch_compute_many_descriptors(mols, n_jobs=-1)
+X = desc_df.values
+
+# Train model
+from sklearn.ensemble import RandomForestRegressor
+model = RandomForestRegressor()
+model.fit(X, y_target)
+
+# Predict
+predictions = model.predict(X_test)</code></pre>
+
+<h2>Troubleshooting</h2>
+
+<p><strong>Issue</strong>: Molecule parsing fails</p>
+<ul><li><strong>Solution</strong>: Use <code>dm.standardize_smiles()</code> first or try <code>dm.fix_mol()</code></li>
+</ul>
+<p><strong>Issue</strong>: Memory errors with clustering</p>
+<ul><li><strong>Solution</strong>: Use <code>dm.pick_diverse()</code> instead of full clustering for large sets</li>
+</ul>
+<p><strong>Issue</strong>: Slow conformer generation</p>
+<ul><li><strong>Solution</strong>: Reduce <code>n_confs</code> or increase <code>rms_cutoff</code> to generate fewer conformers</li>
+</ul>
+<p><strong>Issue</strong>: Remote file access fails</p>
+<ul><li><strong>Solution</strong>: Ensure fsspec and appropriate cloud provider libraries are installed (s3fs, gcsfs, etc.)</li>
+</ul>
+<h2>Additional Resources</h2>
+
+<ul><li><strong>Datamol Documentation</strong>: https://docs.datamol.io/</li>
+<li><strong>RDKit Documentation</strong>: https://www.rdkit.org/docs/</li>
+<li><strong>GitHub Repository</strong>: https://github.com/datamol-io/datamol</li></ul>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Conformers Module</h3>
+  <h1>Datamol Conformers Module Reference</h1>
+
+<p>The <code>datamol.conformers</code> module provides tools for generating and analyzing 3D molecular conformations.</p>
+
+<h2>Conformer Generation</h2>
+
+<h3><code>dm.conformers.generate(mol, n_confs=None, rms_cutoff=None, minimize_energy=True, method='ETKDGv3', add_hs=True, ...)</code></h3>
+<p>Generate 3D molecular conformers.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul><p>  - <code>mol</code>: Input molecule</p>
+<p>  - <code>n_confs</code>: Number of conformers to generate (auto-determined based on rotatable bonds if None)</p>
+<p>  - <code>rms_cutoff</code>: RMS threshold in Ångströms for filtering similar conformers (removes duplicates)</p>
+<p>  - <code>minimize_energy</code>: Apply UFF energy minimization (default: True)</p>
+<p>  - <code>method</code>: Embedding method - options:</p>
+<p>    - <code>'ETDG'</code> - Experimental Torsion Distance Geometry</p>
+<p>    - <code>'ETKDG'</code> - ETDG with additional basic knowledge</p>
+<p>    - <code>'ETKDGv2'</code> - Enhanced version 2</p>
+<p>    - <code>'ETKDGv3'</code> - Enhanced version 3 (default, recommended)</p>
+<p>  - <code>add_hs</code>: Add hydrogens before embedding (default: True, critical for quality)</p>
+<p>  - <code>random_seed</code>: Set for reproducibility</p>
+<ul><li><strong>Returns</strong>: Molecule with embedded conformers</li>
+<li><strong>Example</strong>:</li>
+</ul><p>  <code>`</code>python</p>
+<p>  mol = dm.to_mol("CCO")</p>
+<p>  mol_3d = dm.conformers.generate(mol, n_confs=10, rms_cutoff=0.5)</p>
+<p>  conformers = mol_3d.GetConformers()  # Access all conformers</p>
+<p>  <code>`</code></p>
+
+<h2>Conformer Clustering</h2>
+
+<h3><code>dm.conformers.cluster(mol, rms_cutoff=1.0, already_aligned=False, centroids=False)</code></h3>
+<p>Group conformers by RMS distance.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul><p>  - <code>rms_cutoff</code>: Clustering threshold in Ångströms (default: 1.0)</p>
+<p>  - <code>already_aligned</code>: Whether conformers are pre-aligned</p>
+<p>  - <code>centroids</code>: Return centroid conformers (True) or cluster groups (False)</p>
+<ul><li><strong>Returns</strong>: Cluster information or centroid conformers</li>
+<li><strong>Use case</strong>: Identify distinct conformational families</li>
+</ul>
+<h3><code>dm.conformers.return_centroids(mol, conf_clusters, centroids=True)</code></h3>
+<p>Extract representative conformers from clusters.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul><p>  - <code>conf_clusters</code>: Sequence of cluster indices from <code>cluster()</code></p>
+<p>  - <code>centroids</code>: Return single molecule (True) or list of molecules (False)</p>
+<ul><li><strong>Returns</strong>: Centroid conformer(s)</li>
+</ul>
+<h2>Conformer Analysis</h2>
+
+<h3><code>dm.conformers.rmsd(mol)</code></h3>
+<p>Calculate pairwise RMSD matrix across all conformers.</p>
+<ul><li><strong>Requirements</strong>: Minimum 2 conformers</li>
+<li><strong>Returns</strong>: NxN matrix of RMSD values</li>
+<li><strong>Use case</strong>: Quantify conformer diversity</li>
+</ul>
+<h3><code>dm.conformers.sasa(mol, n_jobs=1, ...)</code></h3>
+<p>Calculate Solvent Accessible Surface Area (SASA) using FreeSASA.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul><p>  - <code>n_jobs</code>: Parallelization for multiple conformers</p>
+<ul><li><strong>Returns</strong>: Array of SASA values (one per conformer)</li>
+<li><strong>Storage</strong>: Values stored in each conformer as property <code>'rdkit_free_sasa'</code></li>
+<li><strong>Example</strong>:</li>
+</ul><p>  <code>`</code>python</p>
+<p>  sasa_values = dm.conformers.sasa(mol_3d)</p>
+<p>  # Or access from conformer properties</p>
+<p>  conf = mol_3d.GetConformer(0)</p>
+<p>  sasa = conf.GetDoubleProp('rdkit_free_sasa')</p>
+<p>  <code>`</code></p>
+
+<h2>Low-Level Conformer Manipulation</h2>
+
+<h3><code>dm.conformers.center_of_mass(mol, conf_id=-1, use_atoms=True, round_coord=None)</code></h3>
+<p>Calculate molecular center.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul><p>  - <code>conf_id</code>: Conformer index (-1 for first conformer)</p>
+<p>  - <code>use_atoms</code>: Use atomic masses (True) or geometric center (False)</p>
+<p>  - <code>round_coord</code>: Decimal precision for rounding</p>
+<ul><li><strong>Returns</strong>: 3D coordinates of center</li>
+<li><strong>Use case</strong>: Centering molecules for visualization or alignment</li>
+</ul>
+<h3><code>dm.conformers.get_coords(mol, conf_id=-1)</code></h3>
+<p>Retrieve atomic coordinates from a conformer.</p>
+<ul><li><strong>Returns</strong>: Nx3 numpy array of atomic positions</li>
+<li><strong>Example</strong>:</li>
+</ul><p>  <code>`</code>python</p>
+<p>  positions = dm.conformers.get_coords(mol_3d, conf_id=0)</p>
+<p>  # positions.shape: (num_atoms, 3)</p>
+<p>  <code>`</code></p>
+
+<h3><code>dm.conformers.translate(mol, conf_id=-1, transform_matrix=None)</code></h3>
+<p>Reposition conformer using transformation matrix.</p>
+<ul><li><strong>Modification</strong>: Operates in-place</li>
+<li><strong>Use case</strong>: Aligning or repositioning molecules</li>
+</ul>
+<h2>Workflow Example</h2>
+
+<pre><code class="language-python">import datamol as dm
+
+# 1. Create molecule and generate conformers
+mol = dm.to_mol("CC(C)CCO")  # Isopentanol
+mol_3d = dm.conformers.generate(
+    mol,
+    n_confs=50,           # Generate 50 initial conformers
+    rms_cutoff=0.5,       # Filter similar conformers
+    minimize_energy=True   # Minimize energy
+)
+
+# 2. Analyze conformers
+n_conformers = mol_3d.GetNumConformers()
+print(f"Generated {n_conformers} unique conformers")
+
+# 3. Calculate SASA
+sasa_values = dm.conformers.sasa(mol_3d)
+
+# 4. Cluster conformers
+clusters = dm.conformers.cluster(mol_3d, rms_cutoff=1.0, centroids=False)
+
+# 5. Get representative conformers
+centroids = dm.conformers.return_centroids(mol_3d, clusters)
+
+# 6. Access 3D coordinates
+coords = dm.conformers.get_coords(mol_3d, conf_id=0)</code></pre>
+
+<h2>Key Concepts</h2>
+
+<ul><li><strong>Distance Geometry</strong>: Method for generating 3D structures from connectivity information</li>
+<li><strong>ETKDG</strong>: Uses experimental torsion angle preferences and additional chemical knowledge</li>
+<li><strong>RMS Cutoff</strong>: Lower values = more unique conformers; higher values = fewer, more distinct conformers</li>
+<li><strong>Energy Minimization</strong>: Relaxes structures to nearest local energy minimum</li>
+<li><strong>Hydrogens</strong>: Critical for accurate 3D geometry - always include during embedding</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Core Api</h3>
+  <h1>Datamol Core API Reference</h1>
+
+<p>This document covers the main functions available in the datamol namespace.</p>
+
+<h2>Molecule Creation and Conversion</h2>
+
+<h3><code>to_mol(mol, ...)</code></h3>
+<p>Convert SMILES string or other molecular representations to RDKit molecule objects.</p>
+<ul><li><strong>Parameters</strong>: Accepts SMILES strings, InChI, or other molecular formats</li>
+<li><strong>Returns</strong>: <code>rdkit.Chem.Mol</code> object</li>
+<li><strong>Common usage</strong>: <code>mol = dm.to_mol("CCO")</code></li>
+</ul>
+<h3><code>from_inchi(inchi)</code></h3>
+<p>Convert InChI string to molecule object.</p>
+
+<h3><code>from_smarts(smarts)</code></h3>
+<p>Convert SMARTS pattern to molecule object.</p>
+
+<h3><code>from_selfies(selfies)</code></h3>
+<p>Convert SELFIES string to molecule object.</p>
+
+<h3><code>copy_mol(mol)</code></h3>
+<p>Create a copy of a molecule object to avoid modifying the original.</p>
+
+<h2>Molecule Export</h2>
+
+<h3><code>to_smiles(mol, ...)</code></h3>
+<p>Convert molecule object to SMILES string.</p>
+<ul><li><strong>Common parameters</strong>: <code>canonical=True</code>, <code>isomeric=True</code></li>
+</ul>
+<h3><code>to_inchi(mol, ...)</code></h3>
+<p>Convert molecule to InChI string representation.</p>
+
+<h3><code>to_inchikey(mol)</code></h3>
+<p>Convert molecule to InChI key (fixed-length hash).</p>
+
+<h3><code>to_smarts(mol)</code></h3>
+<p>Convert molecule to SMARTS pattern.</p>
+
+<h3><code>to_selfies(mol)</code></h3>
+<p>Convert molecule to SELFIES (Self-Referencing Embedded Strings) format.</p>
+
+<h2>Sanitization and Standardization</h2>
+
+<h3><code>sanitize_mol(mol, ...)</code></h3>
+<p>Enhanced version of RDKit's sanitize operation using mol→SMILES→mol conversion and aromatic nitrogen fixing.</p>
+<ul><li><strong>Purpose</strong>: Fix common molecular structure issues</li>
+<li><strong>Returns</strong>: Sanitized molecule or None if sanitization fails</li>
+</ul>
+<h3><code>standardize_mol(mol, disconnect_metals=False, normalize=True, reionize=True, ...)</code></h3>
+<p>Apply comprehensive standardization procedures including:</p>
+<ul><li>Metal disconnection</li>
+<li>Normalization (charge corrections)</li>
+<li>Reionization</li>
+<li>Fragment handling (largest fragment selection)</li>
+</ul>
+<h3><code>standardize_smiles(smiles, ...)</code></h3>
+<p>Apply SMILES standardization procedures directly to a SMILES string.</p>
+
+<h3><code>fix_mol(mol)</code></h3>
+<p>Attempt to fix molecular structure issues automatically.</p>
+
+<h3><code>fix_valence(mol)</code></h3>
+<p>Correct valence errors in molecular structures.</p>
+
+<h2>Molecular Properties</h2>
+
+<h3><code>reorder_atoms(mol, ...)</code></h3>
+<p>Ensure consistent atom ordering for the same molecule regardless of original SMILES representation.</p>
+<ul><li><strong>Purpose</strong>: Maintain reproducible feature generation</li>
+</ul>
+<h3><code>remove_hs(mol, ...)</code></h3>
+<p>Remove hydrogen atoms from molecular structure.</p>
+
+<h3><code>add_hs(mol, ...)</code></h3>
+<p>Add explicit hydrogen atoms to molecular structure.</p>
+
+<h2>Fingerprints and Similarity</h2>
+
+<h3><code>to_fp(mol, fp_type='ecfp', ...)</code></h3>
+<p>Generate molecular fingerprints for similarity calculations.</p>
+<ul><li><strong>Fingerprint types</strong>:</li>
+</ul><p>  - <code>'ecfp'</code> - Extended Connectivity Fingerprints (Morgan)</p>
+<p>  - <code>'fcfp'</code> - Functional Connectivity Fingerprints</p>
+<p>  - <code>'maccs'</code> - MACCS keys</p>
+<p>  - <code>'topological'</code> - Topological fingerprints</p>
+<p>  - <code>'atompair'</code> - Atom pair fingerprints</p>
+<ul><li><strong>Common parameters</strong>: <code>n_bits</code>, <code>radius</code></li>
+<li><strong>Returns</strong>: Numpy array or RDKit fingerprint object</li>
+</ul>
+<h3><code>pdist(mols, ...)</code></h3>
+<p>Calculate pairwise Tanimoto distances between all molecules in a list.</p>
+<ul><li><strong>Supports</strong>: Parallel processing via <code>n_jobs</code> parameter</li>
+<li><strong>Returns</strong>: Distance matrix</li>
+</ul>
+<h3><code>cdist(mols1, mols2, ...)</code></h3>
+<p>Calculate Tanimoto distances between two sets of molecules.</p>
+
+<h2>Clustering and Diversity</h2>
+
+<h3><code>cluster_mols(mols, cutoff=0.2, feature_fn=None, n_jobs=1)</code></h3>
+<p>Cluster molecules using Butina clustering algorithm.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul><p>  - <code>cutoff</code>: Distance threshold (default 0.2)</p>
+<p>  - <code>feature_fn</code>: Custom function for molecular features</p>
+<p>  - <code>n_jobs</code>: Parallelization (-1 for all cores)</p>
+<ul><li><strong>Important</strong>: Builds full distance matrix - suitable for ~1000 structures, not for 10,000+</li>
+<li><strong>Returns</strong>: List of clusters (each cluster is a list of molecule indices)</li>
+</ul>
+<h3><code>pick_diverse(mols, npick, ...)</code></h3>
+<p>Select diverse subset of molecules based on fingerprint diversity.</p>
+
+<h3><code>pick_centroids(mols, npick, ...)</code></h3>
+<p>Select centroid molecules representing clusters.</p>
+
+<h2>Graph Operations</h2>
+
+<h3><code>to_graph(mol)</code></h3>
+<p>Convert molecule to graph representation for graph-based analysis.</p>
+
+<h3><code>get_all_path_between(mol, start, end)</code></h3>
+<p>Find all paths between two atoms in molecular structure.</p>
+
+<h2>DataFrame Integration</h2>
+
+<h3><code>to_df(mols, smiles_column='smiles', mol_column='mol')</code></h3>
+<p>Convert list of molecules to pandas DataFrame.</p>
+
+<h3><code>from_df(df, smiles_column='smiles', mol_column='mol')</code></h3>
+<p>Convert pandas DataFrame to list of molecules.</p>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Descriptors Viz</h3>
+  <h1>Datamol Descriptors and Visualization Reference</h1>
+
+<h2>Descriptors Module (<code>datamol.descriptors</code>)</h2>
+
+<p>The descriptors module provides tools for computing molecular properties and descriptors.</p>
+
+<h3>Specialized Descriptor Functions</h3>
+
+<h4><code>dm.descriptors.n_aromatic_atoms(mol)</code></h4>
+<p>Calculate the number of aromatic atoms.</p>
+<ul><li><strong>Returns</strong>: Integer count</li>
+<li><strong>Use case</strong>: Aromaticity analysis</li>
+</ul>
+<h4><code>dm.descriptors.n_aromatic_atoms_proportion(mol)</code></h4>
+<p>Calculate ratio of aromatic atoms to total heavy atoms.</p>
+<ul><li><strong>Returns</strong>: Float between 0 and 1</li>
+<li><strong>Use case</strong>: Quantifying aromatic character</li>
+</ul>
+<h4><code>dm.descriptors.n_charged_atoms(mol)</code></h4>
+<p>Count atoms with nonzero formal charge.</p>
+<ul><li><strong>Returns</strong>: Integer count</li>
+<li><strong>Use case</strong>: Charge distribution analysis</li>
+</ul>
+<h4><code>dm.descriptors.n_rigid_bonds(mol)</code></h4>
+<p>Count non-rotatable bonds (neither single bonds nor ring bonds).</p>
+<ul><li><strong>Returns</strong>: Integer count</li>
+<li><strong>Use case</strong>: Molecular flexibility assessment</li>
+</ul>
+<h4><code>dm.descriptors.n_stereo_centers(mol)</code></h4>
+<p>Count stereogenic centers (chiral centers).</p>
+<ul><li><strong>Returns</strong>: Integer count</li>
+<li><strong>Use case</strong>: Stereochemistry analysis</li>
+</ul>
+<h4><code>dm.descriptors.n_stereo_centers_unspecified(mol)</code></h4>
+<p>Count stereocenters lacking stereochemical specification.</p>
+<ul><li><strong>Returns</strong>: Integer count</li>
+<li><strong>Use case</strong>: Identifying incomplete stereochemistry</li>
+</ul>
+<h3>Batch Descriptor Computation</h3>
+
+<h4><code>dm.descriptors.compute_many_descriptors(mol, properties_fn=None, add_properties=True)</code></h4>
+<p>Compute multiple molecular properties for a single molecule.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul><p>  - <code>properties_fn</code>: Custom list of descriptor functions</p>
+<p>  - <code>add_properties</code>: Include additional computed properties</p>
+<ul><li><strong>Returns</strong>: Dictionary of descriptor name → value pairs</li>
+<li><strong>Default descriptors include</strong>:</li>
+</ul><p>  - Molecular weight, LogP, number of H-bond donors/acceptors</p>
+<p>  - Aromatic atoms, stereocenters, rotatable bonds</p>
+<p>  - TPSA (Topological Polar Surface Area)</p>
+<p>  - Ring count, heteroatom count</p>
+<ul><li><strong>Example</strong>:</li>
+</ul><p>  <code>`</code>python</p>
+<p>  mol = dm.to_mol("CCO")</p>
+<p>  descriptors = dm.descriptors.compute_many_descriptors(mol)</p>
+<p>  # Returns: {'mw': 46.07, 'logp': -0.03, 'hbd': 1, 'hba': 1, ...}</p>
+<p>  <code>`</code></p>
+
+<h4><code>dm.descriptors.batch_compute_many_descriptors(mols, properties_fn=None, add_properties=True, n_jobs=1, batch_size=None, progress=False)</code></h4>
+<p>Compute descriptors for multiple molecules in parallel.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul><p>  - <code>mols</code>: List of molecules</p>
+<p>  - <code>n_jobs</code>: Number of parallel jobs (-1 for all cores)</p>
+<p>  - <code>batch_size</code>: Chunk size for parallel processing</p>
+<p>  - <code>progress</code>: Show progress bar</p>
+<ul><li><strong>Returns</strong>: Pandas DataFrame with one row per molecule</li>
+<li><strong>Example</strong>:</li>
+</ul><p>  <code>`</code>python</p>
+<p>  mols = [dm.to_mol(smi) for smi in smiles_list]</p>
+<p>  df = dm.descriptors.batch_compute_many_descriptors(</p>
+<p>      mols,</p>
+<p>      n_jobs=-1,</p>
+<p>      progress=True</p>
+<p>  )</p>
+<p>  <code>`</code></p>
+
+<h3>RDKit Descriptor Access</h3>
+
+<h4><code>dm.descriptors.any_rdkit_descriptor(name)</code></h4>
+<p>Retrieve any descriptor function from RDKit by name.</p>
+<ul><li><strong>Parameters</strong>: <code>name</code> - Descriptor function name (e.g., 'MolWt', 'TPSA')</li>
+<li><strong>Returns</strong>: RDKit descriptor function</li>
+<li><strong>Available descriptors</strong>: From <code>rdkit.Chem.Descriptors</code> and <code>rdkit.Chem.rdMolDescriptors</code></li>
+<li><strong>Example</strong>:</li>
+</ul><p>  <code>`</code>python</p>
+<p>  tpsa_fn = dm.descriptors.any_rdkit_descriptor('TPSA')</p>
+<p>  tpsa_value = tpsa_fn(mol)</p>
+<p>  <code>`</code></p>
+
+<h3>Common Use Cases</h3>
+
+<p><strong>Drug-likeness Filtering (Lipinski's Rule of Five)</strong>:</p>
+<pre><code class="language-python">descriptors = dm.descriptors.compute_many_descriptors(mol)
+is_druglike = (
+    descriptors['mw'] &lt;= 500 and
+    descriptors['logp'] &lt;= 5 and
+    descriptors['hbd'] &lt;= 5 and
+    descriptors['hba'] &lt;= 10
+)</code></pre>
+
+<p><strong>ADME Property Analysis</strong>:</p>
+<pre><code class="language-python">df = dm.descriptors.batch_compute_many_descriptors(compound_library)
+# Filter by TPSA for blood-brain barrier penetration
+bbb_candidates = df[df['tpsa'] &lt; 90]</code></pre>
+
+<hr>
+
+<h2>Visualization Module (<code>datamol.viz</code>)</h2>
+
+<p>The viz module provides tools for rendering molecules and conformers as images.</p>
+
+<h3>Main Visualization Function</h3>
+
+<h4><code>dm.viz.to_image(mols, legends=None, n_cols=4, use_svg=False, mol_size=(200, 200), highlight_atom=None, highlight_bond=None, outfile=None, max_mols=None, copy=True, indices=False, ...)</code></h4>
+<p>Generate image grid from molecules.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul><p>  - <code>mols</code>: Single molecule or list of molecules</p>
+<p>  - <code>legends</code>: String or list of strings as labels (one per molecule)</p>
+<p>  - <code>n_cols</code>: Number of molecules per row (default: 4)</p>
+<p>  - <code>use_svg</code>: Output SVG format (True) or PNG (False, default)</p>
+<p>  - <code>mol_size</code>: Tuple (width, height) or single int for square images</p>
+<p>  - <code>highlight_atom</code>: Atom indices to highlight (list or dict)</p>
+<p>  - <code>highlight_bond</code>: Bond indices to highlight (list or dict)</p>
+<p>  - <code>outfile</code>: Save path (local or remote, supports fsspec)</p>
+<p>  - <code>max_mols</code>: Maximum number of molecules to display</p>
+<p>  - <code>indices</code>: Draw atom indices on structures (default: False)</p>
+<p>  - <code>align</code>: Align molecules using MCS (Maximum Common Substructure)</p>
+<ul><li><strong>Returns</strong>: Image object (can be displayed in Jupyter) or saves to file</li>
+<li><strong>Example</strong>:</li>
+</ul><p>  <code>`</code>python</p>
+<p>  # Basic grid</p>
+<p>  dm.viz.to_image(mols[:10], legends=[dm.to_smiles(m) for m in mols[:10]])</p>
+
+<p>  # Save to file</p>
+<p>  dm.viz.to_image(mols, outfile="molecules.png", n_cols=5)</p>
+
+<p>  # Highlight substructure</p>
+<p>  dm.viz.to_image(mol, highlight_atom=[0, 1, 2], highlight_bond=[0, 1])</p>
+
+<p>  # Aligned visualization</p>
+<p>  dm.viz.to_image(mols, align=True, legends=activity_labels)</p>
+<p>  <code>`</code></p>
+
+<h3>Conformer Visualization</h3>
+
+<h4><code>dm.viz.conformers(mol, n_confs=None, align_conf=True, n_cols=3, sync_views=True, remove_hs=True, ...)</code></h4>
+<p>Display multiple conformers in grid layout.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul><p>  - <code>mol</code>: Molecule with embedded conformers</p>
+<p>  - <code>n_confs</code>: Number or list of conformer indices to display (None = all)</p>
+<p>  - <code>align_conf</code>: Align conformers for comparison (default: True)</p>
+<p>  - <code>n_cols</code>: Grid columns (default: 3)</p>
+<p>  - <code>sync_views</code>: Synchronize 3D views when interactive (default: True)</p>
+<p>  - <code>remove_hs</code>: Remove hydrogens for clarity (default: True)</p>
+<ul><li><strong>Returns</strong>: Grid of conformer visualizations</li>
+<li><strong>Use case</strong>: Comparing conformational diversity</li>
+<li><strong>Example</strong>:</li>
+</ul><p>  <code>`</code>python</p>
+<p>  mol_3d = dm.conformers.generate(mol, n_confs=20)</p>
+<p>  dm.viz.conformers(mol_3d, n_confs=10, align_conf=True)</p>
+<p>  <code>`</code></p>
+
+<h3>Circle Grid Visualization</h3>
+
+<h4><code>dm.viz.circle_grid(center_mol, circle_mols, mol_size=200, circle_margin=50, act_mapper=None, ...)</code></h4>
+<p>Create concentric ring visualization with central molecule.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul><p>  - <code>center_mol</code>: Molecule at center</p>
+<p>  - <code>circle_mols</code>: List of molecule lists (one list per ring)</p>
+<p>  - <code>mol_size</code>: Image size per molecule</p>
+<p>  - <code>circle_margin</code>: Spacing between rings (default: 50)</p>
+<p>  - <code>act_mapper</code>: Activity mapping dictionary for color-coding</p>
+<ul><li><strong>Returns</strong>: Circular grid image</li>
+<li><strong>Use case</strong>: Visualizing molecular neighborhoods, SAR analysis, similarity networks</li>
+<li><strong>Example</strong>:</li>
+</ul><p>  <code>`</code>python</p>
+<p>  # Show a reference molecule surrounded by similar compounds</p>
+<p>  dm.viz.circle_grid(</p>
+<p>      center_mol=reference,</p>
+<p>      circle_mols=[nearest_neighbors, second_tier]</p>
+<p>  )</p>
+<p>  <code>`</code></p>
+
+<h3>Visualization Best Practices</h3>
+
+<ul><li><strong>Use legends for clarity</strong>: Always label molecules with SMILES, IDs, or activity values</li>
+<li><strong>Align related molecules</strong>: Use <code>align=True</code> in <code>to_image()</code> for SAR analysis</li>
+<li><strong>Adjust grid size</strong>: Set <code>n_cols</code> based on molecule count and display width</li>
+<li><strong>Use SVG for publications</strong>: Set <code>use_svg=True</code> for scalable vector graphics</li>
+<li><strong>Highlight substructures</strong>: Use <code>highlight_atom</code> and <code>highlight_bond</code> to emphasize features</li>
+<li><strong>Save large grids</strong>: Use <code>outfile</code> parameter to save rather than display in memory</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Fragments Scaffolds</h3>
+  <h1>Datamol Fragments and Scaffolds Reference</h1>
+
+<h2>Scaffolds Module (<code>datamol.scaffold</code>)</h2>
+
+<p>Scaffolds represent the core structure of molecules, useful for identifying structural families and analyzing structure-activity relationships (SAR).</p>
+
+<h3>Murcko Scaffolds</h3>
+
+<h4><code>dm.to_scaffold_murcko(mol)</code></h4>
+<p>Extract Bemis-Murcko scaffold (molecular framework).</p>
+<ul><li><strong>Method</strong>: Removes side chains, retaining ring systems and linkers</li>
+<li><strong>Returns</strong>: Molecule object representing the scaffold</li>
+<li><strong>Use case</strong>: Identify core structures across compound series</li>
+<li><strong>Example</strong>:</li>
+</ul><p>  <code>`</code>python</p>
+<p>  mol = dm.to_mol("c1ccc(cc1)CCN")  # Phenethylamine</p>
+<p>  scaffold = dm.to_scaffold_murcko(mol)</p>
+<p>  scaffold_smiles = dm.to_smiles(scaffold)</p>
+<p>  # Returns: 'c1ccccc1CC' (benzene ring + ethyl linker)</p>
+<p>  <code>`</code></p>
+
+<p><strong>Workflow for scaffold analysis</strong>:</p>
+<pre><code class="language-python"># Extract scaffolds from compound library
+scaffolds = [dm.to_scaffold_murcko(mol) for mol in mols]
+scaffold_smiles = [dm.to_smiles(s) for s in scaffolds]
+
+# Count scaffold frequency
+from collections import Counter
+scaffold_counts = Counter(scaffold_smiles)
+most_common = scaffold_counts.most_common(10)</code></pre>
+
+<h3>Fuzzy Scaffolds</h3>
+
+<h4><code>dm.scaffold.fuzzy_scaffolding(mol, ...)</code></h4>
+<p>Generate fuzzy scaffolds with enforceable groups that must appear in the core.</p>
+<ul><li><strong>Purpose</strong>: More flexible scaffold definition allowing specified functional groups</li>
+<li><strong>Use case</strong>: Custom scaffold definitions beyond Murcko rules</li>
+</ul>
+<h3>Applications</h3>
+
+<p><strong>Scaffold-based splitting</strong> (for ML model validation):</p>
+<pre><code class="language-python"># Group compounds by scaffold
+scaffold_to_mols = {}
+for mol, scaffold in zip(mols, scaffolds):
+    smi = dm.to_smiles(scaffold)
+    if smi not in scaffold_to_mols:
+        scaffold_to_mols[smi] = []
+    scaffold_to_mols[smi].append(mol)
+
+# Ensure train/test sets have different scaffolds</code></pre>
+
+<p><strong>SAR analysis</strong>:</p>
+<pre><code class="language-python"># Group by scaffold and analyze activity
+for scaffold_smi, molecules in scaffold_to_mols.items():
+    activities = [get_activity(mol) for mol in molecules]
+    print(f"Scaffold: {scaffold_smi}, Mean activity: {np.mean(activities)}")</code></pre>
+
+<hr>
+
+<h2>Fragments Module (<code>datamol.fragment</code>)</h2>
+
+<p>Molecular fragmentation breaks molecules into smaller pieces based on chemical rules, useful for fragment-based drug design and substructure analysis.</p>
+
+<h3>BRICS Fragmentation</h3>
+
+<h4><code>dm.fragment.brics(mol, ...)</code></h4>
+<p>Fragment molecule using BRICS (Breaking Retrosynthetically Interesting Chemical Substructures).</p>
+<ul><li><strong>Method</strong>: Dissects based on 16 chemically meaningful bond types</li>
+<li><strong>Consideration</strong>: Considers chemical environment and surrounding substructures</li>
+<li><strong>Returns</strong>: Set of fragment SMILES strings</li>
+<li><strong>Use case</strong>: Retrosynthetic analysis, fragment-based design</li>
+<li><strong>Example</strong>:</li>
+</ul><p>  <code>`</code>python</p>
+<p>  mol = dm.to_mol("c1ccccc1CCN")</p>
+<p>  fragments = dm.fragment.brics(mol)</p>
+<p>  # Returns fragments like: '[1<em>]CCN', '[1</em>]c1ccccc1', etc.</p>
+<p>  # [1*] represents attachment points</p>
+<p>  <code>`</code></p>
+
+<h3>RECAP Fragmentation</h3>
+
+<h4><code>dm.fragment.recap(mol, ...)</code></h4>
+<p>Fragment molecule using RECAP (Retrosynthetic Combinatorial Analysis Procedure).</p>
+<ul><li><strong>Method</strong>: Dissects based on 11 predefined bond types</li>
+<li><strong>Rules</strong>:</li>
+</ul><p>  - Leaves alkyl groups smaller than 5 carbons intact</p>
+<p>  - Preserves cyclic bonds</p>
+<ul><li><strong>Returns</strong>: Set of fragment SMILES strings</li>
+<li><strong>Use case</strong>: Combinatorial library design</li>
+<li><strong>Example</strong>:</li>
+</ul><p>  <code>`</code>python</p>
+<p>  mol = dm.to_mol("CCCCCc1ccccc1")</p>
+<p>  fragments = dm.fragment.recap(mol)</p>
+<p>  <code>`</code></p>
+
+<h3>MMPA Fragmentation</h3>
+
+<h4><code>dm.fragment.mmpa_frag(mol, ...)</code></h4>
+<p>Fragment for Matched Molecular Pair Analysis.</p>
+<ul><li><strong>Purpose</strong>: Generate fragments suitable for identifying molecular pairs</li>
+<li><strong>Use case</strong>: Analyzing how small structural changes affect properties</li>
+<li><strong>Example</strong>:</li>
+</ul><p>  <code>`</code>python</p>
+<p>  fragments = dm.fragment.mmpa_frag(mol)</p>
+<p>  # Used to find pairs of molecules differing by single transformation</p>
+<p>  <code>`</code></p>
+
+<h3>Comparison of Methods</h3>
+
+<p>| Method | Bond Types | Preserves Cycles | Best For |</p>
+<p>|--------|-----------|------------------|----------|</p>
+<p>| BRICS  | 16        | Yes              | Retrosynthetic analysis, fragment recombination |</p>
+<p>| RECAP  | 11        | Yes              | Combinatorial library design |</p>
+<p>| MMPA   | Variable  | Depends          | Structure-activity relationship analysis |</p>
+
+<h3>Fragmentation Workflow</h3>
+
+<pre><code class="language-python">import datamol as dm
+
+# 1. Fragment a molecule
+mol = dm.to_mol("CC(=O)Oc1ccccc1C(=O)O")  # Aspirin
+brics_frags = dm.fragment.brics(mol)
+recap_frags = dm.fragment.recap(mol)
+
+# 2. Analyze fragment frequency across library
+all_fragments = []
+for mol in molecule_library:
+    frags = dm.fragment.brics(mol)
+    all_fragments.extend(frags)
+
+# 3. Identify common fragments
+from collections import Counter
+fragment_counts = Counter(all_fragments)
+common_fragments = fragment_counts.most_common(20)
+
+# 4. Convert fragments back to molecules (remove attachment points)
+def clean_fragment(frag_smiles):
+    # Remove [1*], [2*], etc. attachment point markers
+    clean = frag_smiles.replace('[1*]', '[H]')
+    return dm.to_mol(clean)</code></pre>
+
+<h3>Advanced: Fragment-Based Virtual Screening</h3>
+
+<pre><code class="language-python"># Build fragment library from known actives
+active_fragments = set()
+for active_mol in active_compounds:
+    frags = dm.fragment.brics(active_mol)
+    active_fragments.update(frags)
+
+# Screen compounds for presence of active fragments
+def score_by_fragments(mol, fragment_set):
+    mol_frags = dm.fragment.brics(mol)
+    overlap = mol_frags.intersection(fragment_set)
+    return len(overlap) / len(mol_frags)
+
+# Score screening library
+scores = [score_by_fragments(mol, active_fragments) for mol in screening_lib]</code></pre>
+
+<h3>Key Concepts</h3>
+
+<ul><li><strong>Attachment Points</strong>: Marked with [1<em>], [2</em>], etc. in fragment SMILES</li>
+<li><strong>Retrosynthetic</strong>: Fragmentation mimics synthetic disconnections</li>
+<li><strong>Chemically Meaningful</strong>: Breaks occur at typical synthetic bonds</li>
+<li><strong>Recombination</strong>: Fragments can theoretically be recombined into valid molecules</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Io Module</h3>
+  <h1>Datamol I/O Module Reference</h1>
+
+<p>The <code>datamol.io</code> module provides comprehensive file handling for molecular data across multiple formats.</p>
+
+<h2>Reading Molecular Files</h2>
+
+<h3><code>dm.read_sdf(filename, sanitize=True, remove_hs=True, as_df=True, mol_column='mol', ...)</code></h3>
+<p>Read Structure-Data File (SDF) format.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul><p>  - <code>filename</code>: Path to SDF file (supports local and remote paths via fsspec)</p>
+<p>  - <code>sanitize</code>: Apply sanitization to molecules</p>
+<p>  - <code>remove_hs</code>: Remove explicit hydrogens</p>
+<p>  - <code>as_df</code>: Return as DataFrame (True) or list of molecules (False)</p>
+<p>  - <code>mol_column</code>: Name of molecule column in DataFrame</p>
+<p>  - <code>n_jobs</code>: Enable parallel processing</p>
+<ul><li><strong>Returns</strong>: DataFrame or list of molecules</li>
+<li><strong>Example</strong>: <code>df = dm.read_sdf("compounds.sdf")</code></li>
+</ul>
+<h3><code>dm.read_smi(filename, smiles_column='smiles', mol_column='mol', as_df=True, ...)</code></h3>
+<p>Read SMILES file (space-delimited by default).</p>
+<ul><li><strong>Common format</strong>: SMILES followed by molecule ID/name</li>
+<li><strong>Example</strong>: <code>df = dm.read_smi("molecules.smi")</code></li>
+</ul>
+<h3><code>dm.read_csv(filename, smiles_column='smiles', mol_column=None, ...)</code></h3>
+<p>Read CSV file with optional automatic SMILES-to-molecule conversion.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul><p>  - <code>smiles_column</code>: Column containing SMILES strings</p>
+<p>  - <code>mol_column</code>: If specified, creates molecule objects from SMILES column</p>
+<ul><li><strong>Example</strong>: <code>df = dm.read_csv("data.csv", smiles_column="SMILES", mol_column="mol")</code></li>
+</ul>
+<h3><code>dm.read_excel(filename, sheet_name=0, smiles_column='smiles', mol_column=None, ...)</code></h3>
+<p>Read Excel files with molecule handling.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul><p>  - <code>sheet_name</code>: Sheet to read (index or name)</p>
+<p>  - Other parameters similar to <code>read_csv</code></p>
+<ul><li><strong>Example</strong>: <code>df = dm.read_excel("compounds.xlsx", sheet_name="Sheet1")</code></li>
+</ul>
+<h3><code>dm.read_molblock(molblock, sanitize=True, remove_hs=True)</code></h3>
+<p>Parse MOL block string (molecular structure text representation).</p>
+
+<h3><code>dm.read_mol2file(filename, sanitize=True, remove_hs=True, cleanupSubstructures=True)</code></h3>
+<p>Read Mol2 format files.</p>
+
+<h3><code>dm.read_pdbfile(filename, sanitize=True, remove_hs=True, proximityBonding=True)</code></h3>
+<p>Read Protein Data Bank (PDB) format files.</p>
+
+<h3><code>dm.read_pdbblock(pdbblock, sanitize=True, remove_hs=True, proximityBonding=True)</code></h3>
+<p>Parse PDB block string.</p>
+
+<h3><code>dm.open_df(filename, ...)</code></h3>
+<p>Universal DataFrame reader - automatically detects format.</p>
+<ul><li><strong>Supported formats</strong>: CSV, Excel, Parquet, JSON, SDF</li>
+<li><strong>Example</strong>: <code>df = dm.open_df("data.csv")</code> or <code>df = dm.open_df("molecules.sdf")</code></li>
+</ul>
+<h2>Writing Molecular Files</h2>
+
+<h3><code>dm.to_sdf(mols, filename, mol_column=None, ...)</code></h3>
+<p>Write molecules to SDF file.</p>
+<ul><li><strong>Input types</strong>:</li>
+</ul><p>  - List of molecules</p>
+<p>  - DataFrame with molecule column</p>
+<p>  - Sequence of molecules</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul><p>  - <code>mol_column</code>: Column name if input is DataFrame</p>
+<ul><li><strong>Example</strong>:</li>
+</ul><p>  <code>`</code>python</p>
+<p>  dm.to_sdf(mols, "output.sdf")</p>
+<p>  # or from DataFrame</p>
+<p>  dm.to_sdf(df, "output.sdf", mol_column="mol")</p>
+<p>  <code>`</code></p>
+
+<h3><code>dm.to_smi(mols, filename, mol_column=None, ...)</code></h3>
+<p>Write molecules to SMILES file with optional validation.</p>
+<ul><li><strong>Format</strong>: SMILES strings with optional molecule names/IDs</li>
+</ul>
+<h3><code>dm.to_xlsx(df, filename, mol_columns=None, ...)</code></h3>
+<p>Export DataFrame to Excel with rendered molecular images.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul><p>  - <code>mol_columns</code>: Columns containing molecules to render as images</p>
+<ul><li><strong>Special feature</strong>: Automatically renders molecules as images in Excel cells</li>
+<li><strong>Example</strong>: <code>dm.to_xlsx(df, "molecules.xlsx", mol_columns=["mol"])</code></li>
+</ul>
+<h3><code>dm.to_molblock(mol, ...)</code></h3>
+<p>Convert molecule to MOL block string.</p>
+
+<h3><code>dm.to_pdbblock(mol, ...)</code></h3>
+<p>Convert molecule to PDB block string.</p>
+
+<h3><code>dm.save_df(df, filename, ...)</code></h3>
+<p>Save DataFrame in multiple formats (CSV, Excel, Parquet, JSON).</p>
+
+<h2>Remote File Support</h2>
+
+<p>All I/O functions support remote file paths through fsspec integration:</p>
+<ul><li><strong>Supported protocols</strong>: S3 (AWS), GCS (Google Cloud), Azure, HTTP/HTTPS</li>
+<li><strong>Example</strong>:</li>
+</ul><p>  <code>`</code>python</p>
+<p>  dm.read_sdf("s3://bucket/compounds.sdf")</p>
+<p>  dm.read_csv("https://example.com/data.csv")</p>
+<p>  <code>`</code></p>
+
+<h2>Key Parameters Across Functions</h2>
+
+<ul><li><strong><code>sanitize</code></strong>: Apply molecule sanitization (default: True)</li>
+<li><strong><code>remove_hs</code></strong>: Remove explicit hydrogens (default: True)</li>
+<li><strong><code>as_df</code></strong>: Return DataFrame vs list (default: True for most functions)</li>
+<li><strong><code>n_jobs</code></strong>: Enable parallel processing (None = all cores, 1 = sequential)</li>
+<li><strong><code>mol_column</code></strong>: Name of molecule column in DataFrames</li>
+<li><strong><code>smiles_column</code></strong>: Name of SMILES column in DataFrames</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Reactions Data</h3>
+  <h1>Datamol Reactions and Data Modules Reference</h1>
+
+<h2>Reactions Module (<code>datamol.reactions</code>)</h2>
+
+<p>The reactions module enables programmatic application of chemical transformations using SMARTS reaction patterns.</p>
+
+<h3>Applying Chemical Reactions</h3>
+
+<h4><code>dm.reactions.apply_reaction(rxn, reactants, as_smiles=False, sanitize=True, single_product_group=True, rm_attach=True, product_index=0)</code></h4>
+<p>Apply a chemical reaction to reactant molecules.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul><p>  - <code>rxn</code>: Reaction object (from SMARTS pattern)</p>
+<p>  - <code>reactants</code>: Tuple of reactant molecules</p>
+<p>  - <code>as_smiles</code>: Return SMILES strings (True) or molecule objects (False)</p>
+<p>  - <code>sanitize</code>: Sanitize product molecules</p>
+<p>  - <code>single_product_group</code>: Return single product (True) or all product groups (False)</p>
+<p>  - <code>rm_attach</code>: Remove attachment point markers</p>
+<p>  - <code>product_index</code>: Which product to return from reaction</p>
+<ul><li><strong>Returns</strong>: Product molecule(s) or SMILES</li>
+<li><strong>Example</strong>:</li>
+</ul><p>  <code>`</code>python</p>
+<p>  from rdkit import Chem</p>
+
+<p>  # Define reaction: alcohol + carboxylic acid → ester</p>
+<p>  rxn = Chem.rdChemReactions.ReactionFromSmarts(</p>
+<p>      '<a href="=[O:4]">C:1][OH:2].[C:3</a><a href="=[O:4]">OH:5]>>[C:1][O:2][C:3</a>'</p>
+<p>  )</p>
+
+<p>  # Apply to reactants</p>
+<p>  alcohol = dm.to_mol("CCO")</p>
+<p>  acid = dm.to_mol("CC(=O)O")</p>
+<p>  product = dm.reactions.apply_reaction(rxn, (alcohol, acid))</p>
+<p>  <code>`</code></p>
+
+<h3>Creating Reactions</h3>
+
+<p>Reactions are typically created from SMARTS patterns using RDKit:</p>
+<pre><code class="language-python">from rdkit.Chem import rdChemReactions
+
+# Reaction pattern: [reactant1].[reactant2]&gt;&gt;[product]
+rxn = rdChemReactions.ReactionFromSmarts(
+    '[1*][*:1].[1*][*:2]&gt;&gt;[*:1][*:2]'
+)</code></pre>
+
+<h3>Validation Functions</h3>
+
+<p>The module includes functions to:</p>
+<ul><li><strong>Check if molecule is reactant</strong>: Verify if molecule matches reactant pattern</li>
+<li><strong>Validate reaction</strong>: Check if reaction is synthetically reasonable</li>
+<li><strong>Process reaction files</strong>: Load reactions from files or databases</li>
+</ul>
+<h3>Common Reaction Patterns</h3>
+
+<p><strong>Amide formation</strong>:</p>
+<pre><code class="language-python"># Amine + carboxylic acid → amide
+amide_rxn = rdChemReactions.ReactionFromSmarts(
+    '[N:1].[C:2](=[O:3])[OH]&gt;&gt;[N:1][C:2](=[O:3])'
+)</code></pre>
+
+<p><strong>Suzuki coupling</strong>:</p>
+<pre><code class="language-python"># Aryl halide + boronic acid → biaryl
+suzuki_rxn = rdChemReactions.ReactionFromSmarts(
+    '[c:1][Br].[c:2][B]([OH])[OH]&gt;&gt;[c:1][c:2]'
+)</code></pre>
+
+<p><strong>Functional group transformations</strong>:</p>
+<pre><code class="language-python"># Alcohol → ester
+esterification = rdChemReactions.ReactionFromSmarts(
+    '[C:1][OH:2].[C:3](=[O:4])[Cl]&gt;&gt;[C:1][O:2][C:3](=[O:4])'
+)</code></pre>
+
+<h3>Workflow Example</h3>
+
+<pre><code class="language-python">import datamol as dm
+from rdkit.Chem import rdChemReactions
+
+# 1. Define reaction
+rxn_smarts = '[C:1](=[O:2])[OH:3]&gt;&gt;[C:1](=[O:2])[Cl:3]'  # Acid → acid chloride
+rxn = rdChemReactions.ReactionFromSmarts(rxn_smarts)
+
+# 2. Apply to molecule library
+acids = [dm.to_mol(smi) for smi in acid_smiles_list]
+acid_chlorides = []
+
+for acid in acids:
+    try:
+        product = dm.reactions.apply_reaction(
+            rxn,
+            (acid,),  # Single reactant as tuple
+            sanitize=True
+        )
+        acid_chlorides.append(product)
+    except Exception as e:
+        print(f"Reaction failed: {e}")
+
+# 3. Validate products
+valid_products = [p for p in acid_chlorides if p is not None]</code></pre>
+
+<h3>Key Concepts</h3>
+
+<ul><li><strong>SMARTS</strong>: SMiles ARbitrary Target Specification - pattern language for reactions</li>
+<li><strong>Atom Mapping</strong>: Numbers like [C:1] preserve atom identity through reaction</li>
+<li><strong>Attachment Points</strong>: [1*] represents generic connection points</li>
+<li><strong>Reaction Validation</strong>: Not all SMARTS reactions are chemically reasonable</li>
+</ul>
+<hr>
+
+<h2>Data Module (<code>datamol.data</code>)</h2>
+
+<p>The data module provides convenient access to curated molecular datasets for testing and learning.</p>
+
+<h3>Available Datasets</h3>
+
+<h4><code>dm.data.cdk2(as_df=True, mol_column='mol')</code></h4>
+<p>RDKit CDK2 dataset - kinase inhibitor data.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul><p>  - <code>as_df</code>: Return as DataFrame (True) or list of molecules (False)</p>
+<p>  - <code>mol_column</code>: Name for molecule column</p>
+<ul><li><strong>Returns</strong>: Dataset with molecular structures and activity data</li>
+<li><strong>Use case</strong>: Small dataset for algorithm testing</li>
+<li><strong>Example</strong>:</li>
+</ul><p>  <code>`</code>python</p>
+<p>  cdk2_df = dm.data.cdk2(as_df=True)</p>
+<p>  print(cdk2_df.shape)</p>
+<p>  print(cdk2_df.columns)</p>
+<p>  <code>`</code></p>
+
+<h4><code>dm.data.freesolv()</code></h4>
+<p>FreeSolv dataset - experimental and calculated hydration free energies.</p>
+<ul><li><strong>Contents</strong>: 642 molecules with:</li>
+</ul><p>  - IUPAC names</p>
+<p>  - SMILES strings</p>
+<p>  - Experimental hydration free energy values</p>
+<p>  - Calculated values</p>
+<ul><li><strong>Warning</strong>: "Only meant to be used as a toy dataset for pedagogic and testing purposes"</li>
+<li><strong>Not suitable for</strong>: Benchmarking or production model training</li>
+<li><strong>Example</strong>:</li>
+</ul><p>  <code>`</code>python</p>
+<p>  freesolv_df = dm.data.freesolv()</p>
+<p>  # Columns: iupac, smiles, expt (kcal/mol), calc (kcal/mol)</p>
+<p>  <code>`</code></p>
+
+<h4><code>dm.data.solubility(as_df=True, mol_column='mol')</code></h4>
+<p>RDKit solubility dataset with train/test splits.</p>
+<ul><li><strong>Contents</strong>: Aqueous solubility data with pre-defined splits</li>
+<li><strong>Columns</strong>: Includes 'split' column with 'train' or 'test' values</li>
+<li><strong>Use case</strong>: Testing ML workflows with proper train/test separation</li>
+<li><strong>Example</strong>:</li>
+</ul><p>  <code>`</code>python</p>
+<p>  sol_df = dm.data.solubility(as_df=True)</p>
+
+<p>  # Split into train/test</p>
+<p>  train_df = sol_df[sol_df['split'] == 'train']</p>
+<p>  test_df = sol_df[sol_df['split'] == 'test']</p>
+
+<p>  # Use for model development</p>
+<p>  X_train = dm.to_fp(train_df[mol_column])</p>
+<p>  y_train = train_df['solubility']</p>
+<p>  <code>`</code></p>
+
+<h3>Usage Guidelines</h3>
+
+<p><strong>For testing and tutorials</strong>:</p>
+<pre><code class="language-python"># Quick dataset for testing code
+df = dm.data.cdk2()
+mols = df['mol'].tolist()
+
+# Test descriptor calculation
+descriptors_df = dm.descriptors.batch_compute_many_descriptors(mols)
+
+# Test clustering
+clusters = dm.cluster_mols(mols, cutoff=0.3)</code></pre>
+
+<p><strong>For learning workflows</strong>:</p>
+<pre><code class="language-python"># Complete ML pipeline example
+sol_df = dm.data.solubility()
+
+# Preprocessing
+train = sol_df[sol_df['split'] == 'train']
+test = sol_df[sol_df['split'] == 'test']
+
+# Featurization
+X_train = dm.to_fp(train['mol'])
+X_test = dm.to_fp(test['mol'])
+
+# Model training (example)
+from sklearn.ensemble import RandomForestRegressor
+model = RandomForestRegressor()
+model.fit(X_train, train['solubility'])
+predictions = model.predict(X_test)</code></pre>
+
+<h3>Important Notes</h3>
+
+<ul><li><strong>Toy Datasets</strong>: Designed for pedagogical purposes, not production use</li>
+<li><strong>Small Size</strong>: Limited number of compounds suitable for quick tests</li>
+<li><strong>Pre-processed</strong>: Data already cleaned and formatted</li>
+<li><strong>Citations</strong>: Check dataset documentation for proper attribution if publishing</li>
+</ul>
+<h3>Best Practices</h3>
+
+<ul><li><strong>Use for development only</strong>: Don't draw scientific conclusions from toy datasets</li>
+<li><strong>Validate on real data</strong>: Always test production code on actual project data</li>
+<li><strong>Proper attribution</strong>: Cite original data sources if using in publications</li>
+<li><strong>Understand limitations</strong>: Know the scope and quality of each dataset</li>
+</ul>
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

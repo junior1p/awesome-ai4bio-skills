@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TileDB-VCF — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="active">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / TileDB-VCF</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>TileDB-VCF</h1>
+    <p class="description">Efficient storage and retrieval of genomic variant data using TileDB. Scalable VCF/BCF ingestion, incremental sample addition, compressed storage, parallel queries, and export capabilities for populat</p>
+    <h1>TileDB-VCF</h1>
+
+<h2>Overview</h2>
+
+<p>TileDB-VCF is a high-performance C++ library with Python and CLI interfaces for efficient storage and retrieval of genomic variant-call data. Built on TileDB's sparse array technology, it enables scalable ingestion of VCF/BCF files, incremental sample addition without expensive merging operations, and efficient parallel queries of variant data stored locally or in the cloud.</p>
+
+<h2>When to Use This Skill</h2>
+
+<p>This skill should be used when:</p>
+<ul><li>Learning TileDB-VCF concepts and workflows</li>
+<li>Prototyping genomics analyses and pipelines</li>
+<li>Working with small-to-medium datasets (< 1000 samples)</li>
+<li>Need incremental addition of new samples to existing datasets</li>
+<li>Require efficient querying of specific genomic regions across many samples</li>
+<li>Working with cloud-stored variant data (S3, Azure, GCS)</li>
+<li>Need to export subsets of large VCF datasets</li>
+<li>Building variant databases for cohort studies</li>
+<li>Educational projects and method development</li>
+<li>Performance is critical for variant data operations</li>
+</ul>
+<h2>Quick Start</h2>
+
+<h3>Installation</h3>
+
+<p><strong>Preferred Method: Conda/Mamba</strong></p>
+<pre><code class="language-bash"># Enter the following two lines if you are on a M1 Mac
+CONDA_SUBDIR=osx-64
+conda config --env --set subdir osx-64
+
+# Create the conda environment
+conda create -n tiledb-vcf "python&lt;3.10"
+conda activate tiledb-vcf
+
+# Mamba is a faster and more reliable alternative to conda
+conda install -c conda-forge mamba
+
+# Install TileDB-Py and TileDB-VCF, align with other useful libraries
+mamba install -y -c conda-forge -c bioconda -c tiledb tiledb-py tiledbvcf-py pandas pyarrow numpy</code></pre>
+
+<p><strong>Alternative: Docker Images</strong></p>
+<pre><code class="language-bash">docker pull tiledb/tiledbvcf-py     # Python interface
+docker pull tiledb/tiledbvcf-cli    # Command-line interface</code></pre>
+
+<h3>Basic Examples</h3>
+
+<p><strong>Create and populate a dataset:</strong></p>
+<pre><code class="language-python">import tiledbvcf
+
+# Create a new dataset
+ds = tiledbvcf.Dataset(uri="my_dataset", mode="w",
+                      cfg=tiledbvcf.ReadConfig(memory_budget=1024))
+
+# Ingest VCF files (must be single-sample with indexes)
+# Requirements:
+# - VCFs must be single-sample (not multi-sample)
+# - Must have indexes: .csi (bcftools) or .tbi (tabix)
+ds.ingest_samples(["sample1.vcf.gz", "sample2.vcf.gz"])</code></pre>
+
+<p><strong>Query variant data:</strong></p>
+<pre><code class="language-python"># Open existing dataset for reading
+ds = tiledbvcf.Dataset(uri="my_dataset", mode="r")
+
+# Query specific regions and samples
+df = ds.read(
+    attrs=["sample_name", "pos_start", "pos_end", "alleles", "fmt_GT"],
+    regions=["chr1:1000000-2000000", "chr2:500000-1500000"],
+    samples=["sample1", "sample2", "sample3"]
+)
+print(df.head())</code></pre>
+
+<p><strong>Export to VCF:</strong></p>
+<pre><code class="language-python">import os
+
+# Export two VCF samples
+ds.export(
+    regions=["chr21:8220186-8405573"],
+    samples=["HG00101", "HG00097"],
+    output_format="v",
+    output_dir=os.path.expanduser("~"),
+)</code></pre>
+
+<h2>Core Capabilities</h2>
+
+<h3>1. Dataset Creation and Ingestion</h3>
+
+<p>Create TileDB-VCF datasets and incrementally ingest variant data from multiple VCF/BCF files. This is appropriate for building population genomics databases and cohort studies.</p>
+
+<p><strong>Requirements:</strong></p>
+<ul><li><strong>Single-sample VCFs only</strong>: Multi-sample VCFs are not supported</li>
+<li><strong>Index files required</strong>: VCF/BCF files must have indexes (.csi or .tbi)</li>
+</ul>
+<p><strong>Common operations:</strong></p>
+<ul><li>Create new datasets with optimized array schemas</li>
+<li>Ingest single or multiple VCF/BCF files in parallel</li>
+<li>Add new samples incrementally without re-processing existing data</li>
+<li>Configure memory usage and compression settings</li>
+<li>Handle various VCF formats and INFO/FORMAT fields</li>
+<li>Resume interrupted ingestion processes</li>
+<li>Validate data integrity during ingestion</li>
+</ul>
+
+<h3>2. Efficient Querying and Filtering</h3>
+
+<p>Query variant data with high performance across genomic regions, samples, and variant attributes. This is appropriate for association studies, variant discovery, and population analysis.</p>
+
+<p><strong>Common operations:</strong></p>
+<ul><li>Query specific genomic regions (single or multiple)</li>
+<li>Filter by sample names or sample groups</li>
+<li>Extract specific variant attributes (position, alleles, genotypes, quality)</li>
+<li>Access INFO and FORMAT fields efficiently</li>
+<li>Combine spatial and attribute-based filtering</li>
+<li>Stream large query results</li>
+<li>Perform aggregations across samples or regions</li>
+</ul>
+
+<h3>3. Data Export and Interoperability</h3>
+
+<p>Export data in various formats for downstream analysis or integration with other genomics tools. This is appropriate for sharing datasets, creating analysis subsets, or feeding other pipelines.</p>
+
+<p><strong>Common operations:</strong></p>
+<ul><li>Export to standard VCF/BCF formats</li>
+<li>Generate TSV files with selected fields</li>
+<li>Create sample/region-specific subsets</li>
+<li>Maintain data provenance and metadata</li>
+<li>Lossless data export preserving all annotations</li>
+<li>Compressed output formats</li>
+<li>Streaming exports for large datasets</li>
+</ul>
+
+<h3>4. Population Genomics Workflows</h3>
+
+<p>TileDB-VCF excels at large-scale population genomics analyses requiring efficient access to variant data across many samples and genomic regions.</p>
+
+<p><strong>Common workflows:</strong></p>
+<ul><li>Genome-wide association studies (GWAS) data preparation</li>
+<li>Rare variant burden testing</li>
+<li>Population stratification analysis</li>
+<li>Allele frequency calculations across populations</li>
+<li>Quality control across large cohorts</li>
+<li>Variant annotation and filtering</li>
+<li>Cross-population comparative analysis</li>
+</ul>
+
+<h2>Key Concepts</h2>
+
+<h3>Array Schema and Data Model</h3>
+
+<p><strong>TileDB-VCF Data Model:</strong></p>
+<ul><li>Variants stored as sparse arrays with genomic coordinates as dimensions</li>
+<li>Samples stored as attributes allowing efficient sample-specific queries</li>
+<li>INFO and FORMAT fields preserved with original data types</li>
+<li>Automatic compression and chunking for optimal storage</li>
+</ul>
+<p><strong>Schema Configuration:</strong></p>
+<pre><code class="language-python"># Custom schema with specific tile extents
+config = tiledbvcf.ReadConfig(
+    memory_budget=2048,  # MB
+    region_partition=(0, 3095677412),  # Full genome
+    sample_partition=(0, 10000)  # Up to 10k samples
+)</code></pre>
+
+<h3>Coordinate Systems and Regions</h3>
+
+<p><strong>Critical:</strong> TileDB-VCF uses <strong>1-based genomic coordinates</strong> following VCF standard:</p>
+<ul><li>Positions are 1-based (first base is position 1)</li>
+<li>Ranges are inclusive on both ends</li>
+<li>Region "chr1:1000-2000" includes positions 1000-2000 (1001 bases total)</li>
+</ul>
+<p><strong>Region specification formats:</strong></p>
+<pre><code class="language-python"># Single region
+regions = ["chr1:1000000-2000000"]
+
+# Multiple regions
+regions = ["chr1:1000000-2000000", "chr2:500000-1500000"]
+
+# Whole chromosome
+regions = ["chr1"]
+
+# BED-style (0-based, half-open converted internally)
+regions = ["chr1:999999-2000000"]  # Equivalent to 1-based chr1:1000000-2000000</code></pre>
+
+<h3>Memory Management</h3>
+
+<p><strong>Performance considerations:</strong></p>
+<ul><li><strong>Set appropriate memory budget</strong> based on available system memory</li>
+<li><strong>Use streaming queries</strong> for very large result sets</li>
+<li><strong>Partition large ingestions</strong> to avoid memory exhaustion</li>
+<li><strong>Configure tile cache</strong> for repeated region access</li>
+<li><strong>Use parallel ingestion</strong> for multiple files</li>
+<li><strong>Optimize region queries</strong> by combining nearby regions</li>
+</ul>
+<h3>Cloud Storage Integration</h3>
+
+<p>TileDB-VCF seamlessly works with cloud storage:</p>
+<pre><code class="language-python"># S3 dataset
+ds = tiledbvcf.Dataset(uri="s3://bucket/dataset", mode="r")
+
+# Azure Blob Storage
+ds = tiledbvcf.Dataset(uri="azure://container/dataset", mode="r")
+
+# Google Cloud Storage
+ds = tiledbvcf.Dataset(uri="gcs://bucket/dataset", mode="r")</code></pre>
+
+<h2>Common Pitfalls</h2>
+
+<ul><li><strong>Memory exhaustion during ingestion:</strong> Use appropriate memory budget and batch processing for large VCF files</li>
+<li><strong>Inefficient region queries:</strong> Combine nearby regions instead of many separate queries</li>
+<li><strong>Missing sample names:</strong> Ensure sample names in VCF headers match query sample specifications</li>
+<li><strong>Coordinate system confusion:</strong> Remember TileDB-VCF uses 1-based coordinates like VCF standard</li>
+<li><strong>Large result sets:</strong> Use streaming or pagination for queries returning millions of variants</li>
+<li><strong>Cloud permissions:</strong> Ensure proper authentication for cloud storage access</li>
+<li><strong>Concurrent access:</strong> Multiple writers to the same dataset can cause corruption—use appropriate locking</li>
+</ul>
+<h2>CLI Usage</h2>
+
+<p>TileDB-VCF provides a command-line interface with the following subcommands:</p>
+
+<p><strong>Available Subcommands:</strong></p>
+<ul><li><code>create</code> - Creates an empty TileDB-VCF dataset</li>
+<li><code>store</code> - Ingests samples into a TileDB-VCF dataset</li>
+<li><code>export</code> - Exports data from a TileDB-VCF dataset</li>
+<li><code>list</code> - Lists all sample names present in a TileDB-VCF dataset</li>
+<li><code>stat</code> - Prints high-level statistics about a TileDB-VCF dataset</li>
+<li><code>utils</code> - Utils for working with a TileDB-VCF dataset</li>
+<li><code>version</code> - Print the version information and exit</li>
+</ul>
+<pre><code class="language-bash"># Create empty dataset
+tiledbvcf create --uri my_dataset
+
+# Ingest samples (requires single-sample VCFs with indexes)
+tiledbvcf store --uri my_dataset --samples sample1.vcf.gz,sample2.vcf.gz
+
+# Export data
+tiledbvcf export --uri my_dataset \
+  --regions "chr1:1000000-2000000" \
+  --sample-names "sample1,sample2"
+
+# List all samples
+tiledbvcf list --uri my_dataset
+
+# Show dataset statistics
+tiledbvcf stat --uri my_dataset</code></pre>
+
+<h2>Advanced Features</h2>
+
+<h3>Allele Frequency Analysis</h3>
+<pre><code class="language-python"># Calculate allele frequencies
+af_df = tiledbvcf.read_allele_frequency(
+    uri="my_dataset",
+    regions=["chr1:1000000-2000000"],
+    samples=["sample1", "sample2", "sample3"]
+)</code></pre>
+
+<h3>Sample Quality Control</h3>
+<pre><code class="language-python"># Perform sample QC
+qc_results = tiledbvcf.sample_qc(
+    uri="my_dataset",
+    samples=["sample1", "sample2"]
+)</code></pre>
+
+<h3>Custom Configurations</h3>
+<pre><code class="language-python"># Advanced configuration
+config = tiledbvcf.ReadConfig(
+    memory_budget=4096,
+    tiledb_config={
+        "sm.tile_cache_size": "1000000000",
+        "vfs.s3.region": "us-east-1"
+    }
+)</code></pre>
+
+
+<h2>Resources</h2>
+
+<h2>Getting Help</h2>
+
+<h3>Open Source TileDB-VCF Resources</h3>
+
+<p><strong>Open Source Documentation:</strong></p>
+<ul><li>TileDB Academy: https://cloud.tiledb.com/academy/</li>
+<li>Population Genomics Guide: https://cloud.tiledb.com/academy/structure/life-sciences/population-genomics/</li>
+<li>TileDB-VCF GitHub: https://github.com/TileDB-Inc/TileDB-VCF</li>
+</ul>
+<h3>TileDB-Cloud Resources</h3>
+
+<p><strong>For Large-Scale/Production Genomics:</strong></p>
+<ul><li>TileDB-Cloud Platform: https://cloud.tiledb.com</li>
+<li>TileDB Academy (All Documentation): https://cloud.tiledb.com/academy/</li>
+</ul>
+<p><strong>Getting Started:</strong></p>
+<ul><li>Free account signup: https://cloud.tiledb.com</li>
+<li>Contact: sales@tiledb.com for enterprise needs</li>
+</ul>
+<h2>Scaling to TileDB-Cloud</h2>
+
+<p>When your genomics workloads outgrow single-node processing, TileDB-Cloud provides enterprise-scale capabilities for production genomics pipelines.</p>
+
+<p><strong>Note</strong>: This section covers TileDB-Cloud capabilities based on available documentation. For complete API details and current functionality, consult the official TileDB-Cloud documentation and API reference.</p>
+
+<h3>Setting Up TileDB-Cloud</h3>
+
+<p><strong>1. Create Account and Get API Token</strong></p>
+<pre><code class="language-bash"># Sign up at https://cloud.tiledb.com
+# Generate API token in your account settings</code></pre>
+
+<p><strong>2. Install TileDB-Cloud Python Client</strong></p>
+<pre><code class="language-bash"># Base installation
+pip install tiledb-cloud
+
+# With genomics-specific functionality
+pip install tiledb-cloud[life-sciences]</code></pre>
+
+<p><strong>3. Configure Authentication</strong></p>
+<pre><code class="language-bash"># Set environment variable with your API token
+export TILEDB_REST_TOKEN="your_api_token"</code></pre>
+
+<pre><code class="language-python">import tiledb.cloud
+
+# Authentication is automatic via TILEDB_REST_TOKEN
+# No explicit login required in code</code></pre>
+
+<h3>Migrating from Open Source to TileDB-Cloud</h3>
+
+<p><strong>Large-Scale Ingestion</strong></p>
+<pre><code class="language-python"># TileDB-Cloud: Distributed VCF ingestion
+import tiledb.cloud.vcf
+
+# Use specialized VCF ingestion module
+# Note: Exact API requires TileDB-Cloud documentation
+# This represents the available functionality structure
+tiledb.cloud.vcf.ingestion.ingest_vcf_dataset(
+    source="s3://my-bucket/vcf-files/",
+    output="tiledb://my-namespace/large-dataset",
+    namespace="my-namespace",
+    acn="my-s3-credentials",
+    ingest_resources={"cpu": "16", "memory": "64Gi"}
+)</code></pre>
+
+<p><strong>Distributed Query Processing</strong></p>
+<pre><code class="language-python"># TileDB-Cloud: VCF querying across distributed storage
+import tiledb.cloud.vcf
+import tiledbvcf
+
+# Define the dataset URI
+dataset_uri = "tiledb://TileDB-Inc/gvcf-1kg-dragen-v376"
+
+# Get all samples from the dataset
+ds = tiledbvcf.Dataset(dataset_uri, tiledb_config=cfg)
+samples = ds.samples()
+
+# Define attributes and ranges to query on
+attrs = ["sample_name", "fmt_GT", "fmt_AD", "fmt_DP"]
+regions = ["chr13:32396898-32397044", "chr13:32398162-32400268"]
+
+# Perform the read, which is executed in a distributed fashion
+df = tiledb.cloud.vcf.read(
+    dataset_uri=dataset_uri,
+    regions=regions,
+    samples=samples,
+    attrs=attrs,
+    namespace="my-namespace",  # specifies which account to charge
+)
+df.to_pandas()</code></pre>
+
+<h3>Enterprise Features</h3>
+
+<p><strong>Data Sharing and Collaboration</strong></p>
+<pre><code class="language-python"># TileDB-Cloud provides enterprise data sharing capabilities
+# through namespace-based permissions and group management
+
+# Access shared datasets via TileDB-Cloud URIs
+dataset_uri = "tiledb://shared-namespace/population-study"
+
+# Collaborate through shared notebooks and compute resources
+# (Specific API requires TileDB-Cloud documentation)</code></pre>
+
+<p><strong>Cost Optimization</strong></p>
+<ul><li><strong>Serverless Compute</strong>: Pay only for actual compute time</li>
+<li><strong>Auto-scaling</strong>: Automatically scale up/down based on workload</li>
+<li><strong>Spot Instances</strong>: Use cost-optimized compute for batch jobs</li>
+<li><strong>Data Tiering</strong>: Automatic hot/cold storage management</li>
+</ul>
+<p><strong>Security and Compliance</strong></p>
+<ul><li><strong>End-to-end Encryption</strong>: Data encrypted in transit and at rest</li>
+<li><strong>Access Controls</strong>: Fine-grained permissions and audit logs</li>
+<li><strong>HIPAA/SOC2 Compliance</strong>: Enterprise security standards</li>
+<li><strong>VPC Support</strong>: Deploy in private cloud environments</li>
+</ul>
+<h3>When to Migrate Checklist</h3>
+
+<p>✅ <strong>Migrate to TileDB-Cloud if you have:</strong></p>
+<ul><li>[ ] Datasets > 1000 samples</li>
+<li>[ ] Need to process > 100GB of VCF data</li>
+<li>[ ] Require distributed computing</li>
+<li>[ ] Multiple team members need access</li>
+<li>[ ] Need enterprise security/compliance</li>
+<li>[ ] Want cost-optimized serverless compute</li>
+<li>[ ] Require 24/7 production uptime</li>
+</ul>
+<h3>Getting Started with TileDB-Cloud</h3>
+
+<ul><li><strong>Start Free</strong>: TileDB-Cloud offers free tier for evaluation</li>
+<li><strong>Migration Support</strong>: TileDB team provides migration assistance</li>
+<li><strong>Training</strong>: Access to genomics-specific tutorials and examples</li>
+<li><strong>Professional Services</strong>: Custom deployment and optimization</li>
+</ul>
+<p><strong>Next Steps:</strong></p>
+<ul><li>Visit https://cloud.tiledb.com to create account</li>
+<li>Review documentation at https://cloud.tiledb.com/academy/</li>
+<li>Contact sales@tiledb.com for enterprise needs</li></ul>
+    
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

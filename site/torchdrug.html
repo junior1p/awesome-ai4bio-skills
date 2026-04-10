@@ -1,0 +1,3685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TorchDrug — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="active">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / TorchDrug</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>TorchDrug</h1>
+    <p class="description">PyTorch-native graph neural networks for molecules and proteins. Use when building custom GNN architectures for drug discovery, protein modeling, or knowledge graph reasoning. Best for custom model de</p>
+    <h1>TorchDrug</h1>
+
+<h2>Overview</h2>
+
+<p>TorchDrug is a comprehensive PyTorch-based machine learning toolbox for drug discovery and molecular science. Apply graph neural networks, pre-trained models, and task definitions to molecules, proteins, and biological knowledge graphs, including molecular property prediction, protein modeling, knowledge graph reasoning, molecular generation, retrosynthesis planning, with 40+ curated datasets and 20+ model architectures.</p>
+
+<h2>When to Use This Skill</h2>
+
+<p>This skill should be used when working with:</p>
+
+<p><strong>Data Types:</strong></p>
+<ul><li>SMILES strings or molecular structures</li>
+<li>Protein sequences or 3D structures (PDB files)</li>
+<li>Chemical reactions and retrosynthesis</li>
+<li>Biomedical knowledge graphs</li>
+<li>Drug discovery datasets</li>
+</ul>
+<p><strong>Tasks:</strong></p>
+<ul><li>Predicting molecular properties (solubility, toxicity, activity)</li>
+<li>Protein function or structure prediction</li>
+<li>Drug-target binding prediction</li>
+<li>Generating new molecular structures</li>
+<li>Planning chemical synthesis routes</li>
+<li>Link prediction in biomedical knowledge bases</li>
+<li>Training graph neural networks on scientific data</li>
+</ul>
+<p><strong>Libraries and Integration:</strong></p>
+<ul><li>TorchDrug is the primary library</li>
+<li>Often used with RDKit for cheminformatics</li>
+<li>Compatible with PyTorch and PyTorch Lightning</li>
+<li>Integrates with AlphaFold and ESM for proteins</li>
+</ul>
+<h2>Getting Started</h2>
+
+<h3>Installation</h3>
+
+<pre><code class="language-bash">uv pip install torchdrug
+# Or with optional dependencies
+uv pip install torchdrug[full]</code></pre>
+
+<h3>Quick Example</h3>
+
+<pre><code class="language-python">from torchdrug import datasets, models, tasks
+from torch.utils.data import DataLoader
+
+# Load molecular dataset
+dataset = datasets.BBBP("~/molecule-datasets/")
+train_set, valid_set, test_set = dataset.split()
+
+# Define GNN model
+model = models.GIN(
+    input_dim=dataset.node_feature_dim,
+    hidden_dims=[256, 256, 256],
+    edge_input_dim=dataset.edge_feature_dim,
+    batch_norm=True,
+    readout="mean"
+)
+
+# Create property prediction task
+task = tasks.PropertyPrediction(
+    model,
+    task=dataset.tasks,
+    criterion="bce",
+    metric=["auroc", "auprc"]
+)
+
+# Train with PyTorch
+optimizer = torch.optim.Adam(task.parameters(), lr=1e-3)
+train_loader = DataLoader(train_set, batch_size=32, shuffle=True)
+
+for epoch in range(100):
+    for batch in train_loader:
+        loss = task(batch)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()</code></pre>
+
+<h2>Core Capabilities</h2>
+
+<h3>1. Molecular Property Prediction</h3>
+
+<p>Predict chemical, physical, and biological properties of molecules from structure.</p>
+
+<p><strong>Use Cases:</strong></p>
+<ul><li>Drug-likeness and ADMET properties</li>
+<li>Toxicity screening</li>
+<li>Quantum chemistry properties</li>
+<li>Binding affinity prediction</li>
+</ul>
+<p><strong>Key Components:</strong></p>
+<ul><li>20+ molecular datasets (BBBP, HIV, Tox21, QM9, etc.)</li>
+<li>GNN models (GIN, GAT, SchNet)</li>
+<li>PropertyPrediction and MultipleBinaryClassification tasks</li>
+</ul>
+<p><strong>Reference:</strong> See <code>references/molecular_property_prediction.md</code> for:</p>
+<ul><li>Complete dataset catalog</li>
+<li>Model selection guide</li>
+<li>Training workflows and best practices</li>
+<li>Feature engineering details</li>
+</ul>
+<h3>2. Protein Modeling</h3>
+
+<p>Work with protein sequences, structures, and properties.</p>
+
+<p><strong>Use Cases:</strong></p>
+<ul><li>Enzyme function prediction</li>
+<li>Protein stability and solubility</li>
+<li>Subcellular localization</li>
+<li>Protein-protein interactions</li>
+<li>Structure prediction</li>
+</ul>
+<p><strong>Key Components:</strong></p>
+<ul><li>15+ protein datasets (EnzymeCommission, GeneOntology, PDBBind, etc.)</li>
+<li>Sequence models (ESM, ProteinBERT, ProteinLSTM)</li>
+<li>Structure models (GearNet, SchNet)</li>
+<li>Multiple task types for different prediction levels</li>
+</ul>
+<p><strong>Reference:</strong> See <code>references/protein_modeling.md</code> for:</p>
+<ul><li>Protein-specific datasets</li>
+<li>Sequence vs structure models</li>
+<li>Pre-training strategies</li>
+<li>Integration with AlphaFold and ESM</li>
+</ul>
+<h3>3. Knowledge Graph Reasoning</h3>
+
+<p>Predict missing links and relationships in biological knowledge graphs.</p>
+
+<p><strong>Use Cases:</strong></p>
+<ul><li>Drug repurposing</li>
+<li>Disease mechanism discovery</li>
+<li>Gene-disease associations</li>
+<li>Multi-hop biomedical reasoning</li>
+</ul>
+<p><strong>Key Components:</strong></p>
+<ul><li>General KGs (FB15k, WN18) and biomedical (Hetionet)</li>
+<li>Embedding models (TransE, RotatE, ComplEx)</li>
+<li>KnowledgeGraphCompletion task</li>
+</ul>
+<p><strong>Reference:</strong> See <code>references/knowledge_graphs.md</code> for:</p>
+<ul><li>Knowledge graph datasets (including Hetionet with 45k biomedical entities)</li>
+<li>Embedding model comparison</li>
+<li>Evaluation metrics and protocols</li>
+<li>Biomedical applications</li>
+</ul>
+<h3>4. Molecular Generation</h3>
+
+<p>Generate novel molecular structures with desired properties.</p>
+
+<p><strong>Use Cases:</strong></p>
+<ul><li>De novo drug design</li>
+<li>Lead optimization</li>
+<li>Chemical space exploration</li>
+<li>Property-guided generation</li>
+</ul>
+<p><strong>Key Components:</strong></p>
+<ul><li>Autoregressive generation</li>
+<li>GCPN (policy-based generation)</li>
+<li>GraphAutoregressiveFlow</li>
+<li>Property optimization workflows</li>
+</ul>
+<p><strong>Reference:</strong> See <code>references/molecular_generation.md</code> for:</p>
+<ul><li>Generation strategies (unconditional, conditional, scaffold-based)</li>
+<li>Multi-objective optimization</li>
+<li>Validation and filtering</li>
+<li>Integration with property prediction</li>
+</ul>
+<h3>5. Retrosynthesis</h3>
+
+<p>Predict synthetic routes from target molecules to starting materials.</p>
+
+<p><strong>Use Cases:</strong></p>
+<ul><li>Synthesis planning</li>
+<li>Route optimization</li>
+<li>Synthetic accessibility assessment</li>
+<li>Multi-step planning</li>
+</ul>
+<p><strong>Key Components:</strong></p>
+<ul><li>USPTO-50k reaction dataset</li>
+<li>CenterIdentification (reaction center prediction)</li>
+<li>SynthonCompletion (reactant prediction)</li>
+<li>End-to-end Retrosynthesis pipeline</li>
+</ul>
+<p><strong>Reference:</strong> See <code>references/retrosynthesis.md</code> for:</p>
+<ul><li>Task decomposition (center ID → synthon completion)</li>
+<li>Multi-step synthesis planning</li>
+<li>Commercial availability checking</li>
+<li>Integration with other retrosynthesis tools</li>
+</ul>
+<h3>6. Graph Neural Network Models</h3>
+
+<p>Comprehensive catalog of GNN architectures for different data types and tasks.</p>
+
+<p><strong>Available Models:</strong></p>
+<ul><li>General GNNs: GCN, GAT, GIN, RGCN, MPNN</li>
+<li>3D-aware: SchNet, GearNet</li>
+<li>Protein-specific: ESM, ProteinBERT, GearNet</li>
+<li>Knowledge graph: TransE, RotatE, ComplEx, SimplE</li>
+<li>Generative: GraphAutoregressiveFlow</li>
+</ul>
+<p><strong>Reference:</strong> See <code>references/models_architectures.md</code> for:</p>
+<ul><li>Detailed model descriptions</li>
+<li>Model selection guide by task and dataset</li>
+<li>Architecture comparisons</li>
+<li>Implementation tips</li>
+</ul>
+<h3>7. Datasets</h3>
+
+<p>40+ curated datasets spanning chemistry, biology, and knowledge graphs.</p>
+
+<p><strong>Categories:</strong></p>
+<ul><li>Molecular properties (drug discovery, quantum chemistry)</li>
+<li>Protein properties (function, structure, interactions)</li>
+<li>Knowledge graphs (general and biomedical)</li>
+<li>Retrosynthesis reactions</li>
+</ul>
+<p><strong>Reference:</strong> See <code>references/datasets.md</code> for:</p>
+<ul><li>Complete dataset catalog with sizes and tasks</li>
+<li>Dataset selection guide</li>
+<li>Loading and preprocessing</li>
+<li>Splitting strategies (random, scaffold)</li>
+</ul>
+<h2>Common Workflows</h2>
+
+<h3>Workflow 1: Molecular Property Prediction</h3>
+
+<p><strong>Scenario:</strong> Predict blood-brain barrier penetration for drug candidates.</p>
+
+<p><strong>Steps:</strong></p>
+<ul><li>Load dataset: <code>datasets.BBBP()</code></li>
+<li>Choose model: GIN for molecular graphs</li>
+<li>Define task: <code>PropertyPrediction</code> with binary classification</li>
+<li>Train with scaffold split for realistic evaluation</li>
+<li>Evaluate using AUROC and AUPRC</li>
+</ul>
+<p><strong>Navigation:</strong> <code>references/molecular_property_prediction.md</code> → Dataset selection → Model selection → Training</p>
+
+<h3>Workflow 2: Protein Function Prediction</h3>
+
+<p><strong>Scenario:</strong> Predict enzyme function from sequence.</p>
+
+<p><strong>Steps:</strong></p>
+<ul><li>Load dataset: <code>datasets.EnzymeCommission()</code></li>
+<li>Choose model: ESM (pre-trained) or GearNet (with structure)</li>
+<li>Define task: <code>PropertyPrediction</code> with multi-class classification</li>
+<li>Fine-tune pre-trained model or train from scratch</li>
+<li>Evaluate using accuracy and per-class metrics</li>
+</ul>
+<p><strong>Navigation:</strong> <code>references/protein_modeling.md</code> → Model selection (sequence vs structure) → Pre-training strategies</p>
+
+<h3>Workflow 3: Drug Repurposing via Knowledge Graphs</h3>
+
+<p><strong>Scenario:</strong> Find new disease treatments in Hetionet.</p>
+
+<p><strong>Steps:</strong></p>
+<ul><li>Load dataset: <code>datasets.Hetionet()</code></li>
+<li>Choose model: RotatE or ComplEx</li>
+<li>Define task: <code>KnowledgeGraphCompletion</code></li>
+<li>Train with negative sampling</li>
+<li>Query for "Compound-treats-Disease" predictions</li>
+<li>Filter by plausibility and mechanism</li>
+</ul>
+<p><strong>Navigation:</strong> <code>references/knowledge_graphs.md</code> → Hetionet dataset → Model selection → Biomedical applications</p>
+
+<h3>Workflow 4: De Novo Molecule Generation</h3>
+
+<p><strong>Scenario:</strong> Generate drug-like molecules optimized for target binding.</p>
+
+<p><strong>Steps:</strong></p>
+<ul><li>Train property predictor on activity data</li>
+<li>Choose generation approach: GCPN for RL-based optimization</li>
+<li>Define reward function combining affinity, drug-likeness, synthesizability</li>
+<li>Generate candidates with property constraints</li>
+<li>Validate chemistry and filter by drug-likeness</li>
+<li>Rank by multi-objective scoring</li>
+</ul>
+<p><strong>Navigation:</strong> <code>references/molecular_generation.md</code> → Conditional generation → Multi-objective optimization</p>
+
+<h3>Workflow 5: Retrosynthesis Planning</h3>
+
+<p><strong>Scenario:</strong> Plan synthesis route for target molecule.</p>
+
+<p><strong>Steps:</strong></p>
+<ul><li>Load dataset: <code>datasets.USPTO50k()</code></li>
+<li>Train center identification model (RGCN)</li>
+<li>Train synthon completion model (GIN)</li>
+<li>Combine into end-to-end retrosynthesis pipeline</li>
+<li>Apply recursively for multi-step planning</li>
+<li>Check commercial availability of building blocks</li>
+</ul>
+<p><strong>Navigation:</strong> <code>references/retrosynthesis.md</code> → Task types → Multi-step planning</p>
+
+<h2>Integration Patterns</h2>
+
+<h3>With RDKit</h3>
+
+<p>Convert between TorchDrug molecules and RDKit:</p>
+<pre><code class="language-python">from torchdrug import data
+from rdkit import Chem
+
+# SMILES → TorchDrug molecule
+smiles = "CCO"
+mol = data.Molecule.from_smiles(smiles)
+
+# TorchDrug → RDKit
+rdkit_mol = mol.to_molecule()
+
+# RDKit → TorchDrug
+rdkit_mol = Chem.MolFromSmiles(smiles)
+mol = data.Molecule.from_molecule(rdkit_mol)</code></pre>
+
+<h3>With AlphaFold/ESM</h3>
+
+<p>Use predicted structures:</p>
+<pre><code class="language-python">from torchdrug import data
+
+# Load AlphaFold predicted structure
+protein = data.Protein.from_pdb("AF-P12345-F1-model_v4.pdb")
+
+# Build graph with spatial edges
+graph = protein.residue_graph(
+    node_position="ca",
+    edge_types=["sequential", "radius"],
+    radius_cutoff=10.0
+)</code></pre>
+
+<h3>With PyTorch Lightning</h3>
+
+<p>Wrap tasks for Lightning training:</p>
+<pre><code class="language-python">import pytorch_lightning as pl
+
+class LightningTask(pl.LightningModule):
+    def __init__(self, torchdrug_task):
+        super().__init__()
+        self.task = torchdrug_task
+
+    def training_step(self, batch, batch_idx):
+        return self.task(batch)
+
+    def validation_step(self, batch, batch_idx):
+        pred = self.task.predict(batch)
+        target = self.task.target(batch)
+        return {"pred": pred, "target": target}
+
+    def configure_optimizers(self):
+        return torch.optim.Adam(self.parameters(), lr=1e-3)</code></pre>
+
+<h2>Technical Details</h2>
+
+<p>For deep dives into TorchDrug's architecture:</p>
+
+<p><strong>Core Concepts:</strong> See <code>references/core_concepts.md</code> for:</p>
+<ul><li>Architecture philosophy (modular, configurable)</li>
+<li>Data structures (Graph, Molecule, Protein, PackedGraph)</li>
+<li>Model interface and forward function signature</li>
+<li>Task interface (predict, target, forward, evaluate)</li>
+<li>Training workflows and best practices</li>
+<li>Loss functions and metrics</li>
+<li>Common pitfalls and debugging</li>
+</ul>
+<h2>Quick Reference Cheat Sheet</h2>
+
+<p><strong>Choose Dataset:</strong></p>
+<ul><li>Molecular property → <code>references/datasets.md</code> → Molecular section</li>
+<li>Protein task → <code>references/datasets.md</code> → Protein section</li>
+<li>Knowledge graph → <code>references/datasets.md</code> → Knowledge graph section</li>
+</ul>
+<p><strong>Choose Model:</strong></p>
+<ul><li>Molecules → <code>references/models_architectures.md</code> → GNN section → GIN/GAT/SchNet</li>
+<li>Proteins (sequence) → <code>references/models_architectures.md</code> → Protein section → ESM</li>
+<li>Proteins (structure) → <code>references/models_architectures.md</code> → Protein section → GearNet</li>
+<li>Knowledge graph → <code>references/models_architectures.md</code> → KG section → RotatE/ComplEx</li>
+</ul>
+<p><strong>Common Tasks:</strong></p>
+<ul><li>Property prediction → <code>references/molecular_property_prediction.md</code> or <code>references/protein_modeling.md</code></li>
+<li>Generation → <code>references/molecular_generation.md</code></li>
+<li>Retrosynthesis → <code>references/retrosynthesis.md</code></li>
+<li>KG reasoning → <code>references/knowledge_graphs.md</code></li>
+</ul>
+<p><strong>Understand Architecture:</strong></p>
+<ul><li>Data structures → <code>references/core_concepts.md</code> → Data Structures</li>
+<li>Model design → <code>references/core_concepts.md</code> → Model Interface</li>
+<li>Task design → <code>references/core_concepts.md</code> → Task Interface</li>
+</ul>
+<h2>Troubleshooting Common Issues</h2>
+
+<p><strong>Issue: Dimension mismatch errors</strong></p>
+<p>→ Check <code>model.input_dim</code> matches <code>dataset.node_feature_dim</code></p>
+<p>→ See <code>references/core_concepts.md</code> → Essential Attributes</p>
+
+<p><strong>Issue: Poor performance on molecular tasks</strong></p>
+<p>→ Use scaffold splitting, not random</p>
+<p>→ Try GIN instead of GCN</p>
+<p>→ See <code>references/molecular_property_prediction.md</code> → Best Practices</p>
+
+<p><strong>Issue: Protein model not learning</strong></p>
+<p>→ Use pre-trained ESM for sequence tasks</p>
+<p>→ Check edge construction for structure models</p>
+<p>→ See <code>references/protein_modeling.md</code> → Training Workflows</p>
+
+<p><strong>Issue: Memory errors with large graphs</strong></p>
+<p>→ Reduce batch size</p>
+<p>→ Use gradient accumulation</p>
+<p>→ See <code>references/core_concepts.md</code> → Memory Efficiency</p>
+
+<p><strong>Issue: Generated molecules are invalid</strong></p>
+<p>→ Add validity constraints</p>
+<p>→ Post-process with RDKit validation</p>
+<p>→ See <code>references/molecular_generation.md</code> → Validation and Filtering</p>
+
+<h2>Resources</h2>
+
+<p><strong>Official Documentation:</strong> https://torchdrug.ai/docs/</p>
+<p><strong>GitHub:</strong> https://github.com/DeepGraphLearning/torchdrug</p>
+<p><strong>Paper:</strong> TorchDrug: A Powerful and Flexible Machine Learning Platform for Drug Discovery</p>
+
+<h2>Summary</h2>
+
+<p>Navigate to the appropriate reference file based on your task:</p>
+
+<ul><li><strong>Molecular property prediction</strong> → <code>molecular_property_prediction.md</code></li>
+<li><strong>Protein modeling</strong> → <code>protein_modeling.md</code></li>
+<li><strong>Knowledge graphs</strong> → <code>knowledge_graphs.md</code></li>
+<li><strong>Molecular generation</strong> → <code>molecular_generation.md</code></li>
+<li><strong>Retrosynthesis</strong> → <code>retrosynthesis.md</code></li>
+<li><strong>Model selection</strong> → <code>models_architectures.md</code></li>
+<li><strong>Dataset selection</strong> → <code>datasets.md</code></li>
+<li><strong>Technical details</strong> → <code>core_concepts.md</code></li>
+</ul>
+<p>Each reference provides comprehensive coverage of its domain with examples, best practices, and common use cases.</p>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Core Concepts</h3>
+  <h1>Core Concepts and Technical Details</h1>
+
+<h2>Overview</h2>
+
+<p>This reference covers TorchDrug's fundamental architecture, design principles, and technical implementation details.</p>
+
+<h2>Architecture Philosophy</h2>
+
+<h3>Modular Design</h3>
+
+<p>TorchDrug separates concerns into distinct modules:</p>
+
+<ul><li><strong>Representation Models</strong> (models.py): Encode graphs into embeddings</li>
+<li><strong>Task Definitions</strong> (tasks.py): Define learning objectives and evaluation</li>
+<li><strong>Data Handling</strong> (data.py, datasets.py): Graph structures and datasets</li>
+<li><strong>Core Components</strong> (core.py): Base classes and utilities</li>
+</ul>
+<p><strong>Benefits:</strong></p>
+<ul><li>Reuse representations across tasks</li>
+<li>Mix and match components</li>
+<li>Easy experimentation and prototyping</li>
+<li>Clear separation of concerns</li>
+</ul>
+<h3>Configurable System</h3>
+
+<p>All components inherit from <code>core.Configurable</code>:</p>
+<ul><li>Serialize to configuration dictionaries</li>
+<li>Reconstruct from configurations</li>
+<li>Save and load complete pipelines</li>
+<li>Reproducible experiments</li>
+</ul>
+<h2>Core Components</h2>
+
+<h3>core.Configurable</h3>
+
+<p>Base class for all TorchDrug components.</p>
+
+<p><strong>Key Methods:</strong></p>
+<ul><li><code>config_dict()</code>: Serialize to dictionary</li>
+<li><code>load_config_dict(config)</code>: Load from dictionary</li>
+<li><code>save(file)</code>: Save to file</li>
+<li><code>load(file)</code>: Load from file</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">from torchdrug import core, models
+
+model = models.GIN(input_dim=10, hidden_dims=[256, 256])
+
+# Save configuration
+config = model.config_dict()
+# {'class': 'GIN', 'input_dim': 10, 'hidden_dims': [256, 256], ...}
+
+# Reconstruct model
+model2 = core.Configurable.load_config_dict(config)</code></pre>
+
+<h3>core.Registry</h3>
+
+<p>Decorator for registering models, tasks, and datasets.</p>
+
+<p><strong>Usage:</strong></p>
+<pre><code class="language-python">from torchdrug import core as core_td
+
+@core_td.register("models.CustomModel")
+class CustomModel(nn.Module, core_td.Configurable):
+    def __init__(self, input_dim, hidden_dim):
+        super().__init__()
+        self.linear = nn.Linear(input_dim, hidden_dim)
+
+    def forward(self, graph, input, all_loss, metric):
+        # Model implementation
+        pass</code></pre>
+
+<p><strong>Benefits:</strong></p>
+<ul><li>Models automatically serializable</li>
+<li>String-based model specification</li>
+<li>Easy model lookup and instantiation</li>
+</ul>
+<h2>Data Structures</h2>
+
+<h3>Graph</h3>
+
+<p>Core data structure representing molecular or protein graphs.</p>
+
+<p><strong>Attributes:</strong></p>
+<ul><li><code>num_node</code>: Number of nodes</li>
+<li><code>num_edge</code>: Number of edges</li>
+<li><code>node_feature</code>: Node feature tensor [num_node, feature_dim]</li>
+<li><code>edge_feature</code>: Edge feature tensor [num_edge, feature_dim]</li>
+<li><code>edge_list</code>: Edge connectivity [num_edge, 2 or 3]</li>
+<li><code>num_relation</code>: Number of edge types (for multi-relational)</li>
+</ul>
+<p><strong>Methods:</strong></p>
+<ul><li><code>node_mask(mask)</code>: Select subset of nodes</li>
+<li><code>edge_mask(mask)</code>: Select subset of edges</li>
+<li><code>undirected()</code>: Make graph undirected</li>
+<li><code>directed()</code>: Make graph directed</li>
+</ul>
+<p><strong>Batching:</strong></p>
+<ul><li>Graphs batched into single disconnected graph</li>
+<li>Automatic batching in DataLoader</li>
+<li>Preserves node/edge indices per graph</li>
+</ul>
+<h3>Molecule (extends Graph)</h3>
+
+<p>Specialized graph for molecules.</p>
+
+<p><strong>Additional Attributes:</strong></p>
+<ul><li><code>atom_type</code>: Atomic numbers</li>
+<li><code>bond_type</code>: Bond types (single, double, triple, aromatic)</li>
+<li><code>formal_charge</code>: Atomic formal charges</li>
+<li><code>explicit_hs</code>: Explicit hydrogen counts</li>
+</ul>
+<p><strong>Methods:</strong></p>
+<ul><li><code>from_smiles(smiles)</code>: Create from SMILES string</li>
+<li><code>from_molecule(mol)</code>: Create from RDKit molecule</li>
+<li><code>to_smiles()</code>: Convert to SMILES</li>
+<li><code>to_molecule()</code>: Convert to RDKit molecule</li>
+<li><code>ion_to_molecule()</code>: Neutralize charges</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">from torchdrug import data
+
+# From SMILES
+mol = data.Molecule.from_smiles("CCO")
+
+# Atom features
+print(mol.atom_type)  # [6, 6, 8] (C, C, O)
+print(mol.bond_type)  # [1, 1] (single bonds)</code></pre>
+
+<h3>Protein (extends Graph)</h3>
+
+<p>Specialized graph for proteins.</p>
+
+<p><strong>Additional Attributes:</strong></p>
+<ul><li><code>residue_type</code>: Amino acid types</li>
+<li><code>atom_name</code>: Atom names (CA, CB, etc.)</li>
+<li><code>atom_type</code>: Atomic numbers</li>
+<li><code>residue_number</code>: Residue numbering</li>
+<li><code>chain_id</code>: Chain identifiers</li>
+</ul>
+<p><strong>Methods:</strong></p>
+<ul><li><code>from_pdb(pdb_file)</code>: Load from PDB file</li>
+<li><code>from_sequence(sequence)</code>: Create from sequence</li>
+<li><code>to_pdb(pdb_file)</code>: Save to PDB file</li>
+</ul>
+<p><strong>Graph Construction:</strong></p>
+<ul><li>Nodes typically represent residues (not atoms)</li>
+<li>Edges can be sequential, spatial (KNN), or contact-based</li>
+<li>Configurable edge construction strategies</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">from torchdrug import data
+
+# Load protein
+protein = data.Protein.from_pdb("1a3x.pdb")
+
+# Build graph with multiple edge types
+graph = protein.residue_graph(
+    node_position="ca",  # Use Cα positions
+    edge_types=["sequential", "radius"]  # Sequential + spatial edges
+)</code></pre>
+
+<h3>PackedGraph</h3>
+
+<p>Efficient batching structure for heterogeneous graphs.</p>
+
+<p><strong>Purpose:</strong></p>
+<ul><li>Batch graphs of different sizes</li>
+<li>Single GPU memory allocation</li>
+<li>Efficient parallel processing</li>
+</ul>
+<p><strong>Attributes:</strong></p>
+<ul><li><code>num_nodes</code>: List of node counts per graph</li>
+<li><code>num_edges</code>: List of edge counts per graph</li>
+<li><code>graph_ind</code>: Graph index for each node</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Automatic in DataLoader</li>
+<li>Custom batching strategies</li>
+<li>Multi-graph operations</li>
+</ul>
+<h2>Model Interface</h2>
+
+<h3>Forward Function Signature</h3>
+
+<p>All TorchDrug models follow a standardized interface:</p>
+
+<pre><code class="language-python">def forward(self, graph, input, all_loss=None, metric=None):
+    """
+    Args:
+        graph (Graph): Batch of graphs
+        input (Tensor): Node input features
+        all_loss (Tensor, optional): Accumulator for losses
+        metric (dict, optional): Dictionary for metrics
+
+    Returns:
+        dict: Output dictionary with representation keys
+    """
+    # Model computation
+    output = self.layers(graph, input)
+
+    return {
+        "node_feature": output,
+        "graph_feature": graph_pooling(output)
+    }</code></pre>
+
+<p><strong>Key Points:</strong></p>
+<ul><li><code>graph</code>: Batched graph structure</li>
+<li><code>input</code>: Node features [num_node, input_dim]</li>
+<li><code>all_loss</code>: Accumulated loss (for multi-task)</li>
+<li><code>metric</code>: Shared metric dictionary</li>
+<li>Returns dict with representation types</li>
+</ul>
+<h3>Essential Attributes</h3>
+
+<p><strong>All models must define:</strong></p>
+<ul><li><code>input_dim</code>: Expected input feature dimension</li>
+<li><code>output_dim</code>: Output representation dimension</li>
+</ul>
+<p><strong>Purpose:</strong></p>
+<ul><li>Automatic dimension checking</li>
+<li>Compose models in pipelines</li>
+<li>Error checking and validation</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">class CustomModel(nn.Module):
+    def __init__(self, input_dim, hidden_dim):
+        super().__init__()
+        self.input_dim = input_dim
+        self.output_dim = hidden_dim
+        # ... layers ...</code></pre>
+
+<h2>Task Interface</h2>
+
+<h3>Core Task Methods</h3>
+
+<p>All tasks implement these methods:</p>
+
+<pre><code class="language-python">class CustomTask(tasks.Task):
+    def preprocess(self, train_set, valid_set, test_set):
+        """Dataset-specific preprocessing (optional)"""
+        pass
+
+    def predict(self, batch):
+        """Generate predictions for a batch"""
+        graph, label = batch
+        output = self.model(graph, graph.node_feature)
+        pred = self.mlp(output["graph_feature"])
+        return pred
+
+    def target(self, batch):
+        """Extract ground truth labels"""
+        graph, label = batch
+        return label
+
+    def forward(self, batch):
+        """Compute training loss"""
+        pred = self.predict(batch)
+        target = self.target(batch)
+        loss = self.criterion(pred, target)
+        return loss
+
+    def evaluate(self, pred, target):
+        """Compute evaluation metrics"""
+        metrics = {}
+        metrics["auroc"] = compute_auroc(pred, target)
+        metrics["auprc"] = compute_auprc(pred, target)
+        return metrics</code></pre>
+
+<h3>Task Components</h3>
+
+<p><strong>Typical Task Structure:</strong></p>
+<ul><li><strong>Representation Model</strong>: Encodes graph to embeddings</li>
+<li><strong>Readout/Prediction Head</strong>: Maps embeddings to predictions</li>
+<li><strong>Loss Function</strong>: Training objective</li>
+<li><strong>Metrics</strong>: Evaluation measures</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">from torchdrug import tasks, models
+
+# Representation model
+model = models.GIN(input_dim=10, hidden_dims=[256, 256])
+
+# Task wraps model with prediction head
+task = tasks.PropertyPrediction(
+    model=model,
+    task=["task1", "task2"],  # Multi-task
+    criterion="bce",
+    metric=["auroc", "auprc"],
+    num_mlp_layer=2
+)</code></pre>
+
+<h2>Training Workflow</h2>
+
+<h3>Standard Training Loop</h3>
+
+<pre><code class="language-python">import torch
+from torch.utils.data import DataLoader
+from torchdrug import core, models, tasks, datasets
+
+# 1. Load dataset
+dataset = datasets.BBBP("~/datasets/")
+train_set, valid_set, test_set = dataset.split()
+
+# 2. Create data loaders
+train_loader = DataLoader(train_set, batch_size=32, shuffle=True)
+valid_loader = DataLoader(valid_set, batch_size=32)
+
+# 3. Define model and task
+model = models.GIN(input_dim=dataset.node_feature_dim,
+                   hidden_dims=[256, 256, 256])
+task = tasks.PropertyPrediction(model, task=dataset.tasks,
+                                 criterion="bce", metric=["auroc", "auprc"])
+
+# 4. Setup optimizer
+optimizer = torch.optim.Adam(task.parameters(), lr=1e-3)
+
+# 5. Training loop
+for epoch in range(100):
+    # Train
+    task.train()
+    for batch in train_loader:
+        loss = task(batch)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+    # Validate
+    task.eval()
+    preds, targets = [], []
+    for batch in valid_loader:
+        pred = task.predict(batch)
+        target = task.target(batch)
+        preds.append(pred)
+        targets.append(target)
+
+    preds = torch.cat(preds)
+    targets = torch.cat(targets)
+    metrics = task.evaluate(preds, targets)
+    print(f"Epoch {epoch}: {metrics}")</code></pre>
+
+<h3>PyTorch Lightning Integration</h3>
+
+<p>TorchDrug tasks are compatible with PyTorch Lightning:</p>
+
+<pre><code class="language-python">import pytorch_lightning as pl
+
+class LightningWrapper(pl.LightningModule):
+    def __init__(self, task):
+        super().__init__()
+        self.task = task
+
+    def training_step(self, batch, batch_idx):
+        loss = self.task(batch)
+        return loss
+
+    def validation_step(self, batch, batch_idx):
+        pred = self.task.predict(batch)
+        target = self.task.target(batch)
+        return {"pred": pred, "target": target}
+
+    def validation_epoch_end(self, outputs):
+        preds = torch.cat([o["pred"] for o in outputs])
+        targets = torch.cat([o["target"] for o in outputs])
+        metrics = self.task.evaluate(preds, targets)
+        self.log_dict(metrics)
+
+    def configure_optimizers(self):
+        return torch.optim.Adam(self.parameters(), lr=1e-3)</code></pre>
+
+<h2>Loss Functions</h2>
+
+<h3>Built-in Criteria</h3>
+
+<p><strong>Classification:</strong></p>
+<ul><li><code>"bce"</code>: Binary cross-entropy</li>
+<li><code>"ce"</code>: Cross-entropy (multi-class)</li>
+</ul>
+<p><strong>Regression:</strong></p>
+<ul><li><code>"mse"</code>: Mean squared error</li>
+<li><code>"mae"</code>: Mean absolute error</li>
+</ul>
+<p><strong>Knowledge Graph:</strong></p>
+<ul><li><code>"bce"</code>: Binary classification of triples</li>
+<li><code>"ce"</code>: Cross-entropy ranking loss</li>
+<li><code>"margin"</code>: Margin-based ranking</li>
+</ul>
+<h3>Custom Loss</h3>
+
+<pre><code class="language-python">class CustomTask(tasks.Task):
+    def forward(self, batch):
+        pred = self.predict(batch)
+        target = self.target(batch)
+
+        # Custom loss computation
+        loss = custom_loss_function(pred, target)
+
+        return loss</code></pre>
+
+<h2>Metrics</h2>
+
+<h3>Common Metrics</h3>
+
+<p><strong>Classification:</strong></p>
+<ul><li><strong>AUROC</strong>: Area under ROC curve</li>
+<li><strong>AUPRC</strong>: Area under precision-recall curve</li>
+<li><strong>Accuracy</strong>: Overall accuracy</li>
+<li><strong>F1</strong>: Harmonic mean of precision and recall</li>
+</ul>
+<p><strong>Regression:</strong></p>
+<ul><li><strong>MAE</strong>: Mean absolute error</li>
+<li><strong>RMSE</strong>: Root mean squared error</li>
+<li><strong>R²</strong>: Coefficient of determination</li>
+<li><strong>Pearson</strong>: Pearson correlation</li>
+</ul>
+<p><strong>Ranking (Knowledge Graph):</strong></p>
+<ul><li><strong>MR</strong>: Mean rank</li>
+<li><strong>MRR</strong>: Mean reciprocal rank</li>
+<li><strong>Hits@K</strong>: Percentage in top K</li>
+</ul>
+<h3>Multi-Task Metrics</h3>
+
+<p>For multi-label or multi-task:</p>
+<ul><li>Metrics computed per task</li>
+<li>Macro-average across tasks</li>
+<li>Can weight by task importance</li>
+</ul>
+<h2>Data Transforms</h2>
+
+<h3>Molecule Transforms</h3>
+
+<pre><code class="language-python">from torchdrug import transforms
+
+# Add virtual node connected to all atoms
+transform1 = transforms.VirtualNode()
+
+# Add virtual edges
+transform2 = transforms.VirtualEdge()
+
+# Compose transforms
+transform = transforms.Compose([transform1, transform2])
+
+dataset = datasets.BBBP("~/datasets/", transform=transform)</code></pre>
+
+<h3>Protein Transforms</h3>
+
+<pre><code class="language-python"># Add edges based on spatial proximity
+transform = transforms.TruncateProtein(max_length=500)
+
+dataset = datasets.Fold("~/datasets/", transform=transform)</code></pre>
+
+<h2>Best Practices</h2>
+
+<h3>Memory Efficiency</h3>
+
+<ul><li><strong>Gradient Accumulation</strong>: For large models</li>
+<li><strong>Mixed Precision</strong>: FP16 training</li>
+<li><strong>Batch Size Tuning</strong>: Balance speed and memory</li>
+<li><strong>Data Loading</strong>: Multiple workers for I/O</li>
+</ul>
+<h3>Reproducibility</h3>
+
+<ul><li><strong>Set Seeds</strong>: PyTorch, NumPy, Python random</li>
+<li><strong>Deterministic Operations</strong>: <code>torch.use_deterministic_algorithms(True)</code></li>
+<li><strong>Save Configurations</strong>: Use <code>core.Configurable</code></li>
+<li><strong>Version Control</strong>: Track TorchDrug version</li>
+</ul>
+<h3>Debugging</h3>
+
+<ul><li><strong>Check Dimensions</strong>: Verify <code>input_dim</code> and <code>output_dim</code></li>
+<li><strong>Validate Batching</strong>: Print batch statistics</li>
+<li><strong>Monitor Gradients</strong>: Watch for vanishing/exploding</li>
+<li><strong>Overfit Small Batch</strong>: Ensure model capacity</li>
+</ul>
+<h3>Performance Optimization</h3>
+
+<ul><li><strong>GPU Utilization</strong>: Monitor with <code>nvidia-smi</code></li>
+<li><strong>Profile Code</strong>: Use PyTorch profiler</li>
+<li><strong>Optimize Data Loading</strong>: Prefetch, pin memory</li>
+<li><strong>Compile Models</strong>: Use TorchScript if possible</li>
+</ul>
+<h2>Advanced Topics</h2>
+
+<h3>Multi-Task Learning</h3>
+
+<p>Train single model on multiple related tasks:</p>
+<pre><code class="language-python">task = tasks.PropertyPrediction(
+    model,
+    task=["task1", "task2", "task3"],
+    criterion="bce",
+    metric=["auroc"],
+    task_weight=[1.0, 1.0, 2.0]  # Weight task 3 more
+)</code></pre>
+
+<h3>Transfer Learning</h3>
+
+<ul><li>Pre-train on large dataset</li>
+<li>Fine-tune on target dataset</li>
+<li>Optionally freeze early layers</li>
+</ul>
+<h3>Self-Supervised Pre-training</h3>
+
+<p>Use pre-training tasks:</p>
+<ul><li><code>AttributeMasking</code>: Mask node features</li>
+<li><code>EdgePrediction</code>: Predict edge existence</li>
+<li><code>ContextPrediction</code>: Contrastive learning</li>
+</ul>
+<h3>Custom Layers</h3>
+
+<p>Extend TorchDrug with custom GNN layers:</p>
+<pre><code class="language-python">from torchdrug import layers
+
+class CustomConv(layers.MessagePassingBase):
+    def message(self, graph, input):
+        # Custom message function
+        pass
+
+    def aggregate(self, graph, message):
+        # Custom aggregation
+        pass
+
+    def combine(self, input, update):
+        # Custom combination
+        pass</code></pre>
+
+<h2>Common Pitfalls</h2>
+
+<ul><li><strong>Forgetting <code>input_dim</code> and <code>output_dim</code></strong>: Models won't compose</li>
+<li><strong>Not Batching Properly</strong>: Use PackedGraph for variable-sized graphs</li>
+<li><strong>Data Leakage</strong>: Be careful with scaffold splits and pre-training</li>
+<li><strong>Ignoring Edge Features</strong>: Bonds/spatial info can be critical</li>
+<li><strong>Wrong Evaluation Metrics</strong>: Match metrics to task (AUROC for imbalanced)</li>
+<li><strong>Insufficient Regularization</strong>: Use dropout, weight decay, early stopping</li>
+<li><strong>Not Validating Chemistry</strong>: Generated molecules must be valid</li>
+<li><strong>Overfitting Small Datasets</strong>: Use pre-training or simpler models</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Datasets</h3>
+  <h1>Datasets Reference</h1>
+
+<h2>Overview</h2>
+
+<p>TorchDrug provides 40+ curated datasets across multiple domains: molecular property prediction, protein modeling, knowledge graph reasoning, and retrosynthesis. All datasets support lazy loading, automatic downloading, and customizable feature extraction.</p>
+
+<h2>Molecular Property Prediction Datasets</h2>
+
+<h3>Drug Discovery Classification</h3>
+
+<p>| Dataset | Size | Task | Classes | Description |</p>
+<p>|---------|------|------|---------|-------------|</p>
+<p>| <strong>BACE</strong> | 1,513 | Binary | 2 | β-secretase inhibition for Alzheimer's |</p>
+<p>| <strong>BBBP</strong> | 2,039 | Binary | 2 | Blood-brain barrier penetration |</p>
+<p>| <strong>HIV</strong> | 41,127 | Binary | 2 | Inhibition of HIV replication |</p>
+<p>| <strong>ClinTox</strong> | 1,478 | Multi-label | 2 | Clinical trial toxicity |</p>
+<p>| <strong>SIDER</strong> | 1,427 | Multi-label | 27 | Side effects by system organ class |</p>
+<p>| <strong>Tox21</strong> | 7,831 | Multi-label | 12 | Toxicity across 12 targets |</p>
+<p>| <strong>ToxCast</strong> | 8,576 | Multi-label | 617 | High-throughput toxicology |</p>
+<p>| <strong>MUV</strong> | 93,087 | Multi-label | 17 | Unbiased validation for screening |</p>
+
+<p><strong>Key Features:</strong></p>
+<ul><li>All use scaffold splits for realistic evaluation</li>
+<li>Binary classification metrics: AUROC, AUPRC</li>
+<li>Multi-label handles missing values</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Drug safety prediction</li>
+<li>Virtual screening</li>
+<li>ADMET property prediction</li>
+</ul>
+<h3>Drug Discovery Regression</h3>
+
+<p>| Dataset | Size | Property | Units | Description |</p>
+<p>|---------|------|----------|-------|-------------|</p>
+<p>| <strong>ESOL</strong> | 1,128 | Solubility | log(mol/L) | Water solubility |</p>
+<p>| <strong>FreeSolv</strong> | 642 | Hydration | kcal/mol | Hydration free energy |</p>
+<p>| <strong>Lipophilicity</strong> | 4,200 | LogD | - | Octanol/water distribution |</p>
+<p>| <strong>SAMPL</strong> | 643 | Solvation | kcal/mol | Solvation free energies |</p>
+
+<p><strong>Metrics:</strong> MAE, RMSE, R²</p>
+<p><strong>Use Cases:</strong> ADME optimization, lead optimization</p>
+
+<h3>Quantum Chemistry</h3>
+
+<p>| Dataset | Size | Properties | Description |</p>
+<p>|---------|------|------------|-------------|</p>
+<p>| <strong>QM7</strong> | 7,165 | 1 | Atomization energy |</p>
+<p>| <strong>QM8</strong> | 21,786 | 12 | Electronic spectra, excited states |</p>
+<p>| <strong>QM9</strong> | 133,885 | 12 | Geometric, energetic, electronic, thermodynamic |</p>
+<p>| <strong>PCQM4M</strong> | 3.8M | 1 | Large-scale HOMO-LUMO gap |</p>
+
+<p><strong>Properties (QM9):</strong></p>
+<ul><li>Dipole moment</li>
+<li>Isotropic polarizability</li>
+<li>HOMO/LUMO energies</li>
+<li>Internal energy, enthalpy, free energy</li>
+<li>Heat capacity</li>
+<li>Electronic spatial extent</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Quantum property prediction</li>
+<li>Method development benchmarking</li>
+<li>Pre-training molecular models</li>
+</ul>
+<h3>Large Molecule Databases</h3>
+
+<p>| Dataset | Size | Description | Use Case |</p>
+<p>|---------|------|-------------|----------|</p>
+<p>| <strong>ZINC250k</strong> | 250,000 | Drug-like molecules | Generative model training |</p>
+<p>| <strong>ZINC2M</strong> | 2,000,000 | Drug-like molecules | Large-scale pre-training |</p>
+<p>| <strong>ChEMBL</strong> | Millions | Bioactive molecules | Property prediction, generation |</p>
+
+<h2>Protein Datasets</h2>
+
+<h3>Function Prediction</h3>
+
+<p>| Dataset | Size | Task | Classes | Description |</p>
+<p>|---------|------|------|---------|-------------|</p>
+<p>| <strong>EnzymeCommission</strong> | 17,562 | Multi-class | 7 levels | EC number classification |</p>
+<p>| <strong>GeneOntology</strong> | 46,796 | Multi-label | 489 | GO term prediction (BP/MF/CC) |</p>
+<p>| <strong>BetaLactamase</strong> | 5,864 | Regression | - | Enzyme activity levels |</p>
+<p>| <strong>Fluorescence</strong> | 54,025 | Regression | - | GFP fluorescence intensity |</p>
+<p>| <strong>Stability</strong> | 53,614 | Regression | - | Thermostability (ΔΔG) |</p>
+
+<p><strong>Features:</strong></p>
+<ul><li>Sequence and/or structure input</li>
+<li>Evolutionary information available</li>
+<li>Multiple train/test splits</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Protein engineering</li>
+<li>Function annotation</li>
+<li>Enzyme design</li>
+</ul>
+<h3>Localization and Solubility</h3>
+
+<p>| Dataset | Size | Task | Classes | Description |</p>
+<p>|---------|------|------|---------|-------------|</p>
+<p>| <strong>Solubility</strong> | 62,478 | Binary | 2 | Protein solubility |</p>
+<p>| <strong>BinaryLocalization</strong> | 22,168 | Binary | 2 | Membrane vs soluble |</p>
+<p>| <strong>SubcellularLocalization</strong> | 8,943 | Multi-class | 10 | Subcellular compartment |</p>
+
+<p><strong>Use Cases:</strong></p>
+<ul><li>Protein expression optimization</li>
+<li>Target identification</li>
+<li>Cell biology</li>
+</ul>
+<h3>Structure Prediction</h3>
+
+<p>| Dataset | Size | Task | Description |</p>
+<p>|---------|------|------|-------------|</p>
+<p>| <strong>Fold</strong> | 16,712 | Multi-class (1,195) | Structural fold recognition |</p>
+<p>| <strong>SecondaryStructure</strong> | 8,678 | Sequence labeling | 3-state or 8-state prediction |</p>
+<p>| <strong>ProteinNet</strong> | Varied | Contact prediction | Residue-residue contacts |</p>
+
+<p><strong>Use Cases:</strong></p>
+<ul><li>Structure prediction pipelines</li>
+<li>Fold recognition</li>
+<li>Contact map generation</li>
+</ul>
+<h3>Protein Interactions</h3>
+
+<p>| Dataset | Size | Positives | Negatives | Description |</p>
+<p>|---------|------|-----------|-----------|-------------|</p>
+<p>| <strong>HumanPPI</strong> | 1,412 proteins | 6,584 | - | Human protein interactions |</p>
+<p>| <strong>YeastPPI</strong> | 2,018 proteins | 6,451 | - | Yeast protein interactions |</p>
+<p>| <strong>PPIAffinity</strong> | 2,156 pairs | - | - | Binding affinity values |</p>
+
+<p><strong>Use Cases:</strong></p>
+<ul><li>PPI prediction</li>
+<li>Network biology</li>
+<li>Drug target identification</li>
+</ul>
+<h3>Protein-Ligand Binding</h3>
+
+<p>| Dataset | Size | Type | Description |</p>
+<p>|---------|------|------|-------------|</p>
+<p>| <strong>BindingDB</strong> | ~1.5M | Affinity | Comprehensive binding data |</p>
+<p>| <strong>PDBBind</strong> | 20,000+ | 3D complexes | Structure-based binding |</p>
+<p>| - Refined Set | 5,316 | High quality | Curated crystal structures |</p>
+<p>| - Core Set | 285 | Benchmark | Diverse test set |</p>
+
+<p><strong>Use Cases:</strong></p>
+<ul><li>Binding affinity prediction</li>
+<li>Structure-based drug design</li>
+<li>Scoring function development</li>
+</ul>
+<h3>Large Protein Databases</h3>
+
+<p>| Dataset | Size | Description |</p>
+<p>|---------|------|-------------|</p>
+<p>| <strong>AlphaFoldDB</strong> | 200M+ | Predicted structures for most known proteins |</p>
+<p>| <strong>UniProt</strong> | Integration | Sequence and annotation data |</p>
+
+<h2>Knowledge Graph Datasets</h2>
+
+<h3>General Knowledge</h3>
+
+<p>| Dataset | Entities | Relations | Triples | Domain |</p>
+<p>|---------|----------|-----------|---------|--------|</p>
+<p>| <strong>FB15k</strong> | 14,951 | 1,345 | 592,213 | Freebase (general knowledge) |</p>
+<p>| <strong>FB15k-237</strong> | 14,541 | 237 | 310,116 | Filtered Freebase |</p>
+<p>| <strong>WN18</strong> | 40,943 | 18 | 151,442 | WordNet (lexical) |</p>
+<p>| <strong>WN18RR</strong> | 40,943 | 11 | 93,003 | Filtered WordNet |</p>
+
+<p><strong>Relation Types (FB15k-237):</strong></p>
+<ul><li><code>/people/person/nationality</code></li>
+<li><code>/film/film/genre</code></li>
+<li><code>/location/location/contains</code></li>
+<li><code>/business/company/founders</code></li>
+<li>Many more...</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Link prediction</li>
+<li>Relation extraction</li>
+<li>Knowledge base completion</li>
+</ul>
+<h3>Biomedical Knowledge</h3>
+
+<p>| Dataset | Entities | Relations | Triples | Description |</p>
+<p>|---------|----------|-----------|---------|-------------|</p>
+<p>| <strong>Hetionet</strong> | 45,158 | 24 | 2,250,197 | Integrates 29 biomedical databases |</p>
+
+<p><strong>Entity Types in Hetionet:</strong></p>
+<ul><li>Genes (20,945)</li>
+<li>Compounds (1,552)</li>
+<li>Diseases (137)</li>
+<li>Anatomy (400)</li>
+<li>Pathways (1,822)</li>
+<li>Pharmacologic classes</li>
+<li>Side effects</li>
+<li>Symptoms</li>
+<li>Molecular functions</li>
+<li>Biological processes</li>
+<li>Cellular components</li>
+</ul>
+<p><strong>Relation Types:</strong></p>
+<ul><li>Compound-binds-Gene</li>
+<li>Gene-associates-Disease</li>
+<li>Disease-presents-Symptom</li>
+<li>Compound-treats-Disease</li>
+<li>Compound-causes-Side effect</li>
+<li>Gene-participates-Pathway</li>
+<li>And 18 more...</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Drug repurposing</li>
+<li>Disease mechanism discovery</li>
+<li>Target identification</li>
+<li>Multi-hop reasoning in biomedicine</li>
+</ul>
+<h2>Citation Network Datasets</h2>
+
+<p>| Dataset | Nodes | Edges | Classes | Description |</p>
+<p>|---------|-------|-------|---------|-------------|</p>
+<p>| <strong>Cora</strong> | 2,708 | 5,429 | 7 | Machine learning papers |</p>
+<p>| <strong>CiteSeer</strong> | 3,327 | 4,732 | 6 | Computer science papers |</p>
+<p>| <strong>PubMed</strong> | 19,717 | 44,338 | 3 | Biomedical papers |</p>
+
+<p><strong>Use Cases:</strong></p>
+<ul><li>Node classification</li>
+<li>GNN baseline comparisons</li>
+<li>Method development</li>
+</ul>
+<h2>Retrosynthesis Datasets</h2>
+
+<p>| Dataset | Size | Description |</p>
+<p>|---------|------|-------------|</p>
+<p>| <strong>USPTO-50k</strong> | 50,017 | Curated patent reactions, single-step |</p>
+
+<p><strong>Features:</strong></p>
+<ul><li>Product → Reactants mapping</li>
+<li>Atom mapping for reaction centers</li>
+<li>Canonicalized SMILES</li>
+<li>Balanced across reaction types</li>
+</ul>
+<p><strong>Splits:</strong></p>
+<ul><li>Train: ~40,000</li>
+<li>Validation: ~5,000</li>
+<li>Test: ~5,000</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Retrosynthesis prediction</li>
+<li>Reaction type classification</li>
+<li>Synthetic route planning</li>
+</ul>
+<h2>Dataset Usage Patterns</h2>
+
+<h3>Loading Datasets</h3>
+
+<pre><code class="language-python">from torchdrug import datasets
+
+# Basic loading
+dataset = datasets.BBBP("~/molecule-datasets/")
+
+# With transforms
+from torchdrug import transforms
+transform = transforms.VirtualNode()
+dataset = datasets.BBBP("~/molecule-datasets/", transform=transform)
+
+# Protein dataset
+dataset = datasets.EnzymeCommission("~/protein-datasets/")
+
+# Knowledge graph
+dataset = datasets.FB15k237("~/kg-datasets/")</code></pre>
+
+<h3>Data Splitting</h3>
+
+<pre><code class="language-python"># Random split
+train, valid, test = dataset.split([0.8, 0.1, 0.1])
+
+# Scaffold split (for molecules)
+from torchdrug import utils
+train, valid, test = dataset.split(
+    utils.scaffold_split(dataset, [0.8, 0.1, 0.1])
+)
+
+# Predefined splits (some datasets)
+train, valid, test = dataset.split()</code></pre>
+
+<h3>Feature Extraction</h3>
+
+<p><strong>Node Features (Molecules):</strong></p>
+<ul><li>Atom type (one-hot or embedding)</li>
+<li>Formal charge</li>
+<li>Hybridization</li>
+<li>Aromaticity</li>
+<li>Number of hydrogens</li>
+<li>Chirality</li>
+</ul>
+<p><strong>Edge Features (Molecules):</strong></p>
+<ul><li>Bond type (single, double, triple, aromatic)</li>
+<li>Stereochemistry</li>
+<li>Conjugation</li>
+<li>Ring membership</li>
+</ul>
+<p><strong>Node Features (Proteins):</strong></p>
+<ul><li>Amino acid type (one-hot)</li>
+<li>Physicochemical properties</li>
+<li>Position in sequence</li>
+<li>Secondary structure</li>
+<li>Solvent accessibility</li>
+</ul>
+<p><strong>Edge Features (Proteins):</strong></p>
+<ul><li>Edge type (sequential, spatial, contact)</li>
+<li>Distance</li>
+<li>Angles and dihedrals</li>
+</ul>
+<h2>Choosing Datasets</h2>
+
+<h3>By Task</h3>
+
+<p><strong>Molecular Property Prediction:</strong></p>
+<ul><li>Start with BBBP or HIV (medium size, clear task)</li>
+<li>Use QM9 for quantum properties</li>
+<li>ESOL/FreeSolv for regression</li>
+</ul>
+<p><strong>Protein Function:</strong></p>
+<ul><li>EnzymeCommission (well-defined classes)</li>
+<li>GeneOntology (comprehensive annotations)</li>
+</ul>
+<p><strong>Drug Safety:</strong></p>
+<ul><li>Tox21 (standard benchmark)</li>
+<li>ClinTox (clinical relevance)</li>
+</ul>
+<p><strong>Structure-Based:</strong></p>
+<ul><li>PDBBind (protein-ligand)</li>
+<li>ProteinNet (structure prediction)</li>
+</ul>
+<p><strong>Knowledge Graph:</strong></p>
+<ul><li>FB15k-237 (standard benchmark)</li>
+<li>Hetionet (biomedical applications)</li>
+</ul>
+<p><strong>Generation:</strong></p>
+<ul><li>ZINC250k (training)</li>
+<li>QM9 (with properties)</li>
+</ul>
+<p><strong>Retrosynthesis:</strong></p>
+<ul><li>USPTO-50k (only choice)</li>
+</ul>
+<h3>By Size and Resources</h3>
+
+<p><strong>Small (<5k, for testing):</strong></p>
+<ul><li>BACE, FreeSolv, ClinTox</li>
+<li>Core set of PDBBind</li>
+</ul>
+<p><strong>Medium (5k-100k):</strong></p>
+<ul><li>BBBP, HIV, ESOL, Tox21</li>
+<li>EnzymeCommission, Fold</li>
+<li>FB15k-237, WN18RR</li>
+</ul>
+<p><strong>Large (>100k):</strong></p>
+<ul><li>QM9, MUV, PCQM4M</li>
+<li>GeneOntology, AlphaFoldDB</li>
+<li>ZINC2M, BindingDB</li>
+</ul>
+<h3>By Domain</h3>
+
+<p><strong>Drug Discovery:</strong> BBBP, HIV, Tox21, ESOL, ZINC</p>
+<p><strong>Quantum Chemistry:</strong> QM7, QM8, QM9, PCQM4M</p>
+<p><strong>Protein Engineering:</strong> Fluorescence, Stability, Solubility</p>
+<p><strong>Structural Biology:</strong> Fold, PDBBind, ProteinNet, AlphaFoldDB</p>
+<p><strong>Biomedical:</strong> Hetionet, GeneOntology, EnzymeCommission</p>
+<p><strong>Retrosynthesis:</strong> USPTO-50k</p>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Start Small</strong>: Test on small datasets before scaling</li>
+<li><strong>Scaffold Split</strong>: Use for realistic drug discovery evaluation</li>
+<li><strong>Balanced Metrics</strong>: Use AUROC + AUPRC for imbalanced data</li>
+<li><strong>Multiple Runs</strong>: Report mean ± std over multiple random seeds</li>
+<li><strong>Data Leakage</strong>: Be careful with pre-trained models</li>
+<li><strong>Domain Knowledge</strong>: Understand what you're predicting</li>
+<li><strong>Validation</strong>: Always use held-out test set</li>
+<li><strong>Preprocessing</strong>: Standardize features, handle missing values</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Knowledge Graphs</h3>
+  <h1>Knowledge Graph Reasoning</h1>
+
+<h2>Overview</h2>
+
+<p>Knowledge graphs represent structured information as entities and relations in a graph format. TorchDrug provides comprehensive support for knowledge graph completion (link prediction) using embedding-based models and neural reasoning approaches.</p>
+
+<h2>Available Datasets</h2>
+
+<h3>General Knowledge Graphs</h3>
+
+<p><strong>FB15k (Freebase subset):</strong></p>
+<ul><li>14,951 entities</li>
+<li>1,345 relation types</li>
+<li>592,213 triples</li>
+<li>General world knowledge from Freebase</li>
+</ul>
+<p><strong>FB15k-237:</strong></p>
+<ul><li>14,541 entities</li>
+<li>237 relation types</li>
+<li>310,116 triples</li>
+<li>Filtered version removing inverse relations</li>
+<li>More challenging benchmark</li>
+</ul>
+<p><strong>WN18 (WordNet):</strong></p>
+<ul><li>40,943 entities (word senses)</li>
+<li>18 relation types (lexical relations)</li>
+<li>151,442 triples</li>
+<li>Linguistic knowledge graph</li>
+</ul>
+<p><strong>WN18RR:</strong></p>
+<ul><li>40,943 entities</li>
+<li>11 relation types</li>
+<li>93,003 triples</li>
+<li>Filtered WordNet removing easy inverse patterns</li>
+</ul>
+<h3>Biomedical Knowledge Graphs</h3>
+
+<p><strong>Hetionet:</strong></p>
+<ul><li>45,158 entities (genes, compounds, diseases, pathways, etc.)</li>
+<li>24 relation types (treats, causes, binds, etc.)</li>
+<li>2,250,197 edges</li>
+<li>Integrates 29 public biomedical databases</li>
+<li>Designed for drug repurposing and disease understanding</li>
+</ul>
+<h2>Task: KnowledgeGraphCompletion</h2>
+
+<p>The primary task for knowledge graphs is link prediction - given a head entity and relation, predict the tail entity (or vice versa).</p>
+
+<h3>Task Modes</h3>
+
+<p><strong>Head Prediction:</strong></p>
+<ul><li>Given (?, relation, tail), predict head entity</li>
+<li>"What can cause Disease X?"</li>
+</ul>
+<p><strong>Tail Prediction:</strong></p>
+<ul><li>Given (head, relation, ?), predict tail entity</li>
+<li>"What diseases does Gene X cause?"</li>
+</ul>
+<p><strong>Both:</strong></p>
+<ul><li>Predict both head and tail</li>
+<li>Standard evaluation protocol</li>
+</ul>
+<h3>Evaluation Metrics</h3>
+
+<p><strong>Ranking Metrics:</strong></p>
+<ul><li><strong>Mean Rank (MR)</strong>: Average rank of correct entity</li>
+<li><strong>Mean Reciprocal Rank (MRR)</strong>: Average of 1/rank</li>
+<li><strong>Hits@K</strong>: Percentage of correct entities in top K predictions</li>
+</ul><p>  - Typically reported for K=1, 3, 10</p>
+
+<p><strong>Filtered vs Raw:</strong></p>
+<ul><li><strong>Filtered</strong>: Remove other known true triples from ranking</li>
+<li><strong>Raw</strong>: Rank among all possible entities</li>
+<li>Filtered is standard for evaluation</li>
+</ul>
+<h2>Embedding Models</h2>
+
+<h3>Translational Models</h3>
+
+<p><strong>TransE (Translation Embedding):</strong></p>
+<ul><li>Represents relations as translations in embedding space</li>
+<li>h + r ≈ t (head + relation ≈ tail)</li>
+<li>Simple and effective baseline</li>
+<li>Works well for 1-to-1 relations</li>
+<li>Struggles with N-to-N relations</li>
+</ul>
+<p><strong>RotatE (Rotation Embedding):</strong></p>
+<ul><li>Relations as rotations in complex space</li>
+<li>Better handles symmetric and inverse relations</li>
+<li>State-of-the-art on many benchmarks</li>
+<li>Can model composition patterns</li>
+</ul>
+<h3>Semantic Matching Models</h3>
+
+<p><strong>DistMult:</strong></p>
+<ul><li>Bilinear scoring function</li>
+<li>Handles symmetric relations naturally</li>
+<li>Cannot model asymmetric relations</li>
+<li>Fast and memory efficient</li>
+</ul>
+<p><strong>ComplEx:</strong></p>
+<ul><li>Complex-valued embeddings</li>
+<li>Models asymmetric and inverse relations</li>
+<li>Better than DistMult for most graphs</li>
+<li>Balances expressiveness and efficiency</li>
+</ul>
+<p><strong>SimplE:</strong></p>
+<ul><li>Extends DistMult with inverse relations</li>
+<li>Fully expressive (can represent any relation pattern)</li>
+<li>Two embeddings per entity (canonical and inverse)</li>
+</ul>
+<h3>Neural Logic Models</h3>
+
+<p><strong>NeuralLP (Neural Logic Programming):</strong></p>
+<ul><li>Learns logical rules through differentiable operations</li>
+<li>Interprets predictions via learned rules</li>
+<li>Good for sparse knowledge graphs</li>
+<li>Computationally more expensive</li>
+</ul>
+<p><strong>KBGAT (Knowledge Base Graph Attention):</strong></p>
+<ul><li>Graph attention networks for KG completion</li>
+<li>Learns entity representations from neighborhood</li>
+<li>Handles unseen entities through inductive learning</li>
+<li>Better for incomplete graphs</li>
+</ul>
+<h2>Training Workflow</h2>
+
+<h3>Basic Pipeline</h3>
+
+<pre><code class="language-python">from torchdrug import datasets, models, tasks, core
+
+# Load dataset
+dataset = datasets.FB15k237("~/kg-datasets/")
+
+# Define model
+model = models.RotatE(
+    num_entity=dataset.num_entity,
+    num_relation=dataset.num_relation,
+    embedding_dim=2000,
+    max_score=9
+)
+
+# Define task
+task = tasks.KnowledgeGraphCompletion(
+    model,
+    num_negative=128,
+    adversarial_temperature=2,
+    criterion="bce"
+)
+
+# Train with PyTorch Lightning or custom loop</code></pre>
+
+<h3>Negative Sampling</h3>
+
+<p><strong>Strategies:</strong></p>
+<ul><li><strong>Uniform</strong>: Sample entities uniformly at random</li>
+<li><strong>Self-Adversarial</strong>: Weight samples by current model's scores</li>
+<li><strong>Type-Constrained</strong>: Sample only valid entity types for relation</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul><li><code>num_negative</code>: Number of negative samples per positive triple</li>
+<li><code>adversarial_temperature</code>: Temperature for self-adversarial weighting</li>
+<li>Higher temperature = more focus on hard negatives</li>
+</ul>
+<h3>Loss Functions</h3>
+
+<p><strong>Binary Cross-Entropy (BCE):</strong></p>
+<ul><li>Treats each triple independently</li>
+<li>Balanced classification between positive and negative</li>
+</ul>
+<p><strong>Margin Loss:</strong></p>
+<ul><li>Ensures positive scores higher than negative by margin</li>
+<li><code>max(0, margin + score_neg - score_pos)</code></li>
+</ul>
+<p><strong>Logistic Loss:</strong></p>
+<ul><li>Smooth version of margin loss</li>
+<li>Better gradient properties</li>
+</ul>
+<h2>Model Selection Guide</h2>
+
+<h3>By Relation Patterns</h3>
+
+<p><strong>1-to-1 Relations:</strong></p>
+<ul><li>TransE works well</li>
+<li>Any model will likely succeed</li>
+</ul>
+<p><strong>1-to-N Relations:</strong></p>
+<ul><li>DistMult, ComplEx, SimplE</li>
+<li>Avoid TransE</li>
+</ul>
+<p><strong>N-to-1 Relations:</strong></p>
+<ul><li>DistMult, ComplEx, SimplE</li>
+<li>Avoid TransE</li>
+</ul>
+<p><strong>N-to-N Relations:</strong></p>
+<ul><li>ComplEx, SimplE, RotatE</li>
+<li>Most challenging pattern</li>
+</ul>
+<p><strong>Symmetric Relations:</strong></p>
+<ul><li>DistMult, ComplEx</li>
+<li>RotatE with proper initialization</li>
+</ul>
+<p><strong>Antisymmetric Relations:</strong></p>
+<ul><li>ComplEx, SimplE, RotatE</li>
+<li>Avoid DistMult</li>
+</ul>
+<p><strong>Inverse Relations:</strong></p>
+<ul><li>ComplEx, SimplE, RotatE</li>
+<li>Important for bidirectional reasoning</li>
+</ul>
+<p><strong>Composition:</strong></p>
+<ul><li>RotatE (best)</li>
+<li>TransE (reasonable)</li>
+<li>Captures multi-hop paths</li>
+</ul>
+<h3>By Dataset Characteristics</h3>
+
+<p><strong>Small Graphs (< 50k entities):</strong></p>
+<ul><li>ComplEx or SimplE</li>
+<li>Lower embedding dimensions (200-500)</li>
+</ul>
+<p><strong>Large Graphs (> 100k entities):</strong></p>
+<ul><li>DistMult for efficiency</li>
+<li>RotatE for accuracy</li>
+<li>Higher dimensions (500-2000)</li>
+</ul>
+<p><strong>Sparse Graphs:</strong></p>
+<ul><li>NeuralLP (learns rules from limited data)</li>
+<li>Pre-train embeddings on larger graphs</li>
+</ul>
+<p><strong>Dense, Complete Graphs:</strong></p>
+<ul><li>Any embedding model works well</li>
+<li>Choose based on relation patterns</li>
+</ul>
+<p><strong>Biomedical/Domain Graphs:</strong></p>
+<ul><li>Consider type constraints in sampling</li>
+<li>Use domain-specific negative sampling</li>
+<li>Hetionet benefits from relation-specific models</li>
+</ul>
+<h2>Advanced Techniques</h2>
+
+<h3>Multi-Hop Reasoning</h3>
+
+<p>Chain multiple relations to answer complex queries:</p>
+<ul><li>"What drugs treat diseases caused by gene X?"</li>
+<li>Requires path-based or rule-based reasoning</li>
+<li>NeuralLP naturally supports this</li>
+</ul>
+<h3>Temporal Knowledge Graphs</h3>
+
+<p>Extend to time-varying facts:</p>
+<ul><li>Add temporal information to triples</li>
+<li>Predict future facts</li>
+<li>Requires temporal encoding in models</li>
+</ul>
+<h3>Few-Shot Learning</h3>
+
+<p>Handle relations with few examples:</p>
+<ul><li>Meta-learning approaches</li>
+<li>Transfer from related relations</li>
+<li>Important for emerging knowledge</li>
+</ul>
+<h3>Inductive Learning</h3>
+
+<p>Generalize to unseen entities:</p>
+<ul><li>KBGAT and other GNN-based methods</li>
+<li>Use entity features/descriptions</li>
+<li>Critical for evolving knowledge graphs</li>
+</ul>
+<h2>Biomedical Applications</h2>
+
+<h3>Drug Repurposing</h3>
+
+<p>Predict "drug treats disease" links in Hetionet:</p>
+<ul><li>Train on known drug-disease associations</li>
+<li>Predict new treatment candidates</li>
+<li>Filter by mechanism (gene, pathway involvement)</li>
+<li>Validate predictions experimentally</li>
+</ul>
+<h3>Disease Gene Discovery</h3>
+
+<p>Identify genes associated with diseases:</p>
+<ul><li>Model gene-disease-pathway networks</li>
+<li>Predict missing gene-disease links</li>
+<li>Incorporate protein interactions, expression data</li>
+<li>Prioritize candidates for validation</li>
+</ul>
+<h3>Protein Function Prediction</h3>
+
+<p>Link proteins to biological processes:</p>
+<ul><li>Integrate protein interactions, GO terms</li>
+<li>Predict missing GO annotations</li>
+<li>Transfer function from similar proteins</li>
+</ul>
+<h2>Common Issues and Solutions</h2>
+
+<p><strong>Issue: Poor performance on specific relation types</strong></p>
+<ul><li>Solution: Analyze relation patterns, choose appropriate model, or use relation-specific models</li>
+</ul>
+<p><strong>Issue: Overfitting on small graphs</strong></p>
+<ul><li>Solution: Reduce embedding dimension, increase regularization, or use simpler models</li>
+</ul>
+<p><strong>Issue: Slow training on large graphs</strong></p>
+<ul><li>Solution: Reduce negative samples, use DistMult for efficiency, or implement mini-batch training</li>
+</ul>
+<p><strong>Issue: Cannot handle new entities</strong></p>
+<ul><li>Solution: Use inductive models (KBGAT), incorporate entity features, or pre-compute embeddings for new entities based on their neighbors</li>
+</ul>
+<h2>Best Practices</h2>
+
+<ul><li>Start with ComplEx or RotatE for most tasks</li>
+<li>Use self-adversarial negative sampling</li>
+<li>Tune embedding dimension (typically 500-2000)</li>
+<li>Apply regularization to prevent overfitting</li>
+<li>Use filtered evaluation metrics</li>
+<li>Analyze performance per relation type</li>
+<li>Consider relation-specific models for heterogeneous graphs</li>
+<li>Validate predictions with domain experts</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Models Architectures</h3>
+  <h1>Models and Architectures</h1>
+
+<h2>Overview</h2>
+
+<p>TorchDrug provides a comprehensive collection of pre-built model architectures for various graph-based learning tasks. This reference catalogs all available models with their characteristics, use cases, and implementation details.</p>
+
+<h2>Graph Neural Networks</h2>
+
+<h3>GCN (Graph Convolutional Network)</h3>
+
+<p><strong>Type:</strong> Spatial message passing</p>
+<p><strong>Paper:</strong> Semi-Supervised Classification with Graph Convolutional Networks (Kipf & Welling, 2017)</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>Simple and efficient aggregation</li>
+<li>Normalized adjacency matrix convolution</li>
+<li>Works well for homophilic graphs</li>
+<li>Good baseline for many tasks</li>
+</ul>
+<p><strong>Best For:</strong></p>
+<ul><li>Initial experiments and baselines</li>
+<li>When computational efficiency is important</li>
+<li>Graphs with clear local structure</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul><li><code>input_dim</code>: Node feature dimension</li>
+<li><code>hidden_dims</code>: List of hidden layer dimensions</li>
+<li><code>edge_input_dim</code>: Edge feature dimension (optional)</li>
+<li><code>batch_norm</code>: Apply batch normalization</li>
+<li><code>activation</code>: Activation function (relu, elu, etc.)</li>
+<li><code>dropout</code>: Dropout rate</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Molecular property prediction</li>
+<li>Citation network classification</li>
+<li>Social network analysis</li>
+</ul>
+<h3>GAT (Graph Attention Network)</h3>
+
+<p><strong>Type:</strong> Attention-based message passing</p>
+<p><strong>Paper:</strong> Graph Attention Networks (Veličković et al., 2018)</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>Learns attention weights for neighbors</li>
+<li>Different importance for different neighbors</li>
+<li>Multi-head attention for robustness</li>
+<li>Handles varying node degrees naturally</li>
+</ul>
+<p><strong>Best For:</strong></p>
+<ul><li>When neighbor importance varies</li>
+<li>Heterogeneous graphs</li>
+<li>Interpretable predictions</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul><li><code>input_dim</code>, <code>hidden_dims</code>: Standard dimensions</li>
+<li><code>num_heads</code>: Number of attention heads</li>
+<li><code>negative_slope</code>: LeakyReLU slope</li>
+<li><code>concat</code>: Concatenate or average multi-head outputs</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Protein-protein interaction prediction</li>
+<li>Molecule generation with attention to reactive sites</li>
+<li>Knowledge graph reasoning with relation importance</li>
+</ul>
+<h3>GIN (Graph Isomorphism Network)</h3>
+
+<p><strong>Type:</strong> Maximally powerful message passing</p>
+<p><strong>Paper:</strong> How Powerful are Graph Neural Networks? (Xu et al., 2019)</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>Theoretically most expressive GNN architecture</li>
+<li>Injective aggregation function</li>
+<li>Can distinguish graph structures GCN cannot</li>
+<li>Often best performance on molecular tasks</li>
+</ul>
+<p><strong>Best For:</strong></p>
+<ul><li>Molecular property prediction (state-of-the-art)</li>
+<li>Tasks requiring structural discrimination</li>
+<li>Graph classification</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul><li><code>input_dim</code>, <code>hidden_dims</code>: Standard dimensions</li>
+<li><code>edge_input_dim</code>: Include edge features</li>
+<li><code>batch_norm</code>: Typically use true</li>
+<li><code>readout</code>: Graph pooling ("sum", "mean", "max")</li>
+<li><code>eps</code>: Learnable or fixed epsilon</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Drug property prediction (BBBP, HIV, etc.)</li>
+<li>Molecular generation</li>
+<li>Reaction prediction</li>
+</ul>
+<h3>RGCN (Relational Graph Convolutional Network)</h3>
+
+<p><strong>Type:</strong> Multi-relational message passing</p>
+<p><strong>Paper:</strong> Modeling Relational Data with Graph Convolutional Networks (Schlichtkrull et al., 2018)</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>Handles multiple edge/relation types</li>
+<li>Relation-specific weight matrices</li>
+<li>Basis decomposition for parameter efficiency</li>
+<li>Essential for knowledge graphs</li>
+</ul>
+<p><strong>Best For:</strong></p>
+<ul><li>Knowledge graph reasoning</li>
+<li>Heterogeneous molecular graphs</li>
+<li>Multi-relational data</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul><li><code>num_relation</code>: Number of relation types</li>
+<li><code>hidden_dims</code>: Layer dimensions</li>
+<li><code>num_bases</code>: Basis decomposition (reduce parameters)</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Knowledge graph completion</li>
+<li>Retrosynthesis (different bond types)</li>
+<li>Protein interaction networks</li>
+</ul>
+<h3>MPNN (Message Passing Neural Network)</h3>
+
+<p><strong>Type:</strong> General message passing framework</p>
+<p><strong>Paper:</strong> Neural Message Passing for Quantum Chemistry (Gilmer et al., 2017)</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>Flexible message and update functions</li>
+<li>Edge features in message computation</li>
+<li>GRU updates for node hidden states</li>
+<li>Set2Set readout for graph representation</li>
+</ul>
+<p><strong>Best For:</strong></p>
+<ul><li>Quantum chemistry predictions</li>
+<li>Tasks with important edge information</li>
+<li>When node states evolve over multiple iterations</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul><li><code>input_dim</code>, <code>hidden_dim</code>: Feature dimensions</li>
+<li><code>edge_input_dim</code>: Edge feature dimension</li>
+<li><code>num_layer</code>: Message passing iterations</li>
+<li><code>num_mlp_layer</code>: MLP layers in message function</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>QM9 quantum property prediction</li>
+<li>Molecular dynamics</li>
+<li>3D conformation-aware tasks</li>
+</ul>
+<h3>SchNet (Continuous-Filter Convolutional Network)</h3>
+
+<p><strong>Type:</strong> 3D geometry-aware convolution</p>
+<p><strong>Paper:</strong> SchNet: A continuous-filter convolutional neural network (Schütt et al., 2017)</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>Operates on 3D atomic coordinates</li>
+<li>Continuous filter convolutions</li>
+<li>Rotation and translation invariant</li>
+<li>Excellent for quantum chemistry</li>
+</ul>
+<p><strong>Best For:</strong></p>
+<ul><li>3D molecular structure tasks</li>
+<li>Quantum property prediction</li>
+<li>Protein structure analysis</li>
+<li>Energy and force prediction</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul><li><code>input_dim</code>: Atom features</li>
+<li><code>hidden_dims</code>: Layer dimensions</li>
+<li><code>num_gaussian</code>: RBF basis functions for distances</li>
+<li><code>cutoff</code>: Interaction cutoff distance</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>QM9 property prediction</li>
+<li>Molecular dynamics simulations</li>
+<li>Protein-ligand binding with structures</li>
+<li>Crystal property prediction</li>
+</ul>
+<h3>ChebNet (Chebyshev Spectral CNN)</h3>
+
+<p><strong>Type:</strong> Spectral convolution</p>
+<p><strong>Paper:</strong> Convolutional Neural Networks on Graphs (Defferrard et al., 2016)</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>Spectral graph convolution</li>
+<li>Chebyshev polynomial approximation</li>
+<li>Captures global graph structure</li>
+<li>Computationally efficient</li>
+</ul>
+<p><strong>Best For:</strong></p>
+<ul><li>Tasks requiring global information</li>
+<li>When graph Laplacian is informative</li>
+<li>Theoretical analysis</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul><li><code>input_dim</code>, <code>hidden_dims</code>: Dimensions</li>
+<li><code>num_cheb</code>: Order of Chebyshev polynomial</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Citation network classification</li>
+<li>Brain network analysis</li>
+<li>Signal processing on graphs</li>
+</ul>
+<h3>NFP (Neural Fingerprint)</h3>
+
+<p><strong>Type:</strong> Molecular fingerprint learning</p>
+<p><strong>Paper:</strong> Convolutional Networks on Graphs for Learning Molecular Fingerprints (Duvenaud et al., 2015)</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>Learns differentiable molecular fingerprints</li>
+<li>Alternative to hand-crafted fingerprints (ECFP)</li>
+<li>Circular convolutions like ECFP</li>
+<li>Interpretable learned features</li>
+</ul>
+<p><strong>Best For:</strong></p>
+<ul><li>Molecular similarity learning</li>
+<li>Property prediction with limited data</li>
+<li>When interpretability is important</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul><li><code>input_dim</code>, <code>output_dim</code>: Feature dimensions</li>
+<li><code>hidden_dims</code>: Layer dimensions</li>
+<li><code>num_layer</code>: Circular convolution depth</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Virtual screening</li>
+<li>Molecular similarity search</li>
+<li>QSAR modeling</li>
+</ul>
+<h2>Protein-Specific Models</h2>
+
+<h3>GearNet (Geometry-Aware Relational Graph Network)</h3>
+
+<p><strong>Type:</strong> Protein structure encoder</p>
+<p><strong>Paper:</strong> Protein Representation Learning by Geometric Structure Pretraining (Zhang et al., 2023)</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>Incorporates 3D geometric information</li>
+<li>Multiple edge types (sequential, spatial, KNN)</li>
+<li>Designed specifically for proteins</li>
+<li>State-of-the-art on protein tasks</li>
+</ul>
+<p><strong>Best For:</strong></p>
+<ul><li>Protein structure prediction</li>
+<li>Protein function prediction</li>
+<li>Protein-protein interaction</li>
+<li>Any task with protein 3D structures</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul><li><code>input_dim</code>: Residue features</li>
+<li><code>hidden_dims</code>: Layer dimensions</li>
+<li><code>num_relation</code>: Edge types (sequence, radius, KNN)</li>
+<li><code>edge_input_dim</code>: Geometric features (distances, angles)</li>
+<li><code>batch_norm</code>: Typically true</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Enzyme function prediction (EnzymeCommission)</li>
+<li>Protein fold recognition</li>
+<li>Contact prediction</li>
+<li>Binding site identification</li>
+</ul>
+<h3>ESM (Evolutionary Scale Modeling)</h3>
+
+<p><strong>Type:</strong> Protein language model (transformer)</p>
+<p><strong>Paper:</strong> Biological structure and function emerge from scaling unsupervised learning (Rives et al., 2021)</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>Pre-trained on 250M+ protein sequences</li>
+<li>Captures evolutionary and structural information</li>
+<li>Transformer architecture</li>
+<li>Transfer learning for downstream tasks</li>
+</ul>
+<p><strong>Best For:</strong></p>
+<ul><li>Any sequence-based protein task</li>
+<li>When no structure available</li>
+<li>Transfer learning with limited data</li>
+</ul>
+<p><strong>Variants:</strong></p>
+<ul><li>ESM-1b: 650M parameters</li>
+<li>ESM-2: Multiple sizes (8M to 15B parameters)</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Protein function prediction</li>
+<li>Variant effect prediction</li>
+<li>Protein design</li>
+<li>Structure prediction (ESMFold)</li>
+</ul>
+<h3>ProteinBERT</h3>
+
+<p><strong>Type:</strong> Masked language model for proteins</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>BERT-style pre-training</li>
+<li>Masked amino acid prediction</li>
+<li>Bidirectional context</li>
+<li>Good for sequence-based tasks</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Function annotation</li>
+<li>Subcellular localization</li>
+<li>Stability prediction</li>
+</ul>
+<h3>ProteinCNN / ProteinResNet</h3>
+
+<p><strong>Type:</strong> Convolutional networks for sequences</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>1D convolutions on sequences</li>
+<li>Local pattern recognition</li>
+<li>Faster than transformers</li>
+<li>Good for motif detection</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Binding site prediction</li>
+<li>Secondary structure prediction</li>
+<li>Domain identification</li>
+</ul>
+<h3>ProteinLSTM</h3>
+
+<p><strong>Type:</strong> Recurrent network for sequences</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>Bidirectional LSTM</li>
+<li>Captures long-range dependencies</li>
+<li>Sequential processing</li>
+<li>Good baseline for sequence tasks</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Order prediction</li>
+<li>Sequential annotation</li>
+<li>Time-series protein data</li>
+</ul>
+<h2>Knowledge Graph Models</h2>
+
+<h3>TransE (Translation Embedding)</h3>
+
+<p><strong>Type:</strong> Translation-based embedding</p>
+<p><strong>Paper:</strong> Translating Embeddings for Modeling Multi-relational Data (Bordes et al., 2013)</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>h + r ≈ t (head + relation ≈ tail)</li>
+<li>Simple and interpretable</li>
+<li>Works well for 1-to-1 relations</li>
+<li>Memory efficient</li>
+</ul>
+<p><strong>Best For:</strong></p>
+<ul><li>Large knowledge graphs</li>
+<li>Initial experiments</li>
+<li>Interpretable embeddings</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul><li><code>num_entity</code>, <code>num_relation</code>: Graph size</li>
+<li><code>embedding_dim</code>: Embedding dimensions (typically 50-500)</li>
+</ul>
+<h3>RotatE (Rotation Embedding)</h3>
+
+<p><strong>Type:</strong> Rotation in complex space</p>
+<p><strong>Paper:</strong> RotatE: Knowledge Graph Embedding by Relational Rotation in Complex Space (Sun et al., 2019)</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>Relations as rotations in complex space</li>
+<li>Handles symmetric, antisymmetric, inverse, composition</li>
+<li>State-of-the-art on many benchmarks</li>
+</ul>
+<p><strong>Best For:</strong></p>
+<ul><li>Most knowledge graph tasks</li>
+<li>Complex relation patterns</li>
+<li>When accuracy is critical</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul><li><code>num_entity</code>, <code>num_relation</code>: Graph size</li>
+<li><code>embedding_dim</code>: Must be even (complex embeddings)</li>
+<li><code>max_score</code>: Score clipping value</li>
+</ul>
+<h3>DistMult</h3>
+
+<p><strong>Type:</strong> Bilinear model</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>Symmetric relation modeling</li>
+<li>Fast and efficient</li>
+<li>Cannot model antisymmetric relations</li>
+</ul>
+<p><strong>Best For:</strong></p>
+<ul><li>Symmetric relations (e.g., "similar to")</li>
+<li>When speed is critical</li>
+<li>Large-scale graphs</li>
+</ul>
+<h3>ComplEx</h3>
+
+<p><strong>Type:</strong> Complex-valued embeddings</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>Handles asymmetric and symmetric relations</li>
+<li>Better than DistMult for most graphs</li>
+<li>Good balance of expressiveness and efficiency</li>
+</ul>
+<p><strong>Best For:</strong></p>
+<ul><li>General knowledge graph completion</li>
+<li>Mixed relation types</li>
+<li>When RotatE is too complex</li>
+</ul>
+<h3>SimplE</h3>
+
+<p><strong>Type:</strong> Enhanced embedding model</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>Two embeddings per entity (canonical + inverse)</li>
+<li>Fully expressive</li>
+<li>Slightly more parameters than ComplEx</li>
+</ul>
+<p><strong>Best For:</strong></p>
+<ul><li>When full expressiveness needed</li>
+<li>Inverse relations are important</li>
+</ul>
+<h2>Generative Models</h2>
+
+<h3>GraphAutoregressiveFlow</h3>
+
+<p><strong>Type:</strong> Normalizing flow for molecules</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>Exact likelihood computation</li>
+<li>Invertible transformations</li>
+<li>Stable training (no adversarial)</li>
+<li>Conditional generation support</li>
+</ul>
+<p><strong>Best For:</strong></p>
+<ul><li>Molecular generation</li>
+<li>Density estimation</li>
+<li>Interpolation between molecules</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul><li><code>input_dim</code>: Atom features</li>
+<li><code>hidden_dims</code>: Coupling layers</li>
+<li><code>num_flow</code>: Number of flow transformations</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>De novo drug design</li>
+<li>Chemical space exploration</li>
+<li>Property-targeted generation</li>
+</ul>
+<h2>Pre-training Models</h2>
+
+<h3>InfoGraph</h3>
+
+<p><strong>Type:</strong> Contrastive learning</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>Maximizes mutual information</li>
+<li>Graph-level and node-level contrast</li>
+<li>Unsupervised pre-training</li>
+<li>Good for small datasets</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Pre-train molecular encoders</li>
+<li>Few-shot learning</li>
+<li>Transfer learning</li>
+</ul>
+<h3>MultiviewContrast</h3>
+
+<p><strong>Type:</strong> Multi-view contrastive learning for proteins</p>
+
+<p><strong>Characteristics:</strong></p>
+<ul><li>Contrasts different views of proteins</li>
+<li>Geometric pre-training</li>
+<li>Uses 3D structure information</li>
+<li>Excellent for protein models</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Pre-train GearNet on protein structures</li>
+<li>Transfer to property prediction</li>
+<li>Limited labeled data scenarios</li>
+</ul>
+<h2>Model Selection Guide</h2>
+
+<h3>By Task Type</h3>
+
+<p><strong>Molecular Property Prediction:</strong></p>
+<ul><li>GIN (first choice)</li>
+<li>GAT (interpretability)</li>
+<li>SchNet (3D available)</li>
+</ul>
+<p><strong>Protein Tasks:</strong></p>
+<ul><li>ESM (sequence only)</li>
+<li>GearNet (structure available)</li>
+<li>ProteinBERT (sequence, lighter than ESM)</li>
+</ul>
+<p><strong>Knowledge Graphs:</strong></p>
+<ul><li>RotatE (best performance)</li>
+<li>ComplEx (good balance)</li>
+<li>TransE (large graphs, efficiency)</li>
+</ul>
+<p><strong>Molecular Generation:</strong></p>
+<ul><li>GraphAutoregressiveFlow (exact likelihood)</li>
+<li>GCPN with GIN backbone (property optimization)</li>
+</ul>
+<p><strong>Retrosynthesis:</strong></p>
+<ul><li>GIN (synthon completion)</li>
+<li>RGCN (center identification with bond types)</li>
+</ul>
+<h3>By Dataset Size</h3>
+
+<p><strong>Small (< 1k):</strong></p>
+<ul><li>Use pre-trained models (ESM for proteins)</li>
+<li>Simpler architectures (GCN, ProteinCNN)</li>
+<li>Heavy regularization</li>
+</ul>
+<p><strong>Medium (1k-100k):</strong></p>
+<ul><li>GIN for molecules</li>
+<li>GAT for interpretability</li>
+<li>Standard training</li>
+</ul>
+<p><strong>Large (> 100k):</strong></p>
+<ul><li>Any model works</li>
+<li>Deeper architectures</li>
+<li>Can train from scratch</li>
+</ul>
+<h3>By Computational Budget</h3>
+
+<p><strong>Low:</strong></p>
+<ul><li>GCN (simplest)</li>
+<li>DistMult (KG)</li>
+<li>ProteinLSTM</li>
+</ul>
+<p><strong>Medium:</strong></p>
+<ul><li>GIN</li>
+<li>GAT</li>
+<li>ComplEx</li>
+</ul>
+<p><strong>High:</strong></p>
+<ul><li>ESM (large)</li>
+<li>SchNet (3D)</li>
+<li>RotatE with high dim</li>
+</ul>
+<h2>Implementation Tips</h2>
+
+<ul><li><strong>Start Simple</strong>: Begin with GCN or GIN baseline</li>
+<li><strong>Use Pre-trained</strong>: ESM for proteins, InfoGraph for molecules</li>
+<li><strong>Tune Depth</strong>: 3-5 layers typically sufficient</li>
+<li><strong>Batch Normalization</strong>: Usually helps (except KG embeddings)</li>
+<li><strong>Residual Connections</strong>: Important for deep networks</li>
+<li><strong>Readout Function</strong>: "mean" usually works well</li>
+<li><strong>Edge Features</strong>: Include when available (bonds, distances)</li>
+<li><strong>Regularization</strong>: Dropout, weight decay, early stopping</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Molecular Generation</h3>
+  <h1>Molecular Generation</h1>
+
+<h2>Overview</h2>
+
+<p>Molecular generation involves creating novel molecular structures with desired properties. TorchDrug supports both unconditional generation (exploring chemical space) and conditional generation (optimizing for specific properties).</p>
+
+<h2>Task Types</h2>
+
+<h3>AutoregressiveGeneration</h3>
+
+<p>Generates molecules step-by-step by sequentially adding atoms and bonds. This approach enables fine-grained control and property optimization during generation.</p>
+
+<p><strong>Key Features:</strong></p>
+<ul><li>Sequential atom-by-bond construction</li>
+<li>Supports property optimization during generation</li>
+<li>Can incorporate chemical validity constraints</li>
+<li>Enables multi-objective optimization</li>
+</ul>
+<p><strong>Generation Strategies:</strong></p>
+<ul><li><strong>Beam Search</strong>: Keep top-k candidates at each step</li>
+<li><strong>Sampling</strong>: Probabilistic selection for diversity</li>
+<li><strong>Greedy</strong>: Always select highest probability action</li>
+</ul>
+<p><strong>Property Optimization:</strong></p>
+<ul><li>Reward shaping based on desired properties</li>
+<li>Real-time constraint satisfaction</li>
+<li>Multi-objective balancing (e.g., potency + drug-likeness)</li>
+</ul>
+<h3>GCPNGeneration (Graph Convolutional Policy Network)</h3>
+
+<p>Uses reinforcement learning to generate molecules optimized for specific properties.</p>
+
+<p><strong>Components:</strong></p>
+<ul><li><strong>Policy Network</strong>: Decides which action to take (add atom, add bond)</li>
+<li><strong>Reward Function</strong>: Evaluates generated molecule quality</li>
+<li><strong>Training</strong>: Reinforcement learning with policy gradient</li>
+</ul>
+<p><strong>Advantages:</strong></p>
+<ul><li>Direct optimization of non-differentiable objectives</li>
+<li>Can incorporate complex domain knowledge</li>
+<li>Balances exploration and exploitation</li>
+</ul>
+<p><strong>Applications:</strong></p>
+<ul><li>Drug design with specific targets</li>
+<li>Material discovery with property constraints</li>
+<li>Multi-objective molecular optimization</li>
+</ul>
+<h2>Generative Models</h2>
+
+<h3>GraphAutoregressiveFlow</h3>
+
+<p>Normalizing flow model for molecular generation with exact likelihood computation.</p>
+
+<p><strong>Architecture:</strong></p>
+<ul><li>Coupling layers transform simple distribution to complex molecular distribution</li>
+<li>Invertible transformations enable density estimation</li>
+<li>Supports conditional generation</li>
+</ul>
+<p><strong>Key Features:</strong></p>
+<ul><li>Exact likelihood computation (vs. VAE's approximate likelihood)</li>
+<li>Stable training (vs. GAN's adversarial training)</li>
+<li>Efficient sampling through invertible transformations</li>
+<li>Can generate molecules with specified properties</li>
+</ul>
+<p><strong>Training:</strong></p>
+<ul><li>Maximum likelihood on molecule dataset</li>
+<li>Optional property prediction head for conditional generation</li>
+<li>Typically trained on ZINC or QM9</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul><li>Generating diverse drug-like molecules</li>
+<li>Interpolation between known molecules</li>
+<li>Density estimation for molecular space</li>
+</ul>
+<h2>Generation Workflows</h2>
+
+<h3>Unconditional Generation</h3>
+
+<p>Generate diverse molecules without specific property targets.</p>
+
+<p><strong>Workflow:</strong></p>
+<ul><li>Train generative model on molecule dataset (e.g., ZINC250k)</li>
+<li>Sample from learned distribution</li>
+<li>Post-process for validity and uniqueness</li>
+<li>Evaluate diversity metrics</li>
+</ul>
+<p><strong>Evaluation Metrics:</strong></p>
+<ul><li><strong>Validity</strong>: Percentage of chemically valid molecules</li>
+<li><strong>Uniqueness</strong>: Percentage of unique molecules among valid</li>
+<li><strong>Novelty</strong>: Percentage not in training set</li>
+<li><strong>Diversity</strong>: Internal diversity using fingerprint similarity</li>
+</ul>
+<h3>Conditional Generation</h3>
+
+<p>Generate molecules optimized for specific properties.</p>
+
+<p><strong>Property Targets:</strong></p>
+<ul><li><strong>Drug-likeness</strong>: LogP, QED, Lipinski's rule of five</li>
+<li><strong>Synthesizability</strong>: SA score, retrosynthesis feasibility</li>
+<li><strong>Bioactivity</strong>: Predicted IC50, binding affinity</li>
+<li><strong>ADMET</strong>: Absorption, distribution, metabolism, excretion, toxicity</li>
+<li><strong>Multi-objective</strong>: Balance multiple properties simultaneously</li>
+</ul>
+<p><strong>Workflow:</strong></p>
+<ul><li>Define reward function combining property objectives</li>
+<li>Train GCPN or condition flow model on properties</li>
+<li>Generate molecules with desired property ranges</li>
+<li>Validate generated molecules (in silico → wet lab)</li>
+</ul>
+<h3>Scaffold-Based Generation</h3>
+
+<p>Generate molecules around a fixed scaffold or core structure.</p>
+
+<p><strong>Applications:</strong></p>
+<ul><li>Lead optimization keeping core pharmacophore</li>
+<li>R-group enumeration for SAR studies</li>
+<li>Fragment linking and growing</li>
+</ul>
+<p><strong>Approaches:</strong></p>
+<ul><li>Mask scaffold during training</li>
+<li>Condition generation on scaffold</li>
+<li>Post-generation grafting</li>
+</ul>
+<h3>Fragment-Based Generation</h3>
+
+<p>Build molecules from validated fragments.</p>
+
+<p><strong>Benefits:</strong></p>
+<ul><li>Ensures drug-like substructures</li>
+<li>Reduces search space</li>
+<li>Incorporates medicinal chemistry knowledge</li>
+</ul>
+<p><strong>Methods:</strong></p>
+<ul><li>Fragment library as building blocks</li>
+<li>Vocabulary-based generation</li>
+<li>Fragment linking with learned linkers</li>
+</ul>
+<h2>Property Optimization Strategies</h2>
+
+<h3>Single-Objective Optimization</h3>
+
+<p>Maximize or minimize a single property (e.g., binding affinity).</p>
+
+<p><strong>Approach:</strong></p>
+<ul><li>Define scalar reward function</li>
+<li>Use GCPN with RL training</li>
+<li>Generate and rank candidates</li>
+</ul>
+<p><strong>Challenges:</strong></p>
+<ul><li>May sacrifice other important properties</li>
+<li>Risk of adversarial examples (valid but non-drug-like)</li>
+<li>Need constraints on drug-likeness</li>
+</ul>
+<h3>Multi-Objective Optimization</h3>
+
+<p>Balance multiple competing objectives (e.g., potency, selectivity, synthesizability).</p>
+
+<p><strong>Weighting Approaches:</strong></p>
+<ul><li><strong>Linear combination</strong>: w1×prop1 + w2×prop2 + ...</li>
+<li><strong>Pareto optimization</strong>: Find non-dominated solutions</li>
+<li><strong>Constraint satisfaction</strong>: Threshold on secondary objectives</li>
+</ul>
+<p><strong>Example Objectives:</strong></p>
+<ul><li>High binding affinity (target)</li>
+<li>Low binding affinity (off-targets)</li>
+<li>High synthesizability (SA score)</li>
+<li>Drug-like properties (QED)</li>
+<li>Low molecular weight</li>
+</ul>
+<p><strong>Workflow:</strong></p>
+<pre><code class="language-python">from torchdrug import tasks
+
+# Define multi-objective reward
+def reward_function(mol):
+    affinity_score = predict_binding(mol)
+    druglikeness = calculate_qed(mol)
+    synthesizability = sa_score(mol)
+
+    # Weighted combination
+    reward = 0.5 * affinity_score + 0.3 * druglikeness + 0.2 * (1 - synthesizability)
+    return reward
+
+# GCPN task with custom reward
+task = tasks.GCPNGeneration(
+    model,
+    reward_function=reward_function,
+    criterion="ppo"  # Proximal policy optimization
+)</code></pre>
+
+<h3>Constraint-Based Generation</h3>
+
+<p>Generate molecules satisfying hard constraints.</p>
+
+<p><strong>Common Constraints:</strong></p>
+<ul><li>Molecular weight range</li>
+<li>LogP range</li>
+<li>Number of rotatable bonds</li>
+<li>Ring count limits</li>
+<li>Substructure inclusion/exclusion</li>
+<li>Synthetic accessibility threshold</li>
+</ul>
+<p><strong>Implementation:</strong></p>
+<ul><li>Validity checking during generation</li>
+<li>Early stopping for invalid molecules</li>
+<li>Penalty terms in reward function</li>
+</ul>
+<h2>Training Considerations</h2>
+
+<h3>Dataset Selection</h3>
+
+<p><strong>ZINC (Drug-like compounds):</strong></p>
+<ul><li>ZINC250k: 250,000 compounds</li>
+<li>ZINC2M: 2 million compounds</li>
+<li>Pre-filtered for drug-likeness</li>
+<li>Good for drug discovery applications</li>
+</ul>
+<p><strong>QM9 (Small organic molecules):</strong></p>
+<ul><li>133,885 molecules</li>
+<li>Includes quantum properties</li>
+<li>Good for property prediction models</li>
+</ul>
+<p><strong>ChEMBL (Bioactive molecules):</strong></p>
+<ul><li>Millions of bioactive compounds</li>
+<li>Activity data available</li>
+<li>Target-specific generation</li>
+</ul>
+<p><strong>Custom Datasets:</strong></p>
+<ul><li>Focus on specific chemical space</li>
+<li>Include expert knowledge</li>
+<li>Domain-specific constraints</li>
+</ul>
+<h3>Data Augmentation</h3>
+
+<p><strong>SMILES Augmentation:</strong></p>
+<ul><li>Generate multiple SMILES for same molecule</li>
+<li>Helps model learn canonical representations</li>
+<li>Improves robustness</li>
+</ul>
+<p><strong>Graph Augmentation:</strong></p>
+<ul><li>Random node/edge masking</li>
+<li>Subgraph sampling</li>
+<li>Motif substitution</li>
+</ul>
+<h3>Model Architecture Choices</h3>
+
+<p><strong>For Small Molecules (<30 atoms):</strong></p>
+<ul><li>Simpler architectures sufficient</li>
+<li>Faster training and generation</li>
+<li>GCN or GIN backbone</li>
+</ul>
+<p><strong>For Drug-like Molecules:</strong></p>
+<ul><li>Deeper architectures (4-6 layers)</li>
+<li>Attention mechanisms help</li>
+<li>Consider molecular fingerprints</li>
+</ul>
+<p><strong>For Macrocycles/Polymers:</strong></p>
+<ul><li>Handle larger graphs</li>
+<li>Ring closure mechanisms important</li>
+<li>Long-range dependencies</li>
+</ul>
+<h2>Validation and Filtering</h2>
+
+<h3>In Silico Validation</h3>
+
+<p><strong>Chemical Validity:</strong></p>
+<ul><li>Valence rules</li>
+<li>Aromaticity rules</li>
+<li>Charge neutrality</li>
+<li>Stable substructures</li>
+</ul>
+<p><strong>Drug-likeness Filters:</strong></p>
+<ul><li>Lipinski's rule of five</li>
+<li>Veber's rules</li>
+<li>PAINS filters (pan-assay interference compounds)</li>
+<li>BRENK filters (toxic/reactive substructures)</li>
+</ul>
+<p><strong>Synthesizability:</strong></p>
+<ul><li>SA score (synthetic accessibility)</li>
+<li>Retrosynthesis prediction</li>
+<li>Commercial availability of precursors</li>
+</ul>
+<p><strong>Property Prediction:</strong></p>
+<ul><li>ADMET properties</li>
+<li>Toxicity prediction</li>
+<li>Off-target binding</li>
+<li>Metabolic stability</li>
+</ul>
+<h3>Ranking and Selection</h3>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>Predicted target affinity</li>
+<li>Drug-likeness score</li>
+<li>Synthesizability</li>
+<li>Novelty (dissimilarity to known actives)</li>
+<li>Diversity (within generated set)</li>
+<li>Predicted ADMET properties</li>
+</ul>
+<p><strong>Selection Strategies:</strong></p>
+<ul><li>Pareto frontier selection</li>
+<li>Weighted scoring</li>
+<li>Clustering and representative selection</li>
+<li>Active learning for wet lab validation</li>
+</ul>
+<h2>Best Practices</h2>
+
+<ul><li><strong>Start Simple</strong>: Begin with unconditional generation, then add constraints</li>
+<li><strong>Validate Chemistry</strong>: Always check for valid molecules and drug-likeness</li>
+<li><strong>Diverse Training Data</strong>: Use large, diverse datasets for better generalization</li>
+<li><strong>Multi-Objective</strong>: Consider multiple properties from the start</li>
+<li><strong>Iterative Refinement</strong>: Generate → validate → retrain with feedback</li>
+<li><strong>Domain Expert Review</strong>: Consult medicinal chemists before synthesis</li>
+<li><strong>Benchmark</strong>: Compare against known actives and random samples</li>
+<li><strong>Synthesizability</strong>: Prioritize molecules that can actually be made</li>
+<li><strong>Explainability</strong>: Understand why model generates certain structures</li>
+<li><strong>Wet Lab Validation</strong>: Ultimately validate promising candidates experimentally</li>
+</ul>
+<h2>Common Applications</h2>
+
+<h3>Drug Discovery</h3>
+<ul><li>Lead generation for novel targets</li>
+<li>Lead optimization around active scaffolds</li>
+<li>Bioisostere replacement</li>
+<li>Fragment elaboration</li>
+</ul>
+<h3>Materials Science</h3>
+<ul><li>Polymer design with target properties</li>
+<li>Catalyst discovery</li>
+<li>Energy storage materials</li>
+<li>Photovoltaic materials</li>
+</ul>
+<h3>Chemical Biology</h3>
+<ul><li>Probe molecule design</li>
+<li>Degrader (PROTAC) design</li>
+<li>Molecular glue discovery</li>
+</ul>
+<h2>Integration with Other Tools</h2>
+
+<p><strong>Docking:</strong></p>
+<ul><li>Generate molecules → Dock to target → Retrain with docking scores</li>
+</ul>
+<p><strong>Retrosynthesis:</strong></p>
+<ul><li>Filter generated molecules by synthetic accessibility</li>
+<li>Plan synthesis routes for top candidates</li>
+</ul>
+<p><strong>Property Prediction:</strong></p>
+<ul><li>Use trained property prediction models as reward functions</li>
+<li>Multi-task learning with generation and prediction</li>
+</ul>
+<p><strong>Active Learning:</strong></p>
+<ul><li>Generate candidates → Predict properties → Synthesize best → Retrain</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Molecular Property Prediction</h3>
+  <h1>Molecular Property Prediction</h1>
+
+<h2>Overview</h2>
+
+<p>Molecular property prediction involves predicting chemical, physical, or biological properties of molecules from their structure. TorchDrug provides comprehensive support for both classification and regression tasks on molecular graphs.</p>
+
+<h2>Available Datasets</h2>
+
+<h3>Drug Discovery Datasets</h3>
+
+<p><strong>Classification Tasks:</strong></p>
+<ul><li><strong>BACE</strong> (1,513 molecules): Binary classification for β-secretase inhibition</li>
+<li><strong>BBBP</strong> (2,039 molecules): Blood-brain barrier penetration prediction</li>
+<li><strong>HIV</strong> (41,127 molecules): Ability to inhibit HIV replication</li>
+<li><strong>Tox21</strong> (7,831 molecules): Toxicity prediction across 12 targets</li>
+<li><strong>ToxCast</strong> (8,576 molecules): Toxicology screening</li>
+<li><strong>ClinTox</strong> (1,478 molecules): Clinical trial toxicity</li>
+<li><strong>SIDER</strong> (1,427 molecules): Drug side effects (27 system organ classes)</li>
+<li><strong>MUV</strong> (93,087 molecules): Maximum unbiased validation for virtual screening</li>
+</ul>
+<p><strong>Regression Tasks:</strong></p>
+<ul><li><strong>ESOL</strong> (1,128 molecules): Water solubility prediction</li>
+<li><strong>FreeSolv</strong> (642 molecules): Hydration free energy</li>
+<li><strong>Lipophilicity</strong> (4,200 molecules): Octanol/water distribution coefficient</li>
+<li><strong>SAMPL</strong> (643 molecules): Solvation free energies</li>
+</ul>
+<h3>Large-Scale Datasets</h3>
+
+<ul><li><strong>QM7</strong> (7,165 molecules): Quantum mechanical properties</li>
+<li><strong>QM8</strong> (21,786 molecules): Electronic spectra and excited state properties</li>
+<li><strong>QM9</strong> (133,885 molecules): Geometric, energetic, electronic, and thermodynamic properties</li>
+<li><strong>PCQM4M</strong> (3,803,453 molecules): Large-scale quantum chemistry dataset</li>
+<li><strong>ZINC250k/2M</strong> (250k/2M molecules): Drug-like compounds for generative modeling</li>
+</ul>
+<h2>Task Types</h2>
+
+<h3>PropertyPrediction</h3>
+
+<p>Standard task for graph-level property prediction supporting both classification and regression.</p>
+
+<p><strong>Key Parameters:</strong></p>
+<ul><li><code>model</code>: Graph representation model (GNN)</li>
+<li><code>task</code>: "node", "edge", or "graph" level prediction</li>
+<li><code>criterion</code>: Loss function ("mse", "bce", "ce")</li>
+<li><code>metric</code>: Evaluation metrics ("mae", "rmse", "auroc", "auprc")</li>
+<li><code>num_mlp_layer</code>: Number of MLP layers for readout</li>
+</ul>
+<p><strong>Example Workflow:</strong></p>
+<pre><code class="language-python">import torch
+from torchdrug import core, models, tasks, datasets
+
+# Load dataset
+dataset = datasets.BBBP("~/molecule-datasets/")
+
+# Define model
+model = models.GIN(input_dim=dataset.node_feature_dim,
+                   hidden_dims=[256, 256, 256, 256],
+                   edge_input_dim=dataset.edge_feature_dim,
+                   batch_norm=True, readout="mean")
+
+# Define task
+task = tasks.PropertyPrediction(model, task=dataset.tasks,
+                                 criterion="bce",
+                                 metric=("auprc", "auroc"))</code></pre>
+
+<h3>MultipleBinaryClassification</h3>
+
+<p>Specialized task for multi-label scenarios where each molecule can have multiple binary labels (e.g., Tox21, SIDER).</p>
+
+<p><strong>Key Features:</strong></p>
+<ul><li>Handles missing labels gracefully</li>
+<li>Computes metrics per label and averaged</li>
+<li>Supports weighted loss for imbalanced datasets</li>
+</ul>
+<h2>Model Selection</h2>
+
+<h3>Recommended Models by Task</h3>
+
+<p><strong>Small Molecules (< 1000 molecules):</strong></p>
+<ul><li>GIN (Graph Isomorphism Network)</li>
+<li>SchNet (for 3D structures)</li>
+</ul>
+<p><strong>Medium Datasets (1k-100k molecules):</strong></p>
+<ul><li>GCN, GAT, or GIN</li>
+<li>NFP (Neural Fingerprint)</li>
+<li>MPNN (Message Passing Neural Network)</li>
+</ul>
+<p><strong>Large Datasets (> 100k molecules):</strong></p>
+<ul><li>Pre-trained models with fine-tuning</li>
+<li>InfoGraph or MultiviewContrast for self-supervised pre-training</li>
+<li>GIN with deeper architectures</li>
+</ul>
+<p><strong>3D Structure Available:</strong></p>
+<ul><li>SchNet (continuous-filter convolutions)</li>
+<li>GearNet (geometry-aware relational graph)</li>
+</ul>
+<h2>Feature Engineering</h2>
+
+<h3>Node Features</h3>
+
+<p>TorchDrug automatically extracts atom features:</p>
+<ul><li>Atom type</li>
+<li>Formal charge</li>
+<li>Explicit/implicit hydrogens</li>
+<li>Hybridization</li>
+<li>Aromaticity</li>
+<li>Chirality</li>
+</ul>
+<h3>Edge Features</h3>
+
+<p>Bond features include:</p>
+<ul><li>Bond type (single, double, triple, aromatic)</li>
+<li>Stereochemistry</li>
+<li>Conjugation</li>
+<li>Ring membership</li>
+</ul>
+<h3>Custom Features</h3>
+
+<p>Add custom node/edge features using transforms:</p>
+<pre><code class="language-python">from torchdrug import data, transforms
+
+# Add custom features
+transform = transforms.VirtualNode()  # Add virtual node
+dataset = datasets.BBBP("~/molecule-datasets/",
+                        transform=transform)</code></pre>
+
+<h2>Training Workflow</h2>
+
+<h3>Basic Pipeline</h3>
+
+<ul><li><strong>Load Dataset</strong>: Choose appropriate dataset</li>
+<li><strong>Split Data</strong>: Use scaffold split for drug discovery</li>
+<li><strong>Define Model</strong>: Select GNN architecture</li>
+<li><strong>Create Task</strong>: Configure loss and metrics</li>
+<li><strong>Setup Optimizer</strong>: Adam typically works well</li>
+<li><strong>Train</strong>: Use PyTorch Lightning or custom loop</li>
+</ul>
+<h3>Data Splitting Strategies</h3>
+
+<p><strong>Random Split</strong>: Standard train/val/test split</p>
+<p><strong>Scaffold Split</strong>: Group molecules by Bemis-Murcko scaffolds (recommended for drug discovery)</p>
+<p><strong>Stratified Split</strong>: Maintain label distribution across splits</p>
+
+<h3>Best Practices</h3>
+
+<ul><li>Use scaffold splitting for realistic drug discovery evaluation</li>
+<li>Apply data augmentation (virtual nodes, edges) for small datasets</li>
+<li>Monitor multiple metrics (AUROC, AUPRC for classification; MAE, RMSE for regression)</li>
+<li>Use early stopping based on validation performance</li>
+<li>Consider ensemble methods for critical applications</li>
+<li>Pre-train on large datasets before fine-tuning on small datasets</li>
+</ul>
+<h2>Common Issues and Solutions</h2>
+
+<p><strong>Issue: Poor performance on imbalanced datasets</strong></p>
+<ul><li>Solution: Use weighted loss, focal loss, or over/under-sampling</li>
+</ul>
+<p><strong>Issue: Overfitting on small datasets</strong></p>
+<ul><li>Solution: Increase regularization, use simpler models, apply data augmentation, or pre-train on larger datasets</li>
+</ul>
+<p><strong>Issue: Large memory consumption</strong></p>
+<ul><li>Solution: Reduce batch size, use gradient accumulation, or implement graph sampling</li>
+</ul>
+<p><strong>Issue: Slow training</strong></p>
+<ul><li>Solution: Use GPU acceleration, optimize data loading with multiple workers, or use mixed precision training</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Protein Modeling</h3>
+  <h1>Protein Modeling</h1>
+
+<h2>Overview</h2>
+
+<p>TorchDrug provides extensive support for protein-related tasks including sequence analysis, structure prediction, property prediction, and protein-protein interactions. Proteins are represented as graphs where nodes are amino acid residues and edges represent spatial or sequential relationships.</p>
+
+<h2>Available Datasets</h2>
+
+<h3>Protein Function Prediction</h3>
+
+<p><strong>Enzyme Function:</strong></p>
+<ul><li><strong>EnzymeCommission</strong> (17,562 proteins): EC number classification (7 levels)</li>
+<li><strong>BetaLactamase</strong> (5,864 sequences): Enzyme activity prediction</li>
+</ul>
+<p><strong>Protein Characteristics:</strong></p>
+<ul><li><strong>Fluorescence</strong> (54,025 sequences): GFP fluorescence intensity</li>
+<li><strong>Stability</strong> (53,614 sequences): Thermostability prediction</li>
+<li><strong>Solubility</strong> (62,478 sequences): Protein solubility classification</li>
+<li><strong>BinaryLocalization</strong> (22,168 proteins): Subcellular localization (membrane vs. soluble)</li>
+<li><strong>SubcellularLocalization</strong> (8,943 proteins): 10-class localization prediction</li>
+</ul>
+<p><strong>Gene Ontology:</strong></p>
+<ul><li><strong>GeneOntology</strong> (46,796 proteins): GO term prediction across biological process, molecular function, and cellular component</li>
+</ul>
+<h3>Protein Structure Prediction</h3>
+
+<ul><li><strong>Fold</strong> (16,712 proteins): Structural fold classification (1,195 classes)</li>
+<li><strong>SecondaryStructure</strong> (8,678 proteins): 3-state or 8-state secondary structure prediction</li>
+<li><strong>ContactPrediction</strong> via ProteinNet: Residue-residue contact maps</li>
+</ul>
+<h3>Protein Interaction</h3>
+
+<p><strong>Protein-Protein Interactions:</strong></p>
+<ul><li><strong>HumanPPI</strong> (1,412 proteins, 6,584 interactions): Human protein interaction network</li>
+<li><strong>YeastPPI</strong> (2,018 proteins, 6,451 interactions): Yeast protein interaction network</li>
+<li><strong>PPIAffinity</strong> (2,156 protein pairs): Binding affinity measurements</li>
+</ul>
+<p><strong>Protein-Ligand Binding:</strong></p>
+<ul><li><strong>BindingDB</strong> (~1.5M entries): Comprehensive binding affinity database</li>
+<li><strong>PDBBind</strong> (20,000+ complexes): 3D structure-based binding data</li>
+</ul><p>  - Refined set: High-quality crystal structures</p>
+<p>  - Core set: Diverse benchmark set</p>
+
+<h3>Large-Scale Protein Databases</h3>
+
+<ul><li><strong>AlphaFoldDB</strong>: Access to 200M+ predicted protein structures</li>
+<li><strong>ProteinNet</strong>: Standardized dataset for structure prediction</li>
+</ul>
+<h2>Task Types</h2>
+
+<h3>NodePropertyPrediction</h3>
+
+<p>Predict properties at the residue (node) level, such as secondary structure or contact maps.</p>
+
+<p><strong>Use Cases:</strong></p>
+<ul><li>Secondary structure prediction (helix, sheet, coil)</li>
+<li>Residue-level disorder prediction</li>
+<li>Post-translational modification sites</li>
+<li>Binding site prediction</li>
+</ul>
+<h3>PropertyPrediction</h3>
+
+<p>Predict protein-level properties like function, stability, or localization.</p>
+
+<p><strong>Use Cases:</strong></p>
+<ul><li>Enzyme function classification</li>
+<li>Subcellular localization</li>
+<li>Protein stability prediction</li>
+<li>Gene ontology term prediction</li>
+</ul>
+<h3>InteractionPrediction</h3>
+
+<p>Predict interactions between protein pairs or protein-ligand pairs.</p>
+
+<p><strong>Key Features:</strong></p>
+<ul><li>Handles both sequence and structure inputs</li>
+<li>Supports symmetric (PPI) and asymmetric (protein-ligand) interactions</li>
+<li>Multiple negative sampling strategies</li>
+</ul>
+<h3>ContactPrediction</h3>
+
+<p>Specialized task for predicting spatial proximity between residues in folded structures.</p>
+
+<p><strong>Applications:</strong></p>
+<ul><li>Structure prediction from sequence</li>
+<li>Protein folding pathway analysis</li>
+<li>Validation of predicted structures</li>
+</ul>
+<h2>Protein Representation Models</h2>
+
+<h3>Sequence-Based Models</h3>
+
+<p><strong>ESM (Evolutionary Scale Modeling):</strong></p>
+<ul><li>Pre-trained transformer model on 250M sequences</li>
+<li>State-of-the-art for sequence-only tasks</li>
+<li>Available in multiple sizes (ESM-1b, ESM-2)</li>
+<li>Captures evolutionary and structural information</li>
+</ul>
+<p><strong>ProteinBERT:</strong></p>
+<ul><li>BERT-style masked language model</li>
+<li>Pre-trained on UniProt sequences</li>
+<li>Good for transfer learning</li>
+</ul>
+<p><strong>ProteinLSTM:</strong></p>
+<ul><li>Bidirectional LSTM for sequence encoding</li>
+<li>Lightweight and fast</li>
+<li>Good baseline for sequence tasks</li>
+</ul>
+<p><strong>ProteinCNN / ProteinResNet:</strong></p>
+<ul><li>Convolutional architectures</li>
+<li>Capture local sequence patterns</li>
+<li>Faster than transformer models</li>
+</ul>
+<h3>Structure-Based Models</h3>
+
+<p><strong>GearNet (Geometry-Aware Relational Graph Network):</strong></p>
+<ul><li>Incorporates 3D geometric information</li>
+<li>Edge types based on sequential, radius, and K-nearest neighbors</li>
+<li>State-of-the-art for structure-based tasks</li>
+<li>Supports both backbone and full-atom representations</li>
+</ul>
+<p><strong>GCN/GAT/GIN on Protein Graphs:</strong></p>
+<ul><li>Standard GNN architectures adapted for proteins</li>
+<li>Flexible edge definitions (sequence, spatial, contact)</li>
+</ul>
+<p><strong>SchNet:</strong></p>
+<ul><li>Continuous-filter convolutions</li>
+<li>Handles 3D coordinates directly</li>
+<li>Good for structure prediction and protein-ligand binding</li>
+</ul>
+<h3>Feature-Based Models</h3>
+
+<p><strong>Statistic Features:</strong></p>
+<ul><li>Amino acid composition</li>
+<li>Sequence length statistics</li>
+<li>Motif counts</li>
+</ul>
+<p><strong>Physicochemical Features:</strong></p>
+<ul><li>Hydrophobicity scales</li>
+<li>Charge properties</li>
+<li>Secondary structure propensity</li>
+<li>Molecular weight, pI</li>
+</ul>
+<h2>Protein Graph Construction</h2>
+
+<h3>Edge Types</h3>
+
+<p><strong>Sequential Edges:</strong></p>
+<ul><li>Connect adjacent residues in sequence</li>
+<li>Captures primary structure</li>
+</ul>
+<p><strong>Spatial Edges:</strong></p>
+<ul><li>K-nearest neighbors in 3D space</li>
+<li>Radius cutoff (e.g., Cα atoms within 10Å)</li>
+<li>Captures tertiary structure</li>
+</ul>
+<p><strong>Contact Edges:</strong></p>
+<ul><li>Based on heavy atom distances</li>
+<li>Typically < 8Å threshold</li>
+</ul>
+<h3>Node Features</h3>
+
+<p><strong>Residue Identity:</strong></p>
+<ul><li>One-hot encoding of 20 amino acids</li>
+<li>Learned embeddings</li>
+</ul>
+<p><strong>Position Information:</strong></p>
+<ul><li>3D coordinates (Cα, N, C, O)</li>
+<li>Backbone angles (phi, psi, omega)</li>
+<li>Relative spatial position encodings</li>
+</ul>
+<p><strong>Physicochemical Properties:</strong></p>
+<ul><li>Hydrophobicity</li>
+<li>Charge</li>
+<li>Size</li>
+<li>Secondary structure</li>
+</ul>
+<h2>Training Workflows</h2>
+
+<h3>Pre-training Strategies</h3>
+
+<p><strong>Self-Supervised Pre-training:</strong></p>
+<ul><li>Masked residue prediction (like BERT)</li>
+<li>Distance prediction between residues</li>
+<li>Angle prediction (phi, psi, omega)</li>
+<li>Dihedral angle prediction</li>
+<li>Contact map prediction</li>
+</ul>
+<p><strong>Pre-trained Model Usage:</strong></p>
+<pre><code class="language-python">from torchdrug import models
+
+# Load pre-trained ESM
+model = models.ESM(path="esm1b_t33_650M_UR50S.pt")
+
+# Fine-tune on downstream task
+task = tasks.PropertyPrediction(
+    model, task=["stability"],
+    criterion="mse", metric=["mae", "rmse"]
+)</code></pre>
+
+<h3>Multi-Task Learning</h3>
+
+<p>Train on multiple related tasks simultaneously:</p>
+<ul><li>Joint prediction of function, localization, and stability</li>
+<li>Improves generalization and data efficiency</li>
+<li>Shares representations across tasks</li>
+</ul>
+<h3>Best Practices</h3>
+
+<p><strong>For Sequence-Only Tasks:</strong></p>
+<ul><li>Start with pre-trained ESM or ProteinBERT</li>
+<li>Fine-tune with small learning rate (1e-5 to 1e-4)</li>
+<li>Use frozen embeddings for small datasets</li>
+<li>Apply dropout for regularization</li>
+</ul>
+<p><strong>For Structure-Based Tasks:</strong></p>
+<ul><li>Use GearNet with multiple edge types</li>
+<li>Include geometric features (angles, dihedrals)</li>
+<li>Pre-train on large structure databases</li>
+<li>Use data augmentation (rotations, crops)</li>
+</ul>
+<p><strong>For Small Datasets:</strong></p>
+<ul><li>Transfer learning from pre-trained models</li>
+<li>Multi-task learning with related tasks</li>
+<li>Data augmentation (sequence mutations, structure perturbations)</li>
+<li>Strong regularization (dropout, weight decay)</li>
+</ul>
+<h2>Common Use Cases</h2>
+
+<h3>Enzyme Engineering</h3>
+<ul><li>Predict enzyme activity from sequence</li>
+<li>Design mutations to improve stability</li>
+<li>Screen for desired catalytic properties</li>
+</ul>
+<h3>Antibody Design</h3>
+<ul><li>Predict binding affinity</li>
+<li>Optimize antibody sequences</li>
+<li>Predict immunogenicity</li>
+</ul>
+<h3>Drug Target Identification</h3>
+<ul><li>Predict protein function</li>
+<li>Identify druggable sites</li>
+<li>Analyze protein-ligand interactions</li>
+</ul>
+<h3>Protein Structure Prediction</h3>
+<ul><li>Predict secondary structure from sequence</li>
+<li>Generate contact maps for tertiary structure</li>
+<li>Refine AlphaFold predictions</li>
+</ul>
+<h2>Integration with Other Tools</h2>
+
+<h3>AlphaFold Integration</h3>
+
+<p>Load AlphaFold-predicted structures:</p>
+<pre><code class="language-python">from torchdrug import data
+
+# Load AlphaFold structure
+protein = data.Protein.from_pdb("alphafold_structure.pdb")
+
+# Use in TorchDrug workflows</code></pre>
+
+<h3>ESMFold Integration</h3>
+
+<p>Use ESMFold for structure prediction, then analyze with TorchDrug models.</p>
+
+<h3>Rosetta/PyRosetta</h3>
+
+<p>Generate structures with Rosetta, import to TorchDrug for analysis.</p>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Retrosynthesis</h3>
+  <h1>Retrosynthesis</h1>
+
+<h2>Overview</h2>
+
+<p>Retrosynthesis is the process of planning synthetic routes from target molecules back to commercially available starting materials. TorchDrug provides tools for learning-based retrosynthesis prediction, breaking down the complex task into manageable subtasks.</p>
+
+<h2>Available Datasets</h2>
+
+<h3>USPTO-50K</h3>
+
+<p>The standard benchmark dataset for retrosynthesis derived from US patent literature.</p>
+
+<p><strong>Statistics:</strong></p>
+<ul><li>50,017 reaction examples</li>
+<li>Single-step reactions</li>
+<li>Filtered for quality and canonicalization</li>
+<li>Contains atom mapping for reaction center identification</li>
+</ul>
+<p><strong>Reaction Types:</strong></p>
+<ul><li>Diverse organic reactions</li>
+<li>Drug-like transformations</li>
+<li>Well-balanced across common reaction classes</li>
+</ul>
+<p><strong>Data Splits:</strong></p>
+<ul><li>Training: ~40k reactions</li>
+<li>Validation: ~5k reactions</li>
+<li>Test: ~5k reactions</li>
+</ul>
+<p><strong>Format:</strong></p>
+<ul><li>Product → Reactants</li>
+<li>SMILES representation</li>
+<li>Atom-mapped reactions for training</li>
+</ul>
+<h2>Task Types</h2>
+
+<p>TorchDrug decomposes retrosynthesis into a multi-step pipeline:</p>
+
+<h3>1. CenterIdentification</h3>
+
+<p>Identifies the reaction center - which bonds were formed/broken in the forward reaction.</p>
+
+<p><strong>Input:</strong> Product molecule</p>
+<p><strong>Output:</strong> Probability for each bond of being part of reaction center</p>
+
+<p><strong>Purpose:</strong></p>
+<ul><li>Locate where chemistry happened</li>
+<li>Guide subsequent synthon generation</li>
+<li>Reduce search space dramatically</li>
+</ul>
+<p><strong>Model Architecture:</strong></p>
+<ul><li>Graph neural network on product molecule</li>
+<li>Edge-level classification</li>
+<li>Attention mechanisms to highlight reactive regions</li>
+</ul>
+<p><strong>Evaluation Metrics:</strong></p>
+<ul><li><strong>Top-K Accuracy</strong>: Correct reaction center in top K predictions</li>
+<li><strong>Bond-level F1</strong>: Precision and recall for bond predictions</li>
+</ul>
+<h3>2. SynthonCompletion</h3>
+
+<p>Given the product and identified reaction center, predict the reactant structures (synthons).</p>
+
+<p><strong>Input:</strong></p>
+<ul><li>Product molecule</li>
+<li>Identified reaction center (broken/formed bonds)</li>
+</ul>
+<p><strong>Output:</strong></p>
+<ul><li>Predicted reactant molecules (synthons)</li>
+</ul>
+<p><strong>Process:</strong></p>
+<ul><li>Break bonds at reaction center</li>
+<li>Modify atom environments (valence, charges)</li>
+<li>Determine leaving groups and protecting groups</li>
+<li>Generate complete reactant structures</li>
+</ul>
+<p><strong>Challenges:</strong></p>
+<ul><li>Multiple valid reactant sets</li>
+<li>Stereospecificity</li>
+<li>Atom environment changes (hybridization, charge)</li>
+<li>Leaving group selection</li>
+</ul>
+<p><strong>Evaluation:</strong></p>
+<ul><li><strong>Exact Match</strong>: Generated reactants exactly match ground truth</li>
+<li><strong>Top-K Accuracy</strong>: Correct reactants in top K predictions</li>
+<li><strong>Chemical Validity</strong>: Generated molecules are valid</li>
+</ul>
+<h3>3. Retrosynthesis (End-to-End)</h3>
+
+<p>Combines center identification and synthon completion into a unified pipeline.</p>
+
+<p><strong>Input:</strong> Target product molecule</p>
+<p><strong>Output:</strong> Ranked list of reactant sets (synthesis pathways)</p>
+
+<p><strong>Workflow:</strong></p>
+<ul><li>Identify top-K reaction centers</li>
+<li>For each center, generate reactant candidates</li>
+<li>Rank combinations by model confidence</li>
+<li>Filter for commercial availability and feasibility</li>
+</ul>
+<p><strong>Advantages:</strong></p>
+<ul><li>Single model to train and deploy</li>
+<li>Joint optimization of subtasks</li>
+<li>Error propagation from center identification accounted for</li>
+</ul>
+<h2>Training Workflows</h2>
+
+<h3>Basic Pipeline</h3>
+
+<pre><code class="language-python">from torchdrug import datasets, models, tasks
+
+# Load dataset
+dataset = datasets.USPTO50k("~/retro-datasets/")
+
+# For center identification
+model_center = models.RGCN(
+    input_dim=dataset.node_feature_dim,
+    num_relation=dataset.num_bond_type,
+    hidden_dims=[256, 256, 256]
+)
+
+task_center = tasks.CenterIdentification(
+    model_center,
+    top_k=3  # Consider top 3 reaction centers
+)
+
+# For synthon completion
+model_synthon = models.GIN(
+    input_dim=dataset.node_feature_dim,
+    hidden_dims=[256, 256, 256]
+)
+
+task_synthon = tasks.SynthonCompletion(
+    model_synthon,
+    center_topk=3,  # Use top 3 from center identification
+    num_synthon_beam=5  # Beam search for synthon generation
+)
+
+# End-to-end
+task_retro = tasks.Retrosynthesis(
+    model=model_center,
+    synthon_model=model_synthon,
+    center_topk=5,
+    num_synthon_beam=10
+)</code></pre>
+
+<h3>Transfer Learning</h3>
+
+<p>Pre-train on large reaction datasets (e.g., USPTO-full with 1M+ reactions), then fine-tune on specific reaction classes.</p>
+
+<p><strong>Benefits:</strong></p>
+<ul><li>Better generalization to rare reaction types</li>
+<li>Improved performance on small datasets</li>
+<li>Learn general reaction patterns</li>
+</ul>
+<h3>Multi-Task Learning</h3>
+
+<p>Train jointly on:</p>
+<ul><li>Forward reaction prediction</li>
+<li>Retrosynthesis</li>
+<li>Reaction type classification</li>
+<li>Yield prediction</li>
+</ul>
+<p><strong>Advantages:</strong></p>
+<ul><li>Shared representations of chemistry</li>
+<li>Better sample efficiency</li>
+<li>Improved robustness</li>
+</ul>
+<h2>Model Architectures</h2>
+
+<h3>Graph Neural Networks</h3>
+
+<p><strong>RGCN (Relational Graph Convolutional Network):</strong></p>
+<ul><li>Handles multiple bond types (single, double, triple, aromatic)</li>
+<li>Edge-type-specific transformations</li>
+<li>Good for reaction center identification</li>
+</ul>
+<p><strong>GIN (Graph Isomorphism Network):</strong></p>
+<ul><li>Powerful message passing</li>
+<li>Captures structural patterns</li>
+<li>Works well for synthon completion</li>
+</ul>
+<p><strong>GAT (Graph Attention Network):</strong></p>
+<ul><li>Attention weights highlight important atoms/bonds</li>
+<li>Interpretable reaction center predictions</li>
+<li>Flexible for various reaction types</li>
+</ul>
+<h3>Sequence-Based Models</h3>
+
+<p><strong>Transformer Models:</strong></p>
+<ul><li>SMILES-to-SMILES translation</li>
+<li>Can capture long-range dependencies</li>
+<li>Require large datasets</li>
+</ul>
+<p><strong>LSTM/GRU:</strong></p>
+<ul><li>Sequence generation for reactants</li>
+<li>Autoregressive decoding</li>
+<li>Good for small molecules</li>
+</ul>
+<h3>Hybrid Approaches</h3>
+
+<p>Combine graph and sequence representations:</p>
+<ul><li>Graph encoder for products</li>
+<li>Sequence decoder for reactants</li>
+<li>Best of both representations</li>
+</ul>
+<h2>Reaction Chemistry Considerations</h2>
+
+<h3>Reaction Classes</h3>
+
+<p><strong>Common Transformations:</strong></p>
+<ul><li>C-C bond formation (coupling, addition)</li>
+<li>Functional group interconversions (oxidation, reduction)</li>
+<li>Heterocycle synthesis (cyclizations)</li>
+<li>Protection/deprotection</li>
+<li>Aromatic substitutions</li>
+</ul>
+<p><strong>Rare Reactions:</strong></p>
+<ul><li>Novel coupling methods</li>
+<li>Complex rearrangements</li>
+<li>Multi-component reactions</li>
+</ul>
+<h3>Selectivity Issues</h3>
+
+<p><strong>Regioselectivity:</strong></p>
+<ul><li>Which position reacts on molecule</li>
+<li>Requires understanding of electronics and sterics</li>
+</ul>
+<p><strong>Stereoselectivity:</strong></p>
+<ul><li>Control of stereochemistry</li>
+<li>Diastereoselectivity and enantioselectivity</li>
+<li>Critical for drug synthesis</li>
+</ul>
+<p><strong>Chemoselectivity:</strong></p>
+<ul><li>Which functional group reacts</li>
+<li>Requires protecting group strategies</li>
+</ul>
+<h3>Reaction Conditions</h3>
+
+<p>While TorchDrug focuses on reaction connectivity, consider:</p>
+<ul><li>Temperature and pressure</li>
+<li>Catalysts and reagents</li>
+<li>Solvents</li>
+<li>Reaction time</li>
+<li>Work-up and purification</li>
+</ul>
+<h2>Multi-Step Synthesis Planning</h2>
+
+<h3>Single-Step Retrosynthesis</h3>
+
+<p>Predict immediate precursors for target molecule.</p>
+
+<p><strong>Use Case:</strong></p>
+<ul><li>Late-stage transformations</li>
+<li>Simple molecules (1-2 steps from commercial)</li>
+<li>Initial route scouting</li>
+</ul>
+<h3>Multi-Step Planning</h3>
+
+<p>Recursively apply retrosynthesis to each predicted reactant until reaching commercial building blocks.</p>
+
+<p><strong>Tree Search Strategies:</strong></p>
+
+<p><strong>Breadth-First Search:</strong></p>
+<ul><li>Explore all routes to same depth</li>
+<li>Find shortest routes</li>
+<li>Memory intensive</li>
+</ul>
+<p><strong>Depth-First Search:</strong></p>
+<ul><li>Follow each route to completion</li>
+<li>Memory efficient</li>
+<li>May miss optimal routes</li>
+</ul>
+<p><strong>Monte Carlo Tree Search (MCTS):</strong></p>
+<ul><li>Balance exploration and exploitation</li>
+<li>Guided by model confidence</li>
+<li>State-of-the-art for multi-step planning</li>
+</ul>
+<p><strong>A\* Search:</strong></p>
+<ul><li>Heuristic-guided search</li>
+<li>Optimizes for cost, complexity, or feasibility</li>
+<li>Efficient for finding best routes</li>
+</ul>
+<h3>Route Scoring</h3>
+
+<p>Rank synthetic routes by:</p>
+<ul><li><strong>Number of Steps</strong>: Fewer is better (efficiency)</li>
+<li><strong>Convergent vs Linear</strong>: Convergent routes preferred</li>
+<li><strong>Commercial Availability</strong>: How many steps to buyable compounds</li>
+<li><strong>Reaction Feasibility</strong>: Likelihood each step works</li>
+<li><strong>Overall Yield</strong>: Estimated end-to-end yield</li>
+<li><strong>Cost</strong>: Reagents, labor, equipment</li>
+<li><strong>Green Chemistry</strong>: Environmental impact, safety</li>
+</ul>
+<h3>Stopping Criteria</h3>
+
+<p>Stop retrosynthesis when reaching:</p>
+<ul><li><strong>Commercial Compounds</strong>: Available from vendors (e.g., Sigma-Aldrich, Enamine)</li>
+<li><strong>Building Blocks</strong>: Standard synthetic intermediates</li>
+<li><strong>Max Depth</strong>: e.g., 6-10 steps</li>
+<li><strong>Low Confidence</strong>: Model uncertainty too high</li>
+</ul>
+<h2>Validation and Filtering</h2>
+
+<h3>Chemical Validity</h3>
+
+<p>Check each predicted reaction:</p>
+<ul><li>Reactants are valid molecules</li>
+<li>Reaction is chemically reasonable</li>
+<li>Atom mapping is consistent</li>
+<li>Stoichiometry balances</li>
+</ul>
+<h3>Synthetic Feasibility</h3>
+
+<p><strong>Filters:</strong></p>
+<ul><li>Reaction precedent (literature examples)</li>
+<li>Functional group compatibility</li>
+<li>Typical reaction conditions</li>
+<li>Expected yield ranges</li>
+</ul>
+<p><strong>Expert Systems:</strong></p>
+<ul><li>Rule-based validation (e.g., ARChem Route Designer)</li>
+<li>Check for incompatible functional groups</li>
+<li>Identify protection/deprotection needs</li>
+</ul>
+<h3>Commercial Availability</h3>
+
+<p><strong>Databases:</strong></p>
+<ul><li>eMolecules: 10M+ commercial compounds</li>
+<li>ZINC: Annotated with vendor info</li>
+<li>Reaxys: Commercially available building blocks</li>
+</ul>
+<p><strong>Considerations:</strong></p>
+<ul><li>Cost per gram</li>
+<li>Purity and quality</li>
+<li>Lead time for delivery</li>
+<li>Minimum order quantities</li>
+</ul>
+<h2>Integration with Other Tools</h2>
+
+<h3>Reaction Prediction (Forward)</h3>
+
+<p>Train forward reaction prediction models to validate retrosynthetic proposals:</p>
+<ul><li>Predict products from proposed reactants</li>
+<li>Validate reaction feasibility</li>
+<li>Estimate yields</li>
+</ul>
+<h3>Retrosynthesis Software</h3>
+
+<p><strong>Integration with:</strong></p>
+<ul><li>SciFinder (CAS)</li>
+<li>Reaxys (Elsevier)</li>
+<li>ARChem Route Designer</li>
+<li>IBM RXN for Chemistry</li>
+</ul>
+<p><strong>TorchDrug as Component:</strong></p>
+<ul><li>Use TorchDrug models within larger planning systems</li>
+<li>Combine ML predictions with rule-based systems</li>
+<li>Hybrid AI + expert system approaches</li>
+</ul>
+<h3>Experimental Validation</h3>
+
+<p><strong>High-Throughput Screening:</strong></p>
+<ul><li>Rapid testing of predicted reactions</li>
+<li>Automated synthesis platforms</li>
+<li>Feedback loop to improve models</li>
+</ul>
+<p><strong>Robotic Synthesis:</strong></p>
+<ul><li>Automated execution of planned routes</li>
+<li>Real-time optimization</li>
+<li>Data generation for model improvement</li>
+</ul>
+<h2>Best Practices</h2>
+
+<ul><li><strong>Ensemble Predictions</strong>: Use multiple models for robustness</li>
+<li><strong>Reaction Validation</strong>: Always validate with chemistry rules</li>
+<li><strong>Commercial Check</strong>: Verify building block availability early</li>
+<li><strong>Diversity</strong>: Generate multiple diverse routes, not just top-1</li>
+<li><strong>Expert Review</strong>: Have chemists evaluate proposed routes</li>
+<li><strong>Literature Search</strong>: Check for precedents of key steps</li>
+<li><strong>Iterative Refinement</strong>: Update models with experimental feedback</li>
+<li><strong>Interpretability</strong>: Understand why model suggests each step</li>
+<li><strong>Edge Cases</strong>: Handle unusual functional groups and scaffolds</li>
+<li><strong>Benchmarking</strong>: Compare against known synthesis routes</li>
+</ul>
+<h2>Common Applications</h2>
+
+<h3>Drug Synthesis Planning</h3>
+
+<ul><li>Small molecule drugs</li>
+<li>Natural product total synthesis</li>
+<li>Late-stage functionalization strategies</li>
+</ul>
+<h3>Library Enumeration</h3>
+
+<ul><li>Virtual library design</li>
+<li>Retrosynthetic filtering of generated molecules</li>
+<li>Prioritize synthesizable compounds</li>
+</ul>
+<h3>Process Chemistry</h3>
+
+<ul><li>Route scouting for large-scale synthesis</li>
+<li>Cost optimization</li>
+<li>Green chemistry alternatives</li>
+</ul>
+<h3>Synthetic Method Development</h3>
+
+<ul><li>Identify gaps in synthetic methodology</li>
+<li>Guide development of new reactions</li>
+<li>Expand retrosynthesis model capabilities</li>
+</ul>
+<h2>Challenges and Future Directions</h2>
+
+<h3>Current Limitations</h3>
+
+<ul><li>Limited to single-step predictions (most models)</li>
+<li>Doesn't consider reaction conditions explicitly</li>
+<li>Stereochemistry handling is challenging</li>
+<li>Rare reaction types underrepresented</li>
+</ul>
+<h3>Active Research Areas</h3>
+
+<ul><li>End-to-end multi-step planning</li>
+<li>Incorporation of reaction conditions</li>
+<li>Stereoselective retrosynthesis</li>
+<li>Integration with robotics for closed-loop optimization</li>
+<li>Semi-template methods (balance templates and templates-free)</li>
+<li>Uncertainty quantification for predictions</li>
+</ul>
+<h3>Emerging Techniques</h3>
+
+<ul><li>Large language models for chemistry (ChemGPT, MolT5)</li>
+<li>Reinforcement learning for route optimization</li>
+<li>Graph transformers for long-range interactions</li>
+<li>Self-supervised pre-training on reaction databases</li>
+</ul>
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

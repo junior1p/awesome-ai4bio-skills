@@ -1,0 +1,3635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>scvi-tools — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="active">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / scvi-tools</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>scvi-tools</h1>
+    <p class="description">Deep generative models for single-cell omics. Use when you need probabilistic batch correction (scVI), transfer learning, differential expression with uncertainty, or multi-modal integration (TOTALVI,</p>
+    <h1>scvi-tools</h1>
+
+<h2>Overview</h2>
+
+<p>scvi-tools is a comprehensive Python framework for probabilistic models in single-cell genomics. Built on PyTorch and PyTorch Lightning, it provides deep generative models using variational inference for analyzing diverse single-cell data modalities.</p>
+
+<h2>When to Use This Skill</h2>
+
+<p>Use this skill when:</p>
+<ul><li>Analyzing single-cell RNA-seq data (dimensionality reduction, batch correction, integration)</li>
+<li>Working with single-cell ATAC-seq or chromatin accessibility data</li>
+<li>Integrating multimodal data (CITE-seq, multiome, paired/unpaired datasets)</li>
+<li>Analyzing spatial transcriptomics data (deconvolution, spatial mapping)</li>
+<li>Performing differential expression analysis on single-cell data</li>
+<li>Conducting cell type annotation or transfer learning tasks</li>
+<li>Working with specialized single-cell modalities (methylation, cytometry, RNA velocity)</li>
+<li>Building custom probabilistic models for single-cell analysis</li>
+</ul>
+<h2>Core Capabilities</h2>
+
+<p>scvi-tools provides models organized by data modality:</p>
+
+<h3>1. Single-Cell RNA-seq Analysis</h3>
+<p>Core models for expression analysis, batch correction, and integration. See <code>references/models-scrna-seq.md</code> for:</p>
+<ul><li><strong>scVI</strong>: Unsupervised dimensionality reduction and batch correction</li>
+<li><strong>scANVI</strong>: Semi-supervised cell type annotation and integration</li>
+<li><strong>AUTOZI</strong>: Zero-inflation detection and modeling</li>
+<li><strong>VeloVI</strong>: RNA velocity analysis</li>
+<li><strong>contrastiveVI</strong>: Perturbation effect isolation</li>
+</ul>
+<h3>2. Chromatin Accessibility (ATAC-seq)</h3>
+<p>Models for analyzing single-cell chromatin data. See <code>references/models-atac-seq.md</code> for:</p>
+<ul><li><strong>PeakVI</strong>: Peak-based ATAC-seq analysis and integration</li>
+<li><strong>PoissonVI</strong>: Quantitative fragment count modeling</li>
+<li><strong>scBasset</strong>: Deep learning approach with motif analysis</li>
+</ul>
+<h3>3. Multimodal & Multi-omics Integration</h3>
+<p>Joint analysis of multiple data types. See <code>references/models-multimodal.md</code> for:</p>
+<ul><li><strong>totalVI</strong>: CITE-seq protein and RNA joint modeling</li>
+<li><strong>MultiVI</strong>: Paired and unpaired multi-omic integration</li>
+<li><strong>MrVI</strong>: Multi-resolution cross-sample analysis</li>
+</ul>
+<h3>4. Spatial Transcriptomics</h3>
+<p>Spatially-resolved transcriptomics analysis. See <code>references/models-spatial.md</code> for:</p>
+<ul><li><strong>DestVI</strong>: Multi-resolution spatial deconvolution</li>
+<li><strong>Stereoscope</strong>: Cell type deconvolution</li>
+<li><strong>Tangram</strong>: Spatial mapping and integration</li>
+<li><strong>scVIVA</strong>: Cell-environment relationship analysis</li>
+</ul>
+<h3>5. Specialized Modalities</h3>
+<p>Additional specialized analysis tools. See <code>references/models-specialized.md</code> for:</p>
+<ul><li><strong>MethylVI/MethylANVI</strong>: Single-cell methylation analysis</li>
+<li><strong>CytoVI</strong>: Flow/mass cytometry batch correction</li>
+<li><strong>Solo</strong>: Doublet detection</li>
+<li><strong>CellAssign</strong>: Marker-based cell type annotation</li>
+</ul>
+<h2>Typical Workflow</h2>
+
+<p>All scvi-tools models follow a consistent API pattern:</p>
+
+<pre><code class="language-python"># 1. Load and preprocess data (AnnData format)
+import scvi
+import scanpy as sc
+
+adata = scvi.data.heart_cell_atlas_subsampled()
+sc.pp.filter_genes(adata, min_counts=3)
+sc.pp.highly_variable_genes(adata, n_top_genes=1200)
+
+# 2. Register data with model (specify layers, covariates)
+scvi.model.SCVI.setup_anndata(
+    adata,
+    layer="counts",  # Use raw counts, not log-normalized
+    batch_key="batch",
+    categorical_covariate_keys=["donor"],
+    continuous_covariate_keys=["percent_mito"]
+)
+
+# 3. Create and train model
+model = scvi.model.SCVI(adata)
+model.train()
+
+# 4. Extract latent representations and normalized values
+latent = model.get_latent_representation()
+normalized = model.get_normalized_expression(library_size=1e4)
+
+# 5. Store in AnnData for downstream analysis
+adata.obsm["X_scVI"] = latent
+adata.layers["scvi_normalized"] = normalized
+
+# 6. Downstream analysis with scanpy
+sc.pp.neighbors(adata, use_rep="X_scVI")
+sc.tl.umap(adata)
+sc.tl.leiden(adata)</code></pre>
+
+<p><strong>Key Design Principles:</strong></p>
+<ul><li><strong>Raw counts required</strong>: Models expect unnormalized count data for optimal performance</li>
+<li><strong>Unified API</strong>: Consistent interface across all models (setup → train → extract)</li>
+<li><strong>AnnData-centric</strong>: Seamless integration with the scanpy ecosystem</li>
+<li><strong>GPU acceleration</strong>: Automatic utilization of available GPUs</li>
+<li><strong>Batch correction</strong>: Handle technical variation through covariate registration</li>
+</ul>
+<h2>Common Analysis Tasks</h2>
+
+<h3>Differential Expression</h3>
+<p>Probabilistic DE analysis using the learned generative models:</p>
+
+<pre><code class="language-python">de_results = model.differential_expression(
+    groupby="cell_type",
+    group1="TypeA",
+    group2="TypeB",
+    mode="change",  # Use composite hypothesis testing
+    delta=0.25      # Minimum effect size threshold
+)</code></pre>
+
+<p>See <code>references/differential-expression.md</code> for detailed methodology and interpretation.</p>
+
+<h3>Model Persistence</h3>
+<p>Save and load trained models:</p>
+
+<pre><code class="language-python"># Save model
+model.save("./model_directory", overwrite=True)
+
+# Load model
+model = scvi.model.SCVI.load("./model_directory", adata=adata)</code></pre>
+
+<h3>Batch Correction and Integration</h3>
+<p>Integrate datasets across batches or studies:</p>
+
+<pre><code class="language-python"># Register batch information
+scvi.model.SCVI.setup_anndata(adata, batch_key="study")
+
+# Model automatically learns batch-corrected representations
+model = scvi.model.SCVI(adata)
+model.train()
+latent = model.get_latent_representation()  # Batch-corrected</code></pre>
+
+<h2>Theoretical Foundations</h2>
+
+<p>scvi-tools is built on:</p>
+<ul><li><strong>Variational inference</strong>: Approximate posterior distributions for scalable Bayesian inference</li>
+<li><strong>Deep generative models</strong>: VAE architectures that learn complex data distributions</li>
+<li><strong>Amortized inference</strong>: Shared neural networks for efficient learning across cells</li>
+<li><strong>Probabilistic modeling</strong>: Principled uncertainty quantification and statistical testing</li>
+</ul>
+<p>See <code>references/theoretical-foundations.md</code> for detailed background on the mathematical framework.</p>
+
+<h2>Additional Resources</h2>
+
+<ul><li><strong>Workflows</strong>: <code>references/workflows.md</code> contains common workflows, best practices, hyperparameter tuning, and GPU optimization</li>
+<li><strong>Model References</strong>: Detailed documentation for each model category in the <code>references/</code> directory</li>
+<li><strong>Official Documentation</strong>: https://docs.scvi-tools.org/en/stable/</li>
+<li><strong>Tutorials</strong>: https://docs.scvi-tools.org/en/stable/tutorials/index.html</li>
+<li><strong>API Reference</strong>: https://docs.scvi-tools.org/en/stable/api/index.html</li>
+</ul>
+<h2>Installation</h2>
+
+<pre><code class="language-bash">uv pip install scvi-tools
+# For GPU support
+uv pip install scvi-tools[cuda]</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Use raw counts</strong>: Always provide unnormalized count data to models</li>
+<li><strong>Filter genes</strong>: Remove low-count genes before analysis (e.g., <code>min_counts=3</code>)</li>
+<li><strong>Register covariates</strong>: Include known technical factors (batch, donor, etc.) in <code>setup_anndata</code></li>
+<li><strong>Feature selection</strong>: Use highly variable genes for improved performance</li>
+<li><strong>Model saving</strong>: Always save trained models to avoid retraining</li>
+<li><strong>GPU usage</strong>: Enable GPU acceleration for large datasets (<code>accelerator="gpu"</code>)</li>
+<li><strong>Scanpy integration</strong>: Store outputs in AnnData objects for downstream analysis</li></ul>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Differential Expression</h3>
+  <h1>Differential Expression Analysis in scvi-tools</h1>
+
+<p>This document provides detailed information about differential expression (DE) analysis using scvi-tools' probabilistic framework.</p>
+
+<h2>Overview</h2>
+
+<p>scvi-tools implements Bayesian differential expression testing that leverages the learned generative models to estimate expression differences between groups. This approach provides several advantages over traditional methods:</p>
+
+<ul><li><strong>Batch correction</strong>: DE testing on batch-corrected representations</li>
+<li><strong>Uncertainty quantification</strong>: Probabilistic estimates of effect sizes</li>
+<li><strong>Zero-inflation handling</strong>: Proper modeling of dropout and zeros</li>
+<li><strong>Flexible comparisons</strong>: Between any groups or cell types</li>
+<li><strong>Multiple modalities</strong>: Works for RNA, proteins (totalVI), and accessibility (PeakVI)</li>
+</ul>
+<h2>Core Statistical Framework</h2>
+
+<h3>Problem Definition</h3>
+
+<p>The goal is to estimate the log fold-change in expression between two conditions:</p>
+
+<pre><code>log fold-change = log(μ_B) - log(μ_A)</code></pre>
+
+<p>Where μ_A and μ_B are the mean expression levels in conditions A and B.</p>
+
+<h3>Three-Stage Process</h3>
+
+<p><strong>Stage 1: Estimating Expression Levels</strong></p>
+<ul><li>Sample from posterior distribution of cellular states</li>
+<li>Generate expression values from the learned generative model</li>
+<li>Aggregate across cells to get population-level estimates</li>
+</ul>
+<p><strong>Stage 2: Detecting Relevant Features (Hypothesis Testing)</strong></p>
+<ul><li>Test for differential expression using Bayesian framework</li>
+<li>Two testing modes available:</li>
+</ul><p>  - <strong>"vanilla" mode</strong>: Point null hypothesis (β = 0)</p>
+<p>  - <strong>"change" mode</strong>: Composite hypothesis (|β| ≤ δ)</p>
+
+<p><strong>Stage 3: Controlling False Discovery</strong></p>
+<ul><li>Posterior expected False Discovery Proportion (FDP) control</li>
+<li>Selects maximum number of discoveries ensuring E[FDP] ≤ α</li>
+</ul>
+<h2>Basic Usage</h2>
+
+<h3>Simple Two-Group Comparison</h3>
+
+<pre><code class="language-python">import scvi
+
+# After training a model
+model = scvi.model.SCVI(adata)
+model.train()
+
+# Compare two cell types
+de_results = model.differential_expression(
+    groupby="cell_type",
+    group1="T cells",
+    group2="B cells"
+)
+
+# View top DE genes
+top_genes = de_results.sort_values("lfc_mean", ascending=False).head(20)
+print(top_genes[["lfc_mean", "lfc_std", "bayes_factor", "is_de_fdr_0.05"]])</code></pre>
+
+<h3>One vs. Rest Comparison</h3>
+
+<pre><code class="language-python"># Compare one group against all others
+de_results = model.differential_expression(
+    groupby="cell_type",
+    group1="T cells"  # No group2 = compare to rest
+)</code></pre>
+
+<h3>All Pairwise Comparisons</h3>
+
+<pre><code class="language-python"># Compare all cell types pairwise
+all_comparisons = {}
+
+cell_types = adata.obs["cell_type"].unique()
+
+for ct1 in cell_types:
+    for ct2 in cell_types:
+        if ct1 != ct2:
+            key = f"{ct1}_vs_{ct2}"
+            all_comparisons[key] = model.differential_expression(
+                groupby="cell_type",
+                group1=ct1,
+                group2=ct2
+            )</code></pre>
+
+<h2>Key Parameters</h2>
+
+<h3><code>groupby</code> (required)</h3>
+<p>Column in <code>adata.obs</code> defining groups to compare.</p>
+
+<pre><code class="language-python"># Must be a categorical variable
+de_results = model.differential_expression(groupby="cell_type")</code></pre>
+
+<h3><code>group1</code> and <code>group2</code></h3>
+<p>Groups to compare. If <code>group2</code> is None, compares <code>group1</code> to all others.</p>
+
+<pre><code class="language-python"># Specific comparison
+de = model.differential_expression(groupby="condition", group1="treated", group2="control")
+
+# One vs rest
+de = model.differential_expression(groupby="cell_type", group1="T cells")</code></pre>
+
+<h3><code>mode</code> (Hypothesis Testing Mode)</h3>
+
+<p><strong>"vanilla" mode</strong> (default): Point null hypothesis</p>
+<ul><li>Tests if β = 0 exactly</li>
+<li>More sensitive, but may find trivially small effects</li>
+</ul>
+<p><strong>"change" mode</strong>: Composite null hypothesis</p>
+<ul><li>Tests if |β| ≤ δ</li>
+<li>Requires biologically meaningful change</li>
+<li>Reduces false discoveries of tiny effects</li>
+</ul>
+<pre><code class="language-python"># Change mode with minimum effect size
+de = model.differential_expression(
+    groupby="cell_type",
+    group1="T cells",
+    group2="B cells",
+    mode="change",
+    delta=0.25  # Minimum log fold-change
+)</code></pre>
+
+<h3><code>delta</code></h3>
+<p>Minimum effect size threshold for "change" mode.</p>
+<ul><li>Typical values: 0.25, 0.5, 0.7 (log scale)</li>
+<li>log2(1.5) ≈ 0.58 (1.5-fold change)</li>
+<li>log2(2) = 1.0 (2-fold change)</li>
+</ul>
+<pre><code class="language-python"># Require at least 1.5-fold change
+de = model.differential_expression(
+    groupby="condition",
+    group1="disease",
+    group2="healthy",
+    mode="change",
+    delta=0.58  # log2(1.5)
+)</code></pre>
+
+<h3><code>fdr_target</code></h3>
+<p>False discovery rate threshold (default: 0.05)</p>
+
+<pre><code class="language-python"># More stringent FDR control
+de = model.differential_expression(
+    groupby="cell_type",
+    group1="T cells",
+    fdr_target=0.01
+)</code></pre>
+
+<h3><code>batch_correction</code></h3>
+<p>Whether to perform batch correction during DE testing (default: True)</p>
+
+<pre><code class="language-python"># Test within a specific batch
+de = model.differential_expression(
+    groupby="cell_type",
+    group1="T cells",
+    group2="B cells",
+    batch_correction=False
+)</code></pre>
+
+<h3><code>n_samples</code></h3>
+<p>Number of posterior samples for estimation (default: 5000)</p>
+<ul><li>More samples = more accurate but slower</li>
+<li>Reduce for speed, increase for precision</li>
+</ul>
+<pre><code class="language-python"># High precision analysis
+de = model.differential_expression(
+    groupby="cell_type",
+    group1="T cells",
+    n_samples=10000
+)</code></pre>
+
+<h2>Interpreting Results</h2>
+
+<h3>Output Columns</h3>
+
+<p>The results DataFrame contains several important columns:</p>
+
+<p><strong>Effect Size Estimates</strong>:</p>
+<ul><li><code>lfc_mean</code>: Mean log fold-change</li>
+<li><code>lfc_median</code>: Median log fold-change</li>
+<li><code>lfc_std</code>: Standard deviation of log fold-change</li>
+<li><code>lfc_min</code>: Lower bound of effect size</li>
+<li><code>lfc_max</code>: Upper bound of effect size</li>
+</ul>
+<p><strong>Statistical Significance</strong>:</p>
+<ul><li><code>bayes_factor</code>: Bayes factor for differential expression</li>
+</ul><p>  - Higher values = stronger evidence</p>
+<p>  - >3 often considered meaningful</p>
+<ul><li><code>is_de_fdr_0.05</code>: Boolean indicating if gene is DE at FDR 0.05</li>
+<li><code>is_de_fdr_0.1</code>: Boolean indicating if gene is DE at FDR 0.1</li>
+</ul>
+<p><strong>Expression Levels</strong>:</p>
+<ul><li><code>mean1</code>: Mean expression in group 1</li>
+<li><code>mean2</code>: Mean expression in group 2</li>
+<li><code>non_zeros_proportion1</code>: Proportion of non-zero cells in group 1</li>
+<li><code>non_zeros_proportion2</code>: Proportion of non-zero cells in group 2</li>
+</ul>
+<h3>Example Interpretation</h3>
+
+<pre><code class="language-python">de_results = model.differential_expression(
+    groupby="cell_type",
+    group1="T cells",
+    group2="B cells"
+)
+
+# Find significantly upregulated genes in T cells
+upreg_tcells = de_results[
+    (de_results["is_de_fdr_0.05"]) &amp;
+    (de_results["lfc_mean"] &gt; 0)
+].sort_values("lfc_mean", ascending=False)
+
+print(f"Upregulated genes in T cells: {len(upreg_tcells)}")
+print(upreg_tcells.head(10))
+
+# Find genes with large effect sizes
+large_effect = de_results[
+    (de_results["is_de_fdr_0.05"]) &amp;
+    (abs(de_results["lfc_mean"]) &gt; 1)  # 2-fold change
+]</code></pre>
+
+<h2>Advanced Usage</h2>
+
+<h3>DE Within Specific Cells</h3>
+
+<pre><code class="language-python"># Test DE only within a subset of cells
+subset_indices = adata.obs["tissue"] == "lung"
+
+de = model.differential_expression(
+    idx1=adata.obs["cell_type"] == "T cells" &amp; subset_indices,
+    idx2=adata.obs["cell_type"] == "B cells" &amp; subset_indices
+)</code></pre>
+
+<h3>Batch-Specific DE</h3>
+
+<pre><code class="language-python"># Test DE within each batch separately
+batches = adata.obs["batch"].unique()
+
+batch_de_results = {}
+for batch in batches:
+    batch_idx = adata.obs["batch"] == batch
+    batch_de_results[batch] = model.differential_expression(
+        idx1=(adata.obs["condition"] == "treated") &amp; batch_idx,
+        idx2=(adata.obs["condition"] == "control") &amp; batch_idx
+    )</code></pre>
+
+<h3>Pseudo-bulk DE</h3>
+
+<pre><code class="language-python"># Aggregate cells before DE testing
+# Useful for low cell counts per group
+
+de = model.differential_expression(
+    groupby="cell_type",
+    group1="rare_cell_type",
+    group2="common_cell_type",
+    n_samples=10000,  # More samples for stability
+    batch_correction=True
+)</code></pre>
+
+<h2>Visualization</h2>
+
+<h3>Volcano Plot</h3>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+
+de = model.differential_expression(
+    groupby="condition",
+    group1="treated",
+    group2="control"
+)
+
+# Volcano plot
+plt.figure(figsize=(10, 6))
+plt.scatter(
+    de["lfc_mean"],
+    -np.log10(1 / (de["bayes_factor"] + 1)),
+    c=de["is_de_fdr_0.05"],
+    cmap="coolwarm",
+    alpha=0.5
+)
+plt.xlabel("Log Fold Change")
+plt.ylabel("-log10(1/Bayes Factor)")
+plt.title("Volcano Plot: Treated vs Control")
+plt.axvline(x=0, color='k', linestyle='--', linewidth=0.5)
+plt.show()</code></pre>
+
+<h3>Heatmap of Top DE Genes</h3>
+
+<pre><code class="language-python">import seaborn as sns
+
+# Get top DE genes
+top_genes = de.sort_values("lfc_mean", ascending=False).head(50).index
+
+# Get normalized expression
+norm_expr = model.get_normalized_expression(
+    adata,
+    indices=adata.obs["condition"].isin(["treated", "control"]),
+    gene_list=top_genes
+)
+
+# Plot heatmap
+plt.figure(figsize=(12, 10))
+sns.heatmap(
+    norm_expr.T,
+    cmap="viridis",
+    xticklabels=False,
+    yticklabels=top_genes
+)
+plt.title("Top 50 DE Genes")
+plt.show()</code></pre>
+
+<h3>Ranked Gene Plot</h3>
+
+<pre><code class="language-python"># Plot genes ranked by effect size
+de_sorted = de.sort_values("lfc_mean", ascending=False)
+
+plt.figure(figsize=(12, 6))
+plt.plot(range(len(de_sorted)), de_sorted["lfc_mean"].values)
+plt.axhline(y=0, color='r', linestyle='--')
+plt.xlabel("Gene Rank")
+plt.ylabel("Log Fold Change")
+plt.title("Genes Ranked by Effect Size")
+plt.show()</code></pre>
+
+<h2>Comparison with Traditional Methods</h2>
+
+<h3>scvi-tools vs. Wilcoxon Test</h3>
+
+<pre><code class="language-python">import scanpy as sc
+
+# Traditional Wilcoxon test
+sc.tl.rank_genes_groups(
+    adata,
+    groupby="cell_type",
+    method="wilcoxon",
+    key_added="wilcoxon"
+)
+
+# scvi-tools DE
+de_scvi = model.differential_expression(
+    groupby="cell_type",
+    group1="T cells"
+)
+
+# Compare results
+wilcox_results = sc.get.rank_genes_groups_df(adata, group="T cells", key="wilcoxon")</code></pre>
+
+<p><strong>Advantages of scvi-tools</strong>:</p>
+<ul><li>Accounts for batch effects automatically</li>
+<li>Handles zero-inflation properly</li>
+<li>Provides uncertainty quantification</li>
+<li>No arbitrary pseudocount needed</li>
+<li>Better statistical properties</li>
+</ul>
+<p><strong>When to use Wilcoxon</strong>:</p>
+<ul><li>Very quick exploratory analysis</li>
+<li>Comparison with published results using Wilcoxon</li>
+</ul>
+<h2>Multi-Modal DE</h2>
+
+<h3>Protein DE (totalVI)</h3>
+
+<pre><code class="language-python"># Train totalVI on CITE-seq data
+totalvi_model = scvi.model.TOTALVI(adata)
+totalvi_model.train()
+
+# RNA differential expression
+rna_de = totalvi_model.differential_expression(
+    groupby="cell_type",
+    group1="T cells",
+    group2="B cells",
+    protein_expression=False  # Default
+)
+
+# Protein differential expression
+protein_de = totalvi_model.differential_expression(
+    groupby="cell_type",
+    group1="T cells",
+    group2="B cells",
+    protein_expression=True
+)
+
+print(f"DE genes: {rna_de['is_de_fdr_0.05'].sum()}")
+print(f"DE proteins: {protein_de['is_de_fdr_0.05'].sum()}")</code></pre>
+
+<h3>Differential Accessibility (PeakVI)</h3>
+
+<pre><code class="language-python"># Train PeakVI on ATAC-seq data
+peakvi_model = scvi.model.PEAKVI(atac_adata)
+peakvi_model.train()
+
+# Differential accessibility
+da = peakvi_model.differential_accessibility(
+    groupby="cell_type",
+    group1="T cells",
+    group2="B cells"
+)
+
+# Same interpretation as DE</code></pre>
+
+<h2>Handling Special Cases</h2>
+
+<h3>Low Cell Count Groups</h3>
+
+<pre><code class="language-python"># Increase posterior samples for stability
+de = model.differential_expression(
+    groupby="cell_type",
+    group1="rare_type",  # e.g., 50 cells
+    group2="common_type",  # e.g., 5000 cells
+    n_samples=10000
+)</code></pre>
+
+<h3>Imbalanced Comparisons</h3>
+
+<pre><code class="language-python"># When groups have very different sizes
+# Use change mode to avoid tiny effects
+
+de = model.differential_expression(
+    groupby="condition",
+    group1="rare_condition",
+    group2="common_condition",
+    mode="change",
+    delta=0.5
+)</code></pre>
+
+<h3>Multiple Testing Correction</h3>
+
+<pre><code class="language-python"># Already included via FDP control
+# But can apply additional corrections
+
+from statsmodels.stats.multitest import multipletests
+
+# Bonferroni correction (very conservative)
+_, pvals_corrected, _, _ = multipletests(
+    1 / (de["bayes_factor"] + 1),
+    method="bonferroni"
+)</code></pre>
+
+<h2>Performance Considerations</h2>
+
+<h3>Speed Optimization</h3>
+
+<pre><code class="language-python"># Faster DE testing for large datasets
+de = model.differential_expression(
+    groupby="cell_type",
+    group1="T cells",
+    n_samples=1000,  # Reduce samples
+    batch_size=512    # Increase batch size
+)</code></pre>
+
+<h3>Memory Management</h3>
+
+<pre><code class="language-python"># For very large datasets
+# Test one comparison at a time rather than all pairwise
+
+cell_types = adata.obs["cell_type"].unique()
+for ct in cell_types:
+    de = model.differential_expression(
+        groupby="cell_type",
+        group1=ct
+    )
+    # Save results
+    de.to_csv(f"de_results_{ct}.csv")</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Use "change" mode</strong>: For biologically interpretable results</li>
+<li><strong>Set appropriate delta</strong>: Based on biological significance</li>
+<li><strong>Check expression levels</strong>: Filter lowly expressed genes</li>
+<li><strong>Validate findings</strong>: Check marker genes for sanity</li>
+<li><strong>Visualize results</strong>: Always plot top DE genes</li>
+<li><strong>Report parameters</strong>: Document mode, delta, FDR used</li>
+<li><strong>Consider batch effects</strong>: Use batch_correction=True</li>
+<li><strong>Multiple comparisons</strong>: Be aware of testing many groups</li>
+<li><strong>Sample size</strong>: Ensure sufficient cells per group (>50 recommended)</li>
+<li><strong>Biological validation</strong>: Follow up with functional experiments</li>
+</ul>
+<h2>Example: Complete DE Analysis Workflow</h2>
+
+<pre><code class="language-python">import scvi
+import scanpy as sc
+import matplotlib.pyplot as plt
+
+# 1. Train model
+scvi.model.SCVI.setup_anndata(adata, layer="counts", batch_key="batch")
+model = scvi.model.SCVI(adata)
+model.train()
+
+# 2. Perform DE analysis
+de_results = model.differential_expression(
+    groupby="cell_type",
+    group1="Disease_T_cells",
+    group2="Healthy_T_cells",
+    mode="change",
+    delta=0.5,
+    fdr_target=0.05
+)
+
+# 3. Filter and analyze
+sig_genes = de_results[de_results["is_de_fdr_0.05"]]
+upreg = sig_genes[sig_genes["lfc_mean"] &gt; 0].sort_values("lfc_mean", ascending=False)
+downreg = sig_genes[sig_genes["lfc_mean"] &lt; 0].sort_values("lfc_mean")
+
+print(f"Significant genes: {len(sig_genes)}")
+print(f"Upregulated: {len(upreg)}")
+print(f"Downregulated: {len(downreg)}")
+
+# 4. Visualize top genes
+top_genes = upreg.head(10).index.tolist() + downreg.head(10).index.tolist()
+
+sc.pl.violin(
+    adata[adata.obs["cell_type"].isin(["Disease_T_cells", "Healthy_T_cells"])],
+    keys=top_genes,
+    groupby="cell_type",
+    rotation=90
+)
+
+# 5. Functional enrichment (using external tools)
+# E.g., g:Profiler, DAVID, or gprofiler-official Python package
+upreg_genes = upreg.head(100).index.tolist()
+# Perform pathway analysis...
+
+# 6. Save results
+de_results.to_csv("de_results_disease_vs_healthy.csv")
+upreg.to_csv("upregulated_genes.csv")
+downreg.to_csv("downregulated_genes.csv")</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Models Atac Seq</h3>
+  <h1>ATAC-seq and Chromatin Accessibility Models</h1>
+
+<p>This document covers models for analyzing single-cell ATAC-seq and chromatin accessibility data in scvi-tools.</p>
+
+<h2>PeakVI</h2>
+
+<p><strong>Purpose</strong>: Analysis and integration of single-cell ATAC-seq data using peak counts.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Variational autoencoder specifically designed for scATAC-seq peak data</li>
+<li>Learns low-dimensional representations of chromatin accessibility</li>
+<li>Performs batch correction across samples</li>
+<li>Enables differential accessibility testing</li>
+<li>Integrates multiple ATAC-seq datasets</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Analyzing scATAC-seq peak count matrices</li>
+<li>Integrating multiple ATAC-seq experiments</li>
+<li>Batch correction of chromatin accessibility data</li>
+<li>Dimensionality reduction for ATAC-seq</li>
+<li>Differential accessibility analysis between cell types or conditions</li>
+</ul>
+<p><strong>Data Requirements</strong>:</p>
+<ul><li>Peak count matrix (cells × peaks)</li>
+<li>Binary or count data for peak accessibility</li>
+<li>Batch/sample annotations (optional, for batch correction)</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python">import scvi
+
+# Prepare data (peaks should be in adata.X)
+# Optional: filter peaks
+sc.pp.filter_genes(adata, min_cells=3)
+
+# Setup data
+scvi.model.PEAKVI.setup_anndata(
+    adata,
+    batch_key="batch"
+)
+
+# Train model
+model = scvi.model.PEAKVI(adata)
+model.train()
+
+# Get latent representation (batch-corrected)
+latent = model.get_latent_representation()
+adata.obsm["X_PeakVI"] = latent
+
+# Differential accessibility
+da_results = model.differential_accessibility(
+    groupby="cell_type",
+    group1="TypeA",
+    group2="TypeB"
+)</code></pre>
+
+<p><strong>Key Parameters</strong>:</p>
+<ul><li><code>n_latent</code>: Dimensionality of latent space (default: 10)</li>
+<li><code>n_hidden</code>: Number of nodes per hidden layer (default: 128)</li>
+<li><code>n_layers</code>: Number of hidden layers (default: 1)</li>
+<li><code>region_factors</code>: Whether to learn region-specific factors (default: True)</li>
+<li><code>latent_distribution</code>: Distribution for latent space ("normal" or "ln")</li>
+</ul>
+<p><strong>Outputs</strong>:</p>
+<ul><li><code>get_latent_representation()</code>: Low-dimensional embeddings for cells</li>
+<li><code>get_accessibility_estimates()</code>: Normalized accessibility values</li>
+<li><code>differential_accessibility()</code>: Statistical testing for differential peaks</li>
+<li><code>get_region_factors()</code>: Peak-specific scaling factors</li>
+</ul>
+<p><strong>Best Practices</strong>:</p>
+<ul><li>Filter out low-quality peaks (present in very few cells)</li>
+<li>Include batch information if integrating multiple samples</li>
+<li>Use latent representations for clustering and UMAP visualization</li>
+<li>Consider using <code>region_factors=True</code> for datasets with high technical variation</li>
+<li>Store latent embeddings in <code>adata.obsm</code> for downstream analysis with scanpy</li>
+</ul>
+<h2>PoissonVI</h2>
+
+<p><strong>Purpose</strong>: Quantitative analysis of scATAC-seq fragment counts (more detailed than peak counts).</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Models fragment counts directly (not just peak presence/absence)</li>
+<li>Poisson distribution for count data</li>
+<li>Captures quantitative differences in accessibility</li>
+<li>Enables fine-grained analysis of chromatin state</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Analyzing fragment-level ATAC-seq data</li>
+<li>Need quantitative accessibility measurements</li>
+<li>Higher resolution analysis than binary peak calls</li>
+<li>Investigating gradual changes in chromatin accessibility</li>
+</ul>
+<p><strong>Data Requirements</strong>:</p>
+<ul><li>Fragment count matrix (cells × genomic regions)</li>
+<li>Count data (not binary)</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python">scvi.model.POISSONVI.setup_anndata(
+    adata,
+    batch_key="batch"
+)
+
+model = scvi.model.POISSONVI(adata)
+model.train()
+
+# Get results
+latent = model.get_latent_representation()
+accessibility = model.get_accessibility_estimates()</code></pre>
+
+<p><strong>Key Differences from PeakVI</strong>:</p>
+<ul><li><strong>PeakVI</strong>: Best for standard peak count matrices, faster</li>
+<li><strong>PoissonVI</strong>: Best for quantitative fragment counts, more detailed</li>
+</ul>
+<p><strong>When to Choose PoissonVI over PeakVI</strong>:</p>
+<ul><li>Working with fragment counts rather than called peaks</li>
+<li>Need to capture quantitative differences</li>
+<li>Have high-quality, high-coverage data</li>
+<li>Interested in subtle accessibility changes</li>
+</ul>
+<h2>scBasset</h2>
+
+<p><strong>Purpose</strong>: Deep learning approach to scATAC-seq analysis with interpretability and motif analysis.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Convolutional neural network (CNN) architecture for sequence-based analysis</li>
+<li>Models raw DNA sequences, not just peak counts</li>
+<li>Enables motif discovery and transcription factor (TF) binding prediction</li>
+<li>Provides interpretable feature importance</li>
+<li>Performs batch correction</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Want to incorporate DNA sequence information</li>
+<li>Interested in TF motif analysis</li>
+<li>Need interpretable models (which sequences drive accessibility)</li>
+<li>Analyzing regulatory elements and TF binding sites</li>
+<li>Predicting accessibility from sequence alone</li>
+</ul>
+<p><strong>Data Requirements</strong>:</p>
+<ul><li>Peak sequences (extracted from genome)</li>
+<li>Peak accessibility matrix</li>
+<li>Genome reference (for sequence extraction)</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python"># scBasset requires sequence information
+# First, extract sequences for peaks
+from scbasset import utils
+sequences = utils.fetch_sequences(adata, genome="hg38")
+
+# Setup and train
+scvi.model.SCBASSET.setup_anndata(
+    adata,
+    batch_key="batch"
+)
+
+model = scvi.model.SCBASSET(adata, sequences=sequences)
+model.train()
+
+# Get latent representation
+latent = model.get_latent_representation()
+
+# Interpret model: which sequences/motifs are important
+importance_scores = model.get_feature_importance()</code></pre>
+
+<p><strong>Key Parameters</strong>:</p>
+<ul><li><code>n_latent</code>: Latent space dimensionality</li>
+<li><code>conv_layers</code>: Number of convolutional layers</li>
+<li><code>n_filters</code>: Number of filters per conv layer</li>
+<li><code>filter_size</code>: Size of convolutional filters</li>
+</ul>
+<p><strong>Advanced Features</strong>:</p>
+<ul><li><strong>In silico mutagenesis</strong>: Predict how sequence changes affect accessibility</li>
+<li><strong>Motif enrichment</strong>: Identify enriched TF motifs in accessible regions</li>
+<li><strong>Batch correction</strong>: Similar to other scvi-tools models</li>
+<li><strong>Transfer learning</strong>: Fine-tune on new datasets</li>
+</ul>
+<p><strong>Interpretability Tools</strong>:</p>
+<pre><code class="language-python"># Get importance scores for sequences
+importance = model.get_sequence_importance(region_indices=[0, 1, 2])
+
+# Predict accessibility for new sequences
+predictions = model.predict_accessibility(new_sequences)</code></pre>
+
+<h2>Model Selection for ATAC-seq</h2>
+
+<h3>PeakVI</h3>
+<p><strong>Choose when</strong>:</p>
+<ul><li>Standard scATAC-seq analysis workflow</li>
+<li>Have peak count matrices (most common format)</li>
+<li>Need fast, efficient batch correction</li>
+<li>Want straightforward differential accessibility</li>
+<li>Prioritize computational efficiency</li>
+</ul>
+<p><strong>Advantages</strong>:</p>
+<ul><li>Fast training and inference</li>
+<li>Proven track record for scATAC-seq</li>
+<li>Easy integration with scanpy workflow</li>
+<li>Robust batch correction</li>
+</ul>
+<h3>PoissonVI</h3>
+<p><strong>Choose when</strong>:</p>
+<ul><li>Have fragment-level count data</li>
+<li>Need quantitative accessibility measures</li>
+<li>Interested in subtle differences</li>
+<li>Have high-coverage, high-quality data</li>
+</ul>
+<p><strong>Advantages</strong>:</p>
+<ul><li>More detailed quantitative information</li>
+<li>Better for gradient changes</li>
+<li>Appropriate statistical model for counts</li>
+</ul>
+<h3>scBasset</h3>
+<p><strong>Choose when</strong>:</p>
+<ul><li>Want to incorporate DNA sequence</li>
+<li>Need biological interpretation (motifs, TFs)</li>
+<li>Interested in regulatory mechanisms</li>
+<li>Have computational resources for CNN training</li>
+<li>Want predictive power for new sequences</li>
+</ul>
+<p><strong>Advantages</strong>:</p>
+<ul><li>Sequence-based, biologically interpretable</li>
+<li>Motif and TF analysis built-in</li>
+<li>Predictive modeling capabilities</li>
+<li>In silico perturbation experiments</li>
+</ul>
+<h2>Workflow Example: Complete ATAC-seq Analysis</h2>
+
+<pre><code class="language-python">import scvi
+import scanpy as sc
+
+# 1. Load and preprocess ATAC-seq data
+adata = sc.read_h5ad("atac_data.h5ad")
+
+# 2. Filter low-quality peaks
+sc.pp.filter_genes(adata, min_cells=10)
+
+# 3. Setup and train PeakVI
+scvi.model.PEAKVI.setup_anndata(
+    adata,
+    batch_key="sample"
+)
+
+model = scvi.model.PEAKVI(adata, n_latent=20)
+model.train(max_epochs=400)
+
+# 4. Extract latent representation
+latent = model.get_latent_representation()
+adata.obsm["X_PeakVI"] = latent
+
+# 5. Downstream analysis
+sc.pp.neighbors(adata, use_rep="X_PeakVI")
+sc.tl.umap(adata)
+sc.tl.leiden(adata, key_added="clusters")
+
+# 6. Differential accessibility
+da_results = model.differential_accessibility(
+    groupby="clusters",
+    group1="0",
+    group2="1"
+)
+
+# 7. Save model
+model.save("peakvi_model")</code></pre>
+
+<h2>Integration with Gene Expression (RNA+ATAC)</h2>
+
+<p>For paired multimodal data (RNA+ATAC from same cells), use <strong>MultiVI</strong> instead:</p>
+
+<pre><code class="language-python"># For 10x Multiome or similar paired data
+scvi.model.MULTIVI.setup_anndata(
+    adata,
+    batch_key="sample",
+    modality_key="modality"  # "RNA" or "ATAC"
+)
+
+model = scvi.model.MULTIVI(adata)
+model.train()
+
+# Get joint latent space
+latent = model.get_latent_representation()</code></pre>
+
+<p>See <code>models-multimodal.md</code> for more details on multimodal integration.</p>
+
+<h2>Best Practices for ATAC-seq Analysis</h2>
+
+<ul><li><strong>Quality Control</strong>:</li>
+</ul><p>   - Filter cells with very low or very high peak counts</p>
+<p>   - Remove peaks present in very few cells</p>
+<p>   - Filter mitochondrial and sex chromosome peaks if needed</p>
+
+<ul><li><strong>Batch Correction</strong>:</li>
+</ul><p>   - Always include <code>batch_key</code> if integrating multiple samples</p>
+<p>   - Consider technical covariates (sequencing depth, TSS enrichment)</p>
+
+<ul><li><strong>Feature Selection</strong>:</li>
+</ul><p>   - Unlike RNA-seq, all peaks are often used</p>
+<p>   - Consider filtering very rare peaks for efficiency</p>
+
+<ul><li><strong>Latent Dimensions</strong>:</li>
+</ul><p>   - Start with <code>n_latent=10-30</code> depending on dataset complexity</p>
+<p>   - Larger values for more heterogeneous datasets</p>
+
+<ul><li><strong>Downstream Analysis</strong>:</li>
+</ul><p>   - Use latent representations for clustering and visualization</p>
+<p>   - Link peaks to genes for regulatory analysis</p>
+<p>   - Perform motif enrichment on cluster-specific peaks</p>
+
+<ul><li><strong>Computational Considerations</strong>:</li>
+</ul><p>   - ATAC-seq matrices are often very large (many peaks)</p>
+<p>   - Consider downsampling peaks for initial exploration</p>
+<p>   - Use GPU acceleration for large datasets</p>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Models Multimodal</h3>
+  <h1>Multimodal and Multi-omics Integration Models</h1>
+
+<p>This document covers models for joint analysis of multiple data modalities in scvi-tools.</p>
+
+<h2>totalVI (Total Variational Inference)</h2>
+
+<p><strong>Purpose</strong>: Joint analysis of CITE-seq data (simultaneous RNA and protein measurements from same cells).</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Jointly models gene expression and protein abundance</li>
+<li>Learns shared low-dimensional representations</li>
+<li>Enables protein imputation from RNA data</li>
+<li>Performs differential expression for both modalities</li>
+<li>Handles batch effects in both RNA and protein layers</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Analyzing CITE-seq or REAP-seq data</li>
+<li>Joint RNA + surface protein measurements</li>
+<li>Imputing missing proteins</li>
+<li>Integrating protein and RNA information</li>
+<li>Multi-batch CITE-seq integration</li>
+</ul>
+<p><strong>Data Requirements</strong>:</p>
+<ul><li>AnnData with gene expression in <code>.X</code> or a layer</li>
+<li>Protein measurements in <code>.obsm["protein_expression"]</code></li>
+<li>Same cells measured for both modalities</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python">import scvi
+
+# Setup data - specify both RNA and protein layers
+scvi.model.TOTALVI.setup_anndata(
+    adata,
+    layer="counts",  # RNA counts
+    protein_expression_obsm_key="protein_expression",  # Protein counts
+    batch_key="batch"
+)
+
+# Train model
+model = scvi.model.TOTALVI(adata)
+model.train()
+
+# Get joint latent representation
+latent = model.get_latent_representation()
+
+# Get normalized values for both modalities
+rna_normalized = model.get_normalized_expression()
+protein_normalized = model.get_normalized_expression(
+    transform_batch="batch1",
+    protein_expression=True
+)
+
+# Differential expression (works for both RNA and protein)
+rna_de = model.differential_expression(groupby="cell_type")
+protein_de = model.differential_expression(
+    groupby="cell_type",
+    protein_expression=True
+)</code></pre>
+
+<p><strong>Key Parameters</strong>:</p>
+<ul><li><code>n_latent</code>: Latent space dimensionality (default: 20)</li>
+<li><code>n_layers_encoder</code>: Number of encoder layers (default: 1)</li>
+<li><code>n_layers_decoder</code>: Number of decoder layers (default: 1)</li>
+<li><code>protein_dispersion</code>: Protein dispersion handling ("protein" or "protein-batch")</li>
+<li><code>empirical_protein_background_prior</code>: Use empirical background for proteins</li>
+</ul>
+<p><strong>Advanced Features</strong>:</p>
+
+<p><strong>Protein Imputation</strong>:</p>
+<pre><code class="language-python"># Impute missing proteins for RNA-only cells
+# (useful for mapping RNA-seq to CITE-seq reference)
+protein_foreground = model.get_protein_foreground_probability()
+imputed_proteins = model.get_normalized_expression(
+    protein_expression=True,
+    n_samples=25
+)</code></pre>
+
+<p><strong>Denoising</strong>:</p>
+<pre><code class="language-python"># Get denoised counts for both modalities
+denoised_rna = model.get_normalized_expression(n_samples=25)
+denoised_protein = model.get_normalized_expression(
+    protein_expression=True,
+    n_samples=25
+)</code></pre>
+
+<p><strong>Best Practices</strong>:</p>
+<ul><li>Use empirical protein background prior for datasets with ambient protein</li>
+<li>Consider protein-specific dispersion for heterogeneous protein data</li>
+<li>Use joint latent space for clustering (better than RNA alone)</li>
+<li>Validate protein imputation with known markers</li>
+<li>Check protein QC metrics before training</li>
+</ul>
+<h2>MultiVI (Multi-modal Variational Inference)</h2>
+
+<p><strong>Purpose</strong>: Integration of paired and unpaired multi-omic data (e.g., RNA + ATAC, paired and unpaired cells).</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Handles paired data (same cells) and unpaired data (different cells)</li>
+<li>Integrates multiple modalities: RNA, ATAC, proteins, etc.</li>
+<li>Missing modality imputation</li>
+<li>Learns shared representations across modalities</li>
+<li>Flexible integration strategy</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>10x Multiome data (paired RNA + ATAC)</li>
+<li>Integrating separate RNA-seq and ATAC-seq experiments</li>
+<li>Some cells with both modalities, some with only one</li>
+<li>Cross-modality imputation tasks</li>
+</ul>
+<p><strong>Data Requirements</strong>:</p>
+<ul><li>AnnData with multiple modalities</li>
+<li>Modality indicators (which measurements each cell has)</li>
+<li>Can handle:</li>
+</ul><p>  - All cells with both modalities (fully paired)</p>
+<p>  - Mix of paired and unpaired cells</p>
+<p>  - Completely unpaired datasets</p>
+
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python"># Prepare data with modality information
+# adata.X should contain all features (genes + peaks)
+# adata.var["modality"] indicates "Gene" or "Peak"
+# adata.obs["modality"] indicates which modality each cell has
+
+scvi.model.MULTIVI.setup_anndata(
+    adata,
+    batch_key="batch",
+    modality_key="modality"  # Column indicating cell modality
+)
+
+model = scvi.model.MULTIVI(adata)
+model.train()
+
+# Get joint latent representation
+latent = model.get_latent_representation()
+
+# Impute missing modalities
+# E.g., predict ATAC for RNA-only cells
+imputed_accessibility = model.get_accessibility_estimates(
+    indices=rna_only_indices
+)
+
+# Get normalized expression/accessibility
+rna_normalized = model.get_normalized_expression()
+atac_normalized = model.get_accessibility_estimates()</code></pre>
+
+<p><strong>Key Parameters</strong>:</p>
+<ul><li><code>n_genes</code>: Number of gene features</li>
+<li><code>n_regions</code>: Number of accessibility regions</li>
+<li><code>n_latent</code>: Latent dimensionality (default: 20)</li>
+</ul>
+<p><strong>Integration Scenarios</strong>:</p>
+
+<p><strong>Scenario 1: Fully Paired (10x Multiome)</strong>:</p>
+<pre><code class="language-python"># All cells have both RNA and ATAC
+# Single modality key: "paired"
+adata.obs["modality"] = "paired"</code></pre>
+
+<p><strong>Scenario 2: Partially Paired</strong>:</p>
+<pre><code class="language-python"># Some cells have both, some RNA-only, some ATAC-only
+adata.obs["modality"] = ["RNA+ATAC", "RNA", "ATAC", ...]</code></pre>
+
+<p><strong>Scenario 3: Completely Unpaired</strong>:</p>
+<pre><code class="language-python"># Separate RNA and ATAC experiments
+adata.obs["modality"] = ["RNA"] * n_rna + ["ATAC"] * n_atac</code></pre>
+
+<p><strong>Advanced Use Cases</strong>:</p>
+
+<p><strong>Cross-Modality Prediction</strong>:</p>
+<pre><code class="language-python"># Predict peaks from gene expression
+accessibility_from_rna = model.get_accessibility_estimates(
+    indices=rna_only_cells
+)
+
+# Predict genes from accessibility
+expression_from_atac = model.get_normalized_expression(
+    indices=atac_only_cells
+)</code></pre>
+
+<p><strong>Modality-Specific Analysis</strong>:</p>
+<pre><code class="language-python"># Separate analysis per modality
+rna_subset = adata[adata.obs["modality"].str.contains("RNA")]
+atac_subset = adata[adata.obs["modality"].str.contains("ATAC")]</code></pre>
+
+<h2>MrVI (Multi-resolution Variational Inference)</h2>
+
+<p><strong>Purpose</strong>: Multi-sample analysis accounting for sample-specific and shared variation.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Simultaneously analyzes multiple samples/conditions</li>
+<li>Decomposes variation into:</li>
+</ul><p>  - Shared variation (common across samples)</p>
+<p>  - Sample-specific variation</p>
+<ul><li>Enables sample-level comparisons</li>
+<li>Identifies sample-specific cell states</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Comparing multiple biological samples or conditions</li>
+<li>Identifying sample-specific vs. shared cell states</li>
+<li>Disease vs. healthy sample comparisons</li>
+<li>Understanding inter-sample heterogeneity</li>
+<li>Multi-donor studies</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python">scvi.model.MRVI.setup_anndata(
+    adata,
+    layer="counts",
+    batch_key="batch",
+    sample_key="sample"  # Critical: defines biological samples
+)
+
+model = scvi.model.MRVI(adata, n_latent=10, n_latent_sample=5)
+model.train()
+
+# Get representations
+shared_latent = model.get_latent_representation()  # Shared across samples
+sample_specific = model.get_sample_specific_representation()
+
+# Sample distance matrix
+sample_distances = model.get_sample_distances()</code></pre>
+
+<p><strong>Key Parameters</strong>:</p>
+<ul><li><code>n_latent</code>: Dimensionality of shared latent space</li>
+<li><code>n_latent_sample</code>: Dimensionality of sample-specific space</li>
+<li><code>sample_key</code>: Column defining biological samples</li>
+</ul>
+<p><strong>Analysis Workflow</strong>:</p>
+<pre><code class="language-python"># 1. Identify shared cell types across samples
+sc.pp.neighbors(adata, use_rep="X_MrVI_shared")
+sc.tl.umap(adata)
+sc.tl.leiden(adata, key_added="shared_clusters")
+
+# 2. Analyze sample-specific variation
+sample_repr = model.get_sample_specific_representation()
+
+# 3. Compare samples
+distances = model.get_sample_distances()
+
+# 4. Find sample-enriched genes
+de_results = model.differential_expression(
+    groupby="sample",
+    group1="Disease",
+    group2="Healthy"
+)</code></pre>
+
+<p><strong>Use Cases</strong>:</p>
+<ul><li><strong>Multi-donor studies</strong>: Separate donor effects from cell type variation</li>
+<li><strong>Disease studies</strong>: Identify disease-specific vs. shared biology</li>
+<li><strong>Time series</strong>: Separate temporal from stable variation</li>
+<li><strong>Batch + biology</strong>: Disentangle technical and biological variation</li>
+</ul>
+<h2>totalVI vs. MultiVI vs. MrVI: When to Use Which?</h2>
+
+<h3>totalVI</h3>
+<p><strong>Use for</strong>: CITE-seq (RNA + protein, same cells)</p>
+<ul><li>Paired measurements</li>
+<li>Single modality type per feature</li>
+<li>Focus: protein imputation, joint analysis</li>
+</ul>
+<h3>MultiVI</h3>
+<p><strong>Use for</strong>: Multiple modalities (RNA + ATAC, etc.)</p>
+<ul><li>Paired, unpaired, or mixed</li>
+<li>Different feature types</li>
+<li>Focus: cross-modality integration and imputation</li>
+</ul>
+<h3>MrVI</h3>
+<p><strong>Use for</strong>: Multi-sample RNA-seq</p>
+<ul><li>Single modality (RNA)</li>
+<li>Multiple biological samples</li>
+<li>Focus: sample-level variation decomposition</li>
+</ul>
+<h2>Integration Best Practices</h2>
+
+<h3>For CITE-seq (totalVI)</h3>
+<ul><li><strong>Quality control proteins</strong>: Remove low-quality antibodies</li>
+<li><strong>Background subtraction</strong>: Use empirical background prior</li>
+<li><strong>Joint clustering</strong>: Use joint latent space, not RNA alone</li>
+<li><strong>Validation</strong>: Check known markers in both modalities</li>
+</ul>
+<h3>For Multiome/Multi-modal (MultiVI)</h3>
+<ul><li><strong>Feature filtering</strong>: Filter genes and peaks independently</li>
+<li><strong>Balance modalities</strong>: Ensure reasonable representation of each</li>
+<li><strong>Modality weights</strong>: Consider if one modality dominates</li>
+<li><strong>Imputation validation</strong>: Validate imputed values carefully</li>
+</ul>
+<h3>For Multi-sample (MrVI)</h3>
+<ul><li><strong>Sample definition</strong>: Carefully define biological samples</li>
+<li><strong>Sample size</strong>: Need sufficient cells per sample</li>
+<li><strong>Covariate handling</strong>: Properly account for batch vs. sample</li>
+<li><strong>Interpretation</strong>: Distinguish technical from biological variation</li>
+</ul>
+<h2>Complete Example: CITE-seq Analysis with totalVI</h2>
+
+<pre><code class="language-python">import scvi
+import scanpy as sc
+
+# 1. Load CITE-seq data
+adata = sc.read_h5ad("cite_seq.h5ad")
+
+# 2. QC and filtering
+sc.pp.filter_genes(adata, min_cells=3)
+sc.pp.highly_variable_genes(adata, n_top_genes=4000)
+
+# Protein QC
+protein_counts = adata.obsm["protein_expression"]
+# Remove low-quality proteins
+
+# 3. Setup totalVI
+scvi.model.TOTALVI.setup_anndata(
+    adata,
+    layer="counts",
+    protein_expression_obsm_key="protein_expression",
+    batch_key="batch"
+)
+
+# 4. Train
+model = scvi.model.TOTALVI(adata, n_latent=20)
+model.train(max_epochs=400)
+
+# 5. Extract joint representation
+latent = model.get_latent_representation()
+adata.obsm["X_totalVI"] = latent
+
+# 6. Clustering on joint space
+sc.pp.neighbors(adata, use_rep="X_totalVI")
+sc.tl.umap(adata)
+sc.tl.leiden(adata, resolution=0.5)
+
+# 7. Differential expression for both modalities
+rna_de = model.differential_expression(
+    groupby="leiden",
+    group1="0",
+    group2="1"
+)
+
+protein_de = model.differential_expression(
+    groupby="leiden",
+    group1="0",
+    group2="1",
+    protein_expression=True
+)
+
+# 8. Save model
+model.save("totalvi_model")</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Models Scrna Seq</h3>
+  <h1>Single-Cell RNA-seq Models</h1>
+
+<p>This document covers core models for analyzing single-cell RNA sequencing data in scvi-tools.</p>
+
+<h2>scVI (Single-Cell Variational Inference)</h2>
+
+<p><strong>Purpose</strong>: Unsupervised analysis, dimensionality reduction, and batch correction for scRNA-seq data.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Deep generative model based on variational autoencoders (VAE)</li>
+<li>Learns low-dimensional latent representations that capture biological variation</li>
+<li>Automatically corrects for batch effects and technical covariates</li>
+<li>Enables normalized gene expression estimation</li>
+<li>Supports differential expression analysis</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Initial exploration and dimensionality reduction of scRNA-seq datasets</li>
+<li>Integrating multiple batches or studies</li>
+<li>Generating batch-corrected expression matrices</li>
+<li>Performing probabilistic differential expression analysis</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python">import scvi
+
+# Setup data
+scvi.model.SCVI.setup_anndata(
+    adata,
+    layer="counts",
+    batch_key="batch"
+)
+
+# Train model
+model = scvi.model.SCVI(adata, n_latent=30)
+model.train()
+
+# Extract results
+latent = model.get_latent_representation()
+normalized = model.get_normalized_expression()</code></pre>
+
+<p><strong>Key Parameters</strong>:</p>
+<ul><li><code>n_latent</code>: Dimensionality of latent space (default: 10)</li>
+<li><code>n_layers</code>: Number of hidden layers (default: 1)</li>
+<li><code>n_hidden</code>: Number of nodes per hidden layer (default: 128)</li>
+<li><code>dropout_rate</code>: Dropout rate for neural networks (default: 0.1)</li>
+<li><code>dispersion</code>: Gene-specific or cell-specific dispersion ("gene" or "gene-batch")</li>
+<li><code>gene_likelihood</code>: Distribution for data ("zinb", "nb", "poisson")</li>
+</ul>
+<p><strong>Outputs</strong>:</p>
+<ul><li><code>get_latent_representation()</code>: Batch-corrected low-dimensional embeddings</li>
+<li><code>get_normalized_expression()</code>: Denoised, normalized expression values</li>
+<li><code>differential_expression()</code>: Probabilistic DE testing between groups</li>
+<li><code>get_feature_correlation_matrix()</code>: Gene-gene correlation estimates</li>
+</ul>
+<h2>scANVI (Single-Cell ANnotation using Variational Inference)</h2>
+
+<p><strong>Purpose</strong>: Semi-supervised cell type annotation and integration using labeled and unlabeled cells.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Extends scVI with cell type labels</li>
+<li>Leverages partially labeled datasets for annotation transfer</li>
+<li>Performs simultaneous batch correction and cell type prediction</li>
+<li>Enables query-to-reference mapping</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Annotating new datasets using reference labels</li>
+<li>Transfer learning from well-annotated to unlabeled datasets</li>
+<li>Joint analysis of labeled and unlabeled cells</li>
+<li>Building cell type classifiers with uncertainty quantification</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python"># Option 1: Train from scratch
+scvi.model.SCANVI.setup_anndata(
+    adata,
+    layer="counts",
+    batch_key="batch",
+    labels_key="cell_type",
+    unlabeled_category="Unknown"
+)
+model = scvi.model.SCANVI(adata)
+model.train()
+
+# Option 2: Initialize from pretrained scVI
+scvi_model = scvi.model.SCVI(adata)
+scvi_model.train()
+scanvi_model = scvi.model.SCANVI.from_scvi_model(
+    scvi_model,
+    unlabeled_category="Unknown"
+)
+scanvi_model.train()
+
+# Predict cell types
+predictions = scanvi_model.predict()</code></pre>
+
+<p><strong>Key Parameters</strong>:</p>
+<ul><li><code>labels_key</code>: Column in <code>adata.obs</code> containing cell type labels</li>
+<li><code>unlabeled_category</code>: Label for cells without annotations</li>
+<li>All scVI parameters are also available</li>
+</ul>
+<p><strong>Outputs</strong>:</p>
+<ul><li><code>predict()</code>: Cell type predictions for all cells</li>
+<li><code>predict_proba()</code>: Prediction probabilities</li>
+<li><code>get_latent_representation()</code>: Cell type-aware latent space</li>
+</ul>
+<h2>AUTOZI</h2>
+
+<p><strong>Purpose</strong>: Automatic identification and modeling of zero-inflated genes in scRNA-seq data.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Distinguishes biological zeros from technical dropout</li>
+<li>Learns which genes exhibit zero-inflation</li>
+<li>Provides gene-specific zero-inflation probabilities</li>
+<li>Improves downstream analysis by accounting for dropout</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Detecting which genes are affected by technical dropout</li>
+<li>Improving imputation and normalization for sparse datasets</li>
+<li>Understanding the extent of zero-inflation in your data</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python">scvi.model.AUTOZI.setup_anndata(adata, layer="counts")
+model = scvi.model.AUTOZI(adata)
+model.train()
+
+# Get zero-inflation probabilities per gene
+zi_probs = model.get_alphas_betas()</code></pre>
+
+<h2>VeloVI</h2>
+
+<p><strong>Purpose</strong>: RNA velocity analysis using variational inference.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Joint modeling of spliced and unspliced RNA counts</li>
+<li>Probabilistic estimation of RNA velocity</li>
+<li>Accounts for technical noise and batch effects</li>
+<li>Provides uncertainty quantification for velocity estimates</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Inferring cellular dynamics and differentiation trajectories</li>
+<li>Analyzing spliced/unspliced count data</li>
+<li>RNA velocity analysis with batch correction</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python">import scvelo as scv
+
+# Prepare velocity data
+scv.pp.filter_and_normalize(adata)
+scv.pp.moments(adata)
+
+# Train VeloVI
+scvi.model.VELOVI.setup_anndata(adata, spliced_layer="Ms", unspliced_layer="Mu")
+model = scvi.model.VELOVI(adata)
+model.train()
+
+# Get velocity estimates
+latent_time = model.get_latent_time()
+velocities = model.get_velocity()</code></pre>
+
+<h2>contrastiveVI</h2>
+
+<p><strong>Purpose</strong>: Isolating perturbation-specific variations from background biological variation.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Separates shared variation (common across conditions) from target-specific variation</li>
+<li>Useful for perturbation studies (drug treatments, genetic perturbations)</li>
+<li>Identifies condition-specific gene programs</li>
+<li>Enables discovery of treatment-specific effects</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Analyzing perturbation experiments (drug screens, CRISPR, etc.)</li>
+<li>Identifying genes responding specifically to treatments</li>
+<li>Separating treatment effects from background variation</li>
+<li>Comparing control vs. perturbed conditions</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python">scvi.model.CONTRASTIVEVI.setup_anndata(
+    adata,
+    layer="counts",
+    batch_key="batch",
+    categorical_covariate_keys=["condition"]  # control vs treated
+)
+
+model = scvi.model.CONTRASTIVEVI(
+    adata,
+    n_latent=10,        # Shared variation
+    n_latent_target=5   # Target-specific variation
+)
+model.train()
+
+# Extract representations
+shared = model.get_latent_representation(representation="shared")
+target_specific = model.get_latent_representation(representation="target")</code></pre>
+
+<h2>CellAssign</h2>
+
+<p><strong>Purpose</strong>: Marker-based cell type annotation using known marker genes.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Uses prior knowledge of marker genes for cell types</li>
+<li>Probabilistic assignment of cells to types</li>
+<li>Handles marker gene overlap and ambiguity</li>
+<li>Provides soft assignments with uncertainty</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Annotating cells using known marker genes</li>
+<li>Leveraging existing biological knowledge for classification</li>
+<li>Cases where marker gene lists are available but reference datasets are not</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python"># Create marker gene matrix (cell types x genes)
+marker_gene_mat = pd.DataFrame({
+    "CD4 T cells": [1, 1, 0, 0],  # CD3D, CD4, CD8A, CD19
+    "CD8 T cells": [1, 0, 1, 0],
+    "B cells": [0, 0, 0, 1]
+}, index=["CD3D", "CD4", "CD8A", "CD19"])
+
+scvi.model.CELLASSIGN.setup_anndata(adata, layer="counts")
+model = scvi.model.CELLASSIGN(adata, marker_gene_mat)
+model.train()
+
+predictions = model.predict()</code></pre>
+
+<h2>Solo (Doublet Detection)</h2>
+
+<p><strong>Purpose</strong>: Identifying doublets (cells containing two or more cells) in scRNA-seq data.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Semi-supervised doublet detection using scVI embeddings</li>
+<li>Simulates artificial doublets for training</li>
+<li>Provides doublet probability scores</li>
+<li>Can be applied to any scVI model</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Quality control of scRNA-seq datasets</li>
+<li>Removing doublets before downstream analysis</li>
+<li>Assessing doublet rates in your data</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python"># Train scVI model first
+scvi.model.SCVI.setup_anndata(adata, layer="counts")
+scvi_model = scvi.model.SCVI(adata)
+scvi_model.train()
+
+# Train Solo for doublet detection
+solo_model = scvi.external.SOLO.from_scvi_model(scvi_model)
+solo_model.train()
+
+# Predict doublets
+predictions = solo_model.predict()
+doublet_scores = predictions["doublet"]
+adata.obs["doublet_score"] = doublet_scores</code></pre>
+
+<h2>Amortized LDA (Topic Modeling)</h2>
+
+<p><strong>Purpose</strong>: Topic modeling for gene expression using Latent Dirichlet Allocation.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Discovers gene expression programs (topics)</li>
+<li>Amortized variational inference for scalability</li>
+<li>Each cell is a mixture of topics</li>
+<li>Each topic is a distribution over genes</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Discovering gene programs or expression modules</li>
+<li>Understanding compositional structure of expression</li>
+<li>Alternative dimensionality reduction approach</li>
+<li>Interpretable decomposition of expression patterns</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python">scvi.model.AMORTIZEDLDA.setup_anndata(adata, layer="counts")
+model = scvi.model.AMORTIZEDLDA(adata, n_topics=10)
+model.train()
+
+# Get topic compositions per cell
+topic_proportions = model.get_latent_representation()
+
+# Get gene loadings per topic
+topic_gene_loadings = model.get_topic_distribution()</code></pre>
+
+<h2>Model Selection Guidelines</h2>
+
+<p><strong>Choose scVI when</strong>:</p>
+<ul><li>Starting with unsupervised analysis</li>
+<li>Need batch correction and integration</li>
+<li>Want normalized expression and DE analysis</li>
+</ul>
+<p><strong>Choose scANVI when</strong>:</p>
+<ul><li>Have some labeled cells for training</li>
+<li>Need cell type annotation</li>
+<li>Want to transfer labels from reference to query</li>
+</ul>
+<p><strong>Choose AUTOZI when</strong>:</p>
+<ul><li>Concerned about technical dropout</li>
+<li>Need to identify zero-inflated genes</li>
+<li>Working with very sparse datasets</li>
+</ul>
+<p><strong>Choose VeloVI when</strong>:</p>
+<ul><li>Have spliced/unspliced count data</li>
+<li>Interested in cellular dynamics</li>
+<li>Need RNA velocity with batch correction</li>
+</ul>
+<p><strong>Choose contrastiveVI when</strong>:</p>
+<ul><li>Analyzing perturbation experiments</li>
+<li>Need to separate treatment effects</li>
+<li>Want to identify condition-specific programs</li>
+</ul>
+<p><strong>Choose CellAssign when</strong>:</p>
+<ul><li>Have marker gene lists available</li>
+<li>Want probabilistic marker-based annotation</li>
+<li>No reference dataset available</li>
+</ul>
+<p><strong>Choose Solo when</strong>:</p>
+<ul><li>Need doublet detection</li>
+<li>Already using scVI for analysis</li>
+<li>Want probabilistic doublet scores</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Models Spatial</h3>
+  <h1>Spatial Transcriptomics Models</h1>
+
+<p>This document covers models for analyzing spatially-resolved transcriptomics data in scvi-tools.</p>
+
+<h2>DestVI (Deconvolution of Spatial Transcriptomics using Variational Inference)</h2>
+
+<p><strong>Purpose</strong>: Multi-resolution deconvolution of spatial transcriptomics using single-cell reference data.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Estimates cell type proportions at each spatial location</li>
+<li>Uses single-cell RNA-seq reference for deconvolution</li>
+<li>Multi-resolution approach (global and local patterns)</li>
+<li>Accounts for spatial correlation</li>
+<li>Provides uncertainty quantification</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Deconvolving Visium or similar spatial transcriptomics</li>
+<li>Have scRNA-seq reference data with cell type labels</li>
+<li>Want to map cell types to spatial locations</li>
+<li>Interested in spatial organization of cell types</li>
+<li>Need probabilistic estimates of cell type abundance</li>
+</ul>
+<p><strong>Data Requirements</strong>:</p>
+<ul><li><strong>Spatial data</strong>: Visium or similar spot-based measurements (target data)</li>
+<li><strong>Single-cell reference</strong>: scRNA-seq with cell type annotations</li>
+<li>Both datasets should share genes</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python">import scvi
+
+# Step 1: Train scVI on single-cell reference
+scvi.model.SCVI.setup_anndata(sc_adata, layer="counts")
+sc_model = scvi.model.SCVI(sc_adata)
+sc_model.train()
+
+# Step 2: Setup spatial data
+scvi.model.DESTVI.setup_anndata(
+    spatial_adata,
+    layer="counts"
+)
+
+# Step 3: Train DestVI using reference
+model = scvi.model.DESTVI.from_rna_model(
+    spatial_adata,
+    sc_model,
+    cell_type_key="cell_type"  # Cell type labels in reference
+)
+model.train(max_epochs=2500)
+
+# Step 4: Get cell type proportions
+proportions = model.get_proportions()
+spatial_adata.obsm["proportions"] = proportions
+
+# Step 5: Get cell type-specific expression
+# Expression of genes specific to each cell type at each spot
+ct_expression = model.get_scale_for_ct("T cells")</code></pre>
+
+<p><strong>Key Parameters</strong>:</p>
+<ul><li><code>amortization</code>: Amortization strategy ("both", "latent", "proportion")</li>
+<li><code>n_latent</code>: Latent dimensionality (inherited from scVI model)</li>
+</ul>
+<p><strong>Outputs</strong>:</p>
+<ul><li><code>get_proportions()</code>: Cell type proportions at each spot</li>
+<li><code>get_scale_for_ct(cell_type)</code>: Cell type-specific expression patterns</li>
+<li><code>get_gamma()</code>: Proportion-specific gene expression scaling</li>
+</ul>
+<p><strong>Visualization</strong>:</p>
+<pre><code class="language-python">import scanpy as sc
+import matplotlib.pyplot as plt
+
+# Visualize specific cell type proportions spatially
+sc.pl.spatial(
+    spatial_adata,
+    color="T cells",  # If proportions added to .obs
+    spot_size=150
+)
+
+# Or use obsm directly
+for ct in cell_types:
+    plt.figure()
+    sc.pl.spatial(
+        spatial_adata,
+        color=spatial_adata.obsm["proportions"][ct],
+        title=f"{ct} proportions"
+    )</code></pre>
+
+<h2>Stereoscope</h2>
+
+<p><strong>Purpose</strong>: Cell type deconvolution for spatial transcriptomics using probabilistic modeling.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Reference-based deconvolution</li>
+<li>Probabilistic framework for cell type proportions</li>
+<li>Works with various spatial technologies</li>
+<li>Handles gene selection and normalization</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Similar to DestVI but simpler approach</li>
+<li>Deconvolving spatial data with reference</li>
+<li>Faster alternative for basic deconvolution</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python">scvi.model.STEREOSCOPE.setup_anndata(
+    sc_adata,
+    labels_key="cell_type",
+    layer="counts"
+)
+
+# Train on reference
+ref_model = scvi.model.STEREOSCOPE(sc_adata)
+ref_model.train()
+
+# Setup spatial data
+scvi.model.STEREOSCOPE.setup_anndata(spatial_adata, layer="counts")
+
+# Transfer to spatial
+spatial_model = scvi.model.STEREOSCOPE.from_reference_model(
+    spatial_adata,
+    ref_model
+)
+spatial_model.train()
+
+# Get proportions
+proportions = spatial_model.get_proportions()</code></pre>
+
+<h2>Tangram</h2>
+
+<p><strong>Purpose</strong>: Spatial mapping and integration of single-cell data to spatial locations.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Maps single cells to spatial coordinates</li>
+<li>Learns optimal transport between single-cell and spatial data</li>
+<li>Gene imputation at spatial locations</li>
+<li>Cell type mapping</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Mapping cells from scRNA-seq to spatial locations</li>
+<li>Imputing unmeasured genes in spatial data</li>
+<li>Understanding spatial organization at single-cell resolution</li>
+<li>Integrating scRNA-seq and spatial transcriptomics</li>
+</ul>
+<p><strong>Data Requirements</strong>:</p>
+<ul><li>Single-cell RNA-seq data with annotations</li>
+<li>Spatial transcriptomics data</li>
+<li>Shared genes between modalities</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python">import tangram as tg
+
+# Map cells to spatial locations
+ad_map = tg.map_cells_to_space(
+    adata_sc=sc_adata,
+    adata_sp=spatial_adata,
+    mode="cells",  # or "clusters" for cell type mapping
+    density_prior="rna_count_based"
+)
+
+# Get mapping matrix (cells × spots)
+mapping = ad_map.X
+
+# Project cell annotations to space
+tg.project_cell_annotations(
+    ad_map,
+    spatial_adata,
+    annotation="cell_type"
+)
+
+# Impute genes in spatial data
+genes_to_impute = ["CD3D", "CD8A", "CD4"]
+tg.project_genes(ad_map, spatial_adata, genes=genes_to_impute)</code></pre>
+
+<p><strong>Visualization</strong>:</p>
+<pre><code class="language-python"># Visualize cell type mapping
+sc.pl.spatial(
+    spatial_adata,
+    color="cell_type_projected",
+    spot_size=100
+)</code></pre>
+
+<h2>gimVI (Gaussian Identity Multivi for Imputation)</h2>
+
+<p><strong>Purpose</strong>: Cross-modality imputation between spatial and single-cell data.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Joint model of spatial and single-cell data</li>
+<li>Imputes missing genes in spatial data</li>
+<li>Enables cross-dataset queries</li>
+<li>Learns shared representations</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Imputing genes not measured in spatial data</li>
+<li>Joint analysis of spatial and single-cell datasets</li>
+<li>Mapping between modalities</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python"># Combine datasets
+combined_adata = sc.concat([sc_adata, spatial_adata])
+
+scvi.model.GIMVI.setup_anndata(
+    combined_adata,
+    layer="counts"
+)
+
+model = scvi.model.GIMVI(combined_adata)
+model.train()
+
+# Impute genes in spatial data
+imputed = model.get_imputed_values(spatial_indices)</code></pre>
+
+<h2>scVIVA (Variation in Variational Autoencoders for Spatial)</h2>
+
+<p><strong>Purpose</strong>: Analyzing cell-environment relationships in spatial data.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Models cellular neighborhoods and environments</li>
+<li>Identifies environment-associated gene expression</li>
+<li>Accounts for spatial correlation structure</li>
+<li>Cell-cell interaction analysis</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Understanding how spatial context affects cells</li>
+<li>Identifying niche-specific gene programs</li>
+<li>Cell-cell interaction studies</li>
+<li>Microenvironment analysis</li>
+</ul>
+<p><strong>Data Requirements</strong>:</p>
+<ul><li>Spatial transcriptomics with coordinates</li>
+<li>Cell type annotations (optional)</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python">scvi.model.SCVIVA.setup_anndata(
+    spatial_adata,
+    layer="counts",
+    spatial_key="spatial"  # Coordinates in .obsm
+)
+
+model = scvi.model.SCVIVA(spatial_adata)
+model.train()
+
+# Get environment representations
+env_latent = model.get_environment_representation()
+
+# Identify environment-associated genes
+env_genes = model.get_environment_specific_genes()</code></pre>
+
+<h2>ResolVI</h2>
+
+<p><strong>Purpose</strong>: Addressing spatial transcriptomics noise through resolution-aware modeling.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Accounts for spatial resolution effects</li>
+<li>Denoises spatial data</li>
+<li>Multi-scale analysis</li>
+<li>Improves downstream analysis quality</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Noisy spatial data</li>
+<li>Multiple spatial resolutions</li>
+<li>Need denoising before analysis</li>
+<li>Improving data quality</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python">scvi.model.RESOLVI.setup_anndata(
+    spatial_adata,
+    layer="counts",
+    spatial_key="spatial"
+)
+
+model = scvi.model.RESOLVI(spatial_adata)
+model.train()
+
+# Get denoised expression
+denoised = model.get_denoised_expression()</code></pre>
+
+<h2>Model Selection for Spatial Transcriptomics</h2>
+
+<h3>DestVI</h3>
+<p><strong>Choose when</strong>:</p>
+<ul><li>Need detailed deconvolution with reference</li>
+<li>Have high-quality scRNA-seq reference</li>
+<li>Want multi-resolution analysis</li>
+<li>Need uncertainty quantification</li>
+</ul>
+<p><strong>Best for</strong>: Visium, spot-based technologies</p>
+
+<h3>Stereoscope</h3>
+<p><strong>Choose when</strong>:</p>
+<ul><li>Need simpler, faster deconvolution</li>
+<li>Basic cell type proportion estimates</li>
+<li>Limited computational resources</li>
+</ul>
+<p><strong>Best for</strong>: Quick deconvolution tasks</p>
+
+<h3>Tangram</h3>
+<p><strong>Choose when</strong>:</p>
+<ul><li>Want single-cell resolution mapping</li>
+<li>Need to impute many genes</li>
+<li>Interested in cell positioning</li>
+<li>Optimal transport approach preferred</li>
+</ul>
+<p><strong>Best for</strong>: Detailed spatial mapping</p>
+
+<h3>gimVI</h3>
+<p><strong>Choose when</strong>:</p>
+<ul><li>Need bidirectional imputation</li>
+<li>Joint modeling of spatial and single-cell</li>
+<li>Cross-dataset queries</li>
+</ul>
+<p><strong>Best for</strong>: Integration and imputation</p>
+
+<h3>scVIVA</h3>
+<p><strong>Choose when</strong>:</p>
+<ul><li>Interested in cellular environments</li>
+<li>Cell-cell interaction analysis</li>
+<li>Neighborhood effects</li>
+</ul>
+<p><strong>Best for</strong>: Microenvironment studies</p>
+
+<h3>ResolVI</h3>
+<p><strong>Choose when</strong>:</p>
+<ul><li>Data quality is a concern</li>
+<li>Need denoising</li>
+<li>Multi-scale analysis</li>
+</ul>
+<p><strong>Best for</strong>: Noisy data preprocessing</p>
+
+<h2>Complete Workflow: Spatial Deconvolution with DestVI</h2>
+
+<pre><code class="language-python">import scvi
+import scanpy as sc
+import squidpy as sq
+
+# ===== Part 1: Prepare single-cell reference =====
+# Load and process scRNA-seq reference
+sc_adata = sc.read_h5ad("reference_scrna.h5ad")
+
+# QC and filtering
+sc.pp.filter_genes(sc_adata, min_cells=10)
+sc.pp.highly_variable_genes(sc_adata, n_top_genes=4000)
+
+# Train scVI on reference
+scvi.model.SCVI.setup_anndata(
+    sc_adata,
+    layer="counts",
+    batch_key="batch"
+)
+
+sc_model = scvi.model.SCVI(sc_adata)
+sc_model.train(max_epochs=400)
+
+# ===== Part 2: Load spatial data =====
+spatial_adata = sc.read_visium("path/to/visium")
+spatial_adata.var_names_make_unique()
+
+# QC spatial data
+sc.pp.filter_genes(spatial_adata, min_cells=10)
+
+# ===== Part 3: Run DestVI =====
+scvi.model.DESTVI.setup_anndata(
+    spatial_adata,
+    layer="counts"
+)
+
+destvi_model = scvi.model.DESTVI.from_rna_model(
+    spatial_adata,
+    sc_model,
+    cell_type_key="cell_type"
+)
+
+destvi_model.train(max_epochs=2500)
+
+# ===== Part 4: Extract results =====
+# Get proportions
+proportions = destvi_model.get_proportions()
+spatial_adata.obsm["proportions"] = proportions
+
+# Add proportions to .obs for easy plotting
+for i, ct in enumerate(sc_model.adata.obs["cell_type"].cat.categories):
+    spatial_adata.obs[f"prop_{ct}"] = proportions[:, i]
+
+# ===== Part 5: Visualization =====
+# Plot specific cell types
+cell_types = ["T cells", "B cells", "Macrophages"]
+
+for ct in cell_types:
+    sc.pl.spatial(
+        spatial_adata,
+        color=f"prop_{ct}",
+        title=f"{ct} proportions",
+        spot_size=150,
+        cmap="viridis"
+    )
+
+# ===== Part 6: Spatial analysis =====
+# Compute spatial neighbors
+sq.gr.spatial_neighbors(spatial_adata)
+
+# Spatial autocorrelation of cell types
+for ct in cell_types:
+    sq.gr.spatial_autocorr(
+        spatial_adata,
+        attr="obs",
+        mode="moran",
+        genes=[f"prop_{ct}"]
+    )
+
+# ===== Part 7: Save results =====
+destvi_model.save("destvi_model")
+spatial_adata.write("spatial_deconvolved.h5ad")</code></pre>
+
+<h2>Best Practices for Spatial Analysis</h2>
+
+<ul><li><strong>Reference quality</strong>: Use high-quality, well-annotated scRNA-seq reference</li>
+<li><strong>Gene overlap</strong>: Ensure sufficient shared genes between reference and spatial</li>
+<li><strong>Spatial coordinates</strong>: Properly register spatial coordinates in <code>.obsm["spatial"]</code></li>
+<li><strong>Validation</strong>: Use known marker genes to validate deconvolution</li>
+<li><strong>Visualization</strong>: Always visualize results spatially to check biological plausibility</li>
+<li><strong>Cell type granularity</strong>: Consider appropriate cell type resolution</li>
+<li><strong>Computational resources</strong>: Spatial models can be memory-intensive</li>
+<li><strong>Quality control</strong>: Filter low-quality spots before analysis</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Models Specialized</h3>
+  <h1>Specialized Modality Models</h1>
+
+<p>This document covers models for specialized single-cell data modalities in scvi-tools.</p>
+
+<h2>MethylVI / MethylANVI (Methylation Analysis)</h2>
+
+<p><strong>Purpose</strong>: Analysis of single-cell bisulfite sequencing (scBS-seq) data for DNA methylation.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Models methylation patterns at single-cell resolution</li>
+<li>Handles sparsity in methylation data</li>
+<li>Batch correction for methylation experiments</li>
+<li>Label transfer (MethylANVI) for cell type annotation</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Analyzing scBS-seq or similar methylation data</li>
+<li>Studying DNA methylation patterns across cell types</li>
+<li>Integrating methylation data across batches</li>
+<li>Cell type annotation based on methylation profiles</li>
+</ul>
+<p><strong>Data Requirements</strong>:</p>
+<ul><li>Methylation count matrices (methylated vs. total reads per CpG site)</li>
+<li>Format: Cells × CpG sites with methylation ratios or counts</li>
+</ul>
+<h3>MethylVI (Unsupervised)</h3>
+
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python">import scvi
+
+# Setup methylation data
+scvi.model.METHYLVI.setup_anndata(
+    adata,
+    layer="methylation_counts",  # Methylation data
+    batch_key="batch"
+)
+
+model = scvi.model.METHYLVI(adata)
+model.train()
+
+# Get latent representation
+latent = model.get_latent_representation()
+
+# Get normalized methylation values
+normalized_meth = model.get_normalized_methylation()</code></pre>
+
+<h3>MethylANVI (Semi-supervised with cell types)</h3>
+
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python"># Setup with cell type labels
+scvi.model.METHYLANVI.setup_anndata(
+    adata,
+    layer="methylation_counts",
+    batch_key="batch",
+    labels_key="cell_type",
+    unlabeled_category="Unknown"
+)
+
+model = scvi.model.METHYLANVI(adata)
+model.train()
+
+# Predict cell types
+predictions = model.predict()</code></pre>
+
+<p><strong>Key Parameters</strong>:</p>
+<ul><li><code>n_latent</code>: Latent dimensionality</li>
+<li><code>region_factors</code>: Model region-specific effects</li>
+</ul>
+<p><strong>Use Cases</strong>:</p>
+<ul><li>Epigenetic heterogeneity analysis</li>
+<li>Cell type identification via methylation</li>
+<li>Integration with gene expression data (separate analysis)</li>
+<li>Differential methylation analysis</li>
+</ul>
+<h2>CytoVI (Flow and Mass Cytometry)</h2>
+
+<p><strong>Purpose</strong>: Batch correction and integration of flow cytometry and mass cytometry (CyTOF) data.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Handles antibody-based protein measurements</li>
+<li>Corrects batch effects in cytometry data</li>
+<li>Enables integration across experiments</li>
+<li>Designed for high-dimensional protein panels</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Analyzing flow cytometry or CyTOF data</li>
+<li>Integrating cytometry experiments across batches</li>
+<li>Batch correction for protein panels</li>
+<li>Cross-study cytometry integration</li>
+</ul>
+<p><strong>Data Requirements</strong>:</p>
+<ul><li>Protein expression matrix (cells × proteins)</li>
+<li>Flow cytometry or CyTOF measurements</li>
+<li>Batch/experiment annotations</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python">scvi.model.CYTOVI.setup_anndata(
+    adata,
+    protein_expression_obsm_key="protein_expression",
+    batch_key="batch"
+)
+
+model = scvi.model.CYTOVI(adata)
+model.train()
+
+# Get batch-corrected representation
+latent = model.get_latent_representation()
+
+# Get normalized protein values
+normalized = model.get_normalized_expression()</code></pre>
+
+<p><strong>Key Parameters</strong>:</p>
+<ul><li><code>n_latent</code>: Latent space dimensionality</li>
+<li><code>n_layers</code>: Network depth</li>
+</ul>
+<p><strong>Typical Workflow</strong>:</p>
+<pre><code class="language-python">import scanpy as sc
+
+# 1. Load cytometry data
+adata = sc.read_h5ad("cytof_data.h5ad")
+
+# 2. Train CytoVI
+scvi.model.CYTOVI.setup_anndata(
+    adata,
+    protein_expression_obsm_key="protein",
+    batch_key="experiment"
+)
+model = scvi.model.CYTOVI(adata)
+model.train()
+
+# 3. Get batch-corrected values
+latent = model.get_latent_representation()
+adata.obsm["X_CytoVI"] = latent
+
+# 4. Downstream analysis
+sc.pp.neighbors(adata, use_rep="X_CytoVI")
+sc.tl.umap(adata)
+sc.tl.leiden(adata)
+
+# 5. Visualize batch correction
+sc.pl.umap(adata, color=["batch", "leiden"])</code></pre>
+
+<h2>SysVI (Systems-level Integration)</h2>
+
+<p><strong>Purpose</strong>: Batch effect correction with emphasis on preserving biological variation.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Specialized batch integration approach</li>
+<li>Preserves biological signals while removing technical effects</li>
+<li>Designed for large-scale integration studies</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Large-scale multi-batch integration</li>
+<li>Need to preserve subtle biological variation</li>
+<li>Systems-level analysis across many studies</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python">scvi.model.SYSVI.setup_anndata(
+    adata,
+    layer="counts",
+    batch_key="batch"
+)
+
+model = scvi.model.SYSVI(adata)
+model.train()
+
+latent = model.get_latent_representation()</code></pre>
+
+<h2>Decipher (Trajectory Inference)</h2>
+
+<p><strong>Purpose</strong>: Trajectory inference and pseudotime analysis for single-cell data.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Learns cellular trajectories and differentiation paths</li>
+<li>Pseudotime estimation</li>
+<li>Accounts for uncertainty in trajectory structure</li>
+<li>Compatible with scVI embeddings</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Studying cellular differentiation</li>
+<li>Time-course or developmental datasets</li>
+<li>Understanding cell state transitions</li>
+<li>Identifying branching points in development</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python"># Typically used after scVI for embeddings
+scvi_model = scvi.model.SCVI(adata)
+scvi_model.train()
+
+# Decipher for trajectory
+scvi.model.DECIPHER.setup_anndata(adata)
+decipher_model = scvi.model.DECIPHER(adata, scvi_model)
+decipher_model.train()
+
+# Get pseudotime
+pseudotime = decipher_model.get_pseudotime()
+adata.obs["pseudotime"] = pseudotime</code></pre>
+
+<p><strong>Visualization</strong>:</p>
+<pre><code class="language-python">import scanpy as sc
+
+# Plot pseudotime on UMAP
+sc.pl.umap(adata, color="pseudotime", cmap="viridis")
+
+# Gene expression along pseudotime
+sc.pl.scatter(adata, x="pseudotime", y="gene_of_interest")</code></pre>
+
+<h2>peRegLM (Peak Regulatory Linear Model)</h2>
+
+<p><strong>Purpose</strong>: Linking chromatin accessibility to gene expression for regulatory analysis.</p>
+
+<p><strong>Key Features</strong>:</p>
+<ul><li>Links ATAC-seq peaks to gene expression</li>
+<li>Identifies regulatory relationships</li>
+<li>Works with paired multiome data</li>
+</ul>
+<p><strong>When to Use</strong>:</p>
+<ul><li>Multiome data (RNA + ATAC from same cells)</li>
+<li>Understanding gene regulation</li>
+<li>Linking peaks to target genes</li>
+<li>Regulatory network construction</li>
+</ul>
+<p><strong>Basic Usage</strong>:</p>
+<pre><code class="language-python"># Requires paired RNA + ATAC data
+scvi.model.PEREGLM.setup_anndata(
+    multiome_adata,
+    rna_layer="counts",
+    atac_layer="atac_counts"
+)
+
+model = scvi.model.PEREGLM(multiome_adata)
+model.train()
+
+# Get peak-gene links
+peak_gene_links = model.get_regulatory_links()</code></pre>
+
+<h2>Model-Specific Best Practices</h2>
+
+<h3>MethylVI/MethylANVI</h3>
+<ul><li><strong>Sparsity</strong>: Methylation data is inherently sparse; model accounts for this</li>
+<li><strong>CpG selection</strong>: Filter CpGs with very low coverage</li>
+<li><strong>Biological interpretation</strong>: Consider genomic context (promoters, enhancers)</li>
+<li><strong>Integration</strong>: For multi-omics, analyze separately then integrate results</li>
+</ul>
+<h3>CytoVI</h3>
+<ul><li><strong>Protein QC</strong>: Remove low-quality or uninformative proteins</li>
+<li><strong>Compensation</strong>: Ensure proper spectral compensation before analysis</li>
+<li><strong>Batch design</strong>: Include biological and technical replicates</li>
+<li><strong>Controls</strong>: Use control samples to validate batch correction</li>
+</ul>
+<h3>SysVI</h3>
+<ul><li><strong>Sample size</strong>: Designed for large-scale integration</li>
+<li><strong>Batch definition</strong>: Carefully define batch structure</li>
+<li><strong>Biological validation</strong>: Verify biological signals preserved</li>
+</ul>
+<h3>Decipher</h3>
+<ul><li><strong>Start point</strong>: Define trajectory start cells if known</li>
+<li><strong>Branching</strong>: Specify expected number of branches</li>
+<li><strong>Validation</strong>: Use known markers to validate pseudotime</li>
+<li><strong>Integration</strong>: Works well with scVI embeddings</li>
+</ul>
+<h2>Integration with Other Models</h2>
+
+<p>Many specialized models work well in combination:</p>
+
+<p><strong>Methylation + Expression</strong>:</p>
+<pre><code class="language-python"># Analyze separately, then integrate
+methylvi_model = scvi.model.METHYLVI(meth_adata)
+scvi_model = scvi.model.SCVI(rna_adata)
+
+# Integrate results at analysis level
+# E.g., correlate methylation and expression patterns</code></pre>
+
+<p><strong>Cytometry + CITE-seq</strong>:</p>
+<pre><code class="language-python"># CytoVI for flow/CyTOF
+cyto_model = scvi.model.CYTOVI(cyto_adata)
+
+# totalVI for CITE-seq
+cite_model = scvi.model.TOTALVI(cite_adata)
+
+# Compare protein measurements across platforms</code></pre>
+
+<p><strong>ATAC + RNA (Multiome)</strong>:</p>
+<pre><code class="language-python"># MultiVI for joint analysis
+multivi_model = scvi.model.MULTIVI(multiome_adata)
+
+# peRegLM for regulatory links
+pereglm_model = scvi.model.PEREGLM(multiome_adata)</code></pre>
+
+<h2>Choosing Specialized Models</h2>
+
+<h3>Decision Tree</h3>
+
+<ul><li><strong>What data modality?</strong></li>
+</ul><p>   - Methylation → MethylVI/MethylANVI</p>
+<p>   - Flow/CyTOF → CytoVI</p>
+<p>   - Trajectory → Decipher</p>
+<p>   - Multi-batch integration → SysVI</p>
+<p>   - Regulatory links → peRegLM</p>
+
+<ul><li><strong>Do you have labels?</strong></li>
+</ul><p>   - Yes → MethylANVI (methylation)</p>
+<p>   - No → MethylVI (methylation)</p>
+
+<ul><li><strong>What's your main goal?</strong></li>
+</ul><p>   - Batch correction → CytoVI, SysVI</p>
+<p>   - Trajectory/pseudotime → Decipher</p>
+<p>   - Peak-gene links → peRegLM</p>
+<p>   - Methylation patterns → MethylVI/ANVI</p>
+
+<h2>Example: Complete Methylation Analysis</h2>
+
+<pre><code class="language-python">import scvi
+import scanpy as sc
+
+# 1. Load methylation data
+meth_adata = sc.read_h5ad("methylation_data.h5ad")
+
+# 2. QC: filter low-coverage CpG sites
+sc.pp.filter_genes(meth_adata, min_cells=10)
+
+# 3. Setup MethylVI
+scvi.model.METHYLVI.setup_anndata(
+    meth_adata,
+    layer="methylation",
+    batch_key="batch"
+)
+
+# 4. Train model
+model = scvi.model.METHYLVI(meth_adata, n_latent=15)
+model.train(max_epochs=400)
+
+# 5. Get latent representation
+latent = model.get_latent_representation()
+meth_adata.obsm["X_MethylVI"] = latent
+
+# 6. Clustering
+sc.pp.neighbors(meth_adata, use_rep="X_MethylVI")
+sc.tl.umap(meth_adata)
+sc.tl.leiden(meth_adata)
+
+# 7. Differential methylation
+dm_results = model.differential_methylation(
+    groupby="leiden",
+    group1="0",
+    group2="1"
+)
+
+# 8. Save
+model.save("methylvi_model")
+meth_adata.write("methylation_analyzed.h5ad")</code></pre>
+
+<h2>External Tools Integration</h2>
+
+<p>Some specialized models are available as external packages:</p>
+
+<p><strong>SOLO</strong> (doublet detection):</p>
+<pre><code class="language-python">from scvi.external import SOLO
+
+solo = SOLO.from_scvi_model(scvi_model)
+solo.train()
+doublets = solo.predict()</code></pre>
+
+<p><strong>scArches</strong> (reference mapping):</p>
+<pre><code class="language-python">from scvi.external import SCARCHES
+
+# For transfer learning and query-to-reference mapping</code></pre>
+
+<p>These external tools extend scvi-tools functionality for specific use cases.</p>
+
+<h2>Summary Table</h2>
+
+<p>| Model | Data Type | Primary Use | Supervised? |</p>
+<p>|-------|-----------|-------------|-------------|</p>
+<p>| MethylVI | Methylation | Unsupervised analysis | No |</p>
+<p>| MethylANVI | Methylation | Cell type annotation | Semi |</p>
+<p>| CytoVI | Cytometry | Batch correction | No |</p>
+<p>| SysVI | scRNA-seq | Large-scale integration | No |</p>
+<p>| Decipher | scRNA-seq | Trajectory inference | No |</p>
+<p>| peRegLM | Multiome | Peak-gene links | No |</p>
+<p>| SOLO | scRNA-seq | Doublet detection | Semi |</p>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Theoretical Foundations</h3>
+  <h1>Theoretical Foundations of scvi-tools</h1>
+
+<p>This document explains the mathematical and statistical principles underlying scvi-tools.</p>
+
+<h2>Core Concepts</h2>
+
+<h3>Variational Inference</h3>
+
+<p><strong>What is it?</strong></p>
+<p>Variational inference is a technique for approximating complex probability distributions. In single-cell analysis, we want to understand the posterior distribution p(z|x) - the probability of latent variables z given observed data x.</p>
+
+<p><strong>Why use it?</strong></p>
+<ul><li>Exact inference is computationally intractable for complex models</li>
+<li>Scales to large datasets (millions of cells)</li>
+<li>Provides uncertainty quantification</li>
+<li>Enables Bayesian reasoning about cell states</li>
+</ul>
+<p><strong>How does it work?</strong></p>
+<ul><li>Define a simpler approximate distribution q(z|x) with learnable parameters</li>
+<li>Minimize the KL divergence between q(z|x) and true posterior p(z|x)</li>
+<li>Equivalent to maximizing the Evidence Lower Bound (ELBO)</li>
+</ul>
+<p><strong>ELBO Objective</strong>:</p>
+<pre><code>ELBO = E_q[log p(x|z)] - KL(q(z|x) || p(z))
+       ↑                    ↑
+  Reconstruction          Regularization</code></pre>
+
+<ul><li><strong>Reconstruction term</strong>: Model should generate data similar to observed</li>
+<li><strong>Regularization term</strong>: Latent representation should match prior</li>
+</ul>
+<h3>Variational Autoencoders (VAEs)</h3>
+
+<p><strong>Architecture</strong>:</p>
+<pre><code>x (observed data)
+    ↓
+[Encoder Neural Network]
+    ↓
+z (latent representation)
+    ↓
+[Decoder Neural Network]
+    ↓
+x̂ (reconstructed data)</code></pre>
+
+<p><strong>Encoder</strong>: Maps cells (x) to latent space (z)</p>
+<ul><li>Learns q(z|x), the approximate posterior</li>
+<li>Parameterized by neural network with learnable weights</li>
+<li>Outputs mean and variance of latent distribution</li>
+</ul>
+<p><strong>Decoder</strong>: Maps latent space (z) back to gene space</p>
+<ul><li>Learns p(x|z), the likelihood</li>
+<li>Generates gene expression from latent representation</li>
+<li>Models count distributions (Negative Binomial, Zero-Inflated NB)</li>
+</ul>
+<p><strong>Reparameterization Trick</strong>:</p>
+<ul><li>Allows backpropagation through stochastic sampling</li>
+<li>Sample z = μ + σ ⊙ ε, where ε ~ N(0,1)</li>
+<li>Enables end-to-end training with gradient descent</li>
+</ul>
+<h3>Amortized Inference</h3>
+
+<p><strong>Concept</strong>: Share encoder parameters across all cells.</p>
+
+<p><strong>Traditional inference</strong>: Learn separate latent variables for each cell</p>
+<ul><li>n_cells × n_latent parameters</li>
+<li>Doesn't scale to large datasets</li>
+</ul>
+<p><strong>Amortized inference</strong>: Learn single encoder for all cells</p>
+<ul><li>Fixed number of parameters regardless of cell count</li>
+<li>Enables fast inference on new cells</li>
+<li>Transfers learned patterns across dataset</li>
+</ul>
+<p><strong>Benefits</strong>:</p>
+<ul><li>Scalable to millions of cells</li>
+<li>Fast inference on query data</li>
+<li>Leverages shared structure across cells</li>
+<li>Enables few-shot learning</li>
+</ul>
+<h2>Statistical Modeling</h2>
+
+<h3>Count Data Distributions</h3>
+
+<p>Single-cell data are counts (integer-valued), requiring appropriate distributions.</p>
+
+<h4>Negative Binomial (NB)</h4>
+<pre><code>x ~ NB(μ, θ)</code></pre>
+<ul><li><strong>μ (mean)</strong>: Expected expression level</li>
+<li><strong>θ (dispersion)</strong>: Controls variance</li>
+<li><strong>Variance</strong>: Var(x) = μ + μ²/θ</li>
+</ul>
+<p><strong>When to use</strong>: Gene expression without zero-inflation</p>
+<ul><li>More flexible than Poisson (allows overdispersion)</li>
+<li>Models technical and biological variation</li>
+</ul>
+<h4>Zero-Inflated Negative Binomial (ZINB)</h4>
+<pre><code>x ~ π·δ₀ + (1-π)·NB(μ, θ)</code></pre>
+<ul><li><strong>π (dropout rate)</strong>: Probability of technical zero</li>
+<li><strong>δ₀</strong>: Point mass at zero</li>
+<li><strong>NB(μ, θ)</strong>: Expression when not dropped out</li>
+</ul>
+<p><strong>When to use</strong>: Sparse scRNA-seq data</p>
+<ul><li>Models technical dropout separately from biological zeros</li>
+<li>Better fit for highly sparse data (e.g., 10x data)</li>
+</ul>
+<h4>Poisson</h4>
+<pre><code>x ~ Poisson(μ)</code></pre>
+<ul><li>Simplest count distribution</li>
+<li>Mean equals variance: Var(x) = μ</li>
+</ul>
+<p><strong>When to use</strong>: Less common; ATAC-seq fragment counts</p>
+<ul><li>More restrictive than NB</li>
+<li>Faster computation</li>
+</ul>
+<h3>Batch Correction Framework</h3>
+
+<p><strong>Problem</strong>: Technical variation confounds biological signal</p>
+<ul><li>Different sequencing runs, protocols, labs</li>
+<li>Must remove technical effects while preserving biology</li>
+</ul>
+<p><strong>scvi-tools approach</strong>:</p>
+<ul><li>Encode batch as categorical variable s</li>
+<li>Include s in generative model</li>
+<li>Latent space z is batch-invariant</li>
+<li>Decoder conditions on s for batch-specific effects</li>
+</ul>
+<p><strong>Mathematical formulation</strong>:</p>
+<pre><code>Encoder: q(z|x, s)  - batch-aware encoding
+Latent: z           - batch-corrected representation
+Decoder: p(x|z, s)  - batch-specific decoding</code></pre>
+
+<p><strong>Key insight</strong>: Batch info flows through decoder, not latent space</p>
+<ul><li>z captures biological variation</li>
+<li>s explains technical variation</li>
+<li>Separable biology and batch effects</li>
+</ul>
+<h3>Deep Generative Modeling</h3>
+
+<p><strong>Generative model</strong>: Learns p(x), the data distribution</p>
+
+<p><strong>Process</strong>:</p>
+<ul><li>Sample latent variable: z ~ p(z) = N(0, I)</li>
+<li>Generate expression: x ~ p(x|z)</li>
+<li>Joint distribution: p(x, z) = p(x|z)p(z)</li>
+</ul>
+<p><strong>Benefits</strong>:</p>
+<ul><li>Generate synthetic cells</li>
+<li>Impute missing values</li>
+<li>Quantify uncertainty</li>
+<li>Perform counterfactual predictions</li>
+</ul>
+<p><strong>Inference network</strong>: Inverts generative process</p>
+<ul><li>Given x, infer z</li>
+<li>q(z|x) approximates true posterior p(z|x)</li>
+</ul>
+<h2>Model Architecture Details</h2>
+
+<h3>scVI Architecture</h3>
+
+<p><strong>Input</strong>: Gene expression counts x ∈ ℕ^G (G genes)</p>
+
+<p><strong>Encoder</strong>:</p>
+<pre><code>h = ReLU(W₁·x + b₁)
+μ_z = W₂·h + b₂
+log σ²_z = W₃·h + b₃
+z ~ N(μ_z, σ²_z)</code></pre>
+
+<p><strong>Latent space</strong>: z ∈ ℝ^d (typically d=10-30)</p>
+
+<p><strong>Decoder</strong>:</p>
+<pre><code>h = ReLU(W₄·z + b₄)
+μ = softmax(W₅·h + b₅) · library_size
+θ = exp(W₆·h + b₆)
+π = sigmoid(W₇·h + b₇)  # for ZINB
+x ~ ZINB(μ, θ, π)</code></pre>
+
+<p><strong>Loss function (ELBO)</strong>:</p>
+<pre><code>L = E_q[log p(x|z)] - KL(q(z|x) || N(0,I))</code></pre>
+
+<h3>Handling Covariates</h3>
+
+<p><strong>Categorical covariates</strong> (batch, donor, etc.):</p>
+<ul><li>One-hot encoded: s ∈ {0,1}^K</li>
+<li>Concatenate with latent: [z, s]</li>
+<li>Or use conditional layers</li>
+</ul>
+<p><strong>Continuous covariates</strong> (library size, percent_mito):</p>
+<ul><li>Standardize to zero mean, unit variance</li>
+<li>Include in encoder and/or decoder</li>
+</ul>
+<p><strong>Covariate injection strategies</strong>:</p>
+<ul><li><strong>Concatenation</strong>: [z, s] fed to decoder</li>
+<li><strong>Deep injection</strong>: s added at multiple layers</li>
+<li><strong>Conditional batch norm</strong>: Batch-specific normalization</li>
+</ul>
+<h2>Advanced Theoretical Concepts</h2>
+
+<h3>Transfer Learning (scArches)</h3>
+
+<p><strong>Concept</strong>: Use pretrained model as initialization for new data</p>
+
+<p><strong>Process</strong>:</p>
+<ul><li>Train reference model on large dataset</li>
+<li>Freeze encoder parameters</li>
+<li>Fine-tune decoder on query data</li>
+<li>Or fine-tune all with lower learning rate</li>
+</ul>
+<p><strong>Why it works</strong>:</p>
+<ul><li>Encoder learns general cellular representations</li>
+<li>Decoder adapts to query-specific characteristics</li>
+<li>Prevents catastrophic forgetting</li>
+</ul>
+<p><strong>Applications</strong>:</p>
+<ul><li>Query-to-reference mapping</li>
+<li>Few-shot learning for rare cell types</li>
+<li>Rapid analysis of new datasets</li>
+</ul>
+<h3>Multi-Resolution Modeling (MrVI)</h3>
+
+<p><strong>Idea</strong>: Separate shared and sample-specific variation</p>
+
+<p><strong>Latent space decomposition</strong>:</p>
+<pre><code>z = z_shared + z_sample</code></pre>
+<ul><li><strong>z_shared</strong>: Common across samples</li>
+<li><strong>z_sample</strong>: Sample-specific effects</li>
+</ul>
+<p><strong>Hierarchical structure</strong>:</p>
+<pre><code>Sample level: ρ_s ~ N(0, I)
+Cell level: z_i ~ N(ρ_{s(i)}, σ²)</code></pre>
+
+<p><strong>Benefits</strong>:</p>
+<ul><li>Disentangle biological sources of variation</li>
+<li>Compare samples at different resolutions</li>
+<li>Identify sample-specific cell states</li>
+</ul>
+<h3>Counterfactual Prediction</h3>
+
+<p><strong>Goal</strong>: Predict outcome under different conditions</p>
+
+<p><strong>Example</strong>: "What would this cell look like if from different batch?"</p>
+
+<p><strong>Method</strong>:</p>
+<ul><li>Encode cell to latent: z = Encoder(x, s_original)</li>
+<li>Decode with new condition: x_new = Decoder(z, s_new)</li>
+<li>x_new is counterfactual prediction</li>
+</ul>
+<p><strong>Applications</strong>:</p>
+<ul><li>Batch effect assessment</li>
+<li>Predicting treatment response</li>
+<li>In silico perturbation studies</li>
+</ul>
+<h3>Posterior Predictive Distribution</h3>
+
+<p><strong>Definition</strong>: Distribution of new data given observed data</p>
+
+<pre><code>p(x_new | x_observed) = ∫ p(x_new|z) q(z|x_observed) dz</code></pre>
+
+<p><strong>Estimation</strong>: Sample z from q(z|x), generate x_new from p(x_new|z)</p>
+
+<p><strong>Uses</strong>:</p>
+<ul><li>Uncertainty quantification</li>
+<li>Robust predictions</li>
+<li>Outlier detection</li>
+</ul>
+<h2>Differential Expression Framework</h2>
+
+<h3>Bayesian Approach</h3>
+
+<p><strong>Traditional methods</strong>: Compare point estimates</p>
+<ul><li>Wilcoxon, t-test, etc.</li>
+<li>Ignore uncertainty</li>
+<li>Require pseudocounts</li>
+</ul>
+<p><strong>scvi-tools approach</strong>: Compare distributions</p>
+<ul><li>Sample from posterior: μ_A ~ p(μ|x_A), μ_B ~ p(μ|x_B)</li>
+<li>Compute log fold-change: LFC = log(μ_B) - log(μ_A)</li>
+<li>Posterior distribution of LFC quantifies uncertainty</li>
+</ul>
+<h3>Bayes Factor</h3>
+
+<p><strong>Definition</strong>: Ratio of posterior odds to prior odds</p>
+
+<pre><code>BF = P(H₁|data) / P(H₀|data)
+     ─────────────────────────
+     P(H₁) / P(H₀)</code></pre>
+
+<p><strong>Interpretation</strong>:</p>
+<ul><li>BF > 3: Moderate evidence for H₁</li>
+<li>BF > 10: Strong evidence</li>
+<li>BF > 100: Decisive evidence</li>
+</ul>
+<p><strong>In scvi-tools</strong>: Used to rank genes by evidence for DE</p>
+
+<h3>False Discovery Proportion (FDP)</h3>
+
+<p><strong>Goal</strong>: Control expected false discovery rate</p>
+
+<p><strong>Procedure</strong>:</p>
+<ul><li>For each gene, compute posterior probability of DE</li>
+<li>Rank genes by evidence (Bayes factor)</li>
+<li>Select top k genes such that E[FDP] ≤ α</li>
+</ul>
+<p><strong>Advantage over p-values</strong>:</p>
+<ul><li>Fully Bayesian</li>
+<li>Natural for posterior inference</li>
+<li>No arbitrary thresholds</li>
+</ul>
+<h2>Implementation Details</h2>
+
+<h3>Optimization</h3>
+
+<p><strong>Optimizer</strong>: Adam (adaptive learning rates)</p>
+<ul><li>Default lr = 0.001</li>
+<li>Momentum parameters: β₁=0.9, β₂=0.999</li>
+</ul>
+<p><strong>Training loop</strong>:</p>
+<ul><li>Sample mini-batch of cells</li>
+<li>Compute ELBO loss</li>
+<li>Backpropagate gradients</li>
+<li>Update parameters with Adam</li>
+<li>Repeat until convergence</li>
+</ul>
+<p><strong>Convergence criteria</strong>:</p>
+<ul><li>ELBO plateaus on validation set</li>
+<li>Early stopping prevents overfitting</li>
+<li>Typically 200-500 epochs</li>
+</ul>
+<h3>Regularization</h3>
+
+<p><strong>KL annealing</strong>: Gradually increase KL weight</p>
+<ul><li>Prevents posterior collapse</li>
+<li>Starts at 0, increases to 1 over epochs</li>
+</ul>
+<p><strong>Dropout</strong>: Random neuron dropping during training</p>
+<ul><li>Default: 0.1 dropout rate</li>
+<li>Prevents overfitting</li>
+<li>Improves generalization</li>
+</ul>
+<p><strong>Weight decay</strong>: L2 regularization on weights</p>
+<ul><li>Prevents large weights</li>
+<li>Improves stability</li>
+</ul>
+<h3>Scalability</h3>
+
+<p><strong>Mini-batch training</strong>:</p>
+<ul><li>Process subset of cells per iteration</li>
+<li>Batch size: 64-256 cells</li>
+<li>Enables scaling to millions of cells</li>
+</ul>
+<p><strong>Stochastic optimization</strong>:</p>
+<ul><li>Estimates ELBO on mini-batches</li>
+<li>Unbiased gradient estimates</li>
+<li>Converges to optimal solution</li>
+</ul>
+<p><strong>GPU acceleration</strong>:</p>
+<ul><li>Neural networks naturally parallelize</li>
+<li>Order of magnitude speedup</li>
+<li>Essential for large datasets</li>
+</ul>
+<h2>Connections to Other Methods</h2>
+
+<h3>vs. PCA</h3>
+<ul><li><strong>PCA</strong>: Linear, deterministic</li>
+<li><strong>scVI</strong>: Nonlinear, probabilistic</li>
+<li><strong>Advantage</strong>: scVI captures complex structure, handles counts</li>
+</ul>
+<h3>vs. t-SNE/UMAP</h3>
+<ul><li><strong>t-SNE/UMAP</strong>: Visualization-focused</li>
+<li><strong>scVI</strong>: Full generative model</li>
+<li><strong>Advantage</strong>: scVI enables downstream tasks (DE, imputation)</li>
+</ul>
+<h3>vs. Seurat Integration</h3>
+<ul><li><strong>Seurat</strong>: Anchor-based alignment</li>
+<li><strong>scVI</strong>: Probabilistic modeling</li>
+<li><strong>Advantage</strong>: scVI provides uncertainty, works for multiple batches</li>
+</ul>
+<h3>vs. Harmony</h3>
+<ul><li><strong>Harmony</strong>: PCA + batch correction</li>
+<li><strong>scVI</strong>: VAE-based</li>
+<li><strong>Advantage</strong>: scVI handles counts natively, more flexible</li>
+</ul>
+<h2>Mathematical Notation</h2>
+
+<p><strong>Common symbols</strong>:</p>
+<ul><li>x: Observed gene expression (counts)</li>
+<li>z: Latent representation</li>
+<li>θ: Model parameters</li>
+<li>q(z|x): Approximate posterior (encoder)</li>
+<li>p(x|z): Likelihood (decoder)</li>
+<li>p(z): Prior on latent variables</li>
+<li>μ, σ²: Mean and variance</li>
+<li>π: Dropout probability (ZINB)</li>
+<li>θ (in NB): Dispersion parameter</li>
+<li>s: Batch/covariate indicator</li>
+</ul>
+<h2>Further Reading</h2>
+
+<p><strong>Key Papers</strong>:</p>
+<ul><li>Lopez et al. (2018): "Deep generative modeling for single-cell transcriptomics"</li>
+<li>Xu et al. (2021): "Probabilistic harmonization and annotation of single-cell transcriptomics"</li>
+<li>Boyeau et al. (2019): "Deep generative models for detecting differential expression in single cells"</li>
+</ul>
+<p><strong>Concepts to explore</strong>:</p>
+<ul><li>Variational inference in machine learning</li>
+<li>Bayesian deep learning</li>
+<li>Information theory (KL divergence, mutual information)</li>
+<li>Generative models (GANs, normalizing flows, diffusion models)</li>
+<li>Probabilistic programming (Pyro, PyTorch)</li>
+</ul>
+<p><strong>Mathematical background</strong>:</p>
+<ul><li>Probability theory and statistics</li>
+<li>Linear algebra and calculus</li>
+<li>Optimization theory</li>
+<li>Information theory</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Workflows</h3>
+  <h1>Common Workflows and Best Practices</h1>
+
+<p>This document covers common workflows, best practices, and advanced usage patterns for scvi-tools.</p>
+
+<h2>Standard Analysis Workflow</h2>
+
+<h3>1. Data Loading and Preparation</h3>
+
+<pre><code class="language-python">import scvi
+import scanpy as sc
+import numpy as np
+
+# Load data (AnnData format required)
+adata = sc.read_h5ad("data.h5ad")
+# Or load from other formats
+# adata = sc.read_10x_mtx("filtered_feature_bc_matrix/")
+# adata = sc.read_csv("counts.csv")
+
+# Basic QC metrics
+sc.pp.calculate_qc_metrics(adata, inplace=True)
+adata.var['mt'] = adata.var_names.str.startswith('MT-')
+sc.pp.calculate_qc_metrics(adata, qc_vars=['mt'], inplace=True)</code></pre>
+
+<h3>2. Quality Control</h3>
+
+<pre><code class="language-python"># Filter cells
+sc.pp.filter_cells(adata, min_genes=200)
+sc.pp.filter_cells(adata, max_genes=5000)
+
+# Filter genes
+sc.pp.filter_genes(adata, min_cells=3)
+
+# Filter by mitochondrial content
+adata = adata[adata.obs['pct_counts_mt'] &lt; 20, :]
+
+# Remove doublets (optional, before training)
+sc.external.pp.scrublet(adata)
+adata = adata[~adata.obs['predicted_doublet'], :]</code></pre>
+
+<h3>3. Preprocessing for scvi-tools</h3>
+
+<pre><code class="language-python"># IMPORTANT: scvi-tools needs RAW counts
+# If you've already normalized, use the raw layer or reload data
+
+# Save raw counts if not already available
+if 'counts' not in adata.layers:
+    adata.layers['counts'] = adata.X.copy()
+
+# Feature selection (optional but recommended)
+sc.pp.highly_variable_genes(
+    adata,
+    n_top_genes=4000,
+    subset=False,  # Keep all genes, just mark HVGs
+    batch_key="batch"  # If multiple batches
+)
+
+# Filter to HVGs (optional)
+# adata = adata[:, adata.var['highly_variable']]</code></pre>
+
+<h3>4. Register Data with scvi-tools</h3>
+
+<pre><code class="language-python"># Setup AnnData for scvi-tools
+scvi.model.SCVI.setup_anndata(
+    adata,
+    layer="counts",  # Use raw counts
+    batch_key="batch",  # Technical batches
+    categorical_covariate_keys=["donor", "condition"],
+    continuous_covariate_keys=["percent_mito", "n_counts"]
+)
+
+# Check registration
+adata.uns['_scvi']['summary_stats']</code></pre>
+
+<h3>5. Model Training</h3>
+
+<pre><code class="language-python"># Create model
+model = scvi.model.SCVI(
+    adata,
+    n_latent=30,  # Latent dimensions
+    n_layers=2,   # Network depth
+    n_hidden=128, # Hidden layer size
+    dropout_rate=0.1,
+    gene_likelihood="zinb"  # zero-inflated negative binomial
+)
+
+# Train model
+model.train(
+    max_epochs=400,
+    batch_size=128,
+    train_size=0.9,
+    early_stopping=True,
+    check_val_every_n_epoch=10
+)
+
+# View training history
+train_history = model.history["elbo_train"]
+val_history = model.history["elbo_validation"]</code></pre>
+
+<h3>6. Extract Results</h3>
+
+<pre><code class="language-python"># Get latent representation
+latent = model.get_latent_representation()
+adata.obsm["X_scVI"] = latent
+
+# Get normalized expression
+normalized = model.get_normalized_expression(
+    adata,
+    library_size=1e4,
+    n_samples=25  # Monte Carlo samples
+)
+adata.layers["scvi_normalized"] = normalized</code></pre>
+
+<h3>7. Downstream Analysis</h3>
+
+<pre><code class="language-python"># Clustering on scVI latent space
+sc.pp.neighbors(adata, use_rep="X_scVI", n_neighbors=15)
+sc.tl.umap(adata, min_dist=0.3)
+sc.tl.leiden(adata, resolution=0.8, key_added="leiden")
+
+# Visualization
+sc.pl.umap(adata, color=["leiden", "batch", "cell_type"])
+
+# Differential expression
+de_results = model.differential_expression(
+    groupby="leiden",
+    group1="0",
+    group2="1",
+    mode="change",
+    delta=0.25
+)</code></pre>
+
+<h3>8. Model Persistence</h3>
+
+<pre><code class="language-python"># Save model
+model_dir = "./scvi_model/"
+model.save(model_dir, overwrite=True)
+
+# Save AnnData with results
+adata.write("analyzed_data.h5ad")
+
+# Load model later
+model = scvi.model.SCVI.load(model_dir, adata=adata)</code></pre>
+
+<h2>Hyperparameter Tuning</h2>
+
+<h3>Key Hyperparameters</h3>
+
+<p><strong>Architecture</strong>:</p>
+<ul><li><code>n_latent</code>: Latent space dimensionality (10-50)</li>
+</ul><p>  - Larger for complex, heterogeneous datasets</p>
+<p>  - Smaller for simple datasets or to prevent overfitting</p>
+<ul><li><code>n_layers</code>: Number of hidden layers (1-3)</li>
+</ul><p>  - More layers for complex data, but diminishing returns</p>
+<ul><li><code>n_hidden</code>: Nodes per hidden layer (64-256)</li>
+</ul><p>  - Scale with dataset size and complexity</p>
+
+<p><strong>Training</strong>:</p>
+<ul><li><code>max_epochs</code>: Training iterations (200-500)</li>
+</ul><p>  - Use early stopping to prevent overfitting</p>
+<ul><li><code>batch_size</code>: Samples per batch (64-256)</li>
+</ul><p>  - Larger for big datasets, smaller for limited memory</p>
+<ul><li><code>lr</code>: Learning rate (0.001 default, usually good)</li>
+</ul>
+<p><strong>Model-specific</strong>:</p>
+<ul><li><code>gene_likelihood</code>: Distribution ("zinb", "nb", "poisson")</li>
+</ul><p>  - "zinb" for sparse data with zero-inflation</p>
+<p>  - "nb" for less sparse data</p>
+<ul><li><code>dispersion</code>: Gene or gene-batch specific</li>
+</ul><p>  - "gene" for simple, "gene-batch" for complex batch effects</p>
+
+<h3>Hyperparameter Search Example</h3>
+
+<pre><code class="language-python">from scvi.model import SCVI
+
+# Define search space
+latent_dims = [10, 20, 30]
+n_layers_options = [1, 2]
+
+best_score = float('-inf')
+best_params = None
+
+for n_latent in latent_dims:
+    for n_layers in n_layers_options:
+        model = SCVI(
+            adata,
+            n_latent=n_latent,
+            n_layers=n_layers
+        )
+        model.train(max_epochs=200)
+
+        # Evaluate on validation set
+        val_elbo = model.history["elbo_validation"][-1]
+
+        if val_elbo &gt; best_score:
+            best_score = val_elbo
+            best_params = {"n_latent": n_latent, "n_layers": n_layers}
+
+print(f"Best params: {best_params}")</code></pre>
+
+<h3>Using Optuna for Hyperparameter Optimization</h3>
+
+<pre><code class="language-python">import optuna
+
+def objective(trial):
+    n_latent = trial.suggest_int("n_latent", 10, 50)
+    n_layers = trial.suggest_int("n_layers", 1, 3)
+    n_hidden = trial.suggest_categorical("n_hidden", [64, 128, 256])
+
+    model = scvi.model.SCVI(
+        adata,
+        n_latent=n_latent,
+        n_layers=n_layers,
+        n_hidden=n_hidden
+    )
+
+    model.train(max_epochs=200, early_stopping=True)
+    return model.history["elbo_validation"][-1]
+
+study = optuna.create_study(direction="maximize")
+study.optimize(objective, n_trials=20)
+
+print(f"Best parameters: {study.best_params}")</code></pre>
+
+<h2>GPU Acceleration</h2>
+
+<h3>Enable GPU Training</h3>
+
+<pre><code class="language-python"># Automatic GPU detection
+model = scvi.model.SCVI(adata)
+model.train(accelerator="auto")  # Uses GPU if available
+
+# Force GPU
+model.train(accelerator="gpu")
+
+# Multi-GPU
+model.train(accelerator="gpu", devices=2)
+
+# Check if GPU is being used
+import torch
+print(f"CUDA available: {torch.cuda.is_available()}")
+print(f"GPU count: {torch.cuda.device_count()}")</code></pre>
+
+<h3>GPU Memory Management</h3>
+
+<pre><code class="language-python"># Reduce batch size if OOM
+model.train(batch_size=64)  # Instead of default 128
+
+# Mixed precision training (saves memory)
+model.train(precision=16)
+
+# Clear cache between runs
+import torch
+torch.cuda.empty_cache()</code></pre>
+
+<h2>Batch Integration Strategies</h2>
+
+<h3>Strategy 1: Simple Batch Key</h3>
+
+<pre><code class="language-python"># For standard batch correction
+scvi.model.SCVI.setup_anndata(adata, batch_key="batch")
+model = scvi.model.SCVI(adata)</code></pre>
+
+<h3>Strategy 2: Multiple Covariates</h3>
+
+<pre><code class="language-python"># Correct for multiple technical factors
+scvi.model.SCVI.setup_anndata(
+    adata,
+    batch_key="sequencing_batch",
+    categorical_covariate_keys=["donor", "tissue"],
+    continuous_covariate_keys=["percent_mito"]
+)</code></pre>
+
+<h3>Strategy 3: Hierarchical Batches</h3>
+
+<pre><code class="language-python"># When batches have hierarchical structure
+# E.g., samples within studies
+adata.obs["batch_hierarchy"] = (
+    adata.obs["study"].astype(str) + "_" +
+    adata.obs["sample"].astype(str)
+)
+
+scvi.model.SCVI.setup_anndata(adata, batch_key="batch_hierarchy")</code></pre>
+
+<h2>Reference Mapping (scArches)</h2>
+
+<h3>Training Reference Model</h3>
+
+<pre><code class="language-python"># Train on reference dataset
+scvi.model.SCVI.setup_anndata(ref_adata, batch_key="batch")
+ref_model = scvi.model.SCVI(ref_adata)
+ref_model.train()
+
+# Save reference
+ref_model.save("reference_model")</code></pre>
+
+<h3>Mapping Query to Reference</h3>
+
+<pre><code class="language-python"># Load reference
+ref_model = scvi.model.SCVI.load("reference_model", adata=ref_adata)
+
+# Setup query with same parameters
+scvi.model.SCVI.setup_anndata(query_adata, batch_key="batch")
+
+# Transfer learning
+query_model = scvi.model.SCVI.load_query_data(
+    query_adata,
+    "reference_model"
+)
+
+# Fine-tune on query (optional)
+query_model.train(max_epochs=200)
+
+# Get query embeddings
+query_latent = query_model.get_latent_representation()
+
+# Transfer labels using KNN
+from sklearn.neighbors import KNeighborsClassifier
+
+knn = KNeighborsClassifier(n_neighbors=15)
+knn.fit(ref_model.get_latent_representation(), ref_adata.obs["cell_type"])
+query_adata.obs["predicted_cell_type"] = knn.predict(query_latent)</code></pre>
+
+<h2>Model Minification</h2>
+
+<p>Reduce model size for faster inference:</p>
+
+<pre><code class="language-python"># Train full model
+model = scvi.model.SCVI(adata)
+model.train()
+
+# Minify for deployment
+minified = model.minify_adata(adata)
+
+# Save minified version
+minified.write("minified_data.h5ad")
+model.save("minified_model")
+
+# Load and use (much faster)
+mini_model = scvi.model.SCVI.load("minified_model", adata=minified)</code></pre>
+
+<h2>Memory-Efficient Data Loading</h2>
+
+<h3>Using AnnDataLoader</h3>
+
+<pre><code class="language-python">from scvi.data import AnnDataLoader
+
+# For very large datasets
+dataloader = AnnDataLoader(
+    adata,
+    batch_size=128,
+    shuffle=True,
+    drop_last=False
+)
+
+# Custom training loop (advanced)
+for batch in dataloader:
+    # Process batch
+    pass</code></pre>
+
+<h3>Using Backed AnnData</h3>
+
+<pre><code class="language-python"># For data too large for memory
+adata = sc.read_h5ad("huge_dataset.h5ad", backed='r')
+
+# scvi-tools works with backed mode
+scvi.model.SCVI.setup_anndata(adata)
+model = scvi.model.SCVI(adata)
+model.train()</code></pre>
+
+<h2>Model Interpretation</h2>
+
+<h3>Feature Importance with SHAP</h3>
+
+<pre><code class="language-python">import shap
+
+# Get SHAP values for interpretability
+explainer = shap.DeepExplainer(model.module, background_data)
+shap_values = explainer.shap_values(test_data)
+
+# Visualize
+shap.summary_plot(shap_values, feature_names=adata.var_names)</code></pre>
+
+<h3>Gene Correlation Analysis</h3>
+
+<pre><code class="language-python"># Get gene-gene correlation matrix
+correlation = model.get_feature_correlation_matrix(
+    adata,
+    transform_batch="batch1"
+)
+
+# Visualize top correlated genes
+import seaborn as sns
+sns.heatmap(correlation[:50, :50], cmap="coolwarm")</code></pre>
+
+<h2>Troubleshooting Common Issues</h2>
+
+<h3>Issue: NaN Loss During Training</h3>
+
+<p><strong>Causes</strong>:</p>
+<ul><li>Learning rate too high</li>
+<li>Unnormalized input (must use raw counts)</li>
+<li>Data quality issues</li>
+</ul>
+<p><strong>Solutions</strong>:</p>
+<pre><code class="language-python"># Reduce learning rate
+model.train(lr=0.0001)
+
+# Check data
+assert adata.X.min() &gt;= 0  # No negative values
+assert np.isnan(adata.X).sum() == 0  # No NaNs
+
+# Use more stable likelihood
+model = scvi.model.SCVI(adata, gene_likelihood="nb")</code></pre>
+
+<h3>Issue: Poor Batch Correction</h3>
+
+<p><strong>Solutions</strong>:</p>
+<pre><code class="language-python"># Increase batch effect modeling
+model = scvi.model.SCVI(
+    adata,
+    encode_covariates=True,  # Encode batch in encoder
+    deeply_inject_covariates=False
+)
+
+# Or try opposite
+model = scvi.model.SCVI(adata, deeply_inject_covariates=True)
+
+# Use more latent dimensions
+model = scvi.model.SCVI(adata, n_latent=50)</code></pre>
+
+<h3>Issue: Model Not Training (ELBO Not Decreasing)</h3>
+
+<p><strong>Solutions</strong>:</p>
+<pre><code class="language-python"># Increase learning rate
+model.train(lr=0.005)
+
+# Increase network capacity
+model = scvi.model.SCVI(adata, n_hidden=256, n_layers=2)
+
+# Train longer
+model.train(max_epochs=500)</code></pre>
+
+<h3>Issue: Out of Memory (OOM)</h3>
+
+<p><strong>Solutions</strong>:</p>
+<pre><code class="language-python"># Reduce batch size
+model.train(batch_size=64)
+
+# Use mixed precision
+model.train(precision=16)
+
+# Reduce model size
+model = scvi.model.SCVI(adata, n_latent=10, n_hidden=64)
+
+# Use backed AnnData
+adata = sc.read_h5ad("data.h5ad", backed='r')</code></pre>
+
+<h2>Performance Benchmarking</h2>
+
+<pre><code class="language-python">import time
+
+# Time training
+start = time.time()
+model.train(max_epochs=400)
+training_time = time.time() - start
+print(f"Training time: {training_time:.2f}s")
+
+# Time inference
+start = time.time()
+latent = model.get_latent_representation()
+inference_time = time.time() - start
+print(f"Inference time: {inference_time:.2f}s")
+
+# Memory usage
+import psutil
+import os
+process = psutil.Process(os.getpid())
+memory_gb = process.memory_info().rss / 1024**3
+print(f"Memory usage: {memory_gb:.2f} GB")</code></pre>
+
+<h2>Best Practices Summary</h2>
+
+<ul><li><strong>Always use raw counts</strong>: Never log-normalize before scvi-tools</li>
+<li><strong>Feature selection</strong>: Use highly variable genes for efficiency</li>
+<li><strong>Batch correction</strong>: Register all known technical covariates</li>
+<li><strong>Early stopping</strong>: Use validation set to prevent overfitting</li>
+<li><strong>Model saving</strong>: Always save trained models</li>
+<li><strong>GPU usage</strong>: Use GPU for large datasets (>10k cells)</li>
+<li><strong>Hyperparameter tuning</strong>: Start with defaults, tune if needed</li>
+<li><strong>Validation</strong>: Check batch correction visually (UMAP colored by batch)</li>
+<li><strong>Documentation</strong>: Keep track of preprocessing steps</li>
+<li><strong>Reproducibility</strong>: Set random seeds (<code>scvi.settings.seed = 0</code>)</li>
+</ul>
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

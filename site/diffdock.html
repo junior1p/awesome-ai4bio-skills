@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DiffDock: Molecular Docking with Diffusion Models — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="active">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / DiffDock: Molecular Docking with Diffusion Models</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>DiffDock: Molecular Docking with Diffusion Models</h1>
+    <p class="description">Diffusion-based molecular docking. Predict protein-ligand binding poses from PDB/SMILES, confidence scores, virtual screening, for structure-based drug design. Not for affinity prediction.</p>
+    <h1>DiffDock: Molecular Docking with Diffusion Models</h1>
+
+<h2>Overview</h2>
+
+<p>DiffDock is a diffusion-based deep learning tool for molecular docking that predicts 3D binding poses of small molecule ligands to protein targets. It represents the state-of-the-art in computational docking, crucial for structure-based drug discovery and chemical biology.</p>
+
+<p><strong>Core Capabilities:</strong></p>
+<ul><li>Predict ligand binding poses with high accuracy using deep learning</li>
+<li>Support protein structures (PDB files) or sequences (via ESMFold)</li>
+<li>Process single complexes or batch virtual screening campaigns</li>
+<li>Generate confidence scores to assess prediction reliability</li>
+<li>Handle diverse ligand inputs (SMILES, SDF, MOL2)</li>
+</ul>
+<p><strong>Key Distinction:</strong> DiffDock predicts <strong>binding poses</strong> (3D structure) and <strong>confidence</strong> (prediction certainty), NOT binding affinity (ΔG, Kd). Always combine with scoring functions (GNINA, MM/GBSA) for affinity assessment.</p>
+
+<h2>When to Use This Skill</h2>
+
+<p>This skill should be used when:</p>
+
+<ul><li>"Dock this ligand to a protein" or "predict binding pose"</li>
+<li>"Run molecular docking" or "perform protein-ligand docking"</li>
+<li>"Virtual screening" or "screen compound library"</li>
+<li>"Where does this molecule bind?" or "predict binding site"</li>
+<li>Structure-based drug design or lead optimization tasks</li>
+<li>Tasks involving PDB files + SMILES strings or ligand structures</li>
+<li>Batch docking of multiple protein-ligand pairs</li>
+</ul>
+<h2>Installation and Environment Setup</h2>
+
+<h3>Check Environment Status</h3>
+
+<p>Before proceeding with DiffDock tasks, verify the environment setup:</p>
+
+<pre><code class="language-bash"># Use the provided setup checker
+python scripts/setup_check.py</code></pre>
+
+<p>This script validates Python version, PyTorch with CUDA, PyTorch Geometric, RDKit, ESM, and other dependencies.</p>
+
+<h3>Installation Options</h3>
+
+<p><strong>Option 1: Conda (Recommended)</strong></p>
+<pre><code class="language-bash">git clone https://github.com/gcorso/DiffDock.git
+cd DiffDock
+conda env create --file environment.yml
+conda activate diffdock</code></pre>
+
+<p><strong>Option 2: Docker</strong></p>
+<pre><code class="language-bash">docker pull rbgcsail/diffdock
+docker run -it --gpus all --entrypoint /bin/bash rbgcsail/diffdock
+micromamba activate diffdock</code></pre>
+
+<p><strong>Important Notes:</strong></p>
+<ul><li>GPU strongly recommended (10-100x speedup vs CPU)</li>
+<li>First run pre-computes SO(2)/SO(3) lookup tables (~2-5 minutes)</li>
+<li>Model checkpoints (~500MB) download automatically if not present</li>
+</ul>
+<h2>Core Workflows</h2>
+
+<h3>Workflow 1: Single Protein-Ligand Docking</h3>
+
+<p><strong>Use Case:</strong> Dock one ligand to one protein target</p>
+
+<p><strong>Input Requirements:</strong></p>
+<ul><li>Protein: PDB file OR amino acid sequence</li>
+<li>Ligand: SMILES string OR structure file (SDF/MOL2)</li>
+</ul>
+<p><strong>Command:</strong></p>
+<pre><code class="language-bash">python -m inference \
+  --config default_inference_args.yaml \
+  --protein_path protein.pdb \
+  --ligand "CC(=O)Oc1ccccc1C(=O)O" \
+  --out_dir results/single_docking/</code></pre>
+
+<p><strong>Alternative (protein sequence):</strong></p>
+<pre><code class="language-bash">python -m inference \
+  --config default_inference_args.yaml \
+  --protein_sequence "MSKGEELFTGVVPILVELDGDVNGHKF..." \
+  --ligand ligand.sdf \
+  --out_dir results/sequence_docking/</code></pre>
+
+<p><strong>Output Structure:</strong></p>
+<pre><code>results/single_docking/
+├── rank_1.sdf          # Top-ranked pose
+├── rank_2.sdf          # Second-ranked pose
+├── ...
+├── rank_10.sdf         # 10th pose (default: 10 samples)
+└── confidence_scores.txt</code></pre>
+
+<h3>Workflow 2: Batch Processing Multiple Complexes</h3>
+
+<p><strong>Use Case:</strong> Dock multiple ligands to proteins, virtual screening campaigns</p>
+
+<p><strong>Step 1: Prepare Batch CSV</strong></p>
+
+<p>Use the provided script to create or validate batch input:</p>
+
+<pre><code class="language-bash"># Create template
+python scripts/prepare_batch_csv.py --create --output batch_input.csv
+
+# Validate existing CSV
+python scripts/prepare_batch_csv.py my_input.csv --validate</code></pre>
+
+<p><strong>CSV Format:</strong></p>
+<pre><code class="language-csv">complex_name,protein_path,ligand_description,protein_sequence
+complex1,protein1.pdb,CC(=O)Oc1ccccc1C(=O)O,
+complex2,,COc1ccc(C#N)cc1,MSKGEELFT...
+complex3,protein3.pdb,ligand3.sdf,</code></pre>
+
+<p><strong>Required Columns:</strong></p>
+<ul><li><code>complex_name</code>: Unique identifier</li>
+<li><code>protein_path</code>: PDB file path (leave empty if using sequence)</li>
+<li><code>ligand_description</code>: SMILES string or ligand file path</li>
+<li><code>protein_sequence</code>: Amino acid sequence (leave empty if using PDB)</li>
+</ul>
+<p><strong>Step 2: Run Batch Docking</strong></p>
+
+<pre><code class="language-bash">python -m inference \
+  --config default_inference_args.yaml \
+  --protein_ligand_csv batch_input.csv \
+  --out_dir results/batch/ \
+  --batch_size 10</code></pre>
+
+<p><strong>For Large Virtual Screening (>100 compounds):</strong></p>
+
+<p>Pre-compute protein embeddings for faster processing:</p>
+<pre><code class="language-bash"># Pre-compute embeddings
+python datasets/esm_embedding_preparation.py \
+  --protein_ligand_csv screening_input.csv \
+  --out_file protein_embeddings.pt
+
+# Run with pre-computed embeddings
+python -m inference \
+  --config default_inference_args.yaml \
+  --protein_ligand_csv screening_input.csv \
+  --esm_embeddings_path protein_embeddings.pt \
+  --out_dir results/screening/</code></pre>
+
+<h3>Workflow 3: Analyzing Results</h3>
+
+<p>After docking completes, analyze confidence scores and rank predictions:</p>
+
+<pre><code class="language-bash"># Analyze all results
+python scripts/analyze_results.py results/batch/
+
+# Show top 5 per complex
+python scripts/analyze_results.py results/batch/ --top 5
+
+# Filter by confidence threshold
+python scripts/analyze_results.py results/batch/ --threshold 0.0
+
+# Export to CSV
+python scripts/analyze_results.py results/batch/ --export summary.csv
+
+# Show top 20 predictions across all complexes
+python scripts/analyze_results.py results/batch/ --best 20</code></pre>
+
+<p>The analysis script:</p>
+<ul><li>Parses confidence scores from all predictions</li>
+<li>Classifies as High (>0), Moderate (-1.5 to 0), or Low (<-1.5)</li>
+<li>Ranks predictions within and across complexes</li>
+<li>Generates statistical summaries</li>
+<li>Exports results to CSV for downstream analysis</li>
+</ul>
+<h2>Confidence Score Interpretation</h2>
+
+<p><strong>Understanding Scores:</strong></p>
+
+<p>| Score Range | Confidence Level | Interpretation |</p>
+<p>|------------|------------------|----------------|</p>
+<p>| <strong>> 0</strong> | High | Strong prediction, likely accurate |</p>
+<p>| <strong>-1.5 to 0</strong> | Moderate | Reasonable prediction, validate carefully |</p>
+<p>| <strong>< -1.5</strong> | Low | Uncertain prediction, requires validation |</p>
+
+<p><strong>Critical Notes:</strong></p>
+<ul><li><strong>Confidence ≠ Affinity</strong>: High confidence means model certainty about structure, NOT strong binding</li>
+<li><strong>Context Matters</strong>: Adjust expectations for:</li>
+</ul><p>   - Large ligands (>500 Da): Lower confidence expected</p>
+<p>   - Multiple protein chains: May decrease confidence</p>
+<p>   - Novel protein families: May underperform</p>
+<ul><li><strong>Multiple Samples</strong>: Review top 3-5 predictions, look for consensus</li>
+</ul>
+<p><strong>For detailed guidance:</strong> Read <code>references/confidence_and_limitations.md</code> using the Read tool</p>
+
+<h2>Parameter Customization</h2>
+
+<h3>Using Custom Configuration</h3>
+
+<p>Create custom configuration for specific use cases:</p>
+
+<pre><code class="language-bash"># Copy template
+cp assets/custom_inference_config.yaml my_config.yaml
+
+# Edit parameters (see template for presets)
+# Then run with custom config
+python -m inference \
+  --config my_config.yaml \
+  --protein_ligand_csv input.csv \
+  --out_dir results/</code></pre>
+
+<h3>Key Parameters to Adjust</h3>
+
+<p><strong>Sampling Density:</strong></p>
+<ul><li><code>samples_per_complex: 10</code> → Increase to 20-40 for difficult cases</li>
+<li>More samples = better coverage but longer runtime</li>
+</ul>
+<p><strong>Inference Steps:</strong></p>
+<ul><li><code>inference_steps: 20</code> → Increase to 25-30 for higher accuracy</li>
+<li>More steps = potentially better quality but slower</li>
+</ul>
+<p><strong>Temperature Parameters (control diversity):</strong></p>
+<ul><li><code>temp_sampling_tor: 7.04</code> → Increase for flexible ligands (8-10)</li>
+<li><code>temp_sampling_tor: 7.04</code> → Decrease for rigid ligands (5-6)</li>
+<li>Higher temperature = more diverse poses</li>
+</ul>
+<p><strong>Presets Available in Template:</strong></p>
+<ul><li>High Accuracy: More samples + steps, lower temperature</li>
+<li>Fast Screening: Fewer samples, faster</li>
+<li>Flexible Ligands: Increased torsion temperature</li>
+<li>Rigid Ligands: Decreased torsion temperature</li>
+</ul>
+<p><strong>For complete parameter reference:</strong> Read <code>references/parameters_reference.md</code> using the Read tool</p>
+
+<h2>Advanced Techniques</h2>
+
+<h3>Ensemble Docking (Protein Flexibility)</h3>
+
+<p>For proteins with known flexibility, dock to multiple conformations:</p>
+
+<pre><code class="language-python"># Create ensemble CSV
+import pandas as pd
+
+conformations = ["conf1.pdb", "conf2.pdb", "conf3.pdb"]
+ligand = "CC(=O)Oc1ccccc1C(=O)O"
+
+data = {
+    "complex_name": [f"ensemble_{i}" for i in range(len(conformations))],
+    "protein_path": conformations,
+    "ligand_description": [ligand] * len(conformations),
+    "protein_sequence": [""] * len(conformations)
+}
+
+pd.DataFrame(data).to_csv("ensemble_input.csv", index=False)</code></pre>
+
+<p>Run docking with increased sampling:</p>
+<pre><code class="language-bash">python -m inference \
+  --config default_inference_args.yaml \
+  --protein_ligand_csv ensemble_input.csv \
+  --samples_per_complex 20 \
+  --out_dir results/ensemble/</code></pre>
+
+<h3>Integration with Scoring Functions</h3>
+
+<p>DiffDock generates poses; combine with other tools for affinity:</p>
+
+<p><strong>GNINA (Fast neural network scoring):</strong></p>
+<pre><code class="language-bash">for pose in results/*.sdf; do
+    gnina -r protein.pdb -l "$pose" --score_only
+done</code></pre>
+
+<p><strong>MM/GBSA (More accurate, slower):</strong></p>
+<p>Use AmberTools MMPBSA.py or gmx_MMPBSA after energy minimization</p>
+
+<p><strong>Free Energy Calculations (Most accurate):</strong></p>
+<p>Use OpenMM + OpenFE or GROMACS for FEP/TI calculations</p>
+
+<p><strong>Recommended Workflow:</strong></p>
+<ul><li>DiffDock → Generate poses with confidence scores</li>
+<li>Visual inspection → Check structural plausibility</li>
+<li>GNINA or MM/GBSA → Rescore and rank by affinity</li>
+<li>Experimental validation → Biochemical assays</li>
+</ul>
+<h2>Limitations and Scope</h2>
+
+<p><strong>DiffDock IS Designed For:</strong></p>
+<ul><li>Small molecule ligands (typically 100-1000 Da)</li>
+<li>Drug-like organic compounds</li>
+<li>Small peptides (<20 residues)</li>
+<li>Single or multi-chain proteins</li>
+</ul>
+<p><strong>DiffDock IS NOT Designed For:</strong></p>
+<ul><li>Large biomolecules (protein-protein docking) → Use DiffDock-PP or AlphaFold-Multimer</li>
+<li>Large peptides (>20 residues) → Use alternative methods</li>
+<li>Covalent docking → Use specialized covalent docking tools</li>
+<li>Binding affinity prediction → Combine with scoring functions</li>
+<li>Membrane proteins → Not specifically trained, use with caution</li>
+</ul>
+<p><strong>For complete limitations:</strong> Read <code>references/confidence_and_limitations.md</code> using the Read tool</p>
+
+<h2>Troubleshooting</h2>
+
+<h3>Common Issues</h3>
+
+<p><strong>Issue: Low confidence scores across all predictions</strong></p>
+<ul><li>Cause: Large/unusual ligands, unclear binding site, protein flexibility</li>
+<li>Solution: Increase <code>samples_per_complex</code> (20-40), try ensemble docking, validate protein structure</li>
+</ul>
+<p><strong>Issue: Out of memory errors</strong></p>
+<ul><li>Cause: GPU memory insufficient for batch size</li>
+<li>Solution: Reduce <code>--batch_size 2</code> or process fewer complexes at once</li>
+</ul>
+<p><strong>Issue: Slow performance</strong></p>
+<ul><li>Cause: Running on CPU instead of GPU</li>
+<li>Solution: Verify CUDA with <code>python -c "import torch; print(torch.cuda.is_available())"</code>, use GPU</li>
+</ul>
+<p><strong>Issue: Unrealistic binding poses</strong></p>
+<ul><li>Cause: Poor protein preparation, ligand too large, wrong binding site</li>
+<li>Solution: Check protein for missing residues, remove far waters, consider specifying binding site</li>
+</ul>
+<p><strong>Issue: "Module not found" errors</strong></p>
+<ul><li>Cause: Missing dependencies or wrong environment</li>
+<li>Solution: Run <code>python scripts/setup_check.py</code> to diagnose</li>
+</ul>
+<h3>Performance Optimization</h3>
+
+<p><strong>For Best Results:</strong></p>
+<ul><li>Use GPU (essential for practical use)</li>
+<li>Pre-compute ESM embeddings for repeated protein use</li>
+<li>Batch process multiple complexes together</li>
+<li>Start with default parameters, then tune if needed</li>
+<li>Validate protein structures (resolve missing residues)</li>
+<li>Use canonical SMILES for ligands</li>
+</ul>
+<h2>Graphical User Interface</h2>
+
+<p>For interactive use, launch the web interface:</p>
+
+<pre><code class="language-bash">python app/main.py
+# Navigate to http://localhost:7860</code></pre>
+
+<p>Or use the online demo without installation:</p>
+<ul><li>https://huggingface.co/spaces/reginabarzilaygroup/DiffDock-Web</li>
+</ul>
+<h2>Resources</h2>
+
+<h3>Helper Scripts (<code>scripts/</code>)</h3>
+
+<p><strong><code>prepare_batch_csv.py</code></strong>: Create and validate batch input CSV files</p>
+<ul><li>Create templates with example entries</li>
+<li>Validate file paths and SMILES strings</li>
+<li>Check for required columns and format issues</li>
+</ul>
+<p><strong><code>analyze_results.py</code></strong>: Analyze confidence scores and rank predictions</p>
+<ul><li>Parse results from single or batch runs</li>
+<li>Generate statistical summaries</li>
+<li>Export to CSV for downstream analysis</li>
+<li>Identify top predictions across complexes</li>
+</ul>
+<p><strong><code>setup_check.py</code></strong>: Verify DiffDock environment setup</p>
+<ul><li>Check Python version and dependencies</li>
+<li>Verify PyTorch and CUDA availability</li>
+<li>Test RDKit and PyTorch Geometric installation</li>
+<li>Provide installation instructions if needed</li>
+</ul>
+<h3>Reference Documentation (<code>references/</code>)</h3>
+
+<p><strong><code>parameters_reference.md</code></strong>: Complete parameter documentation</p>
+<ul><li>All command-line options and configuration parameters</li>
+<li>Default values and acceptable ranges</li>
+<li>Temperature parameters for controlling diversity</li>
+<li>Model checkpoint locations and version flags</li>
+</ul>
+<p>Read this file when users need:</p>
+<ul><li>Detailed parameter explanations</li>
+<li>Fine-tuning guidance for specific systems</li>
+<li>Alternative sampling strategies</li>
+</ul>
+<p><strong><code>confidence_and_limitations.md</code></strong>: Confidence score interpretation and tool limitations</p>
+<ul><li>Detailed confidence score interpretation</li>
+<li>When to trust predictions</li>
+<li>Scope and limitations of DiffDock</li>
+<li>Integration with complementary tools</li>
+<li>Troubleshooting prediction quality</li>
+</ul>
+<p>Read this file when users need:</p>
+<ul><li>Help interpreting confidence scores</li>
+<li>Understanding when NOT to use DiffDock</li>
+<li>Guidance on combining with other tools</li>
+<li>Validation strategies</li>
+</ul>
+<p><strong><code>workflows_examples.md</code></strong>: Comprehensive workflow examples</p>
+<ul><li>Detailed installation instructions</li>
+<li>Step-by-step examples for all workflows</li>
+<li>Advanced integration patterns</li>
+<li>Troubleshooting common issues</li>
+<li>Best practices and optimization tips</li>
+</ul>
+<p>Read this file when users need:</p>
+<ul><li>Complete workflow examples with code</li>
+<li>Integration with GNINA, OpenMM, or other tools</li>
+<li>Virtual screening workflows</li>
+<li>Ensemble docking procedures</li>
+</ul>
+<h3>Assets (<code>assets/</code>)</h3>
+
+<p><strong><code>batch_template.csv</code></strong>: Template for batch processing</p>
+<ul><li>Pre-formatted CSV with required columns</li>
+<li>Example entries showing different input types</li>
+<li>Ready to customize with actual data</li>
+</ul>
+<p><strong><code>custom_inference_config.yaml</code></strong>: Configuration template</p>
+<ul><li>Annotated YAML with all parameters</li>
+<li>Four preset configurations for common use cases</li>
+<li>Detailed comments explaining each parameter</li>
+<li>Ready to customize and use</li>
+</ul>
+<h2>Best Practices</h2>
+
+<ul><li><strong>Always verify environment</strong> with <code>setup_check.py</code> before starting large jobs</li>
+<li><strong>Validate batch CSVs</strong> with <code>prepare_batch_csv.py</code> to catch errors early</li>
+<li><strong>Start with defaults</strong> then tune parameters based on system-specific needs</li>
+<li><strong>Generate multiple samples</strong> (10-40) for robust predictions</li>
+<li><strong>Visual inspection</strong> of top poses before downstream analysis</li>
+<li><strong>Combine with scoring</strong> functions for affinity assessment</li>
+<li><strong>Use confidence scores</strong> for initial ranking, not final decisions</li>
+<li><strong>Pre-compute embeddings</strong> for virtual screening campaigns</li>
+<li><strong>Document parameters</strong> used for reproducibility</li>
+<li><strong>Validate results</strong> experimentally when possible</li>
+</ul>
+<h2>Citations</h2>
+
+<p>When using DiffDock, cite the appropriate papers:</p>
+
+<p><strong>DiffDock-L (current default model):</strong></p>
+<pre><code>Stärk et al. (2024) "DiffDock-L: Improving Molecular Docking with Diffusion Models"
+arXiv:2402.18396</code></pre>
+
+<p><strong>Original DiffDock:</strong></p>
+<pre><code>Corso et al. (2023) "DiffDock: Diffusion Steps, Twists, and Turns for Molecular Docking"
+ICLR 2023, arXiv:2210.01776</code></pre>
+
+<h2>Additional Resources</h2>
+
+<ul><li><strong>GitHub Repository</strong>: https://github.com/gcorso/DiffDock</li>
+<li><strong>Online Demo</strong>: https://huggingface.co/spaces/reginabarzilaygroup/DiffDock-Web</li>
+<li><strong>DiffDock-L Paper</strong>: https://arxiv.org/abs/2402.18396</li>
+<li><strong>Original Paper</strong>: https://arxiv.org/abs/2210.01776</li></ul>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Confidence And Limitations</h3>
+  <h1>DiffDock Confidence Scores and Limitations</h1>
+
+<p>This document provides detailed guidance on interpreting DiffDock confidence scores and understanding the tool's limitations.</p>
+
+<h2>Confidence Score Interpretation</h2>
+
+<p>DiffDock generates a confidence score for each predicted binding pose. This score indicates the model's certainty about the prediction.</p>
+
+<h3>Score Ranges</h3>
+
+<p>| Score Range | Confidence Level | Interpretation |</p>
+<p>|------------|------------------|----------------|</p>
+<p>| <strong>> 0</strong> | High confidence | Strong prediction, likely accurate binding pose |</p>
+<p>| <strong>-1.5 to 0</strong> | Moderate confidence | Reasonable prediction, may need validation |</p>
+<p>| <strong>< -1.5</strong> | Low confidence | Uncertain prediction, requires careful validation |</p>
+
+<h3>Important Notes on Confidence Scores</h3>
+
+<ul><li><strong>Not Binding Affinity</strong>: Confidence scores reflect prediction certainty, NOT binding affinity strength</li>
+</ul><p>   - High confidence = model is confident about the structure</p>
+<p>   - Does NOT indicate strong/weak binding affinity</p>
+
+<ul><li><strong>Context-Dependent</strong>: Confidence scores should be adjusted based on system complexity:</li>
+</ul><p>   - <strong>Lower expectations</strong> for:</p>
+<p>     - Large ligands (>500 Da)</p>
+<p>     - Protein complexes with many chains</p>
+<p>     - Unbound protein conformations (may require conformational changes)</p>
+<p>     - Novel protein families not well-represented in training data</p>
+
+<p>   - <strong>Higher expectations</strong> for:</p>
+<p>     - Drug-like small molecules (150-500 Da)</p>
+<p>     - Single-chain proteins or well-defined binding sites</p>
+<p>     - Proteins similar to those in training data (PDBBind, BindingMOAD)</p>
+
+<ul><li><strong>Multiple Predictions</strong>: DiffDock generates multiple samples per complex (default: 10)</li>
+</ul><p>   - Review top-ranked predictions (by confidence)</p>
+<p>   - Consider clustering similar poses</p>
+<p>   - High-confidence consensus across multiple samples strengthens prediction</p>
+
+<h2>What DiffDock Predicts</h2>
+
+<h3>✅ DiffDock DOES Predict</h3>
+<ul><li><strong>Binding poses</strong>: 3D spatial orientation of ligand in protein binding site</li>
+<li><strong>Confidence scores</strong>: Model's certainty about predictions</li>
+<li><strong>Multiple conformations</strong>: Various possible binding modes</li>
+</ul>
+<h3>❌ DiffDock DOES NOT Predict</h3>
+<ul><li><strong>Binding affinity</strong>: Strength of protein-ligand interaction (ΔG, Kd, Ki)</li>
+<li><strong>Binding kinetics</strong>: On/off rates, residence time</li>
+<li><strong>ADMET properties</strong>: Absorption, distribution, metabolism, excretion, toxicity</li>
+<li><strong>Selectivity</strong>: Relative binding to different targets</li>
+</ul>
+<h2>Scope and Limitations</h2>
+
+<h3>Designed For</h3>
+<ul><li><strong>Small molecule docking</strong>: Organic compounds typically 100-1000 Da</li>
+<li><strong>Protein targets</strong>: Single or multi-chain proteins</li>
+<li><strong>Small peptides</strong>: Short peptide ligands (< ~20 residues)</li>
+<li><strong>Small nucleic acids</strong>: Short oligonucleotides</li>
+</ul>
+<h3>NOT Designed For</h3>
+<ul><li><strong>Large biomolecules</strong>: Full protein-protein interactions</li>
+</ul><p>  - Use DiffDock-PP, AlphaFold-Multimer, or RoseTTAFold2NA instead</p>
+<ul><li><strong>Large peptides/proteins</strong>: >20 residues as ligands</li>
+<li><strong>Covalent docking</strong>: Irreversible covalent bond formation</li>
+<li><strong>Metalloprotein specifics</strong>: May not accurately handle metal coordination</li>
+<li><strong>Membrane proteins</strong>: Not specifically trained on membrane-embedded proteins</li>
+</ul>
+<h3>Training Data Considerations</h3>
+
+<p>DiffDock was trained on:</p>
+<ul><li><strong>PDBBind</strong>: Diverse protein-ligand complexes</li>
+<li><strong>BindingMOAD</strong>: Multi-domain protein structures</li>
+</ul>
+<p><strong>Implications</strong>:</p>
+<ul><li>Best performance on proteins/ligands similar to training data</li>
+<li>May underperform on:</li>
+</ul><p>  - Novel protein families</p>
+<p>  - Unusual ligand chemotypes</p>
+<p>  - Allosteric sites not well-represented in training data</p>
+
+<h2>Validation and Complementary Tools</h2>
+
+<h3>Recommended Workflow</h3>
+
+<ul><li><strong>Generate poses with DiffDock</strong></li>
+</ul><p>   - Use confidence scores for initial ranking</p>
+<p>   - Consider multiple high-confidence predictions</p>
+
+<ul><li><strong>Visual Inspection</strong></li>
+</ul><p>   - Examine protein-ligand interactions in molecular viewer</p>
+<p>   - Check for reasonable:</p>
+<p>     - Hydrogen bonds</p>
+<p>     - Hydrophobic interactions</p>
+<p>     - Steric complementarity</p>
+<p>     - Electrostatic interactions</p>
+
+<ul><li><strong>Scoring and Refinement</strong> (choose one or more):</li>
+</ul><p>   - <strong>GNINA</strong>: Deep learning-based scoring function</p>
+<p>   - <strong>Molecular mechanics</strong>: Energy minimization and refinement</p>
+<p>   - <strong>MM/GBSA or MM/PBSA</strong>: Binding free energy estimation</p>
+<p>   - <strong>Free energy calculations</strong>: FEP or TI for accurate affinity prediction</p>
+
+<ul><li><strong>Experimental Validation</strong></li>
+</ul><p>   - Biochemical assays (IC50, Kd measurements)</p>
+<p>   - Structural validation (X-ray crystallography, cryo-EM)</p>
+
+<h3>Tools for Binding Affinity Assessment</h3>
+
+<p>DiffDock should be combined with these tools for affinity prediction:</p>
+
+<ul><li><strong>GNINA</strong>: Fast, accurate scoring function</li>
+</ul><p>  - Github: github.com/gnina/gnina</p>
+
+<ul><li><strong>AutoDock Vina</strong>: Classical docking and scoring</li>
+</ul><p>  - Website: vina.scripps.edu</p>
+
+<ul><li><strong>Free Energy Calculations</strong>:</li>
+</ul><p>  - OpenMM + OpenFE</p>
+<p>  - GROMACS + ABFE/RBFE protocols</p>
+
+<ul><li><strong>MM/GBSA Tools</strong>:</li>
+</ul><p>  - MMPBSA.py (AmberTools)</p>
+<p>  - gmx_MMPBSA</p>
+
+<h2>Performance Optimization</h2>
+
+<h3>For Best Results</h3>
+
+<ul><li><strong>Protein Preparation</strong>:</li>
+</ul><p>   - Remove water molecules far from binding site</p>
+<p>   - Resolve missing residues if possible</p>
+<p>   - Consider protonation states at physiological pH</p>
+
+<ul><li><strong>Ligand Input</strong>:</li>
+</ul><p>   - Provide reasonable 3D conformers when using structure files</p>
+<p>   - Use canonical SMILES for consistent results</p>
+<p>   - Pre-process with RDKit if needed</p>
+
+<ul><li><strong>Computational Resources</strong>:</li>
+</ul><p>   - GPU strongly recommended (10-100x speedup)</p>
+<p>   - First run pre-computes lookup tables (takes a few minutes)</p>
+<p>   - Batch processing more efficient than single predictions</p>
+
+<ul><li><strong>Parameter Tuning</strong>:</li>
+</ul><p>   - Increase <code>samples_per_complex</code> for difficult cases (20-40)</p>
+<p>   - Adjust temperature parameters for diversity/accuracy trade-off</p>
+<p>   - Use pre-computed ESM embeddings for repeated predictions</p>
+
+<h2>Common Issues and Troubleshooting</h2>
+
+<h3>Low Confidence Scores</h3>
+<ul><li><strong>Large/flexible ligands</strong>: Consider splitting into fragments or use alternative methods</li>
+<li><strong>Multiple binding sites</strong>: May predict multiple locations with distributed confidence</li>
+<li><strong>Protein flexibility</strong>: Consider using ensemble of protein conformations</li>
+</ul>
+<h3>Unrealistic Predictions</h3>
+<ul><li><strong>Clashes</strong>: May indicate need for protein preparation or refinement</li>
+<li><strong>Surface binding</strong>: Check if true binding site is blocked or unclear</li>
+<li><strong>Unusual poses</strong>: Consider increasing samples to explore more conformations</li>
+</ul>
+<h3>Slow Performance</h3>
+<ul><li><strong>Use GPU</strong>: Essential for reasonable runtime</li>
+<li><strong>Pre-compute embeddings</strong>: Reuse ESM embeddings for same protein</li>
+<li><strong>Batch processing</strong>: More efficient than sequential individual predictions</li>
+<li><strong>Reduce samples</strong>: Lower <code>samples_per_complex</code> for quick screening</li>
+</ul>
+<h2>Citation and Further Reading</h2>
+
+<p>For methodology details and benchmarking results, see:</p>
+
+<ul><li><strong>Original DiffDock Paper</strong> (ICLR 2023):</li>
+</ul><p>   - "DiffDock: Diffusion Steps, Twists, and Turns for Molecular Docking"</p>
+<p>   - Corso et al., arXiv:2210.01776</p>
+
+<ul><li><strong>DiffDock-L Paper</strong> (2024):</li>
+</ul><p>   - Enhanced model with improved generalization</p>
+<p>   - Stärk et al., arXiv:2402.18396</p>
+
+<ul><li><strong>PoseBusters Benchmark</strong>:</li>
+</ul><p>   - Rigorous docking evaluation framework</p>
+<p>   - Used for DiffDock validation</p>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Parameters Reference</h3>
+  <h1>DiffDock Configuration Parameters Reference</h1>
+
+<p>This document provides comprehensive details on all DiffDock configuration parameters and command-line options.</p>
+
+<h2>Model & Checkpoint Settings</h2>
+
+<h3>Model Paths</h3>
+<ul><li><strong><code>--model_dir</code></strong>: Directory containing the score model checkpoint</li>
+</ul><p>  - Default: <code>./workdir/v1.1/score_model</code></p>
+<p>  - DiffDock-L model (current default)</p>
+
+<ul><li><strong><code>--confidence_model_dir</code></strong>: Directory containing the confidence model checkpoint</li>
+</ul><p>  - Default: <code>./workdir/v1.1/confidence_model</code></p>
+
+<ul><li><strong><code>--ckpt</code></strong>: Name of the score model checkpoint file</li>
+</ul><p>  - Default: <code>best_ema_inference_epoch_model.pt</code></p>
+
+<ul><li><strong><code>--confidence_ckpt</code></strong>: Name of the confidence model checkpoint file</li>
+</ul><p>  - Default: <code>best_model_epoch75.pt</code></p>
+
+<h3>Model Version Flags</h3>
+<ul><li><strong><code>--old_score_model</code></strong>: Use original DiffDock model instead of DiffDock-L</li>
+</ul><p>  - Default: <code>false</code> (uses DiffDock-L)</p>
+
+<ul><li><strong><code>--old_filtering_model</code></strong>: Use legacy confidence filtering approach</li>
+</ul><p>  - Default: <code>true</code></p>
+
+<h2>Input/Output Options</h2>
+
+<h3>Input Specification</h3>
+<ul><li><strong><code>--protein_path</code></strong>: Path to protein PDB file</li>
+</ul><p>  - Example: <code>--protein_path protein.pdb</code></p>
+<p>  - Alternative to <code>--protein_sequence</code></p>
+
+<ul><li><strong><code>--protein_sequence</code></strong>: Amino acid sequence for ESMFold folding</li>
+</ul><p>  - Automatically generates protein structure from sequence</p>
+<p>  - Alternative to <code>--protein_path</code></p>
+
+<ul><li><strong><code>--ligand</code></strong>: Ligand specification (SMILES string or file path)</li>
+</ul><p>  - SMILES string: <code>--ligand "COc(cc1)ccc1C#N"</code></p>
+<p>  - File path: <code>--ligand ligand.sdf</code> or <code>.mol2</code></p>
+
+<ul><li><strong><code>--protein_ligand_csv</code></strong>: CSV file for batch processing</li>
+</ul><p>  - Required columns: <code>complex_name</code>, <code>protein_path</code>, <code>ligand_description</code>, <code>protein_sequence</code></p>
+<p>  - Example: <code>--protein_ligand_csv data/protein_ligand_example.csv</code></p>
+
+<h3>Output Control</h3>
+<ul><li><strong><code>--out_dir</code></strong>: Output directory for predictions</li>
+</ul><p>  - Example: <code>--out_dir results/user_predictions/</code></p>
+
+<ul><li><strong><code>--save_visualisation</code></strong>: Export predicted molecules as SDF files</li>
+</ul><p>  - Enables visualization of results</p>
+
+<h2>Inference Parameters</h2>
+
+<h3>Diffusion Steps</h3>
+<ul><li><strong><code>--inference_steps</code></strong>: Number of planned inference iterations</li>
+</ul><p>  - Default: <code>20</code></p>
+<p>  - Higher values may improve accuracy but increase runtime</p>
+
+<ul><li><strong><code>--actual_steps</code></strong>: Actual diffusion steps executed</li>
+</ul><p>  - Default: <code>19</code></p>
+
+<ul><li><strong><code>--no_final_step_noise</code></strong>: Omit noise at the final diffusion step</li>
+</ul><p>  - Default: <code>true</code></p>
+
+<h3>Sampling Settings</h3>
+<ul><li><strong><code>--samples_per_complex</code></strong>: Number of samples to generate per complex</li>
+</ul><p>  - Default: <code>10</code></p>
+<p>  - More samples provide better coverage but increase computation</p>
+
+<ul><li><strong><code>--sigma_schedule</code></strong>: Noise schedule type</li>
+</ul><p>  - Default: <code>expbeta</code> (exponential-beta)</p>
+
+<ul><li><strong><code>--initial_noise_std_proportion</code></strong>: Initial noise standard deviation scaling</li>
+</ul><p>  - Default: <code>1.46</code></p>
+
+<h3>Temperature Parameters</h3>
+
+<h4>Sampling Temperatures (Controls diversity of predictions)</h4>
+<ul><li><strong><code>--temp_sampling_tr</code></strong>: Translation sampling temperature</li>
+</ul><p>  - Default: <code>1.17</code></p>
+
+<ul><li><strong><code>--temp_sampling_rot</code></strong>: Rotation sampling temperature</li>
+</ul><p>  - Default: <code>2.06</code></p>
+
+<ul><li><strong><code>--temp_sampling_tor</code></strong>: Torsion sampling temperature</li>
+</ul><p>  - Default: <code>7.04</code></p>
+
+<h4>Psi Angle Temperatures</h4>
+<ul><li><strong><code>--temp_psi_tr</code></strong>: Translation psi temperature</li>
+</ul><p>  - Default: <code>0.73</code></p>
+
+<ul><li><strong><code>--temp_psi_rot</code></strong>: Rotation psi temperature</li>
+</ul><p>  - Default: <code>0.90</code></p>
+
+<ul><li><strong><code>--temp_psi_tor</code></strong>: Torsion psi temperature</li>
+</ul><p>  - Default: <code>0.59</code></p>
+
+<h4>Sigma Data Temperatures</h4>
+<ul><li><strong><code>--temp_sigma_data_tr</code></strong>: Translation data distribution scaling</li>
+</ul><p>  - Default: <code>0.93</code></p>
+
+<ul><li><strong><code>--temp_sigma_data_rot</code></strong>: Rotation data distribution scaling</li>
+</ul><p>  - Default: <code>0.75</code></p>
+
+<ul><li><strong><code>--temp_sigma_data_tor</code></strong>: Torsion data distribution scaling</li>
+</ul><p>  - Default: <code>0.69</code></p>
+
+<h2>Processing Options</h2>
+
+<h3>Performance</h3>
+<ul><li><strong><code>--batch_size</code></strong>: Processing batch size</li>
+</ul><p>  - Default: <code>10</code></p>
+<p>  - Larger values increase throughput but require more memory</p>
+
+<ul><li><strong><code>--tqdm</code></strong>: Enable progress bar visualization</li>
+</ul><p>  - Useful for monitoring long-running jobs</p>
+
+<h3>Protein Structure</h3>
+<ul><li><strong><code>--chain_cutoff</code></strong>: Maximum number of protein chains to process</li>
+</ul><p>  - Example: <code>--chain_cutoff 10</code></p>
+<p>  - Useful for large multi-chain complexes</p>
+
+<ul><li><strong><code>--esm_embeddings_path</code></strong>: Path to pre-computed ESM2 protein embeddings</li>
+</ul><p>  - Speeds up inference by reusing embeddings</p>
+<p>  - Optional optimization</p>
+
+<h3>Dataset Options</h3>
+<ul><li><strong><code>--split</code></strong>: Dataset split to use (train/test/val)</li>
+</ul><p>  - Used for evaluation on standard benchmarks</p>
+
+<h2>Advanced Flags</h2>
+
+<h3>Debugging & Testing</h3>
+<ul><li><strong><code>--no_model</code></strong>: Disable model inference (debugging)</li>
+</ul><p>  - Default: <code>false</code></p>
+
+<ul><li><strong><code>--no_random</code></strong>: Disable randomization</li>
+</ul><p>  - Default: <code>false</code></p>
+<p>  - Useful for reproducibility testing</p>
+
+<h3>Alternative Sampling</h3>
+<ul><li><strong><code>--ode</code></strong>: Use ODE solver instead of SDE</li>
+</ul><p>  - Default: <code>false</code></p>
+<p>  - Alternative sampling approach</p>
+
+<ul><li><strong><code>--different_schedules</code></strong>: Use different noise schedules per component</li>
+</ul><p>  - Default: <code>false</code></p>
+
+<h3>Error Handling</h3>
+<ul><li><strong><code>--limit_failures</code></strong>: Maximum allowed failures before stopping</li>
+</ul><p>  - Default: <code>5</code></p>
+
+<h2>Configuration File</h2>
+
+<p>All parameters can be specified in a YAML configuration file (typically <code>default_inference_args.yaml</code>) or overridden via command line:</p>
+
+<pre><code class="language-bash">python -m inference --config default_inference_args.yaml --samples_per_complex 20</code></pre>
+
+<p>Command-line arguments take precedence over configuration file values.</p>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Workflows Examples</h3>
+  <h1>DiffDock Workflows and Examples</h1>
+
+<p>This document provides practical workflows and usage examples for common DiffDock tasks.</p>
+
+<h2>Installation and Setup</h2>
+
+<h3>Conda Installation (Recommended)</h3>
+
+<pre><code class="language-bash"># Clone repository
+git clone https://github.com/gcorso/DiffDock.git
+cd DiffDock
+
+# Create conda environment
+conda env create --file environment.yml
+conda activate diffdock</code></pre>
+
+<h3>Docker Installation</h3>
+
+<pre><code class="language-bash"># Pull Docker image
+docker pull rbgcsail/diffdock
+
+# Run container with GPU support
+docker run -it --gpus all --entrypoint /bin/bash rbgcsail/diffdock
+
+# Inside container, activate environment
+micromamba activate diffdock</code></pre>
+
+<h3>First Run</h3>
+<p>The first execution pre-computes SO(2) and SO(3) lookup tables, taking a few minutes. Subsequent runs start immediately.</p>
+
+<h2>Workflow 1: Single Protein-Ligand Docking</h2>
+
+<h3>Using PDB File and SMILES String</h3>
+
+<pre><code class="language-bash">python -m inference \
+  --config default_inference_args.yaml \
+  --protein_path examples/protein.pdb \
+  --ligand "COc1ccc(C(=O)Nc2ccccc2)cc1" \
+  --out_dir results/single_docking/</code></pre>
+
+<p><strong>Output Structure</strong>:</p>
+<pre><code>results/single_docking/
+├── index_0_rank_1.sdf       # Top-ranked prediction
+├── index_0_rank_2.sdf       # Second-ranked prediction
+├── ...
+├── index_0_rank_10.sdf      # 10th prediction (if samples_per_complex=10)
+└── confidence_scores.txt    # Scores for all predictions</code></pre>
+
+<h3>Using Ligand Structure File</h3>
+
+<pre><code class="language-bash">python -m inference \
+  --config default_inference_args.yaml \
+  --protein_path protein.pdb \
+  --ligand ligand.sdf \
+  --out_dir results/ligand_file/</code></pre>
+
+<p><strong>Supported ligand formats</strong>: SDF, MOL2, or any format readable by RDKit</p>
+
+<h2>Workflow 2: Protein Sequence to Structure Docking</h2>
+
+<h3>Using ESMFold for Protein Folding</h3>
+
+<pre><code class="language-bash">python -m inference \
+  --config default_inference_args.yaml \
+  --protein_sequence "MSKGEELFTGVVPILVELDGDVNGHKFSVSGEGEGDATYGKLTLKFICTTGKLPVPWPTLVTTFSYGVQCFSRYPDHMKQHDFFKSAMPEGYVQERTIFFKDDGNYKTRAEVKFEGDTLVNRIELKGIDFKEDGNILGHKLEYNYNSHNVYIMADKQKNGIKVNFKIRHNIEDGSVQLADHYQQNTPIGDGPVLLPDNHYLSTQSALSKDPNEKRDHMVLLEFVTAAGITHGMDELYK" \
+  --ligand "CC(C)Cc1ccc(cc1)C(C)C(=O)O" \
+  --out_dir results/sequence_docking/</code></pre>
+
+<p><strong>Use Cases</strong>:</p>
+<ul><li>Protein structure not available in PDB</li>
+<li>Modeling mutations or variants</li>
+<li>De novo protein design validation</li>
+</ul>
+<p><strong>Note</strong>: ESMFold folding adds computation time (30s-5min depending on sequence length)</p>
+
+<h2>Workflow 3: Batch Processing Multiple Complexes</h2>
+
+<h3>Prepare CSV File</h3>
+
+<p>Create <code>complexes.csv</code> with required columns:</p>
+
+<pre><code class="language-csv">complex_name,protein_path,ligand_description,protein_sequence
+complex1,proteins/protein1.pdb,CC(=O)Oc1ccccc1C(=O)O,
+complex2,,COc1ccc(C#N)cc1,MSKGEELFTGVVPILVELDGDVNGHKF...
+complex3,proteins/protein3.pdb,ligands/ligand3.sdf,</code></pre>
+
+<p><strong>Column Descriptions</strong>:</p>
+<ul><li><code>complex_name</code>: Unique identifier for the complex</li>
+<li><code>protein_path</code>: Path to PDB file (leave empty if using sequence)</li>
+<li><code>ligand_description</code>: SMILES string or path to ligand file</li>
+<li><code>protein_sequence</code>: Amino acid sequence (leave empty if using PDB)</li>
+</ul>
+<h3>Run Batch Docking</h3>
+
+<pre><code class="language-bash">python -m inference \
+  --config default_inference_args.yaml \
+  --protein_ligand_csv complexes.csv \
+  --out_dir results/batch_predictions/ \
+  --batch_size 10</code></pre>
+
+<p><strong>Output Structure</strong>:</p>
+<pre><code>results/batch_predictions/
+├── complex1/
+│   ├── rank_1.sdf
+│   ├── rank_2.sdf
+│   └── ...
+├── complex2/
+│   ├── rank_1.sdf
+│   └── ...
+└── complex3/
+    └── ...</code></pre>
+
+<h2>Workflow 4: High-Throughput Virtual Screening</h2>
+
+<h3>Setup for Screening Large Ligand Libraries</h3>
+
+<pre><code class="language-python"># generate_screening_csv.py
+import pandas as pd
+
+# Load ligand library
+ligands = pd.read_csv("ligand_library.csv")  # Contains SMILES
+
+# Create DiffDock input
+screening_data = {
+    "complex_name": [f"screen_{i}" for i in range(len(ligands))],
+    "protein_path": ["target_protein.pdb"] * len(ligands),
+    "ligand_description": ligands["smiles"].tolist(),
+    "protein_sequence": [""] * len(ligands)
+}
+
+df = pd.DataFrame(screening_data)
+df.to_csv("screening_input.csv", index=False)</code></pre>
+
+<h3>Run Screening</h3>
+
+<pre><code class="language-bash"># Pre-compute ESM embeddings for faster screening
+python datasets/esm_embedding_preparation.py \
+  --protein_ligand_csv screening_input.csv \
+  --out_file protein_embeddings.pt
+
+# Run docking with pre-computed embeddings
+python -m inference \
+  --config default_inference_args.yaml \
+  --protein_ligand_csv screening_input.csv \
+  --esm_embeddings_path protein_embeddings.pt \
+  --out_dir results/virtual_screening/ \
+  --batch_size 32</code></pre>
+
+<h3>Post-Processing: Extract Top Hits</h3>
+
+<pre><code class="language-python"># analyze_screening_results.py
+import os
+import pandas as pd
+
+results = []
+results_dir = "results/virtual_screening/"
+
+for complex_dir in os.listdir(results_dir):
+    confidence_file = os.path.join(results_dir, complex_dir, "confidence_scores.txt")
+    if os.path.exists(confidence_file):
+        with open(confidence_file) as f:
+            scores = [float(line.strip()) for line in f]
+            top_score = max(scores)
+            results.append({"complex": complex_dir, "top_confidence": top_score})
+
+# Sort by confidence
+df = pd.DataFrame(results)
+df_sorted = df.sort_values("top_confidence", ascending=False)
+
+# Get top 100 hits
+top_hits = df_sorted.head(100)
+top_hits.to_csv("top_hits.csv", index=False)</code></pre>
+
+<h2>Workflow 5: Ensemble Docking with Protein Flexibility</h2>
+
+<h3>Prepare Protein Ensemble</h3>
+
+<pre><code class="language-python"># For proteins with known flexibility, use multiple conformations
+# Example: Using MD snapshots or crystal structures
+
+# create_ensemble_csv.py
+import pandas as pd
+
+conformations = [
+    "protein_conf1.pdb",
+    "protein_conf2.pdb",
+    "protein_conf3.pdb",
+    "protein_conf4.pdb"
+]
+
+ligand = "CC(C)Cc1ccc(cc1)C(C)C(=O)O"
+
+data = {
+    "complex_name": [f"ensemble_{i}" for i in range(len(conformations))],
+    "protein_path": conformations,
+    "ligand_description": [ligand] * len(conformations),
+    "protein_sequence": [""] * len(conformations)
+}
+
+pd.DataFrame(data).to_csv("ensemble_input.csv", index=False)</code></pre>
+
+<h3>Run Ensemble Docking</h3>
+
+<pre><code class="language-bash">python -m inference \
+  --config default_inference_args.yaml \
+  --protein_ligand_csv ensemble_input.csv \
+  --out_dir results/ensemble_docking/ \
+  --samples_per_complex 20  # More samples per conformation</code></pre>
+
+<h2>Workflow 6: Integration with Downstream Analysis</h2>
+
+<h3>Example: DiffDock + GNINA Rescoring</h3>
+
+<pre><code class="language-bash"># 1. Run DiffDock
+python -m inference \
+  --config default_inference_args.yaml \
+  --protein_path protein.pdb \
+  --ligand "CC(=O)OC1=CC=CC=C1C(=O)O" \
+  --out_dir results/diffdock_poses/ \
+  --save_visualisation
+
+# 2. Rescore with GNINA
+for pose in results/diffdock_poses/*.sdf; do
+    gnina -r protein.pdb -l "$pose" --score_only -o "${pose%.sdf}_gnina.sdf"
+done</code></pre>
+
+<h3>Example: DiffDock + OpenMM Energy Minimization</h3>
+
+<pre><code class="language-python"># minimize_poses.py
+from openmm import app, LangevinIntegrator, Platform
+from openmm.app import ForceField, Modeller, PDBFile
+from rdkit import Chem
+import os
+
+# Load protein
+protein = PDBFile('protein.pdb')
+forcefield = ForceField('amber14-all.xml', 'amber14/tip3pfb.xml')
+
+# Process each DiffDock pose
+pose_dir = 'results/diffdock_poses/'
+for pose_file in os.listdir(pose_dir):
+    if pose_file.endswith('.sdf'):
+        # Load ligand
+        mol = Chem.SDMolSupplier(os.path.join(pose_dir, pose_file))[0]
+
+        # Combine protein + ligand
+        modeller = Modeller(protein.topology, protein.positions)
+        # ... add ligand to modeller ...
+
+        # Create system and minimize
+        system = forcefield.createSystem(modeller.topology)
+        integrator = LangevinIntegrator(300, 1.0, 0.002)
+        simulation = app.Simulation(modeller.topology, system, integrator)
+        simulation.minimizeEnergy(maxIterations=1000)
+
+        # Save minimized structure
+        positions = simulation.context.getState(getPositions=True).getPositions()
+        PDBFile.writeFile(simulation.topology, positions,
+                         open(f"minimized_{pose_file}.pdb", 'w'))</code></pre>
+
+<h2>Workflow 7: Using the Graphical Interface</h2>
+
+<h3>Launch Web Interface</h3>
+
+<pre><code class="language-bash">python app/main.py</code></pre>
+
+<h3>Access Interface</h3>
+<p>Navigate to <code>http://localhost:7860</code> in web browser</p>
+
+<h3>Features</h3>
+<ul><li>Upload protein PDB or enter sequence</li>
+<li>Input ligand SMILES or upload structure</li>
+<li>Adjust inference parameters via GUI</li>
+<li>Visualize results interactively</li>
+<li>Download predictions directly</li>
+</ul>
+<h3>Online Alternative</h3>
+<p>Use the Hugging Face Spaces demo without local installation:</p>
+<ul><li>URL: https://huggingface.co/spaces/reginabarzilaygroup/DiffDock-Web</li>
+</ul>
+<h2>Advanced Configuration</h2>
+
+<h3>Custom Inference Settings</h3>
+
+<p>Create custom YAML configuration:</p>
+
+<pre><code class="language-yaml"># custom_inference.yaml
+# Model settings
+model_dir: ./workdir/v1.1/score_model
+confidence_model_dir: ./workdir/v1.1/confidence_model
+
+# Sampling parameters
+samples_per_complex: 20  # More samples for better coverage
+inference_steps: 25      # More steps for accuracy
+
+# Temperature adjustments (increase for more diversity)
+temp_sampling_tr: 1.3
+temp_sampling_rot: 2.2
+temp_sampling_tor: 7.5
+
+# Output
+save_visualisation: true</code></pre>
+
+<p>Use custom configuration:</p>
+
+<pre><code class="language-bash">python -m inference \
+  --config custom_inference.yaml \
+  --protein_path protein.pdb \
+  --ligand "CC(=O)OC1=CC=CC=C1C(=O)O" \
+  --out_dir results/custom_config/</code></pre>
+
+<h2>Troubleshooting Common Issues</h2>
+
+<h3>Issue: Out of Memory Errors</h3>
+
+<p><strong>Solution</strong>: Reduce batch size</p>
+<pre><code class="language-bash">python -m inference ... --batch_size 2</code></pre>
+
+<h3>Issue: Slow Performance</h3>
+
+<p><strong>Solution</strong>: Ensure GPU usage</p>
+<pre><code class="language-python">import torch
+print(torch.cuda.is_available())  # Should return True</code></pre>
+
+<h3>Issue: Poor Predictions for Large Ligands</h3>
+
+<p><strong>Solution</strong>: Increase sampling diversity</p>
+<pre><code class="language-bash">python -m inference ... --samples_per_complex 40 --temp_sampling_tor 9.0</code></pre>
+
+<h3>Issue: Protein with Many Chains</h3>
+
+<p><strong>Solution</strong>: Limit chains or isolate binding site</p>
+<pre><code class="language-bash">python -m inference ... --chain_cutoff 4</code></pre>
+
+<p>Or pre-process PDB to include only relevant chains.</p>
+
+<h2>Best Practices Summary</h2>
+
+<ul><li><strong>Start Simple</strong>: Test with single complex before batch processing</li>
+<li><strong>GPU Essential</strong>: Use GPU for reasonable performance</li>
+<li><strong>Multiple Samples</strong>: Generate 10-40 samples for robust predictions</li>
+<li><strong>Validate Results</strong>: Use molecular visualization and complementary scoring</li>
+<li><strong>Consider Confidence</strong>: Use confidence scores for initial ranking, not final decisions</li>
+<li><strong>Iterate Parameters</strong>: Adjust temperature/steps for specific systems</li>
+<li><strong>Pre-compute Embeddings</strong>: For repeated use of same protein</li>
+<li><strong>Combine Tools</strong>: Integrate with scoring functions and energy minimization</li>
+</ul>
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

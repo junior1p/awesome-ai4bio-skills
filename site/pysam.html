@@ -1,0 +1,1933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pysam — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="active">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / Pysam</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>Pysam</h1>
+    <p class="description">Genomic file toolkit. Read/write SAM/BAM/CRAM alignments, VCF/BCF variants, FASTA/FASTQ sequences, extract regions, calculate coverage, for NGS data processing pipelines.</p>
+    <h1>Pysam</h1>
+
+<h2>Overview</h2>
+
+<p>Pysam is a Python module for reading, manipulating, and writing genomic datasets. Read/write SAM/BAM/CRAM alignment files, VCF/BCF variant files, and FASTA/FASTQ sequences with a Pythonic interface to htslib. Query tabix-indexed files, perform pileup analysis for coverage, and execute samtools/bcftools commands.</p>
+
+<h2>When to Use This Skill</h2>
+
+<p>This skill should be used when:</p>
+<ul><li>Working with sequencing alignment files (BAM/CRAM)</li>
+<li>Analyzing genetic variants (VCF/BCF)</li>
+<li>Extracting reference sequences or gene regions</li>
+<li>Processing raw sequencing data (FASTQ)</li>
+<li>Calculating coverage or read depth</li>
+<li>Implementing bioinformatics analysis pipelines</li>
+<li>Quality control of sequencing data</li>
+<li>Variant calling and annotation workflows</li>
+</ul>
+<h2>Quick Start</h2>
+
+<h3>Installation</h3>
+<pre><code class="language-bash">uv pip install pysam</code></pre>
+
+<h3>Basic Examples</h3>
+
+<p><strong>Read alignment file:</strong></p>
+<pre><code class="language-python">import pysam
+
+# Open BAM file and fetch reads in region
+samfile = pysam.AlignmentFile("example.bam", "rb")
+for read in samfile.fetch("chr1", 1000, 2000):
+    print(f"{read.query_name}: {read.reference_start}")
+samfile.close()</code></pre>
+
+<p><strong>Read variant file:</strong></p>
+<pre><code class="language-python"># Open VCF file and iterate variants
+vcf = pysam.VariantFile("variants.vcf")
+for variant in vcf:
+    print(f"{variant.chrom}:{variant.pos} {variant.ref}&gt;{variant.alts}")
+vcf.close()</code></pre>
+
+<p><strong>Query reference sequence:</strong></p>
+<pre><code class="language-python"># Open FASTA and extract sequence
+fasta = pysam.FastaFile("reference.fasta")
+sequence = fasta.fetch("chr1", 1000, 2000)
+print(sequence)
+fasta.close()</code></pre>
+
+<h2>Core Capabilities</h2>
+
+<h3>1. Alignment File Operations (SAM/BAM/CRAM)</h3>
+
+<p>Use the <code>AlignmentFile</code> class to work with aligned sequencing reads. This is appropriate for analyzing mapping results, calculating coverage, extracting reads, or quality control.</p>
+
+<p><strong>Common operations:</strong></p>
+<ul><li>Open and read BAM/SAM/CRAM files</li>
+<li>Fetch reads from specific genomic regions</li>
+<li>Filter reads by mapping quality, flags, or other criteria</li>
+<li>Write filtered or modified alignments</li>
+<li>Calculate coverage statistics</li>
+<li>Perform pileup analysis (base-by-base coverage)</li>
+<li>Access read sequences, quality scores, and alignment information</li>
+</ul>
+<p><strong>Reference:</strong> See <code>references/alignment_files.md</code> for detailed documentation on:</p>
+<ul><li>Opening and reading alignment files</li>
+<li>AlignedSegment attributes and methods</li>
+<li>Region-based fetching with <code>fetch()</code></li>
+<li>Pileup analysis for coverage</li>
+<li>Writing and creating BAM files</li>
+<li>Coordinate systems and indexing</li>
+<li>Performance optimization tips</li>
+</ul>
+<h3>2. Variant File Operations (VCF/BCF)</h3>
+
+<p>Use the <code>VariantFile</code> class to work with genetic variants from variant calling pipelines. This is appropriate for variant analysis, filtering, annotation, or population genetics.</p>
+
+<p><strong>Common operations:</strong></p>
+<ul><li>Read and write VCF/BCF files</li>
+<li>Query variants in specific regions</li>
+<li>Access variant information (position, alleles, quality)</li>
+<li>Extract genotype data for samples</li>
+<li>Filter variants by quality, allele frequency, or other criteria</li>
+<li>Annotate variants with additional information</li>
+<li>Subset samples or regions</li>
+</ul>
+<p><strong>Reference:</strong> See <code>references/variant_files.md</code> for detailed documentation on:</p>
+<ul><li>Opening and reading variant files</li>
+<li>VariantRecord attributes and methods</li>
+<li>Accessing INFO and FORMAT fields</li>
+<li>Working with genotypes and samples</li>
+<li>Creating and writing VCF files</li>
+<li>Filtering and subsetting variants</li>
+<li>Multi-sample VCF operations</li>
+</ul>
+<h3>3. Sequence File Operations (FASTA/FASTQ)</h3>
+
+<p>Use <code>FastaFile</code> for random access to reference sequences and <code>FastxFile</code> for reading raw sequencing data. This is appropriate for extracting gene sequences, validating variants against reference, or processing raw reads.</p>
+
+<p><strong>Common operations:</strong></p>
+<ul><li>Query reference sequences by genomic coordinates</li>
+<li>Extract sequences for genes or regions of interest</li>
+<li>Read FASTQ files with quality scores</li>
+<li>Validate variant reference alleles</li>
+<li>Calculate sequence statistics</li>
+<li>Filter reads by quality or length</li>
+<li>Convert between FASTA and FASTQ formats</li>
+</ul>
+<p><strong>Reference:</strong> See <code>references/sequence_files.md</code> for detailed documentation on:</p>
+<ul><li>FASTA file access and indexing</li>
+<li>Extracting sequences by region</li>
+<li>Handling reverse complement for genes</li>
+<li>Reading FASTQ files sequentially</li>
+<li>Quality score conversion and filtering</li>
+<li>Working with tabix-indexed files (BED, GTF, GFF)</li>
+<li>Common sequence processing patterns</li>
+</ul>
+<h3>4. Integrated Bioinformatics Workflows</h3>
+
+<p>Pysam excels at integrating multiple file types for comprehensive genomic analyses. Common workflows combine alignment files, variant files, and reference sequences.</p>
+
+<p><strong>Common workflows:</strong></p>
+<ul><li>Calculate coverage statistics for specific regions</li>
+<li>Validate variants against aligned reads</li>
+<li>Annotate variants with coverage information</li>
+<li>Extract sequences around variant positions</li>
+<li>Filter alignments or variants based on multiple criteria</li>
+<li>Generate coverage tracks for visualization</li>
+<li>Quality control across multiple data types</li>
+</ul>
+<p><strong>Reference:</strong> See <code>references/common_workflows.md</code> for detailed examples of:</p>
+<ul><li>Quality control workflows (BAM statistics, reference consistency)</li>
+<li>Coverage analysis (per-base coverage, low coverage detection)</li>
+<li>Variant analysis (annotation, filtering by read support)</li>
+<li>Sequence extraction (variant contexts, gene sequences)</li>
+<li>Read filtering and subsetting</li>
+<li>Integration patterns (BAM+VCF, VCF+BED, etc.)</li>
+<li>Performance optimization for complex workflows</li>
+</ul>
+<h2>Key Concepts</h2>
+
+<h3>Coordinate Systems</h3>
+
+<p><strong>Critical:</strong> Pysam uses <strong>0-based, half-open</strong> coordinates (Python convention):</p>
+<ul><li>Start positions are 0-based (first base is position 0)</li>
+<li>End positions are exclusive (not included in the range)</li>
+<li>Region 1000-2000 includes bases 1000-1999 (1000 bases total)</li>
+</ul>
+<p><strong>Exception:</strong> Region strings in <code>fetch()</code> follow samtools convention (1-based):</p>
+<pre><code class="language-python">samfile.fetch("chr1", 999, 2000)      # 0-based: positions 999-1999
+samfile.fetch("chr1:1000-2000")       # 1-based string: positions 1000-2000</code></pre>
+
+<p><strong>VCF files:</strong> Use 1-based coordinates in the file format, but <code>VariantRecord.start</code> is 0-based.</p>
+
+<h3>Indexing Requirements</h3>
+
+<p>Random access to specific genomic regions requires index files:</p>
+<ul><li><strong>BAM files</strong>: Require <code>.bai</code> index (create with <code>pysam.index()</code>)</li>
+<li><strong>CRAM files</strong>: Require <code>.crai</code> index</li>
+<li><strong>FASTA files</strong>: Require <code>.fai</code> index (create with <code>pysam.faidx()</code>)</li>
+<li><strong>VCF.gz files</strong>: Require <code>.tbi</code> tabix index (create with <code>pysam.tabix_index()</code>)</li>
+<li><strong>BCF files</strong>: Require <code>.csi</code> index</li>
+</ul>
+<p>Without an index, use <code>fetch(until_eof=True)</code> for sequential reading.</p>
+
+<h3>File Modes</h3>
+
+<p>Specify format when opening files:</p>
+<ul><li><code>"rb"</code> - Read BAM (binary)</li>
+<li><code>"r"</code> - Read SAM (text)</li>
+<li><code>"rc"</code> - Read CRAM</li>
+<li><code>"wb"</code> - Write BAM</li>
+<li><code>"w"</code> - Write SAM</li>
+<li><code>"wc"</code> - Write CRAM</li>
+</ul>
+<h3>Performance Considerations</h3>
+
+<ul><li><strong>Always use indexed files</strong> for random access operations</li>
+<li><strong>Use <code>pileup()</code> for column-wise analysis</strong> instead of repeated fetch operations</li>
+<li><strong>Use <code>count()</code> for counting</strong> instead of iterating and counting manually</li>
+<li><strong>Process regions in parallel</strong> when analyzing independent genomic regions</li>
+<li><strong>Close files explicitly</strong> to free resources</li>
+<li><strong>Use <code>until_eof=True</code></strong> for sequential processing without index</li>
+<li><strong>Avoid multiple iterators</strong> unless necessary (use <code>multiple_iterators=True</code> if needed)</li>
+</ul>
+<h2>Common Pitfalls</h2>
+
+<ul><li><strong>Coordinate confusion:</strong> Remember 0-based vs 1-based systems in different contexts</li>
+<li><strong>Missing indices:</strong> Many operations require index files—create them first</li>
+<li><strong>Partial overlaps:</strong> <code>fetch()</code> returns reads overlapping region boundaries, not just those fully contained</li>
+<li><strong>Iterator scope:</strong> Keep pileup iterator references alive to avoid "PileupProxy accessed after iterator finished" errors</li>
+<li><strong>Quality score editing:</strong> Cannot modify <code>query_qualities</code> in place after changing <code>query_sequence</code>—create a copy first</li>
+<li><strong>Stream limitations:</strong> Only stdin/stdout are supported for streaming, not arbitrary Python file objects</li>
+<li><strong>Thread safety:</strong> While GIL is released during I/O, comprehensive thread-safety hasn't been fully validated</li>
+</ul>
+<h2>Command-Line Tools</h2>
+
+<p>Pysam provides access to samtools and bcftools commands:</p>
+
+<pre><code class="language-python"># Sort BAM file
+pysam.samtools.sort("-o", "sorted.bam", "input.bam")
+
+# Index BAM
+pysam.samtools.index("sorted.bam")
+
+# View specific region
+pysam.samtools.view("-b", "-o", "region.bam", "input.bam", "chr1:1000-2000")
+
+# BCF tools
+pysam.bcftools.view("-O", "z", "-o", "output.vcf.gz", "input.vcf")</code></pre>
+
+<p><strong>Error handling:</strong></p>
+<pre><code class="language-python">try:
+    pysam.samtools.sort("-o", "output.bam", "input.bam")
+except pysam.SamtoolsError as e:
+    print(f"Error: {e}")</code></pre>
+
+<h2>Resources</h2>
+
+<h3>references/</h3>
+
+<p>Detailed documentation for each major capability:</p>
+
+<ul><li><strong>alignment_files.md</strong> - Complete guide to SAM/BAM/CRAM operations, including AlignmentFile class, AlignedSegment attributes, fetch operations, pileup analysis, and writing alignments</li>
+</ul>
+<ul><li><strong>variant_files.md</strong> - Complete guide to VCF/BCF operations, including VariantFile class, VariantRecord attributes, genotype handling, INFO/FORMAT fields, and multi-sample operations</li>
+</ul>
+<ul><li><strong>sequence_files.md</strong> - Complete guide to FASTA/FASTQ operations, including FastaFile and FastxFile classes, sequence extraction, quality score handling, and tabix-indexed file access</li>
+</ul>
+<ul><li><strong>common_workflows.md</strong> - Practical examples of integrated bioinformatics workflows combining multiple file types, including quality control, coverage analysis, variant validation, and sequence extraction</li>
+</ul>
+<h2>Getting Help</h2>
+
+<p>For detailed information on specific operations, refer to the appropriate reference document:</p>
+
+<ul><li>Working with BAM files or calculating coverage → <code>alignment_files.md</code></li>
+<li>Analyzing variants or genotypes → <code>variant_files.md</code></li>
+<li>Extracting sequences or processing FASTQ → <code>sequence_files.md</code></li>
+<li>Complex workflows integrating multiple file types → <code>common_workflows.md</code></li>
+</ul>
+<p>Official documentation: https://pysam.readthedocs.io/</p>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Alignment Files</h3>
+  <h1>Working with Alignment Files (SAM/BAM/CRAM)</h1>
+
+<h2>Overview</h2>
+
+<p>Pysam provides the <code>AlignmentFile</code> class for reading and writing SAM/BAM/CRAM formatted files containing aligned sequence data. BAM/CRAM files support compression and random access through indexing.</p>
+
+<h2>Opening Alignment Files</h2>
+
+<p>Specify format via mode qualifier:</p>
+<ul><li><code>"rb"</code> - Read BAM (binary)</li>
+<li><code>"r"</code> - Read SAM (text)</li>
+<li><code>"rc"</code> - Read CRAM (compressed)</li>
+<li><code>"wb"</code> - Write BAM</li>
+<li><code>"w"</code> - Write SAM</li>
+<li><code>"wc"</code> - Write CRAM</li>
+</ul>
+<pre><code class="language-python">import pysam
+
+# Reading
+samfile = pysam.AlignmentFile("example.bam", "rb")
+
+# Writing (requires template or header)
+outfile = pysam.AlignmentFile("output.bam", "wb", template=samfile)</code></pre>
+
+<h3>Stream Processing</h3>
+
+<p>Use <code>"-"</code> as filename for stdin/stdout operations:</p>
+
+<pre><code class="language-python"># Read from stdin
+infile = pysam.AlignmentFile('-', 'rb')
+
+# Write to stdout
+outfile = pysam.AlignmentFile('-', 'w', template=infile)</code></pre>
+
+<p><strong>Important:</strong> Pysam does not support reading/writing from true Python file objects—only stdin/stdout streams are supported.</p>
+
+<h2>AlignmentFile Properties</h2>
+
+<p><strong>Header Information:</strong></p>
+<ul><li><code>references</code> - List of chromosome/contig names</li>
+<li><code>lengths</code> - Corresponding lengths for each reference</li>
+<li><code>header</code> - Complete header as dictionary</li>
+</ul>
+<pre><code class="language-python">samfile = pysam.AlignmentFile("example.bam", "rb")
+print(f"References: {samfile.references}")
+print(f"Lengths: {samfile.lengths}")</code></pre>
+
+<h2>Reading Reads</h2>
+
+<h3>fetch() - Region-Based Retrieval</h3>
+
+<p>Retrieves reads overlapping specified genomic regions using <strong>0-based coordinates</strong>.</p>
+
+<pre><code class="language-python"># Fetch specific region
+for read in samfile.fetch("chr1", 1000, 2000):
+    print(read.query_name, read.reference_start)
+
+# Fetch entire contig
+for read in samfile.fetch("chr1"):
+    print(read.query_name)
+
+# Fetch without index (sequential read)
+for read in samfile.fetch(until_eof=True):
+    print(read.query_name)</code></pre>
+
+<p><strong>Important Notes:</strong></p>
+<ul><li>Requires index (.bai/.crai) for random access</li>
+<li>Returns reads that <strong>overlap</strong> the region (may extend beyond boundaries)</li>
+<li>Use <code>until_eof=True</code> for non-indexed files or sequential reading</li>
+<li>By default, only returns mapped reads</li>
+<li>For unmapped reads, use <code>fetch("*")</code> or <code>until_eof=True</code></li>
+</ul>
+<h3>Multiple Iterators</h3>
+
+<p>When using multiple iterators on the same file:</p>
+
+<pre><code class="language-python">samfile = pysam.AlignmentFile("example.bam", "rb", multiple_iterators=True)
+iter1 = samfile.fetch("chr1", 1000, 2000)
+iter2 = samfile.fetch("chr2", 5000, 6000)</code></pre>
+
+<p>Without <code>multiple_iterators=True</code>, a new fetch() call repositions the file pointer and breaks existing iterators.</p>
+
+<h3>count() - Count Reads in Region</h3>
+
+<pre><code class="language-python"># Count all reads
+num_reads = samfile.count("chr1", 1000, 2000)
+
+# Count with quality filter
+num_quality_reads = samfile.count("chr1", 1000, 2000, quality=20)</code></pre>
+
+<h3>count_coverage() - Per-Base Coverage</h3>
+
+<p>Returns four arrays (A, C, G, T) with per-base coverage:</p>
+
+<pre><code class="language-python">coverage = samfile.count_coverage("chr1", 1000, 2000)
+a_counts, c_counts, g_counts, t_counts = coverage</code></pre>
+
+<h2>AlignedSegment Objects</h2>
+
+<p>Each read is represented as an <code>AlignedSegment</code> object with these key attributes:</p>
+
+<h3>Read Information</h3>
+<ul><li><code>query_name</code> - Read name/ID</li>
+<li><code>query_sequence</code> - Read sequence (bases)</li>
+<li><code>query_qualities</code> - Base quality scores (ASCII-encoded)</li>
+<li><code>query_length</code> - Length of the read</li>
+</ul>
+<h3>Mapping Information</h3>
+<ul><li><code>reference_name</code> - Chromosome/contig name</li>
+<li><code>reference_start</code> - Start position (0-based, inclusive)</li>
+<li><code>reference_end</code> - End position (0-based, exclusive)</li>
+<li><code>mapping_quality</code> - MAPQ score</li>
+<li><code>cigarstring</code> - CIGAR string (e.g., "100M")</li>
+<li><code>cigartuples</code> - CIGAR as list of (operation, length) tuples</li>
+</ul>
+<p><strong>Important:</strong> <code>cigartuples</code> format differs from SAM specification. Operations are integers:</p>
+<ul><li>0 = M (match/mismatch)</li>
+<li>1 = I (insertion)</li>
+<li>2 = D (deletion)</li>
+<li>3 = N (skipped reference)</li>
+<li>4 = S (soft clipping)</li>
+<li>5 = H (hard clipping)</li>
+<li>6 = P (padding)</li>
+<li>7 = = (sequence match)</li>
+<li>8 = X (sequence mismatch)</li>
+</ul>
+<h3>Flags and Status</h3>
+<ul><li><code>flag</code> - SAM flag as integer</li>
+<li><code>is_paired</code> - Is read paired?</li>
+<li><code>is_proper_pair</code> - Is read in a proper pair?</li>
+<li><code>is_unmapped</code> - Is read unmapped?</li>
+<li><code>mate_is_unmapped</code> - Is mate unmapped?</li>
+<li><code>is_reverse</code> - Is read on reverse strand?</li>
+<li><code>mate_is_reverse</code> - Is mate on reverse strand?</li>
+<li><code>is_read1</code> - Is this read1?</li>
+<li><code>is_read2</code> - Is this read2?</li>
+<li><code>is_secondary</code> - Is secondary alignment?</li>
+<li><code>is_qcfail</code> - Did read fail QC?</li>
+<li><code>is_duplicate</code> - Is read a duplicate?</li>
+<li><code>is_supplementary</code> - Is supplementary alignment?</li>
+</ul>
+<h3>Tags and Optional Fields</h3>
+<ul><li><code>get_tag(tag)</code> - Get value of optional field</li>
+<li><code>set_tag(tag, value)</code> - Set optional field</li>
+<li><code>has_tag(tag)</code> - Check if tag exists</li>
+<li><code>get_tags()</code> - Get all tags as list of tuples</li>
+</ul>
+<pre><code class="language-python">for read in samfile.fetch("chr1", 1000, 2000):
+    if read.has_tag("NM"):
+        edit_distance = read.get_tag("NM")
+        print(f"{read.query_name}: NM={edit_distance}")</code></pre>
+
+<h2>Writing Alignment Files</h2>
+
+<h3>Creating Header</h3>
+
+<pre><code class="language-python">header = {
+    'HD': {'VN': '1.0'},
+    'SQ': [
+        {'LN': 1575, 'SN': 'chr1'},
+        {'LN': 1584, 'SN': 'chr2'}
+    ]
+}
+
+outfile = pysam.AlignmentFile("output.bam", "wb", header=header)</code></pre>
+
+<h3>Creating AlignedSegment Objects</h3>
+
+<pre><code class="language-python"># Create new read
+a = pysam.AlignedSegment()
+a.query_name = "read001"
+a.query_sequence = "AGCTTAGCTAGCTACCTATATCTTGGTCTTGGCCG"
+a.flag = 0
+a.reference_id = 0  # Index into header['SQ']
+a.reference_start = 100
+a.mapping_quality = 20
+a.cigar = [(0, 35)]  # 35M
+a.query_qualities = pysam.qualitystring_to_array("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII")
+
+# Write to file
+outfile.write(a)</code></pre>
+
+<h3>Converting Between Formats</h3>
+
+<pre><code class="language-python"># BAM to SAM
+infile = pysam.AlignmentFile("input.bam", "rb")
+outfile = pysam.AlignmentFile("output.sam", "w", template=infile)
+for read in infile:
+    outfile.write(read)
+infile.close()
+outfile.close()</code></pre>
+
+<h2>Pileup Analysis</h2>
+
+<p>The <code>pileup()</code> method provides <strong>column-wise</strong> (position-by-position) analysis across a region:</p>
+
+<pre><code class="language-python">for pileupcolumn in samfile.pileup("chr1", 1000, 2000):
+    print(f"Position {pileupcolumn.pos}: coverage = {pileupcolumn.nsegments}")
+
+    for pileupread in pileupcolumn.pileups:
+        if not pileupread.is_del and not pileupread.is_refskip:
+            # Query position is the position in the read
+            base = pileupread.alignment.query_sequence[pileupread.query_position]
+            print(f"  {pileupread.alignment.query_name}: {base}")</code></pre>
+
+<p><strong>Key attributes:</strong></p>
+<ul><li><code>pileupcolumn.pos</code> - 0-based reference position</li>
+<li><code>pileupcolumn.nsegments</code> - Number of reads covering position</li>
+<li><code>pileupread.alignment</code> - The AlignedSegment object</li>
+<li><code>pileupread.query_position</code> - Position in the read (None for deletions)</li>
+<li><code>pileupread.is_del</code> - Is this a deletion?</li>
+<li><code>pileupread.is_refskip</code> - Is this a reference skip (N in CIGAR)?</li>
+</ul>
+<p><strong>Important:</strong> Keep iterator references alive. The error "PileupProxy accessed after iterator finished" occurs when iterators go out of scope prematurely.</p>
+
+<h2>Coordinate System</h2>
+
+<p><strong>Critical:</strong> Pysam uses <strong>0-based, half-open</strong> coordinates (Python convention):</p>
+<ul><li><code>reference_start</code> is 0-based (first base is 0)</li>
+<li><code>reference_end</code> is exclusive (not included in range)</li>
+<li>Region from 1000-2000 includes bases 1000-1999</li>
+</ul>
+<p><strong>Exception:</strong> Region strings in <code>fetch()</code> and <code>pileup()</code> follow samtools conventions (1-based):</p>
+<pre><code class="language-python"># These are equivalent:
+samfile.fetch("chr1", 999, 2000)  # Python style: 0-based
+samfile.fetch("chr1:1000-2000")   # samtools style: 1-based</code></pre>
+
+<h2>Indexing</h2>
+
+<p>Create BAM index:</p>
+<pre><code class="language-python">pysam.index("example.bam")</code></pre>
+
+<p>Or use command-line interface:</p>
+<pre><code class="language-python">pysam.samtools.index("example.bam")</code></pre>
+
+<h2>Performance Tips</h2>
+
+<ul><li><strong>Use indexed access</strong> when querying specific regions repeatedly</li>
+<li><strong>Use <code>pileup()</code> for column-wise analysis</strong> instead of repeated fetch operations</li>
+<li><strong>Use <code>fetch(until_eof=True)</code> for sequential reading</strong> of non-indexed files</li>
+<li><strong>Avoid multiple iterators</strong> unless necessary (performance cost)</li>
+<li><strong>Use <code>count()</code> for simple counting</strong> instead of iterating and counting manually</li>
+</ul>
+<h2>Common Pitfalls</h2>
+
+<ul><li><strong>Partial overlaps:</strong> <code>fetch()</code> returns reads that overlap region boundaries—implement explicit filtering if exact boundaries are needed</li>
+<li><strong>Quality score editing:</strong> Cannot edit <code>query_qualities</code> in place after modifying <code>query_sequence</code>. Create a copy first: <code>quals = read.query_qualities</code></li>
+<li><strong>Missing index:</strong> <code>fetch()</code> without <code>until_eof=True</code> requires an index file</li>
+<li><strong>Thread safety:</strong> While pysam releases GIL during I/O, comprehensive thread-safety hasn't been fully validated</li>
+<li><strong>Iterator scope:</strong> Keep pileup iterator references alive to avoid "PileupProxy accessed after iterator finished" errors</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Common Workflows</h3>
+  <h1>Common Bioinformatics Workflows with Pysam</h1>
+
+<h2>Overview</h2>
+
+<p>This document provides practical examples of common bioinformatics workflows using pysam, demonstrating how to combine different file types and operations.</p>
+
+<h2>Quality Control Workflows</h2>
+
+<h3>Calculate BAM Statistics</h3>
+
+<pre><code class="language-python">import pysam
+
+def calculate_bam_stats(bam_file):
+    """Calculate basic statistics for BAM file."""
+    samfile = pysam.AlignmentFile(bam_file, "rb")
+
+    stats = {
+        "total_reads": 0,
+        "mapped_reads": 0,
+        "unmapped_reads": 0,
+        "paired_reads": 0,
+        "proper_pairs": 0,
+        "duplicates": 0,
+        "total_bases": 0,
+        "mapped_bases": 0
+    }
+
+    for read in samfile.fetch(until_eof=True):
+        stats["total_reads"] += 1
+
+        if read.is_unmapped:
+            stats["unmapped_reads"] += 1
+        else:
+            stats["mapped_reads"] += 1
+            stats["mapped_bases"] += read.query_alignment_length
+
+        if read.is_paired:
+            stats["paired_reads"] += 1
+            if read.is_proper_pair:
+                stats["proper_pairs"] += 1
+
+        if read.is_duplicate:
+            stats["duplicates"] += 1
+
+        stats["total_bases"] += read.query_length
+
+    samfile.close()
+
+    # Calculate derived statistics
+    stats["mapping_rate"] = stats["mapped_reads"] / stats["total_reads"] if stats["total_reads"] &gt; 0 else 0
+    stats["duplication_rate"] = stats["duplicates"] / stats["total_reads"] if stats["total_reads"] &gt; 0 else 0
+
+    return stats</code></pre>
+
+<h3>Check Reference Consistency</h3>
+
+<pre><code class="language-python">def check_bam_reference_consistency(bam_file, fasta_file):
+    """Verify that BAM reads match reference genome."""
+    samfile = pysam.AlignmentFile(bam_file, "rb")
+    fasta = pysam.FastaFile(fasta_file)
+
+    mismatches = 0
+    total_checked = 0
+
+    for read in samfile.fetch():
+        if read.is_unmapped:
+            continue
+
+        # Get reference sequence for aligned region
+        ref_seq = fasta.fetch(
+            read.reference_name,
+            read.reference_start,
+            read.reference_end
+        )
+
+        # Get read sequence aligned to reference
+        aligned_pairs = read.get_aligned_pairs(with_seq=True)
+
+        for query_pos, ref_pos, ref_base in aligned_pairs:
+            if query_pos is not None and ref_pos is not None and ref_base is not None:
+                read_base = read.query_sequence[query_pos]
+                if read_base.upper() != ref_base.upper():
+                    mismatches += 1
+                total_checked += 1
+
+        if total_checked &gt;= 10000:  # Sample first 10k positions
+            break
+
+    samfile.close()
+    fasta.close()
+
+    error_rate = mismatches / total_checked if total_checked &gt; 0 else 0
+    return {
+        "positions_checked": total_checked,
+        "mismatches": mismatches,
+        "error_rate": error_rate
+    }</code></pre>
+
+<h2>Coverage Analysis</h2>
+
+<h3>Calculate Per-Base Coverage</h3>
+
+<pre><code class="language-python">def calculate_coverage(bam_file, chrom, start, end):
+    """Calculate coverage for each position in region."""
+    samfile = pysam.AlignmentFile(bam_file, "rb")
+
+    # Initialize coverage array
+    length = end - start
+    coverage = [0] * length
+
+    # Count coverage at each position
+    for pileupcolumn in samfile.pileup(chrom, start, end):
+        if start &lt;= pileupcolumn.pos &lt; end:
+            coverage[pileupcolumn.pos - start] = pileupcolumn.nsegments
+
+    samfile.close()
+
+    return coverage</code></pre>
+
+<h3>Identify Low Coverage Regions</h3>
+
+<pre><code class="language-python">def find_low_coverage_regions(bam_file, chrom, start, end, min_coverage=10):
+    """Find regions with coverage below threshold."""
+    samfile = pysam.AlignmentFile(bam_file, "rb")
+
+    low_coverage_regions = []
+    in_low_region = False
+    region_start = None
+
+    for pileupcolumn in samfile.pileup(chrom, start, end):
+        pos = pileupcolumn.pos
+        if pos &lt; start or pos &gt;= end:
+            continue
+
+        coverage = pileupcolumn.nsegments
+
+        if coverage &lt; min_coverage:
+            if not in_low_region:
+                region_start = pos
+                in_low_region = True
+        else:
+            if in_low_region:
+                low_coverage_regions.append((region_start, pos))
+                in_low_region = False
+
+    # Close last region if still open
+    if in_low_region:
+        low_coverage_regions.append((region_start, end))
+
+    samfile.close()
+
+    return low_coverage_regions</code></pre>
+
+<h3>Calculate Coverage Statistics</h3>
+
+<pre><code class="language-python">def coverage_statistics(bam_file, chrom, start, end):
+    """Calculate coverage statistics for region."""
+    samfile = pysam.AlignmentFile(bam_file, "rb")
+
+    coverages = []
+
+    for pileupcolumn in samfile.pileup(chrom, start, end):
+        if start &lt;= pileupcolumn.pos &lt; end:
+            coverages.append(pileupcolumn.nsegments)
+
+    samfile.close()
+
+    if not coverages:
+        return None
+
+    coverages.sort()
+    n = len(coverages)
+
+    return {
+        "mean": sum(coverages) / n,
+        "median": coverages[n // 2],
+        "min": coverages[0],
+        "max": coverages[-1],
+        "positions": n
+    }</code></pre>
+
+<h2>Variant Analysis</h2>
+
+<h3>Extract Variants in Regions</h3>
+
+<pre><code class="language-python">def extract_variants_in_genes(vcf_file, bed_file):
+    """Extract variants overlapping gene regions."""
+    vcf = pysam.VariantFile(vcf_file)
+    bed = pysam.TabixFile(bed_file)
+
+    variants_by_gene = {}
+
+    for gene in bed.fetch(parser=pysam.asBed()):
+        gene_name = gene.name
+        variants_by_gene[gene_name] = []
+
+        # Find variants in gene region
+        for variant in vcf.fetch(gene.contig, gene.start, gene.end):
+            variant_info = {
+                "chrom": variant.chrom,
+                "pos": variant.pos,
+                "ref": variant.ref,
+                "alt": variant.alts,
+                "qual": variant.qual
+            }
+            variants_by_gene[gene_name].append(variant_info)
+
+    vcf.close()
+    bed.close()
+
+    return variants_by_gene</code></pre>
+
+<h3>Annotate Variants with Coverage</h3>
+
+<pre><code class="language-python">def annotate_variants_with_coverage(vcf_file, bam_file, output_file):
+    """Add coverage information to variants."""
+    vcf = pysam.VariantFile(vcf_file)
+    samfile = pysam.AlignmentFile(bam_file, "rb")
+
+    # Add DP to header if not present
+    if "DP" not in vcf.header.info:
+        vcf.header.info.add("DP", "1", "Integer", "Total Depth from BAM")
+
+    outvcf = pysam.VariantFile(output_file, "w", header=vcf.header)
+
+    for variant in vcf:
+        # Get coverage at variant position
+        coverage = samfile.count(
+            variant.chrom,
+            variant.pos - 1,  # Convert to 0-based
+            variant.pos
+        )
+
+        # Add to INFO field
+        variant.info["DP"] = coverage
+
+        outvcf.write(variant)
+
+    vcf.close()
+    samfile.close()
+    outvcf.close()</code></pre>
+
+<h3>Filter Variants by Read Support</h3>
+
+<pre><code class="language-python">def filter_variants_by_support(vcf_file, bam_file, output_file, min_alt_reads=3):
+    """Filter variants requiring minimum alternate allele support."""
+    vcf = pysam.VariantFile(vcf_file)
+    samfile = pysam.AlignmentFile(bam_file, "rb")
+    outvcf = pysam.VariantFile(output_file, "w", header=vcf.header)
+
+    for variant in vcf:
+        # Count reads supporting each allele
+        allele_counts = {variant.ref: 0}
+        for alt in variant.alts:
+            allele_counts[alt] = 0
+
+        # Pileup at variant position
+        for pileupcolumn in samfile.pileup(
+            variant.chrom,
+            variant.pos - 1,
+            variant.pos
+        ):
+            if pileupcolumn.pos == variant.pos - 1:  # 0-based
+                for pileupread in pileupcolumn.pileups:
+                    if not pileupread.is_del and not pileupread.is_refskip:
+                        base = pileupread.alignment.query_sequence[
+                            pileupread.query_position
+                        ]
+                        if base in allele_counts:
+                            allele_counts[base] += 1
+
+        # Check if any alt allele has sufficient support
+        has_support = any(
+            allele_counts.get(alt, 0) &gt;= min_alt_reads
+            for alt in variant.alts
+        )
+
+        if has_support:
+            outvcf.write(variant)
+
+    vcf.close()
+    samfile.close()
+    outvcf.close()</code></pre>
+
+<h2>Sequence Extraction</h2>
+
+<h3>Extract Sequences Around Variants</h3>
+
+<pre><code class="language-python">def extract_variant_contexts(vcf_file, fasta_file, output_file, window=50):
+    """Extract reference sequences around variants."""
+    vcf = pysam.VariantFile(vcf_file)
+    fasta = pysam.FastaFile(fasta_file)
+
+    with open(output_file, 'w') as out:
+        for variant in vcf:
+            # Get sequence context
+            start = max(0, variant.pos - window - 1)  # Convert to 0-based
+            end = variant.pos + window
+
+            context = fasta.fetch(variant.chrom, start, end)
+
+            # Mark variant position
+            var_pos_in_context = variant.pos - 1 - start
+
+            out.write(f"&gt;{variant.chrom}:{variant.pos} {variant.ref}&gt;{variant.alts}\n")
+            out.write(context[:var_pos_in_context].lower())
+            out.write(context[var_pos_in_context:var_pos_in_context+len(variant.ref)].upper())
+            out.write(context[var_pos_in_context+len(variant.ref):].lower())
+            out.write("\n")
+
+    vcf.close()
+    fasta.close()</code></pre>
+
+<h3>Extract Gene Sequences</h3>
+
+<pre><code class="language-python">def extract_gene_sequences(bed_file, fasta_file, output_fasta):
+    """Extract sequences for genes from BED file."""
+    bed = pysam.TabixFile(bed_file)
+    fasta = pysam.FastaFile(fasta_file)
+
+    with open(output_fasta, 'w') as out:
+        for gene in bed.fetch(parser=pysam.asBed()):
+            sequence = fasta.fetch(gene.contig, gene.start, gene.end)
+
+            # Handle strand
+            if hasattr(gene, 'strand') and gene.strand == '-':
+                # Reverse complement
+                complement = str.maketrans("ATGCatgcNn", "TACGtacgNn")
+                sequence = sequence.translate(complement)[::-1]
+
+            out.write(f"&gt;{gene.name} {gene.contig}:{gene.start}-{gene.end}\n")
+
+            # Write sequence in 60-character lines
+            for i in range(0, len(sequence), 60):
+                out.write(sequence[i:i+60] + "\n")
+
+    bed.close()
+    fasta.close()</code></pre>
+
+<h2>Read Filtering and Subsetting</h2>
+
+<h3>Filter BAM by Region and Quality</h3>
+
+<pre><code class="language-python">def filter_bam(input_bam, output_bam, chrom, start, end, min_mapq=20):
+    """Filter BAM file by region and mapping quality."""
+    infile = pysam.AlignmentFile(input_bam, "rb")
+    outfile = pysam.AlignmentFile(output_bam, "wb", template=infile)
+
+    for read in infile.fetch(chrom, start, end):
+        if read.mapping_quality &gt;= min_mapq and not read.is_duplicate:
+            outfile.write(read)
+
+    infile.close()
+    outfile.close()
+
+    # Create index
+    pysam.index(output_bam)</code></pre>
+
+<h3>Extract Reads for Specific Variants</h3>
+
+<pre><code class="language-python">def extract_reads_at_variants(bam_file, vcf_file, output_bam, window=100):
+    """Extract reads overlapping variant positions."""
+    samfile = pysam.AlignmentFile(bam_file, "rb")
+    vcf = pysam.VariantFile(vcf_file)
+    outfile = pysam.AlignmentFile(output_bam, "wb", template=samfile)
+
+    # Collect all reads (using set to avoid duplicates)
+    reads_to_keep = set()
+
+    for variant in vcf:
+        start = max(0, variant.pos - window - 1)
+        end = variant.pos + window
+
+        for read in samfile.fetch(variant.chrom, start, end):
+            reads_to_keep.add(read.query_name)
+
+    # Write all reads
+    samfile.close()
+    samfile = pysam.AlignmentFile(bam_file, "rb")
+
+    for read in samfile.fetch(until_eof=True):
+        if read.query_name in reads_to_keep:
+            outfile.write(read)
+
+    samfile.close()
+    vcf.close()
+    outfile.close()
+
+    pysam.index(output_bam)</code></pre>
+
+<h2>Integration Workflows</h2>
+
+<h3>Create Coverage Track from BAM</h3>
+
+<pre><code class="language-python">def create_coverage_bedgraph(bam_file, output_file, chrom=None):
+    """Create bedGraph coverage track from BAM."""
+    samfile = pysam.AlignmentFile(bam_file, "rb")
+
+    chroms = [chrom] if chrom else samfile.references
+
+    with open(output_file, 'w') as out:
+        out.write("track type=bedGraph name=\"Coverage\"\n")
+
+        for chrom in chroms:
+            current_cov = None
+            region_start = None
+
+            for pileupcolumn in samfile.pileup(chrom):
+                pos = pileupcolumn.pos
+                cov = pileupcolumn.nsegments
+
+                if cov != current_cov:
+                    # Write previous region
+                    if current_cov is not None:
+                        out.write(f"{chrom}\t{region_start}\t{pos}\t{current_cov}\n")
+
+                    # Start new region
+                    current_cov = cov
+                    region_start = pos
+
+            # Write final region
+            if current_cov is not None:
+                out.write(f"{chrom}\t{region_start}\t{pos+1}\t{current_cov}\n")
+
+    samfile.close()</code></pre>
+
+<h3>Merge Multiple VCF Files</h3>
+
+<pre><code class="language-python">def merge_vcf_samples(vcf_files, output_file):
+    """Merge multiple single-sample VCFs."""
+    # Open all input files
+    vcf_readers = [pysam.VariantFile(f) for f in vcf_files]
+
+    # Create merged header
+    merged_header = vcf_readers[0].header.copy()
+    for vcf in vcf_readers[1:]:
+        for sample in vcf.header.samples:
+            merged_header.samples.add(sample)
+
+    outvcf = pysam.VariantFile(output_file, "w", header=merged_header)
+
+    # Get all variant positions
+    all_variants = {}
+    for vcf in vcf_readers:
+        for variant in vcf:
+            key = (variant.chrom, variant.pos, variant.ref, variant.alts)
+            if key not in all_variants:
+                all_variants[key] = []
+            all_variants[key].append(variant)
+
+    # Write merged variants
+    for key, variants in sorted(all_variants.items()):
+        # Create merged record from first variant
+        merged = outvcf.new_record(
+            contig=variants[0].chrom,
+            start=variants[0].start,
+            stop=variants[0].stop,
+            alleles=variants[0].alleles
+        )
+
+        # Add genotypes from all samples
+        for variant in variants:
+            for sample in variant.samples:
+                merged.samples[sample].update(variant.samples[sample])
+
+        outvcf.write(merged)
+
+    # Close all files
+    for vcf in vcf_readers:
+        vcf.close()
+    outvcf.close()</code></pre>
+
+<h2>Performance Tips for Workflows</h2>
+
+<ul><li><strong>Use indexed files</strong> for all random access operations</li>
+<li><strong>Process regions in parallel</strong> when analyzing multiple independent regions</li>
+<li><strong>Stream data when possible</strong> - avoid loading entire files into memory</li>
+<li><strong>Close files explicitly</strong> to free resources</li>
+<li><strong>Use <code>until_eof=True</code></strong> for sequential processing of entire files</li>
+<li><strong>Batch operations</strong> on the same file to minimize I/O</li>
+<li><strong>Consider memory usage</strong> with pileup operations on high-coverage regions</li>
+<li><strong>Use count() instead of pileup()</strong> when only counts are needed</li>
+</ul>
+<h2>Common Integration Patterns</h2>
+
+<ul><li><strong>BAM + Reference</strong>: Verify alignments, extract aligned sequences</li>
+<li><strong>BAM + VCF</strong>: Validate variants, calculate allele frequencies</li>
+<li><strong>VCF + BED</strong>: Annotate variants with gene/region information</li>
+<li><strong>BAM + BED</strong>: Calculate coverage statistics for specific regions</li>
+<li><strong>FASTA + VCF</strong>: Extract variant context sequences</li>
+<li><strong>Multiple BAMs</strong>: Compare coverage or variants across samples</li>
+<li><strong>BAM + FASTQ</strong>: Extract unaligned reads for re-alignment</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Sequence Files</h3>
+  <h1>Working with Sequence Files (FASTA/FASTQ)</h1>
+
+<h2>FASTA Files</h2>
+
+<h3>Overview</h3>
+
+<p>Pysam provides the <code>FastaFile</code> class for indexed, random access to FASTA reference sequences. FASTA files must be indexed with <code>samtools faidx</code> before use.</p>
+
+<h3>Opening FASTA Files</h3>
+
+<pre><code class="language-python">import pysam
+
+# Open indexed FASTA file
+fasta = pysam.FastaFile("reference.fasta")
+
+# Automatically looks for reference.fasta.fai index</code></pre>
+
+<h3>Creating FASTA Index</h3>
+
+<pre><code class="language-python"># Create index using pysam
+pysam.faidx("reference.fasta")
+
+# Or using samtools command
+pysam.samtools.faidx("reference.fasta")</code></pre>
+
+<p>This creates a <code>.fai</code> index file required for random access.</p>
+
+<h3>FastaFile Properties</h3>
+
+<pre><code class="language-python">fasta = pysam.FastaFile("reference.fasta")
+
+# List of reference sequences
+references = fasta.references
+print(f"References: {references}")
+
+# Get lengths
+lengths = fasta.lengths
+print(f"Lengths: {lengths}")
+
+# Get specific sequence length
+chr1_length = fasta.get_reference_length("chr1")</code></pre>
+
+<h3>Fetching Sequences</h3>
+
+<h4>Fetch by Region</h4>
+
+<p>Uses <strong>0-based, half-open</strong> coordinates:</p>
+
+<pre><code class="language-python"># Fetch specific region
+sequence = fasta.fetch("chr1", 1000, 2000)
+print(f"Sequence: {sequence}")  # Returns 1000 bases
+
+# Fetch entire chromosome
+chr1_seq = fasta.fetch("chr1")
+
+# Fetch using region string (1-based)
+sequence = fasta.fetch(region="chr1:1001-2000")</code></pre>
+
+<p><strong>Important:</strong> Numeric arguments use 0-based coordinates, region strings use 1-based coordinates (samtools convention).</p>
+
+<h4>Common Use Cases</h4>
+
+<pre><code class="language-python"># Get sequence at variant position
+def get_variant_context(fasta, chrom, pos, window=10):
+    """Get sequence context around a variant position (1-based)."""
+    start = max(0, pos - window - 1)  # Convert to 0-based
+    end = pos + window
+    return fasta.fetch(chrom, start, end)
+
+# Get sequence for gene coordinates
+def get_gene_sequence(fasta, chrom, start, end, strand):
+    """Get gene sequence with strand awareness."""
+    seq = fasta.fetch(chrom, start, end)
+
+    if strand == "-":
+        # Reverse complement
+        complement = str.maketrans("ATGCatgc", "TACGtacg")
+        seq = seq.translate(complement)[::-1]
+
+    return seq
+
+# Check reference allele
+def check_ref_allele(fasta, chrom, pos, expected_ref):
+    """Verify reference allele at position (1-based pos)."""
+    actual = fasta.fetch(chrom, pos-1, pos)  # Convert to 0-based
+    return actual.upper() == expected_ref.upper()</code></pre>
+
+<h3>Extracting Multiple Regions</h3>
+
+<pre><code class="language-python"># Extract multiple regions efficiently
+regions = [
+    ("chr1", 1000, 2000),
+    ("chr1", 5000, 6000),
+    ("chr2", 10000, 11000)
+]
+
+sequences = {}
+for chrom, start, end in regions:
+    seq_id = f"{chrom}:{start}-{end}"
+    sequences[seq_id] = fasta.fetch(chrom, start, end)</code></pre>
+
+<h3>Working with Ambiguous Bases</h3>
+
+<p>FASTA files may contain IUPAC ambiguity codes:</p>
+
+<ul><li>N = any base</li>
+<li>R = A or G (purine)</li>
+<li>Y = C or T (pyrimidine)</li>
+<li>S = G or C (strong)</li>
+<li>W = A or T (weak)</li>
+<li>K = G or T (keto)</li>
+<li>M = A or C (amino)</li>
+<li>B = C, G, or T (not A)</li>
+<li>D = A, G, or T (not C)</li>
+<li>H = A, C, or T (not G)</li>
+<li>V = A, C, or G (not T)</li>
+</ul>
+<pre><code class="language-python"># Handle ambiguous bases
+def count_ambiguous(sequence):
+    """Count non-ATGC bases."""
+    return sum(1 for base in sequence.upper() if base not in "ATGC")
+
+# Remove regions with too many Ns
+def has_quality_sequence(fasta, chrom, start, end, max_n_frac=0.1):
+    """Check if region has acceptable N content."""
+    seq = fasta.fetch(chrom, start, end)
+    n_count = seq.upper().count('N')
+    return (n_count / len(seq)) &lt;= max_n_frac</code></pre>
+
+<h2>FASTQ Files</h2>
+
+<h3>Overview</h3>
+
+<p>Pysam provides <code>FastxFile</code> (or <code>FastqFile</code>) for reading FASTQ files containing raw sequencing reads with quality scores. FASTQ files do not support random access—only sequential reading.</p>
+
+<h3>Opening FASTQ Files</h3>
+
+<pre><code class="language-python">import pysam
+
+# Open FASTQ file
+fastq = pysam.FastxFile("reads.fastq")
+
+# Works with compressed files
+fastq_gz = pysam.FastxFile("reads.fastq.gz")</code></pre>
+
+<h3>Reading FASTQ Records</h3>
+
+<pre><code class="language-python">fastq = pysam.FastxFile("reads.fastq")
+
+for read in fastq:
+    print(f"Name: {read.name}")
+    print(f"Sequence: {read.sequence}")
+    print(f"Quality: {read.quality}")
+    print(f"Comment: {read.comment}")  # Optional header comment</code></pre>
+
+<p><strong>FastqProxy attributes:</strong></p>
+<ul><li><code>name</code> - Read identifier (without @ prefix)</li>
+<li><code>sequence</code> - DNA/RNA sequence</li>
+<li><code>quality</code> - ASCII-encoded quality string</li>
+<li><code>comment</code> - Optional comment from header line</li>
+<li><code>get_quality_array()</code> - Convert quality string to numeric array</li>
+</ul>
+<h3>Quality Score Conversion</h3>
+
+<pre><code class="language-python"># Convert quality string to numeric values
+for read in fastq:
+    qual_array = read.get_quality_array()
+    mean_quality = sum(qual_array) / len(qual_array)
+    print(f"{read.name}: mean Q = {mean_quality:.1f}")</code></pre>
+
+<p>Quality scores are Phred-scaled (typically Phred+33 encoding):</p>
+<ul><li>Q = -10 * log10(P_error)</li>
+<li>ASCII 33 ('!') = Q0</li>
+<li>ASCII 43 ('+') = Q10</li>
+<li>ASCII 63 ('?') = Q30</li>
+</ul>
+<h3>Common FASTQ Processing Workflows</h3>
+
+<h4>Quality Filtering</h4>
+
+<pre><code class="language-python">def filter_by_quality(input_fastq, output_fastq, min_mean_quality=20):
+    """Filter reads by mean quality score."""
+    with pysam.FastxFile(input_fastq) as infile:
+        with open(output_fastq, 'w') as outfile:
+            for read in infile:
+                qual_array = read.get_quality_array()
+                mean_q = sum(qual_array) / len(qual_array)
+
+                if mean_q &gt;= min_mean_quality:
+                    # Write in FASTQ format
+                    outfile.write(f"@{read.name}\n")
+                    outfile.write(f"{read.sequence}\n")
+                    outfile.write("+\n")
+                    outfile.write(f"{read.quality}\n")</code></pre>
+
+<h4>Length Filtering</h4>
+
+<pre><code class="language-python">def filter_by_length(input_fastq, output_fastq, min_length=50):
+    """Filter reads by minimum length."""
+    with pysam.FastxFile(input_fastq) as infile:
+        with open(output_fastq, 'w') as outfile:
+            kept = 0
+            for read in infile:
+                if len(read.sequence) &gt;= min_length:
+                    outfile.write(f"@{read.name}\n")
+                    outfile.write(f"{read.sequence}\n")
+                    outfile.write("+\n")
+                    outfile.write(f"{read.quality}\n")
+                    kept += 1
+    print(f"Kept {kept} reads")</code></pre>
+
+<h4>Calculate Quality Statistics</h4>
+
+<pre><code class="language-python">def calculate_fastq_stats(fastq_file):
+    """Calculate basic statistics for FASTQ file."""
+    total_reads = 0
+    total_bases = 0
+    quality_sum = 0
+
+    with pysam.FastxFile(fastq_file) as fastq:
+        for read in fastq:
+            total_reads += 1
+            read_length = len(read.sequence)
+            total_bases += read_length
+
+            qual_array = read.get_quality_array()
+            quality_sum += sum(qual_array)
+
+    return {
+        "total_reads": total_reads,
+        "total_bases": total_bases,
+        "mean_read_length": total_bases / total_reads if total_reads &gt; 0 else 0,
+        "mean_quality": quality_sum / total_bases if total_bases &gt; 0 else 0
+    }</code></pre>
+
+<h4>Extract Reads by Name</h4>
+
+<pre><code class="language-python">def extract_reads_by_name(fastq_file, read_names, output_file):
+    """Extract specific reads by name."""
+    read_set = set(read_names)
+
+    with pysam.FastxFile(fastq_file) as infile:
+        with open(output_file, 'w') as outfile:
+            for read in infile:
+                if read.name in read_set:
+                    outfile.write(f"@{read.name}\n")
+                    outfile.write(f"{read.sequence}\n")
+                    outfile.write("+\n")
+                    outfile.write(f"{read.quality}\n")</code></pre>
+
+<h4>Convert FASTQ to FASTA</h4>
+
+<pre><code class="language-python">def fastq_to_fasta(fastq_file, fasta_file):
+    """Convert FASTQ to FASTA (discards quality scores)."""
+    with pysam.FastxFile(fastq_file) as infile:
+        with open(fasta_file, 'w') as outfile:
+            for read in infile:
+                outfile.write(f"&gt;{read.name}\n")
+                outfile.write(f"{read.sequence}\n")</code></pre>
+
+<h4>Subsample FASTQ</h4>
+
+<pre><code class="language-python">import random
+
+def subsample_fastq(input_fastq, output_fastq, fraction=0.1, seed=42):
+    """Randomly subsample reads from FASTQ file."""
+    random.seed(seed)
+
+    with pysam.FastxFile(input_fastq) as infile:
+        with open(output_fastq, 'w') as outfile:
+            for read in infile:
+                if random.random() &lt; fraction:
+                    outfile.write(f"@{read.name}\n")
+                    outfile.write(f"{read.sequence}\n")
+                    outfile.write("+\n")
+                    outfile.write(f"{read.quality}\n")</code></pre>
+
+<h2>Tabix-Indexed Files</h2>
+
+<h3>Overview</h3>
+
+<p>Pysam provides <code>TabixFile</code> for accessing tabix-indexed genomic data files (BED, GFF, GTF, generic tab-delimited).</p>
+
+<h3>Opening Tabix Files</h3>
+
+<pre><code class="language-python">import pysam
+
+# Open tabix-indexed file
+tabix = pysam.TabixFile("annotations.bed.gz")
+
+# File must be bgzip-compressed and tabix-indexed</code></pre>
+
+<h3>Creating Tabix Index</h3>
+
+<pre><code class="language-python"># Index a file
+pysam.tabix_index("annotations.bed", preset="bed", force=True)
+# Creates annotations.bed.gz and annotations.bed.gz.tbi
+
+# Presets available: bed, gff, vcf</code></pre>
+
+<h3>Fetching Records</h3>
+
+<pre><code class="language-python">tabix = pysam.TabixFile("annotations.bed.gz")
+
+# Fetch region
+for row in tabix.fetch("chr1", 1000000, 2000000):
+    print(row)  # Returns tab-delimited string
+
+# Parse with specific parser
+for row in tabix.fetch("chr1", 1000000, 2000000, parser=pysam.asBed()):
+    print(f"Interval: {row.contig}:{row.start}-{row.end}")
+
+# Available parsers: asBed(), asGTF(), asVCF(), asTuple()</code></pre>
+
+<h3>Working with BED Files</h3>
+
+<pre><code class="language-python">bed = pysam.TabixFile("regions.bed.gz")
+
+# Access BED fields by name
+for interval in bed.fetch("chr1", 1000000, 2000000, parser=pysam.asBed()):
+    print(f"Region: {interval.contig}:{interval.start}-{interval.end}")
+    print(f"Name: {interval.name}")
+    print(f"Score: {interval.score}")
+    print(f"Strand: {interval.strand}")</code></pre>
+
+<h3>Working with GTF/GFF Files</h3>
+
+<pre><code class="language-python">gtf = pysam.TabixFile("annotations.gtf.gz")
+
+# Access GTF fields
+for feature in gtf.fetch("chr1", 1000000, 2000000, parser=pysam.asGTF()):
+    print(f"Feature: {feature.feature}")
+    print(f"Gene: {feature.gene_id}")
+    print(f"Transcript: {feature.transcript_id}")
+    print(f"Coordinates: {feature.start}-{feature.end}")</code></pre>
+
+<h2>Performance Tips</h2>
+
+<h3>FASTA</h3>
+<ul><li><strong>Always use indexed FASTA</strong> files (create .fai with samtools faidx)</li>
+<li><strong>Batch fetch operations</strong> when extracting multiple regions</li>
+<li><strong>Cache frequently accessed sequences</strong> in memory</li>
+<li><strong>Use appropriate window sizes</strong> to avoid loading excessive sequence data</li>
+</ul>
+<h3>FASTQ</h3>
+<ul><li><strong>Stream processing</strong> - FASTQ files are read sequentially, process on-the-fly</li>
+<li><strong>Use compressed FASTQ.gz</strong> to save disk space (pysam handles transparently)</li>
+<li><strong>Avoid loading entire file</strong> into memory—process read-by-read</li>
+<li><strong>For large files</strong>, consider parallel processing with file splitting</li>
+</ul>
+<h3>Tabix</h3>
+<ul><li><strong>Always bgzip and tabix-index</strong> files before region queries</li>
+<li><strong>Use appropriate presets</strong> when creating indices</li>
+<li><strong>Specify parser</strong> for named field access</li>
+<li><strong>Batch queries</strong> to same file to avoid re-opening</li>
+</ul>
+<h2>Common Pitfalls</h2>
+
+<ul><li><strong>FASTA coordinate system:</strong> fetch() uses 0-based coordinates, region strings use 1-based</li>
+<li><strong>Missing index:</strong> FASTA random access requires .fai index file</li>
+<li><strong>FASTQ sequential only:</strong> Cannot do random access or region-based queries on FASTQ</li>
+<li><strong>Quality encoding:</strong> Assume Phred+33 unless specified otherwise</li>
+<li><strong>Tabix compression:</strong> Must use bgzip, not regular gzip, for tabix indexing</li>
+<li><strong>Parser requirement:</strong> TabixFile needs explicit parser for named field access</li>
+<li><strong>Case sensitivity:</strong> FASTA sequences preserve case—use .upper() or .lower() for consistent comparisons</li>
+</ul>
+</div>
+<div class="ref-card">
+  <h3>📄 Variant Files</h3>
+  <h1>Working with Variant Files (VCF/BCF)</h1>
+
+<h2>Overview</h2>
+
+<p>Pysam provides the <code>VariantFile</code> class for reading and writing VCF (Variant Call Format) and BCF (binary VCF) files. These files contain information about genetic variants, including SNPs, indels, and structural variants.</p>
+
+<h2>Opening Variant Files</h2>
+
+<pre><code class="language-python">import pysam
+
+# Reading VCF
+vcf = pysam.VariantFile("example.vcf")
+
+# Reading BCF (binary, compressed)
+bcf = pysam.VariantFile("example.bcf")
+
+# Reading compressed VCF
+vcf_gz = pysam.VariantFile("example.vcf.gz")
+
+# Writing
+outvcf = pysam.VariantFile("output.vcf", "w", header=vcf.header)</code></pre>
+
+<h2>VariantFile Properties</h2>
+
+<p><strong>Header Information:</strong></p>
+<ul><li><code>header</code> - Complete VCF header with metadata</li>
+<li><code>header.contigs</code> - Dictionary of contigs/chromosomes</li>
+<li><code>header.samples</code> - List of sample names</li>
+<li><code>header.filters</code> - Dictionary of FILTER definitions</li>
+<li><code>header.info</code> - Dictionary of INFO field definitions</li>
+<li><code>header.formats</code> - Dictionary of FORMAT field definitions</li>
+</ul>
+<pre><code class="language-python">vcf = pysam.VariantFile("example.vcf")
+
+# List samples
+print(f"Samples: {list(vcf.header.samples)}")
+
+# List contigs
+for contig in vcf.header.contigs:
+    print(f"{contig}: length={vcf.header.contigs[contig].length}")
+
+# List INFO fields
+for info in vcf.header.info:
+    print(f"{info}: {vcf.header.info[info].description}")</code></pre>
+
+<h2>Reading Variant Records</h2>
+
+<h3>Iterate All Variants</h3>
+
+<pre><code class="language-python">for variant in vcf:
+    print(f"{variant.chrom}:{variant.pos} {variant.ref}&gt;{variant.alts}")</code></pre>
+
+<h3>Fetch Specific Region</h3>
+
+<p>Requires tabix index (.tbi) for VCF.gz or index for BCF:</p>
+
+<pre><code class="language-python"># Fetch variants in region (1-based coordinates for region string)
+for variant in vcf.fetch("chr1", 1000000, 2000000):
+    print(f"{variant.chrom}:{variant.pos} {variant.id}")
+
+# Using region string (1-based)
+for variant in vcf.fetch("chr1:1000000-2000000"):
+    print(variant.pos)</code></pre>
+
+<p><strong>Note:</strong> Uses <strong>1-based coordinates</strong> in <code>fetch()</code> calls to match VCF specification.</p>
+
+<h2>VariantRecord Objects</h2>
+
+<p>Each variant is represented as a <code>VariantRecord</code> object:</p>
+
+<h3>Position Information</h3>
+<ul><li><code>chrom</code> - Chromosome/contig name</li>
+<li><code>pos</code> - Position (1-based)</li>
+<li><code>start</code> - Start position (0-based)</li>
+<li><code>stop</code> - Stop position (0-based, exclusive)</li>
+<li><code>id</code> - Variant ID (e.g., rsID)</li>
+</ul>
+<h3>Allele Information</h3>
+<ul><li><code>ref</code> - Reference allele</li>
+<li><code>alts</code> - Tuple of alternate alleles</li>
+<li><code>alleles</code> - Tuple of all alleles (ref + alts)</li>
+</ul>
+<h3>Quality and Filtering</h3>
+<ul><li><code>qual</code> - Quality score (QUAL field)</li>
+<li><code>filter</code> - Filter status</li>
+</ul>
+<h3>INFO Fields</h3>
+
+<p>Access INFO fields as dictionary:</p>
+
+<pre><code class="language-python">for variant in vcf:
+    # Check if field exists
+    if "DP" in variant.info:
+        depth = variant.info["DP"]
+        print(f"Depth: {depth}")
+
+    # Get all INFO keys
+    print(f"INFO fields: {variant.info.keys()}")
+
+    # Access specific fields
+    if "AF" in variant.info:
+        allele_freq = variant.info["AF"]
+        print(f"Allele frequency: {allele_freq}")</code></pre>
+
+<h3>Sample Genotype Data</h3>
+
+<p>Access sample data through <code>samples</code> dictionary:</p>
+
+<pre><code class="language-python">for variant in vcf:
+    for sample_name in variant.samples:
+        sample = variant.samples[sample_name]
+
+        # Genotype (GT field)
+        gt = sample["GT"]
+        print(f"{sample_name} genotype: {gt}")
+
+        # Other FORMAT fields
+        if "DP" in sample:
+            print(f"{sample_name} depth: {sample['DP']}")
+        if "GQ" in sample:
+            print(f"{sample_name} quality: {sample['GQ']}")
+
+        # Alleles for this genotype
+        alleles = sample.alleles
+        print(f"{sample_name} alleles: {alleles}")
+
+        # Phasing
+        if sample.phased:
+            print(f"{sample_name} is phased")</code></pre>
+
+<p><strong>Genotype representation:</strong></p>
+<ul><li><code>(0, 0)</code> - Homozygous reference</li>
+<li><code>(0, 1)</code> - Heterozygous</li>
+<li><code>(1, 1)</code> - Homozygous alternate</li>
+<li><code>(None, None)</code> - Missing genotype</li>
+<li>Phased: <code>(0|1)</code> vs unphased: <code>(0/1)</code></li>
+</ul>
+<h2>Writing Variant Files</h2>
+
+<h3>Creating Header</h3>
+
+<pre><code class="language-python">header = pysam.VariantHeader()
+
+# Add contigs
+header.contigs.add("chr1", length=248956422)
+header.contigs.add("chr2", length=242193529)
+
+# Add INFO fields
+header.add_line('##INFO=&lt;ID=DP,Number=1,Type=Integer,Description="Total Depth"&gt;')
+header.add_line('##INFO=&lt;ID=AF,Number=A,Type=Float,Description="Allele Frequency"&gt;')
+
+# Add FORMAT fields
+header.add_line('##FORMAT=&lt;ID=GT,Number=1,Type=String,Description="Genotype"&gt;')
+header.add_line('##FORMAT=&lt;ID=DP,Number=1,Type=Integer,Description="Read Depth"&gt;')
+
+# Add samples
+header.add_sample("sample1")
+header.add_sample("sample2")
+
+# Create output file
+outvcf = pysam.VariantFile("output.vcf", "w", header=header)</code></pre>
+
+<h3>Creating Variant Records</h3>
+
+<pre><code class="language-python"># Create new variant
+record = outvcf.new_record()
+record.chrom = "chr1"
+record.pos = 100000
+record.id = "rs123456"
+record.ref = "A"
+record.alts = ("G",)
+record.qual = 30
+record.filter.add("PASS")
+
+# Set INFO fields
+record.info["DP"] = 100
+record.info["AF"] = (0.25,)
+
+# Set genotype data
+record.samples["sample1"]["GT"] = (0, 1)
+record.samples["sample1"]["DP"] = 50
+record.samples["sample2"]["GT"] = (0, 0)
+record.samples["sample2"]["DP"] = 50
+
+# Write to file
+outvcf.write(record)</code></pre>
+
+<h2>Filtering Variants</h2>
+
+<h3>Basic Filtering</h3>
+
+<pre><code class="language-python"># Filter by quality
+for variant in vcf:
+    if variant.qual &gt;= 30:
+        print(f"High quality variant: {variant.chrom}:{variant.pos}")
+
+# Filter by depth
+for variant in vcf:
+    if "DP" in variant.info and variant.info["DP"] &gt;= 20:
+        print(f"High depth variant: {variant.chrom}:{variant.pos}")
+
+# Filter by allele frequency
+for variant in vcf:
+    if "AF" in variant.info:
+        for af in variant.info["AF"]:
+            if af &gt;= 0.01:
+                print(f"Common variant: {variant.chrom}:{variant.pos}")</code></pre>
+
+<h3>Filtering by Genotype</h3>
+
+<pre><code class="language-python"># Find variants where sample has alternate allele
+for variant in vcf:
+    sample = variant.samples["sample1"]
+    gt = sample["GT"]
+
+    # Check if has alternate allele
+    if gt and any(allele and allele &gt; 0 for allele in gt):
+        print(f"Sample has alt allele: {variant.chrom}:{variant.pos}")
+
+    # Check if homozygous alternate
+    if gt == (1, 1):
+        print(f"Homozygous alt: {variant.chrom}:{variant.pos}")</code></pre>
+
+<h3>Filter Field</h3>
+
+<pre><code class="language-python"># Check FILTER status
+for variant in vcf:
+    if "PASS" in variant.filter or len(variant.filter) == 0:
+        print(f"Passed filters: {variant.chrom}:{variant.pos}")
+    else:
+        print(f"Failed: {variant.filter.keys()}")</code></pre>
+
+<h2>Indexing VCF Files</h2>
+
+<p>Create tabix index for compressed VCF:</p>
+
+<pre><code class="language-python"># Compress and index
+pysam.tabix_index("example.vcf", preset="vcf", force=True)
+# Creates example.vcf.gz and example.vcf.gz.tbi</code></pre>
+
+<p>Or use bcftools for BCF:</p>
+
+<pre><code class="language-python">pysam.bcftools.index("example.bcf")</code></pre>
+
+<h2>Common Workflows</h2>
+
+<h3>Extract Variants for Specific Samples</h3>
+
+<pre><code class="language-python">invcf = pysam.VariantFile("input.vcf")
+samples_to_keep = ["sample1", "sample3"]
+
+# Create new header with subset of samples
+new_header = invcf.header.copy()
+new_header.samples.clear()
+for sample in samples_to_keep:
+    new_header.samples.add(sample)
+
+outvcf = pysam.VariantFile("output.vcf", "w", header=new_header)
+
+for variant in invcf:
+    # Create new record
+    new_record = outvcf.new_record(
+        contig=variant.chrom,
+        start=variant.start,
+        stop=variant.stop,
+        alleles=variant.alleles,
+        id=variant.id,
+        qual=variant.qual,
+        filter=variant.filter,
+        info=variant.info
+    )
+
+    # Copy genotype data for selected samples
+    for sample in samples_to_keep:
+        new_record.samples[sample].update(variant.samples[sample])
+
+    outvcf.write(new_record)</code></pre>
+
+<h3>Calculate Allele Frequencies</h3>
+
+<pre><code class="language-python">vcf = pysam.VariantFile("example.vcf")
+
+for variant in vcf:
+    total_alleles = 0
+    alt_alleles = 0
+
+    for sample_name in variant.samples:
+        gt = variant.samples[sample_name]["GT"]
+        if gt and None not in gt:
+            total_alleles += 2
+            alt_alleles += sum(1 for allele in gt if allele &gt; 0)
+
+    if total_alleles &gt; 0:
+        af = alt_alleles / total_alleles
+        print(f"{variant.chrom}:{variant.pos} AF={af:.4f}")</code></pre>
+
+<h3>Convert VCF to Summary Table</h3>
+
+<pre><code class="language-python">import csv
+
+vcf = pysam.VariantFile("example.vcf")
+
+with open("variants.csv", "w", newline="") as csvfile:
+    writer = csv.writer(csvfile)
+    writer.writerow(["CHROM", "POS", "ID", "REF", "ALT", "QUAL", "DP"])
+
+    for variant in vcf:
+        writer.writerow([
+            variant.chrom,
+            variant.pos,
+            variant.id or ".",
+            variant.ref,
+            ",".join(variant.alts) if variant.alts else ".",
+            variant.qual or ".",
+            variant.info.get("DP", ".")
+        ])</code></pre>
+
+<h2>Performance Tips</h2>
+
+<ul><li><strong>Use BCF format</strong> for better compression and faster access than VCF</li>
+<li><strong>Index files</strong> with tabix for efficient region queries</li>
+<li><strong>Filter early</strong> to reduce processing of irrelevant variants</li>
+<li><strong>Use INFO fields efficiently</strong> - check existence before accessing</li>
+<li><strong>Batch write operations</strong> when creating VCF files</li>
+</ul>
+<h2>Common Pitfalls</h2>
+
+<ul><li><strong>Coordinate systems:</strong> VCF uses 1-based coordinates, but VariantRecord.start is 0-based</li>
+<li><strong>Missing data:</strong> Always check if INFO/FORMAT fields exist before accessing</li>
+<li><strong>Genotype tuples:</strong> Genotypes are tuples, not lists—handle None values for missing data</li>
+<li><strong>Allele indexing:</strong> In genotype (0, 1), 0=REF, 1=first ALT, 2=second ALT, etc.</li>
+<li><strong>Index requirement:</strong> Region-based <code>fetch()</code> requires tabix index for VCF.gz</li>
+<li><strong>Header modification:</strong> When subsetting samples, properly update header and copy FORMAT fields</li>
+</ul>
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

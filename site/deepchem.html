@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeepChem — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="active">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / DeepChem</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>DeepChem</h1>
+    <p class="description">Molecular ML with diverse featurizers and pre-built datasets. Use for property prediction (ADMET, toxicity) with traditional ML or GNNs when you want extensive featurization options and MoleculeNet be</p>
+    <h1>DeepChem</h1>
+
+<h2>Overview</h2>
+
+<p>DeepChem is a comprehensive Python library for applying machine learning to chemistry, materials science, and biology. Enable molecular property prediction, drug discovery, materials design, and biomolecule analysis through specialized neural networks, molecular featurization methods, and pretrained models.</p>
+
+<h2>When to Use This Skill</h2>
+
+<p>This skill should be used when:</p>
+<ul><li>Loading and processing molecular data (SMILES strings, SDF files, protein sequences)</li>
+<li>Predicting molecular properties (solubility, toxicity, binding affinity, ADMET properties)</li>
+<li>Training models on chemical/biological datasets</li>
+<li>Using MoleculeNet benchmark datasets (Tox21, BBBP, Delaney, etc.)</li>
+<li>Converting molecules to ML-ready features (fingerprints, graph representations, descriptors)</li>
+<li>Implementing graph neural networks for molecules (GCN, GAT, MPNN, AttentiveFP)</li>
+<li>Applying transfer learning with pretrained models (ChemBERTa, GROVER, MolFormer)</li>
+<li>Predicting crystal/materials properties (bandgap, formation energy)</li>
+<li>Analyzing protein or DNA sequences</li>
+</ul>
+<h2>Core Capabilities</h2>
+
+<h3>1. Molecular Data Loading and Processing</h3>
+
+<p>DeepChem provides specialized loaders for various chemical data formats:</p>
+
+<pre><code class="language-python">import deepchem as dc
+
+# Load CSV with SMILES
+featurizer = dc.feat.CircularFingerprint(radius=2, size=2048)
+loader = dc.data.CSVLoader(
+    tasks=['solubility', 'toxicity'],
+    feature_field='smiles',
+    featurizer=featurizer
+)
+dataset = loader.create_dataset('molecules.csv')
+
+# Load SDF files
+loader = dc.data.SDFLoader(tasks=['activity'], featurizer=featurizer)
+dataset = loader.create_dataset('compounds.sdf')
+
+# Load protein sequences
+loader = dc.data.FASTALoader()
+dataset = loader.create_dataset('proteins.fasta')</code></pre>
+
+<p><strong>Key Loaders</strong>:</p>
+<ul><li><code>CSVLoader</code>: Tabular data with molecular identifiers</li>
+<li><code>SDFLoader</code>: Molecular structure files</li>
+<li><code>FASTALoader</code>: Protein/DNA sequences</li>
+<li><code>ImageLoader</code>: Molecular images</li>
+<li><code>JsonLoader</code>: JSON-formatted datasets</li>
+</ul>
+<h3>2. Molecular Featurization</h3>
+
+<p>Convert molecules into numerical representations for ML models.</p>
+
+<h4>Decision Tree for Featurizer Selection</h4>
+
+<pre><code>Is the model a graph neural network?
+├─ YES → Use graph featurizers
+│   ├─ Standard GNN → MolGraphConvFeaturizer
+│   ├─ Message passing → DMPNNFeaturizer
+│   └─ Pretrained → GroverFeaturizer
+│
+└─ NO → What type of model?
+    ├─ Traditional ML (RF, XGBoost, SVM)
+    │   ├─ Fast baseline → CircularFingerprint (ECFP)
+    │   ├─ Interpretable → RDKitDescriptors
+    │   └─ Maximum coverage → MordredDescriptors
+    │
+    ├─ Deep learning (non-graph)
+    │   ├─ Dense networks → CircularFingerprint
+    │   └─ CNN → SmilesToImage
+    │
+    ├─ Sequence models (LSTM, Transformer)
+    │   └─ SmilesToSeq
+    │
+    └─ 3D structure analysis
+        └─ CoulombMatrix</code></pre>
+
+<h4>Example Featurization</h4>
+
+<pre><code class="language-python"># Fingerprints (for traditional ML)
+fp = dc.feat.CircularFingerprint(radius=2, size=2048)
+
+# Descriptors (for interpretable models)
+desc = dc.feat.RDKitDescriptors()
+
+# Graph features (for GNNs)
+graph_feat = dc.feat.MolGraphConvFeaturizer()
+
+# Apply featurization
+features = fp.featurize(['CCO', 'c1ccccc1'])</code></pre>
+
+<p><strong>Selection Guide</strong>:</p>
+<ul><li><strong>Small datasets (<1K)</strong>: CircularFingerprint or RDKitDescriptors</li>
+<li><strong>Medium datasets (1K-100K)</strong>: CircularFingerprint or graph featurizers</li>
+<li><strong>Large datasets (>100K)</strong>: Graph featurizers (MolGraphConvFeaturizer, DMPNNFeaturizer)</li>
+<li><strong>Transfer learning</strong>: Pretrained model featurizers (GroverFeaturizer)</li>
+</ul>
+<p>See <code>references/api_reference.md</code> for complete featurizer documentation.</p>
+
+<h3>3. Data Splitting</h3>
+
+<p><strong>Critical</strong>: For drug discovery tasks, use <code>ScaffoldSplitter</code> to prevent data leakage from similar molecular structures appearing in both training and test sets.</p>
+
+<pre><code class="language-python"># Scaffold splitting (recommended for molecules)
+splitter = dc.splits.ScaffoldSplitter()
+train, valid, test = splitter.train_valid_test_split(
+    dataset,
+    frac_train=0.8,
+    frac_valid=0.1,
+    frac_test=0.1
+)
+
+# Random splitting (for non-molecular data)
+splitter = dc.splits.RandomSplitter()
+train, test = splitter.train_test_split(dataset)
+
+# Stratified splitting (for imbalanced classification)
+splitter = dc.splits.RandomStratifiedSplitter()
+train, test = splitter.train_test_split(dataset)</code></pre>
+
+<p><strong>Available Splitters</strong>:</p>
+<ul><li><code>ScaffoldSplitter</code>: Split by molecular scaffolds (prevents leakage)</li>
+<li><code>ButinaSplitter</code>: Clustering-based molecular splitting</li>
+<li><code>MaxMinSplitter</code>: Maximize diversity between sets</li>
+<li><code>RandomSplitter</code>: Random splitting</li>
+<li><code>RandomStratifiedSplitter</code>: Preserves class distributions</li>
+</ul>
+<h3>4. Model Selection and Training</h3>
+
+<h4>Quick Model Selection Guide</h4>
+
+<p>| Dataset Size | Task | Recommended Model | Featurizer |</p>
+<p>|-------------|------|-------------------|------------|</p>
+<p>| < 1K samples | Any | SklearnModel (RandomForest) | CircularFingerprint |</p>
+<p>| 1K-100K | Classification/Regression | GBDTModel or MultitaskRegressor | CircularFingerprint |</p>
+<p>| > 100K | Molecular properties | GCNModel, AttentiveFPModel, DMPNNModel | MolGraphConvFeaturizer |</p>
+<p>| Any (small preferred) | Transfer learning | ChemBERTa, GROVER, MolFormer | Model-specific |</p>
+<p>| Crystal structures | Materials properties | CGCNNModel, MEGNetModel | Structure-based |</p>
+<p>| Protein sequences | Protein properties | ProtBERT | Sequence-based |</p>
+
+<h4>Example: Traditional ML</h4>
+<pre><code class="language-python">from sklearn.ensemble import RandomForestRegressor
+
+# Wrap scikit-learn model
+sklearn_model = RandomForestRegressor(n_estimators=100)
+model = dc.models.SklearnModel(model=sklearn_model)
+model.fit(train)</code></pre>
+
+<h4>Example: Deep Learning</h4>
+<pre><code class="language-python"># Multitask regressor (for fingerprints)
+model = dc.models.MultitaskRegressor(
+    n_tasks=2,
+    n_features=2048,
+    layer_sizes=[1000, 500],
+    dropouts=0.25,
+    learning_rate=0.001
+)
+model.fit(train, nb_epoch=50)</code></pre>
+
+<h4>Example: Graph Neural Networks</h4>
+<pre><code class="language-python"># Graph Convolutional Network
+model = dc.models.GCNModel(
+    n_tasks=1,
+    mode='regression',
+    batch_size=128,
+    learning_rate=0.001
+)
+model.fit(train, nb_epoch=50)
+
+# Graph Attention Network
+model = dc.models.GATModel(n_tasks=1, mode='classification')
+model.fit(train, nb_epoch=50)
+
+# Attentive Fingerprint
+model = dc.models.AttentiveFPModel(n_tasks=1, mode='regression')
+model.fit(train, nb_epoch=50)</code></pre>
+
+<h3>5. MoleculeNet Benchmarks</h3>
+
+<p>Quick access to 30+ curated benchmark datasets with standardized train/valid/test splits:</p>
+
+<pre><code class="language-python"># Load benchmark dataset
+tasks, datasets, transformers = dc.molnet.load_tox21(
+    featurizer='GraphConv',  # or 'ECFP', 'Weave', 'Raw'
+    splitter='scaffold',     # or 'random', 'stratified'
+    reload=False
+)
+train, valid, test = datasets
+
+# Train and evaluate
+model = dc.models.GCNModel(n_tasks=len(tasks), mode='classification')
+model.fit(train, nb_epoch=50)
+
+metric = dc.metrics.Metric(dc.metrics.roc_auc_score)
+test_score = model.evaluate(test, [metric])</code></pre>
+
+<p><strong>Common Datasets</strong>:</p>
+<ul><li><strong>Classification</strong>: <code>load_tox21()</code>, <code>load_bbbp()</code>, <code>load_hiv()</code>, <code>load_clintox()</code></li>
+<li><strong>Regression</strong>: <code>load_delaney()</code>, <code>load_freesolv()</code>, <code>load_lipo()</code></li>
+<li><strong>Quantum properties</strong>: <code>load_qm7()</code>, <code>load_qm8()</code>, <code>load_qm9()</code></li>
+<li><strong>Materials</strong>: <code>load_perovskite()</code>, <code>load_bandgap()</code>, <code>load_mp_formation_energy()</code></li>
+</ul>
+<p>See <code>references/api_reference.md</code> for complete dataset list.</p>
+
+<h3>6. Transfer Learning</h3>
+
+<p>Leverage pretrained models for improved performance, especially on small datasets:</p>
+
+<pre><code class="language-python"># ChemBERTa (BERT pretrained on 77M molecules)
+model = dc.models.HuggingFaceModel(
+    model='seyonec/ChemBERTa-zinc-base-v1',
+    task='classification',
+    n_tasks=1,
+    learning_rate=2e-5  # Lower LR for fine-tuning
+)
+model.fit(train, nb_epoch=10)
+
+# GROVER (graph transformer pretrained on 10M molecules)
+model = dc.models.GroverModel(
+    task='regression',
+    n_tasks=1
+)
+model.fit(train, nb_epoch=20)</code></pre>
+
+<p><strong>When to use transfer learning</strong>:</p>
+<ul><li>Small datasets (< 1000 samples)</li>
+<li>Novel molecular scaffolds</li>
+<li>Limited computational resources</li>
+<li>Need for rapid prototyping</li>
+</ul>
+<p>Use the <code>scripts/transfer_learning.py</code> script for guided transfer learning workflows.</p>
+
+<h3>7. Model Evaluation</h3>
+
+<pre><code class="language-python"># Define metrics
+classification_metrics = [
+    dc.metrics.Metric(dc.metrics.roc_auc_score, name='ROC-AUC'),
+    dc.metrics.Metric(dc.metrics.accuracy_score, name='Accuracy'),
+    dc.metrics.Metric(dc.metrics.f1_score, name='F1')
+]
+
+regression_metrics = [
+    dc.metrics.Metric(dc.metrics.r2_score, name='R²'),
+    dc.metrics.Metric(dc.metrics.mean_absolute_error, name='MAE'),
+    dc.metrics.Metric(dc.metrics.root_mean_squared_error, name='RMSE')
+]
+
+# Evaluate
+train_scores = model.evaluate(train, classification_metrics)
+test_scores = model.evaluate(test, classification_metrics)</code></pre>
+
+<h3>8. Making Predictions</h3>
+
+<pre><code class="language-python"># Predict on test set
+predictions = model.predict(test)
+
+# Predict on new molecules
+new_smiles = ['CCO', 'c1ccccc1', 'CC(C)O']
+new_features = featurizer.featurize(new_smiles)
+new_dataset = dc.data.NumpyDataset(X=new_features)
+
+# Apply same transformations as training
+for transformer in transformers:
+    new_dataset = transformer.transform(new_dataset)
+
+predictions = model.predict(new_dataset)</code></pre>
+
+<h2>Typical Workflows</h2>
+
+<h3>Workflow A: Quick Benchmark Evaluation</h3>
+
+<p>For evaluating a model on standard benchmarks:</p>
+
+<pre><code class="language-python">import deepchem as dc
+
+# 1. Load benchmark
+tasks, datasets, _ = dc.molnet.load_bbbp(
+    featurizer='GraphConv',
+    splitter='scaffold'
+)
+train, valid, test = datasets
+
+# 2. Train model
+model = dc.models.GCNModel(n_tasks=len(tasks), mode='classification')
+model.fit(train, nb_epoch=50)
+
+# 3. Evaluate
+metric = dc.metrics.Metric(dc.metrics.roc_auc_score)
+test_score = model.evaluate(test, [metric])
+print(f"Test ROC-AUC: {test_score}")</code></pre>
+
+<h3>Workflow B: Custom Data Prediction</h3>
+
+<p>For training on custom molecular datasets:</p>
+
+<pre><code class="language-python">import deepchem as dc
+
+# 1. Load and featurize data
+featurizer = dc.feat.CircularFingerprint(radius=2, size=2048)
+loader = dc.data.CSVLoader(
+    tasks=['activity'],
+    feature_field='smiles',
+    featurizer=featurizer
+)
+dataset = loader.create_dataset('my_molecules.csv')
+
+# 2. Split data (use ScaffoldSplitter for molecules!)
+splitter = dc.splits.ScaffoldSplitter()
+train, valid, test = splitter.train_valid_test_split(dataset)
+
+# 3. Normalize (optional but recommended)
+transformers = [dc.trans.NormalizationTransformer(
+    transform_y=True, dataset=train
+)]
+for transformer in transformers:
+    train = transformer.transform(train)
+    valid = transformer.transform(valid)
+    test = transformer.transform(test)
+
+# 4. Train model
+model = dc.models.MultitaskRegressor(
+    n_tasks=1,
+    n_features=2048,
+    layer_sizes=[1000, 500],
+    dropouts=0.25
+)
+model.fit(train, nb_epoch=50)
+
+# 5. Evaluate
+metric = dc.metrics.Metric(dc.metrics.r2_score)
+test_score = model.evaluate(test, [metric])</code></pre>
+
+<h3>Workflow C: Transfer Learning on Small Dataset</h3>
+
+<p>For leveraging pretrained models:</p>
+
+<pre><code class="language-python">import deepchem as dc
+
+# 1. Load data (pretrained models often need raw SMILES)
+loader = dc.data.CSVLoader(
+    tasks=['activity'],
+    feature_field='smiles',
+    featurizer=dc.feat.DummyFeaturizer()  # Model handles featurization
+)
+dataset = loader.create_dataset('small_dataset.csv')
+
+# 2. Split data
+splitter = dc.splits.ScaffoldSplitter()
+train, test = splitter.train_test_split(dataset)
+
+# 3. Load pretrained model
+model = dc.models.HuggingFaceModel(
+    model='seyonec/ChemBERTa-zinc-base-v1',
+    task='classification',
+    n_tasks=1,
+    learning_rate=2e-5
+)
+
+# 4. Fine-tune
+model.fit(train, nb_epoch=10)
+
+# 5. Evaluate
+predictions = model.predict(test)</code></pre>
+
+<p>See <code>references/workflows.md</code> for 8 detailed workflow examples covering molecular generation, materials science, protein analysis, and more.</p>
+
+<h2>Example Scripts</h2>
+
+<p>This skill includes three production-ready scripts in the <code>scripts/</code> directory:</p>
+
+<h3>1. <code>predict_solubility.py</code></h3>
+<p>Train and evaluate solubility prediction models. Works with Delaney benchmark or custom CSV data.</p>
+
+<pre><code class="language-bash"># Use Delaney benchmark
+python scripts/predict_solubility.py
+
+# Use custom data
+python scripts/predict_solubility.py \
+    --data my_data.csv \
+    --smiles-col smiles \
+    --target-col solubility \
+    --predict "CCO" "c1ccccc1"</code></pre>
+
+<h3>2. <code>graph_neural_network.py</code></h3>
+<p>Train various graph neural network architectures on molecular data.</p>
+
+<pre><code class="language-bash"># Train GCN on Tox21
+python scripts/graph_neural_network.py --model gcn --dataset tox21
+
+# Train AttentiveFP on custom data
+python scripts/graph_neural_network.py \
+    --model attentivefp \
+    --data molecules.csv \
+    --task-type regression \
+    --targets activity \
+    --epochs 100</code></pre>
+
+<h3>3. <code>transfer_learning.py</code></h3>
+<p>Fine-tune pretrained models (ChemBERTa, GROVER) on molecular property prediction tasks.</p>
+
+<pre><code class="language-bash"># Fine-tune ChemBERTa on BBBP
+python scripts/transfer_learning.py --model chemberta --dataset bbbp
+
+# Fine-tune GROVER on custom data
+python scripts/transfer_learning.py \
+    --model grover \
+    --data small_dataset.csv \
+    --target activity \
+    --task-type classification \
+    --epochs 20</code></pre>
+
+<h2>Common Patterns and Best Practices</h2>
+
+<h3>Pattern 1: Always Use Scaffold Splitting for Molecules</h3>
+<pre><code class="language-python"># GOOD: Prevents data leakage
+splitter = dc.splits.ScaffoldSplitter()
+train, test = splitter.train_test_split(dataset)
+
+# BAD: Similar molecules in train and test
+splitter = dc.splits.RandomSplitter()
+train, test = splitter.train_test_split(dataset)</code></pre>
+
+<h3>Pattern 2: Normalize Features and Targets</h3>
+<pre><code class="language-python">transformers = [
+    dc.trans.NormalizationTransformer(
+        transform_y=True,  # Also normalize target values
+        dataset=train
+    )
+]
+for transformer in transformers:
+    train = transformer.transform(train)
+    test = transformer.transform(test)</code></pre>
+
+<h3>Pattern 3: Start Simple, Then Scale</h3>
+<ul><li>Start with Random Forest + CircularFingerprint (fast baseline)</li>
+<li>Try XGBoost/LightGBM if RF works well</li>
+<li>Move to deep learning (MultitaskRegressor) if you have >5K samples</li>
+<li>Try GNNs if you have >10K samples</li>
+<li>Use transfer learning for small datasets or novel scaffolds</li>
+</ul>
+<h3>Pattern 4: Handle Imbalanced Data</h3>
+<pre><code class="language-python"># Option 1: Balancing transformer
+transformer = dc.trans.BalancingTransformer(dataset=train)
+train = transformer.transform(train)
+
+# Option 2: Use balanced metrics
+metric = dc.metrics.Metric(dc.metrics.balanced_accuracy_score)</code></pre>
+
+<h3>Pattern 5: Avoid Memory Issues</h3>
+<pre><code class="language-python"># Use DiskDataset for large datasets
+dataset = dc.data.DiskDataset.from_numpy(X, y, w, ids)
+
+# Use smaller batch sizes
+model = dc.models.GCNModel(batch_size=32)  # Instead of 128</code></pre>
+
+<h2>Common Pitfalls</h2>
+
+<h3>Issue 1: Data Leakage in Drug Discovery</h3>
+<p><strong>Problem</strong>: Using random splitting allows similar molecules in train/test sets.</p>
+<p><strong>Solution</strong>: Always use <code>ScaffoldSplitter</code> for molecular datasets.</p>
+
+<h3>Issue 2: GNN Underperforming vs Fingerprints</h3>
+<p><strong>Problem</strong>: Graph neural networks perform worse than simple fingerprints.</p>
+<p><strong>Solutions</strong>:</p>
+<ul><li>Ensure dataset is large enough (>10K samples typically)</li>
+<li>Increase training epochs (50-100)</li>
+<li>Try different architectures (AttentiveFP, DMPNN instead of GCN)</li>
+<li>Use pretrained models (GROVER)</li>
+</ul>
+<h3>Issue 3: Overfitting on Small Datasets</h3>
+<p><strong>Problem</strong>: Model memorizes training data.</p>
+<p><strong>Solutions</strong>:</p>
+<ul><li>Use stronger regularization (increase dropout to 0.5)</li>
+<li>Use simpler models (Random Forest instead of deep learning)</li>
+<li>Apply transfer learning (ChemBERTa, GROVER)</li>
+<li>Collect more data</li>
+</ul>
+<h3>Issue 4: Import Errors</h3>
+<p><strong>Problem</strong>: Module not found errors.</p>
+<p><strong>Solution</strong>: Ensure DeepChem is installed with required dependencies:</p>
+<pre><code class="language-bash">uv pip install deepchem
+# For PyTorch models
+uv pip install deepchem[torch]
+# For all features
+uv pip install deepchem[all]</code></pre>
+
+<h2>Reference Documentation</h2>
+
+<p>This skill includes comprehensive reference documentation:</p>
+
+<h3><code>references/api_reference.md</code></h3>
+<p>Complete API documentation including:</p>
+<ul><li>All data loaders and their use cases</li>
+<li>Dataset classes and when to use each</li>
+<li>Complete featurizer catalog with selection guide</li>
+<li>Model catalog organized by category (50+ models)</li>
+<li>MoleculeNet dataset descriptions</li>
+<li>Metrics and evaluation functions</li>
+<li>Common code patterns</li>
+</ul>
+<p><strong>When to reference</strong>: Search this file when you need specific API details, parameter names, or want to explore available options.</p>
+
+<h3><code>references/workflows.md</code></h3>
+<p>Eight detailed end-to-end workflows:</p>
+<ul><li>Molecular property prediction from SMILES</li>
+<li>Using MoleculeNet benchmarks</li>
+<li>Hyperparameter optimization</li>
+<li>Transfer learning with pretrained models</li>
+<li>Molecular generation with GANs</li>
+<li>Materials property prediction</li>
+<li>Protein sequence analysis</li>
+<li>Custom model integration</li>
+</ul>
+<p><strong>When to reference</strong>: Use these workflows as templates for implementing complete solutions.</p>
+
+<h2>Installation Notes</h2>
+
+<p>Basic installation:</p>
+<pre><code class="language-bash">uv pip install deepchem</code></pre>
+
+<p>For PyTorch models (GCN, GAT, etc.):</p>
+<pre><code class="language-bash">uv pip install deepchem[torch]</code></pre>
+
+<p>For all features:</p>
+<pre><code class="language-bash">uv pip install deepchem[all]</code></pre>
+
+<p>If import errors occur, the user may need specific dependencies. Check the DeepChem documentation for detailed installation instructions.</p>
+
+<h2>Additional Resources</h2>
+
+<ul><li>Official documentation: https://deepchem.readthedocs.io/</li>
+<li>GitHub repository: https://github.com/deepchem/deepchem</li>
+<li>Tutorials: https://deepchem.readthedocs.io/en/latest/get_started/tutorials.html</li>
+<li>Paper: "MoleculeNet: A Benchmark for Molecular Machine Learning"</li></ul>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Api Reference</h3>
+  <h1>DeepChem API Reference</h1>
+
+<p>This document provides a comprehensive reference for DeepChem's core APIs, organized by functionality.</p>
+
+<h2>Data Handling</h2>
+
+<h3>Data Loaders</h3>
+
+<h4>File Format Loaders</h4>
+<ul><li><strong>CSVLoader</strong>: Load tabular data from CSV files with customizable feature handling</li>
+<li><strong>UserCSVLoader</strong>: User-defined CSV loading with flexible column specifications</li>
+<li><strong>SDFLoader</strong>: Process molecular structure files (SDF format)</li>
+<li><strong>JsonLoader</strong>: Import JSON-structured datasets</li>
+<li><strong>ImageLoader</strong>: Load image data for computer vision tasks</li>
+</ul>
+<h4>Biological Data Loaders</h4>
+<ul><li><strong>FASTALoader</strong>: Handle protein/DNA sequences in FASTA format</li>
+<li><strong>FASTQLoader</strong>: Process FASTQ sequencing data with quality scores</li>
+<li><strong>SAMLoader/BAMLoader/CRAMLoader</strong>: Support sequence alignment formats</li>
+</ul>
+<h4>Specialized Loaders</h4>
+<ul><li><strong>DFTYamlLoader</strong>: Process density functional theory computational data</li>
+<li><strong>InMemoryLoader</strong>: Load data directly from Python objects</li>
+</ul>
+<h3>Dataset Classes</h3>
+
+<ul><li><strong>NumpyDataset</strong>: Wrap NumPy arrays for in-memory data manipulation</li>
+<li><strong>DiskDataset</strong>: Manage larger datasets stored on disk, reducing memory overhead</li>
+<li><strong>ImageDataset</strong>: Specialized container for image-based ML tasks</li>
+</ul>
+<h3>Data Splitters</h3>
+
+<h4>General Splitters</h4>
+<ul><li><strong>RandomSplitter</strong>: Random dataset partitioning</li>
+<li><strong>IndexSplitter</strong>: Split by specified indices</li>
+<li><strong>SpecifiedSplitter</strong>: Use pre-defined splits</li>
+<li><strong>RandomStratifiedSplitter</strong>: Stratified random splitting</li>
+<li><strong>SingletaskStratifiedSplitter</strong>: Stratified splitting for single tasks</li>
+<li><strong>TaskSplitter</strong>: Split for multitask scenarios</li>
+</ul>
+<h4>Molecule-Specific Splitters</h4>
+<ul><li><strong>ScaffoldSplitter</strong>: Divide molecules by structural scaffolds (prevents data leakage)</li>
+<li><strong>ButinaSplitter</strong>: Clustering-based molecular splitting</li>
+<li><strong>FingerprintSplitter</strong>: Split based on molecular fingerprint similarity</li>
+<li><strong>MaxMinSplitter</strong>: Maximize diversity between training/test sets</li>
+<li><strong>MolecularWeightSplitter</strong>: Split by molecular weight properties</li>
+</ul>
+<p><strong>Best Practice</strong>: For drug discovery tasks, use ScaffoldSplitter to prevent overfitting on similar molecular structures.</p>
+
+<h3>Transformers</h3>
+
+<h4>Normalization</h4>
+<ul><li><strong>NormalizationTransformer</strong>: Standard normalization (mean=0, std=1)</li>
+<li><strong>MinMaxTransformer</strong>: Scale features to [0,1] range</li>
+<li><strong>LogTransformer</strong>: Apply log transformation</li>
+<li><strong>PowerTransformer</strong>: Box-Cox and Yeo-Johnson transformations</li>
+<li><strong>CDFTransformer</strong>: Cumulative distribution function normalization</li>
+</ul>
+<h4>Task-Specific</h4>
+<ul><li><strong>BalancingTransformer</strong>: Address class imbalance</li>
+<li><strong>FeaturizationTransformer</strong>: Apply dynamic feature engineering</li>
+<li><strong>CoulombFitTransformer</strong>: Quantum chemistry specific</li>
+<li><strong>DAGTransformer</strong>: Directed acyclic graph transformations</li>
+<li><strong>RxnSplitTransformer</strong>: Chemical reaction preprocessing</li>
+</ul>
+<h2>Molecular Featurizers</h2>
+
+<h3>Graph-Based Featurizers</h3>
+<p>Use these with graph neural networks (GCNs, MPNNs, etc.):</p>
+
+<ul><li><strong>ConvMolFeaturizer</strong>: Graph representations for graph convolutional networks</li>
+<li><strong>WeaveFeaturizer</strong>: "Weave" graph embeddings</li>
+<li><strong>MolGraphConvFeaturizer</strong>: Graph convolution-ready representations</li>
+<li><strong>EquivariantGraphFeaturizer</strong>: Maintains geometric invariance</li>
+<li><strong>DMPNNFeaturizer</strong>: Directed message-passing neural network inputs</li>
+<li><strong>GroverFeaturizer</strong>: Pre-trained molecular embeddings</li>
+</ul>
+<h3>Fingerprint-Based Featurizers</h3>
+<p>Use these with traditional ML (Random Forest, SVM, XGBoost):</p>
+
+<ul><li><strong>MACCSKeysFingerprint</strong>: 167-bit structural keys</li>
+<li><strong>CircularFingerprint</strong>: Extended connectivity fingerprints (Morgan fingerprints)</li>
+</ul><p>  - Parameters: <code>radius</code> (default 2), <code>size</code> (default 2048), <code>useChirality</code> (default False)</p>
+<ul><li><strong>PubChemFingerprint</strong>: 881-bit structural descriptors</li>
+<li><strong>Mol2VecFingerprint</strong>: Learned molecular vector representations</li>
+</ul>
+<h3>Descriptor Featurizers</h3>
+<p>Calculate molecular properties directly:</p>
+
+<ul><li><strong>RDKitDescriptors</strong>: ~200 molecular descriptors (MW, LogP, H-donors, H-acceptors, TPSA, etc.)</li>
+<li><strong>MordredDescriptors</strong>: Comprehensive structural and physicochemical descriptors</li>
+<li><strong>CoulombMatrix</strong>: Interatomic distance matrices for 3D structures</li>
+</ul>
+<h3>Sequence-Based Featurizers</h3>
+<p>For recurrent networks and transformers:</p>
+
+<ul><li><strong>SmilesToSeq</strong>: Convert SMILES strings to sequences</li>
+<li><strong>SmilesToImage</strong>: Generate 2D image representations from SMILES</li>
+<li><strong>RawFeaturizer</strong>: Pass through raw molecular data unchanged</li>
+</ul>
+<h3>Selection Guide</h3>
+
+<p>| Use Case | Recommended Featurizer | Model Type |</p>
+<p>|----------|----------------------|------------|</p>
+<p>| Graph neural networks | ConvMolFeaturizer, MolGraphConvFeaturizer | GCN, MPNN, GAT |</p>
+<p>| Traditional ML | CircularFingerprint, RDKitDescriptors | Random Forest, XGBoost, SVM |</p>
+<p>| Deep learning (non-graph) | CircularFingerprint, Mol2VecFingerprint | Dense networks, CNN |</p>
+<p>| Sequence models | SmilesToSeq | LSTM, GRU, Transformer |</p>
+<p>| 3D molecular structures | CoulombMatrix | Specialized 3D models |</p>
+<p>| Quick baseline | RDKitDescriptors | Linear, Ridge, Lasso |</p>
+
+<h2>Models</h2>
+
+<h3>Scikit-Learn Integration</h3>
+<ul><li><strong>SklearnModel</strong>: Wrapper for any scikit-learn algorithm</li>
+</ul><p>  - Usage: <code>SklearnModel(model=RandomForestRegressor())</code></p>
+
+<h3>Gradient Boosting</h3>
+<ul><li><strong>GBDTModel</strong>: Gradient boosting decision trees (XGBoost, LightGBM)</li>
+</ul>
+<h3>PyTorch Models</h3>
+
+<h4>Molecular Property Prediction</h4>
+<ul><li><strong>MultitaskRegressor</strong>: Multi-task regression with shared representations</li>
+<li><strong>MultitaskClassifier</strong>: Multi-task classification</li>
+<li><strong>MultitaskFitTransformRegressor</strong>: Regression with learned transformations</li>
+<li><strong>GCNModel</strong>: Graph convolutional networks</li>
+<li><strong>GATModel</strong>: Graph attention networks</li>
+<li><strong>AttentiveFPModel</strong>: Attentive fingerprint networks</li>
+<li><strong>DMPNNModel</strong>: Directed message passing neural networks</li>
+<li><strong>GroverModel</strong>: GROVER pre-trained transformer</li>
+<li><strong>MATModel</strong>: Molecule attention transformer</li>
+</ul>
+<h4>Materials Science</h4>
+<ul><li><strong>CGCNNModel</strong>: Crystal graph convolutional networks</li>
+<li><strong>MEGNetModel</strong>: Materials graph networks</li>
+<li><strong>LCNNModel</strong>: Lattice CNN for materials</li>
+</ul>
+<h4>Generative Models</h4>
+<ul><li><strong>GANModel</strong>: Generative adversarial networks</li>
+<li><strong>WGANModel</strong>: Wasserstein GAN</li>
+<li><strong>BasicMolGANModel</strong>: Molecular GAN</li>
+<li><strong>LSTMGenerator</strong>: LSTM-based molecule generation</li>
+<li><strong>SeqToSeqModel</strong>: Sequence-to-sequence models</li>
+</ul>
+<h4>Physics-Informed Models</h4>
+<ul><li><strong>PINNModel</strong>: Physics-informed neural networks</li>
+<li><strong>HNNModel</strong>: Hamiltonian neural networks</li>
+<li><strong>LNN</strong>: Lagrangian neural networks</li>
+<li><strong>FNOModel</strong>: Fourier neural operators</li>
+</ul>
+<h4>Computer Vision</h4>
+<ul><li><strong>CNN</strong>: Convolutional neural networks</li>
+<li><strong>UNetModel</strong>: U-Net architecture for segmentation</li>
+<li><strong>InceptionV3Model</strong>: Pre-trained Inception v3</li>
+<li><strong>MobileNetV2Model</strong>: Lightweight mobile networks</li>
+</ul>
+<h3>Hugging Face Models</h3>
+
+<ul><li><strong>HuggingFaceModel</strong>: General wrapper for HF transformers</li>
+<li><strong>Chemberta</strong>: Chemical BERT for molecular property prediction</li>
+<li><strong>MoLFormer</strong>: Molecular transformer architecture</li>
+<li><strong>ProtBERT</strong>: Protein sequence BERT</li>
+<li><strong>DeepAbLLM</strong>: Antibody large language models</li>
+</ul>
+<h3>Model Selection Guide</h3>
+
+<p>| Task | Recommended Model | Featurizer |</p>
+<p>|------|------------------|------------|</p>
+<p>| Small dataset (<1000 samples) | SklearnModel (Random Forest) | CircularFingerprint |</p>
+<p>| Medium dataset (1K-100K) | GBDTModel or MultitaskRegressor | CircularFingerprint or ConvMolFeaturizer |</p>
+<p>| Large dataset (>100K) | GCNModel, AttentiveFPModel, or DMPNN | MolGraphConvFeaturizer |</p>
+<p>| Transfer learning | GroverModel, Chemberta, MoLFormer | Model-specific |</p>
+<p>| Materials properties | CGCNNModel, MEGNetModel | Structure-based |</p>
+<p>| Molecule generation | BasicMolGANModel, LSTMGenerator | SmilesToSeq |</p>
+<p>| Protein sequences | ProtBERT | Sequence-based |</p>
+
+<h2>MoleculeNet Datasets</h2>
+
+<p>Quick access to 30+ benchmark datasets via <code>dc.molnet.load_*()</code> functions.</p>
+
+<h3>Classification Datasets</h3>
+<ul><li><strong>load_bace()</strong>: BACE-1 inhibitors (binary classification)</li>
+<li><strong>load_bbbp()</strong>: Blood-brain barrier penetration</li>
+<li><strong>load_clintox()</strong>: Clinical toxicity</li>
+<li><strong>load_hiv()</strong>: HIV inhibition activity</li>
+<li><strong>load_muv()</strong>: PubChem BioAssay (challenging, sparse)</li>
+<li><strong>load_pcba()</strong>: PubChem screening data</li>
+<li><strong>load_sider()</strong>: Adverse drug reactions (multi-label)</li>
+<li><strong>load_tox21()</strong>: 12 toxicity assays (multi-task)</li>
+<li><strong>load_toxcast()</strong>: EPA ToxCast screening</li>
+</ul>
+<h3>Regression Datasets</h3>
+<ul><li><strong>load_delaney()</strong>: Aqueous solubility (ESOL)</li>
+<li><strong>load_freesolv()</strong>: Solvation free energy</li>
+<li><strong>load_lipo()</strong>: Lipophilicity (octanol-water partition)</li>
+<li><strong>load_qm7/qm8/qm9()</strong>: Quantum mechanical properties</li>
+<li><strong>load_hopv()</strong>: Organic photovoltaic properties</li>
+</ul>
+<h3>Protein-Ligand Binding</h3>
+<ul><li><strong>load_pdbbind()</strong>: Binding affinity data</li>
+</ul>
+<h3>Materials Science</h3>
+<ul><li><strong>load_perovskite()</strong>: Perovskite stability</li>
+<li><strong>load_mp_formation_energy()</strong>: Materials Project formation energy</li>
+<li><strong>load_mp_metallicity()</strong>: Metal vs. non-metal classification</li>
+<li><strong>load_bandgap()</strong>: Electronic bandgap prediction</li>
+</ul>
+<h3>Chemical Reactions</h3>
+<ul><li><strong>load_uspto()</strong>: USPTO reaction dataset</li>
+</ul>
+<h3>Usage Pattern</h3>
+<pre><code class="language-python">tasks, datasets, transformers = dc.molnet.load_bbbp(
+    featurizer='GraphConv',  # or 'ECFP', 'GraphConv', 'Weave', etc.
+    splitter='scaffold',      # or 'random', 'stratified', etc.
+    reload=False              # set True to skip caching
+)
+train, valid, test = datasets</code></pre>
+
+<h2>Metrics</h2>
+
+<p>Common evaluation metrics available in <code>dc.metrics</code>:</p>
+
+<h3>Classification Metrics</h3>
+<ul><li><strong>roc_auc_score</strong>: Area under ROC curve (binary/multi-class)</li>
+<li><strong>prc_auc_score</strong>: Area under precision-recall curve</li>
+<li><strong>accuracy_score</strong>: Classification accuracy</li>
+<li><strong>balanced_accuracy_score</strong>: Balanced accuracy for imbalanced datasets</li>
+<li><strong>recall_score</strong>: Sensitivity/recall</li>
+<li><strong>precision_score</strong>: Precision</li>
+<li><strong>f1_score</strong>: F1 score</li>
+</ul>
+<h3>Regression Metrics</h3>
+<ul><li><strong>mean_absolute_error</strong>: MAE</li>
+<li><strong>mean_squared_error</strong>: MSE</li>
+<li><strong>root_mean_squared_error</strong>: RMSE</li>
+<li><strong>r2_score</strong>: R² coefficient of determination</li>
+<li><strong>pearson_r2_score</strong>: Pearson correlation</li>
+<li><strong>spearman_correlation</strong>: Spearman rank correlation</li>
+</ul>
+<h3>Multi-Task Metrics</h3>
+<p>Most metrics support multi-task evaluation by averaging over tasks.</p>
+
+<h2>Training Pattern</h2>
+
+<p>Standard DeepChem workflow:</p>
+
+<pre><code class="language-python"># 1. Load data
+loader = dc.data.CSVLoader(tasks=['task1'], feature_field='smiles',
+                           featurizer=dc.feat.CircularFingerprint())
+dataset = loader.create_dataset('data.csv')
+
+# 2. Split data
+splitter = dc.splits.ScaffoldSplitter()
+train, valid, test = splitter.train_valid_test_split(dataset)
+
+# 3. Transform data (optional)
+transformers = [dc.trans.NormalizationTransformer(dataset=train)]
+for transformer in transformers:
+    train = transformer.transform(train)
+    valid = transformer.transform(valid)
+    test = transformer.transform(test)
+
+# 4. Create and train model
+model = dc.models.MultitaskRegressor(n_tasks=1, n_features=2048, layer_sizes=[1000])
+model.fit(train, nb_epoch=50)
+
+# 5. Evaluate
+metric = dc.metrics.Metric(dc.metrics.r2_score)
+train_score = model.evaluate(train, [metric])
+test_score = model.evaluate(test, [metric])</code></pre>
+
+<h2>Common Patterns</h2>
+
+<h3>Pattern 1: Quick Baseline with MoleculeNet</h3>
+<pre><code class="language-python">tasks, datasets, transformers = dc.molnet.load_tox21(featurizer='ECFP')
+train, valid, test = datasets
+model = dc.models.MultitaskClassifier(n_tasks=len(tasks), n_features=1024)
+model.fit(train)</code></pre>
+
+<h3>Pattern 2: Custom Data with Graph Networks</h3>
+<pre><code class="language-python">featurizer = dc.feat.MolGraphConvFeaturizer()
+loader = dc.data.CSVLoader(tasks=['activity'], feature_field='smiles',
+                           featurizer=featurizer)
+dataset = loader.create_dataset('my_data.csv')
+train, test = dc.splits.RandomSplitter().train_test_split(dataset)
+model = dc.models.GCNModel(mode='classification', n_tasks=1)
+model.fit(train)</code></pre>
+
+<h3>Pattern 3: Transfer Learning with Pretrained Models</h3>
+<pre><code class="language-python">model = dc.models.GroverModel(task='classification', n_tasks=1)
+model.fit(train_dataset)
+predictions = model.predict(test_dataset)</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Workflows</h3>
+  <h1>DeepChem Workflows</h1>
+
+<p>This document provides detailed workflows for common DeepChem use cases.</p>
+
+<h2>Workflow 1: Molecular Property Prediction from SMILES</h2>
+
+<p><strong>Goal</strong>: Predict molecular properties (e.g., solubility, toxicity, activity) from SMILES strings.</p>
+
+<h3>Step-by-Step Process</h3>
+
+<h4>1. Prepare Your Data</h4>
+<p>Data should be in CSV format with at minimum:</p>
+<ul><li>A column with SMILES strings</li>
+<li>One or more columns with property values (targets)</li>
+</ul>
+<p>Example CSV structure:</p>
+<pre><code class="language-csv">smiles,solubility,toxicity
+CCO,-0.77,0
+CC(=O)OC1=CC=CC=C1C(=O)O,-1.19,1</code></pre>
+
+<h4>2. Choose Featurizer</h4>
+<p>Decision tree:</p>
+<ul><li><strong>Small dataset (<1K)</strong>: Use <code>CircularFingerprint</code> or <code>RDKitDescriptors</code></li>
+<li><strong>Medium dataset (1K-100K)</strong>: Use <code>CircularFingerprint</code> or <code>MolGraphConvFeaturizer</code></li>
+<li><strong>Large dataset (>100K)</strong>: Use graph-based featurizers (<code>MolGraphConvFeaturizer</code>, <code>DMPNNFeaturizer</code>)</li>
+<li><strong>Transfer learning</strong>: Use pretrained model featurizers (<code>GroverFeaturizer</code>)</li>
+</ul>
+<h4>3. Load and Featurize Data</h4>
+<pre><code class="language-python">import deepchem as dc
+
+# For fingerprint-based
+featurizer = dc.feat.CircularFingerprint(radius=2, size=2048)
+# OR for graph-based
+featurizer = dc.feat.MolGraphConvFeaturizer()
+
+loader = dc.data.CSVLoader(
+    tasks=['solubility', 'toxicity'],  # column names to predict
+    feature_field='smiles',             # column with SMILES
+    featurizer=featurizer
+)
+dataset = loader.create_dataset('data.csv')</code></pre>
+
+<h4>4. Split Data</h4>
+<p><strong>Critical</strong>: Use <code>ScaffoldSplitter</code> for drug discovery to prevent data leakage.</p>
+
+<pre><code class="language-python">splitter = dc.splits.ScaffoldSplitter()
+train, valid, test = splitter.train_valid_test_split(
+    dataset,
+    frac_train=0.8,
+    frac_valid=0.1,
+    frac_test=0.1
+)</code></pre>
+
+<h4>5. Transform Data (Optional but Recommended)</h4>
+<pre><code class="language-python">transformers = [
+    dc.trans.NormalizationTransformer(
+        transform_y=True,
+        dataset=train
+    )
+]
+
+for transformer in transformers:
+    train = transformer.transform(train)
+    valid = transformer.transform(valid)
+    test = transformer.transform(test)</code></pre>
+
+<h4>6. Select and Train Model</h4>
+<pre><code class="language-python"># For fingerprints
+model = dc.models.MultitaskRegressor(
+    n_tasks=2,                    # number of properties to predict
+    n_features=2048,              # fingerprint size
+    layer_sizes=[1000, 500],      # hidden layer sizes
+    dropouts=0.25,
+    learning_rate=0.001
+)
+
+# OR for graphs
+model = dc.models.GCNModel(
+    n_tasks=2,
+    mode='regression',
+    batch_size=128,
+    learning_rate=0.001
+)
+
+# Train
+model.fit(train, nb_epoch=50)</code></pre>
+
+<h4>7. Evaluate</h4>
+<pre><code class="language-python">metric = dc.metrics.Metric(dc.metrics.r2_score)
+train_score = model.evaluate(train, [metric])
+valid_score = model.evaluate(valid, [metric])
+test_score = model.evaluate(test, [metric])
+
+print(f"Train R²: {train_score}")
+print(f"Valid R²: {valid_score}")
+print(f"Test R²: {test_score}")</code></pre>
+
+<h4>8. Make Predictions</h4>
+<pre><code class="language-python"># Predict on new molecules
+new_smiles = ['CCO', 'CC(C)O', 'c1ccccc1']
+new_featurizer = dc.feat.CircularFingerprint(radius=2, size=2048)
+new_features = new_featurizer.featurize(new_smiles)
+new_dataset = dc.data.NumpyDataset(X=new_features)
+
+# Apply same transformations
+for transformer in transformers:
+    new_dataset = transformer.transform(new_dataset)
+
+predictions = model.predict(new_dataset)</code></pre>
+
+<hr>
+
+<h2>Workflow 2: Using MoleculeNet Benchmark Datasets</h2>
+
+<p><strong>Goal</strong>: Quickly train and evaluate models on standard benchmarks.</p>
+
+<h3>Quick Start</h3>
+<pre><code class="language-python">import deepchem as dc
+
+# Load benchmark dataset
+tasks, datasets, transformers = dc.molnet.load_tox21(
+    featurizer='GraphConv',
+    splitter='scaffold'
+)
+train, valid, test = datasets
+
+# Train model
+model = dc.models.GCNModel(
+    n_tasks=len(tasks),
+    mode='classification'
+)
+model.fit(train, nb_epoch=50)
+
+# Evaluate
+metric = dc.metrics.Metric(dc.metrics.roc_auc_score)
+test_score = model.evaluate(test, [metric])
+print(f"Test ROC-AUC: {test_score}")</code></pre>
+
+<h3>Available Featurizer Options</h3>
+<p>When calling <code>load_*()</code> functions:</p>
+<ul><li><code>'ECFP'</code>: Extended-connectivity fingerprints (circular fingerprints)</li>
+<li><code>'GraphConv'</code>: Graph convolution features</li>
+<li><code>'Weave'</code>: Weave features</li>
+<li><code>'Raw'</code>: Raw SMILES strings</li>
+<li><code>'smiles2img'</code>: 2D molecular images</li>
+</ul>
+<h3>Available Splitter Options</h3>
+<ul><li><code>'scaffold'</code>: Scaffold-based splitting (recommended for drug discovery)</li>
+<li><code>'random'</code>: Random splitting</li>
+<li><code>'stratified'</code>: Stratified splitting (preserves class distributions)</li>
+<li><code>'butina'</code>: Butina clustering-based splitting</li>
+</ul>
+<hr>
+
+<h2>Workflow 3: Hyperparameter Optimization</h2>
+
+<p><strong>Goal</strong>: Find optimal model hyperparameters systematically.</p>
+
+<h3>Using GridHyperparamOpt</h3>
+<pre><code class="language-python">import deepchem as dc
+import numpy as np
+
+# Load data
+tasks, datasets, transformers = dc.molnet.load_bbbp(
+    featurizer='ECFP',
+    splitter='scaffold'
+)
+train, valid, test = datasets
+
+# Define parameter grid
+params_dict = {
+    'layer_sizes': [[1000], [1000, 500], [1000, 1000]],
+    'dropouts': [0.0, 0.25, 0.5],
+    'learning_rate': [0.001, 0.0001]
+}
+
+# Define model builder function
+def model_builder(model_params, model_dir):
+    return dc.models.MultitaskClassifier(
+        n_tasks=len(tasks),
+        n_features=1024,
+        **model_params
+    )
+
+# Setup optimizer
+metric = dc.metrics.Metric(dc.metrics.roc_auc_score)
+optimizer = dc.hyper.GridHyperparamOpt(model_builder)
+
+# Run optimization
+best_model, best_params, all_results = optimizer.hyperparam_search(
+    params_dict,
+    train,
+    valid,
+    metric,
+    transformers=transformers
+)
+
+print(f"Best parameters: {best_params}")
+print(f"Best validation score: {all_results['best_validation_score']}")</code></pre>
+
+<hr>
+
+<h2>Workflow 4: Transfer Learning with Pretrained Models</h2>
+
+<p><strong>Goal</strong>: Leverage pretrained models for improved performance on small datasets.</p>
+
+<h3>Using ChemBERTa</h3>
+<pre><code class="language-python">import deepchem as dc
+from transformers import AutoTokenizer
+
+# Load your data
+loader = dc.data.CSVLoader(
+    tasks=['activity'],
+    feature_field='smiles',
+    featurizer=dc.feat.DummyFeaturizer()  # ChemBERTa handles featurization
+)
+dataset = loader.create_dataset('data.csv')
+
+# Split data
+splitter = dc.splits.ScaffoldSplitter()
+train, test = splitter.train_test_split(dataset)
+
+# Load pretrained ChemBERTa
+model = dc.models.HuggingFaceModel(
+    model='seyonec/ChemBERTa-zinc-base-v1',
+    task='regression',
+    n_tasks=1
+)
+
+# Fine-tune
+model.fit(train, nb_epoch=10)
+
+# Evaluate
+predictions = model.predict(test)</code></pre>
+
+<h3>Using GROVER</h3>
+<pre><code class="language-python"># GROVER: pre-trained on molecular graphs
+model = dc.models.GroverModel(
+    task='classification',
+    n_tasks=1,
+    model_dir='./grover_model'
+)
+
+# Fine-tune on your data
+model.fit(train_dataset, nb_epoch=20)</code></pre>
+
+<hr>
+
+<h2>Workflow 5: Molecular Generation with GANs</h2>
+
+<p><strong>Goal</strong>: Generate novel molecules with desired properties.</p>
+
+<h3>Basic MolGAN</h3>
+<pre><code class="language-python">import deepchem as dc
+
+# Load training data (molecules for the generator to learn from)
+tasks, datasets, _ = dc.molnet.load_qm9(
+    featurizer='GraphConv',
+    splitter='random'
+)
+train, _, _ = datasets
+
+# Create and train MolGAN
+gan = dc.models.BasicMolGANModel(
+    learning_rate=0.001,
+    vertices=9,  # max atoms in molecule
+    edges=5,     # max bonds
+    nodes=[128, 256, 512]
+)
+
+# Train
+gan.fit_gan(
+    train,
+    nb_epoch=100,
+    generator_steps=0.2,
+    checkpoint_interval=10
+)
+
+# Generate new molecules
+generated_molecules = gan.predict_gan_generator(1000)</code></pre>
+
+<h3>Conditional Generation</h3>
+<pre><code class="language-python"># For property-targeted generation
+from deepchem.models.optimizers import ExponentialDecay
+
+gan = dc.models.BasicMolGANModel(
+    learning_rate=ExponentialDecay(0.001, 0.9, 1000),
+    conditional=True  # enable conditional generation
+)
+
+# Train with properties
+gan.fit_gan(train, nb_epoch=100)
+
+# Generate molecules with target properties
+target_properties = np.array([[5.0, 300.0]])  # e.g., [logP, MW]
+molecules = gan.predict_gan_generator(
+    1000,
+    conditional_inputs=target_properties
+)</code></pre>
+
+<hr>
+
+<h2>Workflow 6: Materials Property Prediction</h2>
+
+<p><strong>Goal</strong>: Predict properties of crystalline materials.</p>
+
+<h3>Using Crystal Graph Convolutional Networks</h3>
+<pre><code class="language-python">import deepchem as dc
+
+# Load materials data (structure files in CIF format)
+loader = dc.data.CIFLoader()
+dataset = loader.create_dataset('materials.csv')
+
+# Split data
+splitter = dc.splits.RandomSplitter()
+train, test = splitter.train_test_split(dataset)
+
+# Create CGCNN model
+model = dc.models.CGCNNModel(
+    n_tasks=1,
+    mode='regression',
+    batch_size=32,
+    learning_rate=0.001
+)
+
+# Train
+model.fit(train, nb_epoch=100)
+
+# Evaluate
+metric = dc.metrics.Metric(dc.metrics.mae_score)
+test_score = model.evaluate(test, [metric])</code></pre>
+
+<hr>
+
+<h2>Workflow 7: Protein Sequence Analysis</h2>
+
+<p><strong>Goal</strong>: Predict protein properties from sequences.</p>
+
+<h3>Using ProtBERT</h3>
+<pre><code class="language-python">import deepchem as dc
+
+# Load protein sequence data
+loader = dc.data.FASTALoader()
+dataset = loader.create_dataset('proteins.fasta')
+
+# Use ProtBERT
+model = dc.models.HuggingFaceModel(
+    model='Rostlab/prot_bert',
+    task='classification',
+    n_tasks=1
+)
+
+# Split and train
+splitter = dc.splits.RandomSplitter()
+train, test = splitter.train_test_split(dataset)
+model.fit(train, nb_epoch=5)
+
+# Predict
+predictions = model.predict(test)</code></pre>
+
+<hr>
+
+<h2>Workflow 8: Custom Model Integration</h2>
+
+<p><strong>Goal</strong>: Use your own PyTorch/scikit-learn models with DeepChem.</p>
+
+<h3>Wrapping Scikit-Learn Models</h3>
+<pre><code class="language-python">from sklearn.ensemble import RandomForestRegressor
+import deepchem as dc
+
+# Create scikit-learn model
+sklearn_model = RandomForestRegressor(
+    n_estimators=100,
+    max_depth=10,
+    random_state=42
+)
+
+# Wrap in DeepChem
+model = dc.models.SklearnModel(model=sklearn_model)
+
+# Use with DeepChem datasets
+model.fit(train)
+predictions = model.predict(test)
+
+# Evaluate
+metric = dc.metrics.Metric(dc.metrics.r2_score)
+score = model.evaluate(test, [metric])</code></pre>
+
+<h3>Creating Custom PyTorch Models</h3>
+<pre><code class="language-python">import torch
+import torch.nn as nn
+import deepchem as dc
+
+class CustomNetwork(nn.Module):
+    def __init__(self, n_features, n_tasks):
+        super().__init__()
+        self.fc1 = nn.Linear(n_features, 512)
+        self.fc2 = nn.Linear(512, 256)
+        self.fc3 = nn.Linear(256, n_tasks)
+        self.relu = nn.ReLU()
+        self.dropout = nn.Dropout(0.2)
+
+    def forward(self, x):
+        x = self.relu(self.fc1(x))
+        x = self.dropout(x)
+        x = self.relu(self.fc2(x))
+        x = self.dropout(x)
+        return self.fc3(x)
+
+# Wrap in DeepChem TorchModel
+model = dc.models.TorchModel(
+    model=CustomNetwork(n_features=2048, n_tasks=1),
+    loss=nn.MSELoss(),
+    output_types=['prediction']
+)
+
+# Train
+model.fit(train, nb_epoch=50)</code></pre>
+
+<hr>
+
+<h2>Common Pitfalls and Solutions</h2>
+
+<h3>Issue 1: Data Leakage in Drug Discovery</h3>
+<p><strong>Problem</strong>: Using random splitting allows similar molecules in train and test sets.</p>
+<p><strong>Solution</strong>: Always use <code>ScaffoldSplitter</code> for molecular datasets.</p>
+
+<h3>Issue 2: Imbalanced Classification</h3>
+<p><strong>Problem</strong>: Poor performance on minority class.</p>
+<p><strong>Solution</strong>: Use <code>BalancingTransformer</code> or weighted metrics.</p>
+<pre><code class="language-python">transformer = dc.trans.BalancingTransformer(dataset=train)
+train = transformer.transform(train)</code></pre>
+
+<h3>Issue 3: Memory Issues with Large Datasets</h3>
+<p><strong>Problem</strong>: Dataset doesn't fit in memory.</p>
+<p><strong>Solution</strong>: Use <code>DiskDataset</code> instead of <code>NumpyDataset</code>.</p>
+<pre><code class="language-python">dataset = dc.data.DiskDataset.from_numpy(X, y, w, ids)</code></pre>
+
+<h3>Issue 4: Overfitting on Small Datasets</h3>
+<p><strong>Problem</strong>: Model memorizes training data.</p>
+<p><strong>Solutions</strong>:</p>
+<ul><li>Use stronger regularization (increase dropout)</li>
+<li>Use simpler models (Random Forest, Ridge)</li>
+<li>Apply transfer learning (pretrained models)</li>
+<li>Collect more data</li>
+</ul>
+<h3>Issue 5: Poor Graph Neural Network Performance</h3>
+<p><strong>Problem</strong>: GNN performs worse than fingerprints.</p>
+<p><strong>Solutions</strong>:</p>
+<ul><li>Check if dataset is large enough (GNNs need >10K samples typically)</li>
+<li>Increase training epochs</li>
+<li>Try different GNN architectures (AttentiveFP, DMPNN)</li>
+<li>Use pretrained models (GROVER)</li>
+</ul>
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

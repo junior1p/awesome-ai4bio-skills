@@ -1,0 +1,3628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biopython: Computational Molecular Biology in Python — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="active">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / Biopython: Computational Molecular Biology in Python</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>Biopython: Computational Molecular Biology in Python</h1>
+    <p class="description">Comprehensive molecular biology toolkit. Use for sequence manipulation, file parsing (FASTA/GenBank/PDB), phylogenetics, and programmatic NCBI/PubMed access (Bio.Entrez). Best for batch processing, cu</p>
+    <h1>Biopython: Computational Molecular Biology in Python</h1>
+
+<h2>Overview</h2>
+
+<p>Biopython is a comprehensive set of freely available Python tools for biological computation. It provides functionality for sequence manipulation, file I/O, database access, structural bioinformatics, phylogenetics, and many other bioinformatics tasks. The current version is <strong>Biopython 1.85</strong> (released January 2025), which supports Python 3 and requires NumPy.</p>
+
+<h2>When to Use This Skill</h2>
+
+<p>Use this skill when:</p>
+
+<ul><li>Working with biological sequences (DNA, RNA, or protein)</li>
+<li>Reading, writing, or converting biological file formats (FASTA, GenBank, FASTQ, PDB, mmCIF, etc.)</li>
+<li>Accessing NCBI databases (GenBank, PubMed, Protein, Gene, etc.) via Entrez</li>
+<li>Running BLAST searches or parsing BLAST results</li>
+<li>Performing sequence alignments (pairwise or multiple sequence alignments)</li>
+<li>Analyzing protein structures from PDB files</li>
+<li>Creating, manipulating, or visualizing phylogenetic trees</li>
+<li>Finding sequence motifs or analyzing motif patterns</li>
+<li>Calculating sequence statistics (GC content, molecular weight, melting temperature, etc.)</li>
+<li>Performing structural bioinformatics tasks</li>
+<li>Working with population genetics data</li>
+<li>Any other computational molecular biology task</li>
+</ul>
+<h2>Core Capabilities</h2>
+
+<p>Biopython is organized into modular sub-packages, each addressing specific bioinformatics domains:</p>
+
+<ul><li><strong>Sequence Handling</strong> - Bio.Seq and Bio.SeqIO for sequence manipulation and file I/O</li>
+<li><strong>Alignment Analysis</strong> - Bio.Align and Bio.AlignIO for pairwise and multiple sequence alignments</li>
+<li><strong>Database Access</strong> - Bio.Entrez for programmatic access to NCBI databases</li>
+<li><strong>BLAST Operations</strong> - Bio.Blast for running and parsing BLAST searches</li>
+<li><strong>Structural Bioinformatics</strong> - Bio.PDB for working with 3D protein structures</li>
+<li><strong>Phylogenetics</strong> - Bio.Phylo for phylogenetic tree manipulation and visualization</li>
+<li><strong>Advanced Features</strong> - Motifs, population genetics, sequence utilities, and more</li>
+</ul>
+<h2>Installation and Setup</h2>
+
+<p>Install Biopython using pip (requires Python 3 and NumPy):</p>
+
+<pre><code class="language-python">uv pip install biopython</code></pre>
+
+<p>For NCBI database access, always set your email address (required by NCBI):</p>
+
+<pre><code class="language-python">from Bio import Entrez
+Entrez.email = "your.email@example.com"
+
+# Optional: API key for higher rate limits (10 req/s instead of 3 req/s)
+Entrez.api_key = "your_api_key_here"</code></pre>
+
+<h2>Using This Skill</h2>
+
+<p>This skill provides comprehensive documentation organized by functionality area. When working on a task, consult the relevant reference documentation:</p>
+
+<h3>1. Sequence Handling (Bio.Seq & Bio.SeqIO)</h3>
+
+<p><strong>Reference:</strong> <code>references/sequence_io.md</code></p>
+
+<p>Use for:</p>
+<ul><li>Creating and manipulating biological sequences</li>
+<li>Reading and writing sequence files (FASTA, GenBank, FASTQ, etc.)</li>
+<li>Converting between file formats</li>
+<li>Extracting sequences from large files</li>
+<li>Sequence translation, transcription, and reverse complement</li>
+<li>Working with SeqRecord objects</li>
+</ul>
+<p><strong>Quick example:</strong></p>
+<pre><code class="language-python">from Bio import SeqIO
+
+# Read sequences from FASTA file
+for record in SeqIO.parse("sequences.fasta", "fasta"):
+    print(f"{record.id}: {len(record.seq)} bp")
+
+# Convert GenBank to FASTA
+SeqIO.convert("input.gb", "genbank", "output.fasta", "fasta")</code></pre>
+
+<h3>2. Alignment Analysis (Bio.Align & Bio.AlignIO)</h3>
+
+<p><strong>Reference:</strong> <code>references/alignment.md</code></p>
+
+<p>Use for:</p>
+<ul><li>Pairwise sequence alignment (global and local)</li>
+<li>Reading and writing multiple sequence alignments</li>
+<li>Using substitution matrices (BLOSUM, PAM)</li>
+<li>Calculating alignment statistics</li>
+<li>Customizing alignment parameters</li>
+</ul>
+<p><strong>Quick example:</strong></p>
+<pre><code class="language-python">from Bio import Align
+
+# Pairwise alignment
+aligner = Align.PairwiseAligner()
+aligner.mode = 'global'
+alignments = aligner.align("ACCGGT", "ACGGT")
+print(alignments[0])</code></pre>
+
+<h3>3. Database Access (Bio.Entrez)</h3>
+
+<p><strong>Reference:</strong> <code>references/databases.md</code></p>
+
+<p>Use for:</p>
+<ul><li>Searching NCBI databases (PubMed, GenBank, Protein, Gene, etc.)</li>
+<li>Downloading sequences and records</li>
+<li>Fetching publication information</li>
+<li>Finding related records across databases</li>
+<li>Batch downloading with proper rate limiting</li>
+</ul>
+<p><strong>Quick example:</strong></p>
+<pre><code class="language-python">from Bio import Entrez
+Entrez.email = "your.email@example.com"
+
+# Search PubMed
+handle = Entrez.esearch(db="pubmed", term="biopython", retmax=10)
+results = Entrez.read(handle)
+handle.close()
+print(f"Found {results['Count']} results")</code></pre>
+
+<h3>4. BLAST Operations (Bio.Blast)</h3>
+
+<p><strong>Reference:</strong> <code>references/blast.md</code></p>
+
+<p>Use for:</p>
+<ul><li>Running BLAST searches via NCBI web services</li>
+<li>Running local BLAST searches</li>
+<li>Parsing BLAST XML output</li>
+<li>Filtering results by E-value or identity</li>
+<li>Extracting hit sequences</li>
+</ul>
+<p><strong>Quick example:</strong></p>
+<pre><code class="language-python">from Bio.Blast import NCBIWWW, NCBIXML
+
+# Run BLAST search
+result_handle = NCBIWWW.qblast("blastn", "nt", "ATCGATCGATCG")
+blast_record = NCBIXML.read(result_handle)
+
+# Display top hits
+for alignment in blast_record.alignments[:5]:
+    print(f"{alignment.title}: E-value={alignment.hsps[0].expect}")</code></pre>
+
+<h3>5. Structural Bioinformatics (Bio.PDB)</h3>
+
+<p><strong>Reference:</strong> <code>references/structure.md</code></p>
+
+<p>Use for:</p>
+<ul><li>Parsing PDB and mmCIF structure files</li>
+<li>Navigating protein structure hierarchy (SMCRA: Structure/Model/Chain/Residue/Atom)</li>
+<li>Calculating distances, angles, and dihedrals</li>
+<li>Secondary structure assignment (DSSP)</li>
+<li>Structure superimposition and RMSD calculation</li>
+<li>Extracting sequences from structures</li>
+</ul>
+<p><strong>Quick example:</strong></p>
+<pre><code class="language-python">from Bio.PDB import PDBParser
+
+# Parse structure
+parser = PDBParser(QUIET=True)
+structure = parser.get_structure("1crn", "1crn.pdb")
+
+# Calculate distance between alpha carbons
+chain = structure[0]["A"]
+distance = chain[10]["CA"] - chain[20]["CA"]
+print(f"Distance: {distance:.2f} Å")</code></pre>
+
+<h3>6. Phylogenetics (Bio.Phylo)</h3>
+
+<p><strong>Reference:</strong> <code>references/phylogenetics.md</code></p>
+
+<p>Use for:</p>
+<ul><li>Reading and writing phylogenetic trees (Newick, NEXUS, phyloXML)</li>
+<li>Building trees from distance matrices or alignments</li>
+<li>Tree manipulation (pruning, rerooting, ladderizing)</li>
+<li>Calculating phylogenetic distances</li>
+<li>Creating consensus trees</li>
+<li>Visualizing trees</li>
+</ul>
+<p><strong>Quick example:</strong></p>
+<pre><code class="language-python">from Bio import Phylo
+
+# Read and visualize tree
+tree = Phylo.read("tree.nwk", "newick")
+Phylo.draw_ascii(tree)
+
+# Calculate distance
+distance = tree.distance("Species_A", "Species_B")
+print(f"Distance: {distance:.3f}")</code></pre>
+
+<h3>7. Advanced Features</h3>
+
+<p><strong>Reference:</strong> <code>references/advanced.md</code></p>
+
+<p>Use for:</p>
+<ul><li><strong>Sequence motifs</strong> (Bio.motifs) - Finding and analyzing motif patterns</li>
+<li><strong>Population genetics</strong> (Bio.PopGen) - GenePop files, Fst calculations, Hardy-Weinberg tests</li>
+<li><strong>Sequence utilities</strong> (Bio.SeqUtils) - GC content, melting temperature, molecular weight, protein analysis</li>
+<li><strong>Restriction analysis</strong> (Bio.Restriction) - Finding restriction enzyme sites</li>
+<li><strong>Clustering</strong> (Bio.Cluster) - K-means and hierarchical clustering</li>
+<li><strong>Genome diagrams</strong> (GenomeDiagram) - Visualizing genomic features</li>
+</ul>
+<p><strong>Quick example:</strong></p>
+<pre><code class="language-python">from Bio.SeqUtils import gc_fraction, molecular_weight
+from Bio.Seq import Seq
+
+seq = Seq("ATCGATCGATCG")
+print(f"GC content: {gc_fraction(seq):.2%}")
+print(f"Molecular weight: {molecular_weight(seq, seq_type='DNA'):.2f} g/mol")</code></pre>
+
+<h2>General Workflow Guidelines</h2>
+
+<h3>Reading Documentation</h3>
+
+<p>When a user asks about a specific Biopython task:</p>
+
+<ul><li><strong>Identify the relevant module</strong> based on the task description</li>
+<li><strong>Read the appropriate reference file</strong> using the Read tool</li>
+<li><strong>Extract relevant code patterns</strong> and adapt them to the user's specific needs</li>
+<li><strong>Combine multiple modules</strong> when the task requires it</li>
+</ul>
+<p>Example search patterns for reference files:</p>
+<pre><code class="language-bash"># Find information about specific functions
+grep -n "SeqIO.parse" references/sequence_io.md
+
+# Find examples of specific tasks
+grep -n "BLAST" references/blast.md
+
+# Find information about specific concepts
+grep -n "alignment" references/alignment.md</code></pre>
+
+<h3>Writing Biopython Code</h3>
+
+<p>Follow these principles when writing Biopython code:</p>
+
+<ul><li><strong>Import modules explicitly</strong></li>
+</ul><p>   <code>`</code>python</p>
+<p>   from Bio import SeqIO, Entrez</p>
+<p>   from Bio.Seq import Seq</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Set Entrez email</strong> when using NCBI databases</li>
+</ul><p>   <code>`</code>python</p>
+<p>   Entrez.email = "your.email@example.com"</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Use appropriate file formats</strong> - Check which format best suits the task</li>
+</ul><p>   <code>`</code>python</p>
+<p>   # Common formats: "fasta", "genbank", "fastq", "clustal", "phylip"</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Handle files properly</strong> - Close handles after use or use context managers</li>
+</ul><p>   <code>`</code>python</p>
+<p>   with open("file.fasta") as handle:</p>
+<p>       records = SeqIO.parse(handle, "fasta")</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Use iterators for large files</strong> - Avoid loading everything into memory</li>
+</ul><p>   <code>`</code>python</p>
+<p>   for record in SeqIO.parse("large_file.fasta", "fasta"):</p>
+<p>       # Process one record at a time</p>
+<p>   <code>`</code></p>
+
+<ul><li><strong>Handle errors gracefully</strong> - Network operations and file parsing can fail</li>
+</ul><p>   <code>`</code>python</p>
+<p>   try:</p>
+<p>       handle = Entrez.efetch(db="nucleotide", id=accession)</p>
+<p>   except HTTPError as e:</p>
+<p>       print(f"Error: {e}")</p>
+<p>   <code>`</code></p>
+
+<h2>Common Patterns</h2>
+
+<h3>Pattern 1: Fetch Sequence from GenBank</h3>
+
+<pre><code class="language-python">from Bio import Entrez, SeqIO
+
+Entrez.email = "your.email@example.com"
+
+# Fetch sequence
+handle = Entrez.efetch(db="nucleotide", id="EU490707", rettype="gb", retmode="text")
+record = SeqIO.read(handle, "genbank")
+handle.close()
+
+print(f"Description: {record.description}")
+print(f"Sequence length: {len(record.seq)}")</code></pre>
+
+<h3>Pattern 2: Sequence Analysis Pipeline</h3>
+
+<pre><code class="language-python">from Bio import SeqIO
+from Bio.SeqUtils import gc_fraction
+
+for record in SeqIO.parse("sequences.fasta", "fasta"):
+    # Calculate statistics
+    gc = gc_fraction(record.seq)
+    length = len(record.seq)
+
+    # Find ORFs, translate, etc.
+    protein = record.seq.translate()
+
+    print(f"{record.id}: {length} bp, GC={gc:.2%}")</code></pre>
+
+<h3>Pattern 3: BLAST and Fetch Top Hits</h3>
+
+<pre><code class="language-python">from Bio.Blast import NCBIWWW, NCBIXML
+from Bio import Entrez, SeqIO
+
+Entrez.email = "your.email@example.com"
+
+# Run BLAST
+result_handle = NCBIWWW.qblast("blastn", "nt", sequence)
+blast_record = NCBIXML.read(result_handle)
+
+# Get top hit accessions
+accessions = [aln.accession for aln in blast_record.alignments[:5]]
+
+# Fetch sequences
+for acc in accessions:
+    handle = Entrez.efetch(db="nucleotide", id=acc, rettype="fasta", retmode="text")
+    record = SeqIO.read(handle, "fasta")
+    handle.close()
+    print(f"&gt;{record.description}")</code></pre>
+
+<h3>Pattern 4: Build Phylogenetic Tree from Sequences</h3>
+
+<pre><code class="language-python">from Bio import AlignIO, Phylo
+from Bio.Phylo.TreeConstruction import DistanceCalculator, DistanceTreeConstructor
+
+# Read alignment
+alignment = AlignIO.read("alignment.fasta", "fasta")
+
+# Calculate distances
+calculator = DistanceCalculator("identity")
+dm = calculator.get_distance(alignment)
+
+# Build tree
+constructor = DistanceTreeConstructor()
+tree = constructor.nj(dm)
+
+# Visualize
+Phylo.draw_ascii(tree)</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Always read relevant reference documentation</strong> before writing code</li>
+<li><strong>Use grep to search reference files</strong> for specific functions or examples</li>
+<li><strong>Validate file formats</strong> before parsing</li>
+<li><strong>Handle missing data gracefully</strong> - Not all records have all fields</li>
+<li><strong>Cache downloaded data</strong> - Don't repeatedly download the same sequences</li>
+<li><strong>Respect NCBI rate limits</strong> - Use API keys and proper delays</li>
+<li><strong>Test with small datasets</strong> before processing large files</li>
+<li><strong>Keep Biopython updated</strong> to get latest features and bug fixes</li>
+<li><strong>Use appropriate genetic code tables</strong> for translation</li>
+<li><strong>Document analysis parameters</strong> for reproducibility</li>
+</ul>
+<h2>Troubleshooting Common Issues</h2>
+
+<h3>Issue: "No handlers could be found for logger 'Bio.Entrez'"</h3>
+<p><strong>Solution:</strong> This is just a warning. Set Entrez.email to suppress it.</p>
+
+<h3>Issue: "HTTP Error 400" from NCBI</h3>
+<p><strong>Solution:</strong> Check that IDs/accessions are valid and properly formatted.</p>
+
+<h3>Issue: "ValueError: EOF" when parsing files</h3>
+<p><strong>Solution:</strong> Verify file format matches the specified format string.</p>
+
+<h3>Issue: Alignment fails with "sequences are not the same length"</h3>
+<p><strong>Solution:</strong> Ensure sequences are aligned before using AlignIO or MultipleSeqAlignment.</p>
+
+<h3>Issue: BLAST searches are slow</h3>
+<p><strong>Solution:</strong> Use local BLAST for large-scale searches, or cache results.</p>
+
+<h3>Issue: PDB parser warnings</h3>
+<p><strong>Solution:</strong> Use <code>PDBParser(QUIET=True)</code> to suppress warnings, or investigate structure quality.</p>
+
+<h2>Additional Resources</h2>
+
+<ul><li><strong>Official Documentation</strong>: https://biopython.org/docs/latest/</li>
+<li><strong>Tutorial</strong>: https://biopython.org/docs/latest/Tutorial/</li>
+<li><strong>Cookbook</strong>: https://biopython.org/docs/latest/Tutorial/ (advanced examples)</li>
+<li><strong>GitHub</strong>: https://github.com/biopython/biopython</li>
+<li><strong>Mailing List</strong>: biopython@biopython.org</li>
+</ul>
+<h2>Quick Reference</h2>
+
+<p>To locate information in reference files, use these search patterns:</p>
+
+<pre><code class="language-bash"># Search for specific functions
+grep -n "function_name" references/*.md
+
+# Find examples of specific tasks
+grep -n "example" references/sequence_io.md
+
+# Find all occurrences of a module
+grep -n "Bio.Seq" references/*.md</code></pre>
+
+<h2>Summary</h2>
+
+<p>Biopython provides comprehensive tools for computational molecular biology. When using this skill:</p>
+
+<ul><li><strong>Identify the task domain</strong> (sequences, alignments, databases, BLAST, structures, phylogenetics, or advanced)</li>
+<li><strong>Consult the appropriate reference file</strong> in the <code>references/</code> directory</li>
+<li><strong>Adapt code examples</strong> to the specific use case</li>
+<li><strong>Combine multiple modules</strong> when needed for complex workflows</li>
+<li><strong>Follow best practices</strong> for file handling, error checking, and data management</li>
+</ul>
+<p>The modular reference documentation ensures detailed, searchable information for every major Biopython capability.</p>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Advanced</h3>
+  <h1>Advanced Biopython Features</h1>
+
+<h2>Sequence Motifs with Bio.motifs</h2>
+
+<h3>Creating Motifs</h3>
+
+<pre><code class="language-python">from Bio import motifs
+from Bio.Seq import Seq
+
+# Create motif from instances
+instances = [
+    Seq("TACAA"),
+    Seq("TACGC"),
+    Seq("TACAC"),
+    Seq("TACCC"),
+    Seq("AACCC"),
+    Seq("AATGC"),
+    Seq("AATGC"),
+]
+
+motif = motifs.create(instances)</code></pre>
+
+<h3>Motif Consensus and Degenerate Sequences</h3>
+
+<pre><code class="language-python"># Get consensus sequence
+print(motif.counts.consensus)
+
+# Get degenerate consensus (IUPAC ambiguity codes)
+print(motif.counts.degenerate_consensus)
+
+# Access counts matrix
+print(motif.counts)</code></pre>
+
+<h3>Position Weight Matrix (PWM)</h3>
+
+<pre><code class="language-python"># Create position weight matrix
+pwm = motif.counts.normalize(pseudocounts=0.5)
+print(pwm)
+
+# Calculate information content
+ic = motif.counts.information_content()
+print(f"Information content: {ic:.2f} bits")</code></pre>
+
+<h3>Searching for Motifs</h3>
+
+<pre><code class="language-python">from Bio.Seq import Seq
+
+# Search sequence for motif
+test_seq = Seq("ATACAGGACAGACATACGCATACAACATTACAC")
+
+# Get Position Specific Scoring Matrix (PSSM)
+pssm = pwm.log_odds()
+
+# Search sequence
+for position, score in pssm.search(test_seq, threshold=5.0):
+    print(f"Position {position}: score = {score:.2f}")</code></pre>
+
+<h3>Reading Motifs from Files</h3>
+
+<pre><code class="language-python"># Read motif from JASPAR format
+with open("motif.jaspar") as handle:
+    motif = motifs.read(handle, "jaspar")
+
+# Read multiple motifs
+with open("motifs.jaspar") as handle:
+    for m in motifs.parse(handle, "jaspar"):
+        print(m.name)
+
+# Supported formats: jaspar, meme, transfac, pfm</code></pre>
+
+<h3>Writing Motifs</h3>
+
+<pre><code class="language-python"># Write motif in JASPAR format
+with open("output.jaspar", "w") as handle:
+    handle.write(motif.format("jaspar"))</code></pre>
+
+<h2>Population Genetics with Bio.PopGen</h2>
+
+<h3>Working with GenePop Files</h3>
+
+<pre><code class="language-python">from Bio.PopGen import GenePop
+
+# Read GenePop file
+with open("data.gen") as handle:
+    record = GenePop.read(handle)
+
+# Access populations
+print(f"Number of populations: {len(record.populations)}")
+print(f"Loci: {record.loci_list}")
+
+# Iterate through populations
+for pop_idx, pop in enumerate(record.populations):
+    print(f"\nPopulation {pop_idx + 1}:")
+    for individual in pop:
+        print(f"  {individual[0]}: {individual[1]}")</code></pre>
+
+<h3>Calculating Population Statistics</h3>
+
+<pre><code class="language-python">from Bio.PopGen.GenePop.Controller import GenePopController
+
+# Create controller
+ctrl = GenePopController()
+
+# Calculate basic statistics
+result = ctrl.calc_allele_genotype_freqs("data.gen")
+
+# Calculate Fst
+fst_result = ctrl.calc_fst_all("data.gen")
+print(f"Fst: {fst_result}")
+
+# Test Hardy-Weinberg equilibrium
+hw_result = ctrl.test_hw_pop("data.gen", "probability")</code></pre>
+
+<h2>Sequence Utilities with Bio.SeqUtils</h2>
+
+<h3>GC Content</h3>
+
+<pre><code class="language-python">from Bio.SeqUtils import gc_fraction
+from Bio.Seq import Seq
+
+seq = Seq("ATCGATCGATCG")
+gc = gc_fraction(seq)
+print(f"GC content: {gc:.2%}")</code></pre>
+
+<h3>Molecular Weight</h3>
+
+<pre><code class="language-python">from Bio.SeqUtils import molecular_weight
+
+# DNA molecular weight
+dna_seq = Seq("ATCG")
+mw = molecular_weight(dna_seq, seq_type="DNA")
+print(f"DNA MW: {mw:.2f} g/mol")
+
+# Protein molecular weight
+protein_seq = Seq("ACDEFGHIKLMNPQRSTVWY")
+mw = molecular_weight(protein_seq, seq_type="protein")
+print(f"Protein MW: {mw:.2f} Da")</code></pre>
+
+<h3>Melting Temperature</h3>
+
+<pre><code class="language-python">from Bio.SeqUtils import MeltingTemp as mt
+
+# Calculate Tm using nearest-neighbor method
+seq = Seq("ATCGATCGATCG")
+tm = mt.Tm_NN(seq)
+print(f"Tm: {tm:.1f}°C")
+
+# Use different salt concentration
+tm = mt.Tm_NN(seq, Na=50, Mg=1.5)  # 50 mM Na+, 1.5 mM Mg2+
+
+# Wallace rule (for primers)
+tm_wallace = mt.Tm_Wallace(seq)</code></pre>
+
+<h3>GC Skew</h3>
+
+<pre><code class="language-python">from Bio.SeqUtils import gc_skew
+
+# Calculate GC skew
+seq = Seq("ATCGATCGGGCCCAAATTT")
+skew = gc_skew(seq, window=100)
+print(f"GC skew: {skew}")</code></pre>
+
+<h3>ProtParam - Protein Analysis</h3>
+
+<pre><code class="language-python">from Bio.SeqUtils.ProtParam import ProteinAnalysis
+
+protein_seq = "ACDEFGHIKLMNPQRSTVWY"
+analyzed_seq = ProteinAnalysis(protein_seq)
+
+# Molecular weight
+print(f"MW: {analyzed_seq.molecular_weight():.2f} Da")
+
+# Isoelectric point
+print(f"pI: {analyzed_seq.isoelectric_point():.2f}")
+
+# Amino acid composition
+print(f"Composition: {analyzed_seq.get_amino_acids_percent()}")
+
+# Instability index
+print(f"Instability: {analyzed_seq.instability_index():.2f}")
+
+# Aromaticity
+print(f"Aromaticity: {analyzed_seq.aromaticity():.2f}")
+
+# Secondary structure fraction
+ss = analyzed_seq.secondary_structure_fraction()
+print(f"Helix: {ss[0]:.2%}, Turn: {ss[1]:.2%}, Sheet: {ss[2]:.2%}")
+
+# Extinction coefficient (assumes Cys reduced, no disulfide bonds)
+print(f"Extinction coefficient: {analyzed_seq.molar_extinction_coefficient()}")
+
+# Gravy (grand average of hydropathy)
+print(f"GRAVY: {analyzed_seq.gravy():.3f}")</code></pre>
+
+<h2>Restriction Analysis with Bio.Restriction</h2>
+
+<pre><code class="language-python">from Bio import Restriction
+from Bio.Seq import Seq
+
+# Analyze sequence for restriction sites
+seq = Seq("GAATTCATCGATCGATGAATTC")
+
+# Use specific enzyme
+ecori = Restriction.EcoRI
+sites = ecori.search(seq)
+print(f"EcoRI sites at: {sites}")
+
+# Use multiple enzymes
+rb = Restriction.RestrictionBatch(["EcoRI", "BamHI", "PstI"])
+results = rb.search(seq)
+for enzyme, sites in results.items():
+    if sites:
+        print(f"{enzyme}: {sites}")
+
+# Get all enzymes that cut sequence
+all_enzymes = Restriction.Analysis(rb, seq)
+print(f"Cutting enzymes: {all_enzymes.with_sites()}")</code></pre>
+
+<h2>Sequence Translation Tables</h2>
+
+<pre><code class="language-python">from Bio.Data import CodonTable
+
+# Standard genetic code
+standard_table = CodonTable.unambiguous_dna_by_id[1]
+print(standard_table)
+
+# Mitochondrial code
+mito_table = CodonTable.unambiguous_dna_by_id[2]
+
+# Get specific codon
+print(f"ATG codes for: {standard_table.forward_table['ATG']}")
+
+# Get stop codons
+print(f"Stop codons: {standard_table.stop_codons}")
+
+# Get start codons
+print(f"Start codons: {standard_table.start_codons}")</code></pre>
+
+<h2>Cluster Analysis with Bio.Cluster</h2>
+
+<pre><code class="language-python">from Bio.Cluster import kcluster
+import numpy as np
+
+# Sample data matrix (genes x conditions)
+data = np.array([
+    [1.2, 0.8, 0.5, 1.5],
+    [0.9, 1.1, 0.7, 1.3],
+    [0.2, 0.3, 2.1, 2.5],
+    [0.1, 0.4, 2.3, 2.2],
+])
+
+# Perform k-means clustering
+clusterid, error, nfound = kcluster(data, nclusters=2)
+print(f"Cluster assignments: {clusterid}")
+print(f"Error: {error}")</code></pre>
+
+<h2>Genome Diagrams with GenomeDiagram</h2>
+
+<pre><code class="language-python">from Bio.Graphics import GenomeDiagram
+from Bio.SeqFeature import SeqFeature, FeatureLocation
+from Bio import SeqIO
+from reportlab.lib import colors
+
+# Read GenBank file
+record = SeqIO.read("sequence.gb", "genbank")
+
+# Create diagram
+gd_diagram = GenomeDiagram.Diagram("Genome Diagram")
+gd_track = gd_diagram.new_track(1, greytrack=True)
+gd_feature_set = gd_track.new_set()
+
+# Add features
+for feature in record.features:
+    if feature.type == "CDS":
+        color = colors.blue
+    elif feature.type == "gene":
+        color = colors.lightblue
+    else:
+        color = colors.grey
+
+    gd_feature_set.add_feature(
+        feature,
+        color=color,
+        label=True,
+        label_size=6,
+        label_angle=45
+    )
+
+# Draw and save
+gd_diagram.draw(format="linear", pagesize="A4", fragments=1)
+gd_diagram.write("genome_diagram.pdf", "PDF")</code></pre>
+
+<h2>Sequence Comparison with Bio.pairwise2</h2>
+
+<p><strong>Note</strong>: Bio.pairwise2 is deprecated. Use Bio.Align.PairwiseAligner instead (see alignment.md).</p>
+
+<p>However, for legacy code:</p>
+
+<pre><code class="language-python">from Bio import pairwise2
+from Bio.pairwise2 import format_alignment
+
+# Global alignment
+alignments = pairwise2.align.globalxx("ACCGT", "ACGT")
+
+# Print top alignments
+for alignment in alignments[:3]:
+    print(format_alignment(*alignment))</code></pre>
+
+<h2>Working with PubChem</h2>
+
+<pre><code class="language-python">from Bio import Entrez
+
+Entrez.email = "your.email@example.com"
+
+# Search PubChem
+handle = Entrez.esearch(db="pccompound", term="aspirin")
+result = Entrez.read(handle)
+handle.close()
+
+compound_id = result["IdList"][0]
+
+# Get compound information
+handle = Entrez.efetch(db="pccompound", id=compound_id, retmode="xml")
+compound_data = handle.read()
+handle.close()</code></pre>
+
+<h2>Sequence Features with Bio.SeqFeature</h2>
+
+<pre><code class="language-python">from Bio.SeqFeature import SeqFeature, FeatureLocation
+from Bio.Seq import Seq
+from Bio.SeqRecord import SeqRecord
+
+# Create a feature
+feature = SeqFeature(
+    location=FeatureLocation(start=10, end=50),
+    type="CDS",
+    strand=1,
+    qualifiers={"gene": ["ABC1"], "product": ["ABC protein"]}
+)
+
+# Add feature to record
+record = SeqRecord(Seq("ATCG" * 20), id="seq1")
+record.features.append(feature)
+
+# Extract feature sequence
+feature_seq = feature.extract(record.seq)
+print(feature_seq)</code></pre>
+
+<h2>Sequence Ambiguity</h2>
+
+<pre><code class="language-python">from Bio.Data import IUPACData
+
+# DNA ambiguity codes
+print(IUPACData.ambiguous_dna_letters)
+
+# Protein ambiguity codes
+print(IUPACData.ambiguous_protein_letters)
+
+# Resolve ambiguous bases
+print(IUPACData.ambiguous_dna_values["N"])  # Any base
+print(IUPACData.ambiguous_dna_values["R"])  # A or G</code></pre>
+
+<h2>Quality Scores (FASTQ)</h2>
+
+<pre><code class="language-python">from Bio import SeqIO
+
+# Read FASTQ with quality scores
+for record in SeqIO.parse("reads.fastq", "fastq"):
+    print(f"ID: {record.id}")
+    print(f"Sequence: {record.seq}")
+    print(f"Quality: {record.letter_annotations['phred_quality']}")
+
+    # Calculate average quality
+    avg_quality = sum(record.letter_annotations['phred_quality']) / len(record)
+    print(f"Average quality: {avg_quality:.2f}")
+
+    # Filter by quality
+    min_quality = min(record.letter_annotations['phred_quality'])
+    if min_quality &gt;= 20:
+        print("High quality read")</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Use appropriate modules</strong> - Choose the right tool for your analysis</li>
+<li><strong>Handle pseudocounts</strong> - Important for motif analysis</li>
+<li><strong>Validate input data</strong> - Check file formats and data quality</li>
+<li><strong>Consider performance</strong> - Some operations can be computationally intensive</li>
+<li><strong>Cache results</strong> - Store intermediate results for large analyses</li>
+<li><strong>Use proper genetic codes</strong> - Select appropriate translation tables</li>
+<li><strong>Document parameters</strong> - Record thresholds and settings used</li>
+<li><strong>Validate statistical results</strong> - Understand limitations of tests</li>
+<li><strong>Handle edge cases</strong> - Check for empty results or invalid input</li>
+<li><strong>Combine modules</strong> - Leverage multiple Biopython tools together</li>
+</ul>
+<h2>Common Use Cases</h2>
+
+<h3>Find ORFs</h3>
+
+<pre><code class="language-python">from Bio import SeqIO
+from Bio.SeqUtils import gc_fraction
+
+def find_orfs(seq, min_length=100):
+    """Find all ORFs in sequence."""
+    orfs = []
+
+    for strand, nuc in [(+1, seq), (-1, seq.reverse_complement())]:
+        for frame in range(3):
+            trans = nuc[frame:].translate()
+            trans_len = len(trans)
+
+            aa_start = 0
+            while aa_start &lt; trans_len:
+                aa_end = trans.find("*", aa_start)
+                if aa_end == -1:
+                    aa_end = trans_len
+
+                if aa_end - aa_start &gt;= min_length // 3:
+                    start = frame + aa_start * 3
+                    end = frame + aa_end * 3
+                    orfs.append({
+                        'start': start,
+                        'end': end,
+                        'strand': strand,
+                        'frame': frame,
+                        'length': end - start,
+                        'sequence': nuc[start:end]
+                    })
+
+                aa_start = aa_end + 1
+
+    return orfs
+
+# Use it
+record = SeqIO.read("sequence.fasta", "fasta")
+orfs = find_orfs(record.seq, min_length=300)
+for orf in orfs:
+    print(f"ORF: {orf['start']}-{orf['end']}, strand={orf['strand']}, length={orf['length']}")</code></pre>
+
+<h3>Analyze Codon Usage</h3>
+
+<pre><code class="language-python">from Bio import SeqIO
+from Bio.SeqUtils import CodonUsage
+
+def analyze_codon_usage(fasta_file):
+    """Analyze codon usage in coding sequences."""
+    codon_counts = {}
+
+    for record in SeqIO.parse(fasta_file, "fasta"):
+        # Ensure sequence is multiple of 3
+        seq = record.seq[:len(record.seq) - len(record.seq) % 3]
+
+        # Count codons
+        for i in range(0, len(seq), 3):
+            codon = str(seq[i:i+3])
+            codon_counts[codon] = codon_counts.get(codon, 0) + 1
+
+    # Calculate frequencies
+    total = sum(codon_counts.values())
+    codon_freq = {k: v/total for k, v in codon_counts.items()}
+
+    return codon_freq</code></pre>
+
+<h3>Calculate Sequence Complexity</h3>
+
+<pre><code class="language-python">def sequence_complexity(seq, k=2):
+    """Calculate k-mer complexity (Shannon entropy)."""
+    import math
+    from collections import Counter
+
+    # Generate k-mers
+    kmers = [str(seq[i:i+k]) for i in range(len(seq) - k + 1)]
+
+    # Count k-mers
+    counts = Counter(kmers)
+    total = len(kmers)
+
+    # Calculate entropy
+    entropy = 0
+    for count in counts.values():
+        freq = count / total
+        entropy -= freq * math.log2(freq)
+
+    # Normalize by maximum possible entropy
+    max_entropy = math.log2(4 ** k)  # For DNA
+
+    return entropy / max_entropy if max_entropy &gt; 0 else 0
+
+# Use it
+from Bio.Seq import Seq
+seq = Seq("ATCGATCGATCGATCG")
+complexity = sequence_complexity(seq, k=2)
+print(f"Sequence complexity: {complexity:.3f}")</code></pre>
+
+<h3>Extract Promoter Regions</h3>
+
+<pre><code class="language-python">def extract_promoters(genbank_file, upstream=500):
+    """Extract promoter regions upstream of genes."""
+    from Bio import SeqIO
+
+    record = SeqIO.read(genbank_file, "genbank")
+    promoters = []
+
+    for feature in record.features:
+        if feature.type == "gene":
+            if feature.strand == 1:
+                # Forward strand
+                start = max(0, feature.location.start - upstream)
+                end = feature.location.start
+            else:
+                # Reverse strand
+                start = feature.location.end
+                end = min(len(record.seq), feature.location.end + upstream)
+
+            promoter_seq = record.seq[start:end]
+            if feature.strand == -1:
+                promoter_seq = promoter_seq.reverse_complement()
+
+            promoters.append({
+                'gene': feature.qualifiers.get('gene', ['Unknown'])[0],
+                'sequence': promoter_seq,
+                'start': start,
+                'end': end
+            })
+
+    return promoters</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Alignment</h3>
+  <h1>Sequence Alignments with Bio.Align and Bio.AlignIO</h1>
+
+<h2>Overview</h2>
+
+<p>Bio.Align provides tools for pairwise sequence alignment using various algorithms, while Bio.AlignIO handles reading and writing multiple sequence alignment files in various formats.</p>
+
+<h2>Pairwise Alignment with Bio.Align</h2>
+
+<h3>The PairwiseAligner Class</h3>
+
+<p>The <code>PairwiseAligner</code> class performs pairwise sequence alignments using Needleman-Wunsch (global), Smith-Waterman (local), Gotoh (three-state), and Waterman-Smith-Beyer algorithms. The appropriate algorithm is automatically selected based on gap score parameters.</p>
+
+<h3>Creating an Aligner</h3>
+
+<pre><code class="language-python">from Bio import Align
+
+# Create aligner with default parameters
+aligner = Align.PairwiseAligner()
+
+# Default scores (as of Biopython 1.85+):
+# - Match score: +1.0
+# - Mismatch score: 0.0
+# - All gap scores: -1.0</code></pre>
+
+<h3>Customizing Alignment Parameters</h3>
+
+<pre><code class="language-python"># Set scoring parameters
+aligner.match_score = 2.0
+aligner.mismatch_score = -1.0
+aligner.gap_score = -0.5
+
+# Or use separate gap opening/extension penalties
+aligner.open_gap_score = -2.0
+aligner.extend_gap_score = -0.5
+
+# Set internal gap scores separately
+aligner.internal_open_gap_score = -2.0
+aligner.internal_extend_gap_score = -0.5
+
+# Set end gap scores (for semi-global alignment)
+aligner.left_open_gap_score = 0.0
+aligner.left_extend_gap_score = 0.0
+aligner.right_open_gap_score = 0.0
+aligner.right_extend_gap_score = 0.0</code></pre>
+
+<h3>Alignment Modes</h3>
+
+<pre><code class="language-python"># Global alignment (default)
+aligner.mode = 'global'
+
+# Local alignment
+aligner.mode = 'local'</code></pre>
+
+<h3>Performing Alignments</h3>
+
+<pre><code class="language-python">from Bio.Seq import Seq
+
+seq1 = Seq("ACCGGT")
+seq2 = Seq("ACGGT")
+
+# Get all optimal alignments
+alignments = aligner.align(seq1, seq2)
+
+# Iterate through alignments
+for alignment in alignments:
+    print(alignment)
+    print(f"Score: {alignment.score}")
+
+# Get just the score
+score = aligner.score(seq1, seq2)</code></pre>
+
+<h3>Using Substitution Matrices</h3>
+
+<pre><code class="language-python">from Bio.Align import substitution_matrices
+
+# Load a substitution matrix
+matrix = substitution_matrices.load("BLOSUM62")
+aligner.substitution_matrix = matrix
+
+# Align protein sequences
+protein1 = Seq("KEVLA")
+protein2 = Seq("KSVLA")
+alignments = aligner.align(protein1, protein2)</code></pre>
+
+<h3>Available Substitution Matrices</h3>
+
+<p>Common matrices include:</p>
+<ul><li><strong>BLOSUM</strong> series (BLOSUM45, BLOSUM50, BLOSUM62, BLOSUM80, BLOSUM90)</li>
+<li><strong>PAM</strong> series (PAM30, PAM70, PAM250)</li>
+<li><strong>MATCH</strong> - Simple match/mismatch matrix</li>
+</ul>
+<pre><code class="language-python"># List available matrices
+available = substitution_matrices.load()
+print(available)</code></pre>
+
+<h2>Multiple Sequence Alignments with Bio.AlignIO</h2>
+
+<h3>Reading Alignments</h3>
+
+<p>Bio.AlignIO provides similar API to Bio.SeqIO but for alignment files:</p>
+
+<pre><code class="language-python">from Bio import AlignIO
+
+# Read a single alignment
+alignment = AlignIO.read("alignment.aln", "clustal")
+
+# Parse multiple alignments from a file
+for alignment in AlignIO.parse("alignments.aln", "clustal"):
+    print(f"Alignment with {len(alignment)} sequences")
+    print(f"Alignment length: {alignment.get_alignment_length()}")</code></pre>
+
+<h3>Supported Alignment Formats</h3>
+
+<p>Common formats include:</p>
+<ul><li><strong>clustal</strong> - Clustal format</li>
+<li><strong>phylip</strong> - PHYLIP format</li>
+<li><strong>phylip-relaxed</strong> - Relaxed PHYLIP (longer names)</li>
+<li><strong>stockholm</strong> - Stockholm format</li>
+<li><strong>fasta</strong> - FASTA format (aligned)</li>
+<li><strong>nexus</strong> - NEXUS format</li>
+<li><strong>emboss</strong> - EMBOSS alignment format</li>
+<li><strong>msf</strong> - MSF format</li>
+<li><strong>maf</strong> - Multiple Alignment Format</li>
+</ul>
+<h3>Writing Alignments</h3>
+
+<pre><code class="language-python"># Write alignment to file
+AlignIO.write(alignment, "output.aln", "clustal")
+
+# Convert between formats
+count = AlignIO.convert("input.aln", "clustal", "output.phy", "phylip")</code></pre>
+
+<h3>Working with Alignment Objects</h3>
+
+<pre><code class="language-python">from Bio import AlignIO
+
+alignment = AlignIO.read("alignment.aln", "clustal")
+
+# Get alignment properties
+print(f"Number of sequences: {len(alignment)}")
+print(f"Alignment length: {alignment.get_alignment_length()}")
+
+# Access individual sequences
+for record in alignment:
+    print(f"{record.id}: {record.seq}")
+
+# Get alignment column
+column = alignment[:, 0]  # First column
+
+# Get alignment slice
+sub_alignment = alignment[:, 10:20]  # Positions 10-20
+
+# Get specific sequence
+seq_record = alignment[0]  # First sequence</code></pre>
+
+<h3>Alignment Analysis</h3>
+
+<pre><code class="language-python"># Calculate alignment statistics
+from Bio.Align import AlignInfo
+
+summary = AlignInfo.SummaryInfo(alignment)
+
+# Get consensus sequence
+consensus = summary.gap_consensus(threshold=0.7)
+
+# Position-specific scoring matrix (PSSM)
+pssm = summary.pos_specific_score_matrix(consensus)
+
+# Calculate information content
+from Bio import motifs
+motif = motifs.create([record.seq for record in alignment])
+information = motif.counts.information_content()</code></pre>
+
+<h2>Creating Alignments Programmatically</h2>
+
+<h3>From SeqRecord Objects</h3>
+
+<pre><code class="language-python">from Bio.Align import MultipleSeqAlignment
+from Bio.SeqRecord import SeqRecord
+from Bio.Seq import Seq
+
+# Create records
+records = [
+    SeqRecord(Seq("ACTGCTAGCTAG"), id="seq1"),
+    SeqRecord(Seq("ACT-CTAGCTAG"), id="seq2"),
+    SeqRecord(Seq("ACTGCTA-CTAG"), id="seq3"),
+]
+
+# Create alignment
+alignment = MultipleSeqAlignment(records)</code></pre>
+
+<h3>Adding Sequences to Alignments</h3>
+
+<pre><code class="language-python"># Start with empty alignment
+alignment = MultipleSeqAlignment([])
+
+# Add sequences (must have same length)
+alignment.append(SeqRecord(Seq("ACTG"), id="seq1"))
+alignment.append(SeqRecord(Seq("ACTG"), id="seq2"))
+
+# Extend with another alignment
+alignment.extend(other_alignment)</code></pre>
+
+<h2>Advanced Alignment Operations</h2>
+
+<h3>Removing Gaps</h3>
+
+<pre><code class="language-python"># Remove all gap-only columns
+from Bio.Align import AlignInfo
+
+no_gaps = []
+for i in range(alignment.get_alignment_length()):
+    column = alignment[:, i]
+    if set(column) != {'-'}:  # Not all gaps
+        no_gaps.append(column)</code></pre>
+
+<h3>Alignment Sorting</h3>
+
+<pre><code class="language-python"># Sort by sequence ID
+sorted_alignment = sorted(alignment, key=lambda x: x.id)
+alignment = MultipleSeqAlignment(sorted_alignment)</code></pre>
+
+<h3>Computing Pairwise Identities</h3>
+
+<pre><code class="language-python">def pairwise_identity(seq1, seq2):
+    """Calculate percent identity between two sequences."""
+    matches = sum(a == b for a, b in zip(seq1, seq2) if a != '-' and b != '-')
+    length = sum(1 for a, b in zip(seq1, seq2) if a != '-' and b != '-')
+    return matches / length if length &gt; 0 else 0
+
+# Calculate all pairwise identities
+for i, record1 in enumerate(alignment):
+    for record2 in alignment[i+1:]:
+        identity = pairwise_identity(record1.seq, record2.seq)
+        print(f"{record1.id} vs {record2.id}: {identity:.2%}")</code></pre>
+
+<h2>Running External Alignment Tools</h2>
+
+<h3>Clustal Omega (via Command Line)</h3>
+
+<pre><code class="language-python">from Bio.Align.Applications import ClustalOmegaCommandline
+
+# Setup command
+clustal_cmd = ClustalOmegaCommandline(
+    infile="sequences.fasta",
+    outfile="alignment.aln",
+    verbose=True,
+    auto=True
+)
+
+# Run alignment
+stdout, stderr = clustal_cmd()
+
+# Read result
+alignment = AlignIO.read("alignment.aln", "clustal")</code></pre>
+
+<h3>MUSCLE (via Command Line)</h3>
+
+<pre><code class="language-python">from Bio.Align.Applications import MuscleCommandline
+
+muscle_cmd = MuscleCommandline(
+    input="sequences.fasta",
+    out="alignment.aln"
+)
+stdout, stderr = muscle_cmd()</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Choose appropriate scoring schemes</strong> - Use BLOSUM62 for proteins, custom scores for DNA</li>
+<li><strong>Consider alignment mode</strong> - Global for similar-length sequences, local for finding conserved regions</li>
+<li><strong>Set gap penalties carefully</strong> - Higher penalties create fewer, longer gaps</li>
+<li><strong>Use appropriate formats</strong> - FASTA for simple alignments, Stockholm for rich annotation</li>
+<li><strong>Validate alignment quality</strong> - Check for conserved regions and percent identity</li>
+<li><strong>Handle large alignments carefully</strong> - Use slicing and iteration for memory efficiency</li>
+<li><strong>Preserve metadata</strong> - Maintain SeqRecord IDs and annotations through alignment operations</li>
+</ul>
+<h2>Common Use Cases</h2>
+
+<h3>Find Best Local Alignment</h3>
+
+<pre><code class="language-python">from Bio.Align import PairwiseAligner
+from Bio.Seq import Seq
+
+aligner = PairwiseAligner()
+aligner.mode = 'local'
+aligner.match_score = 2
+aligner.mismatch_score = -1
+
+seq1 = Seq("AGCTTAGCTAGCTAGC")
+seq2 = Seq("CTAGCTAGC")
+
+alignments = aligner.align(seq1, seq2)
+print(alignments[0])</code></pre>
+
+<h3>Protein Sequence Alignment</h3>
+
+<pre><code class="language-python">from Bio.Align import PairwiseAligner, substitution_matrices
+
+aligner = PairwiseAligner()
+aligner.substitution_matrix = substitution_matrices.load("BLOSUM62")
+aligner.open_gap_score = -10
+aligner.extend_gap_score = -0.5
+
+protein1 = Seq("KEVLA")
+protein2 = Seq("KEVLAEQP")
+alignments = aligner.align(protein1, protein2)</code></pre>
+
+<h3>Extract Conserved Regions</h3>
+
+<pre><code class="language-python">from Bio import AlignIO
+
+alignment = AlignIO.read("alignment.aln", "clustal")
+
+# Find columns with &gt;80% identity
+conserved_positions = []
+for i in range(alignment.get_alignment_length()):
+    column = alignment[:, i]
+    most_common = max(set(column), key=column.count)
+    if column.count(most_common) / len(column) &gt; 0.8:
+        conserved_positions.append(i)
+
+print(f"Conserved positions: {conserved_positions}")</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Blast</h3>
+  <h1>BLAST Operations with Bio.Blast</h1>
+
+<h2>Overview</h2>
+
+<p>Bio.Blast provides tools for running BLAST searches (both locally and via NCBI web services) and parsing BLAST results in various formats. The module handles the complexity of submitting queries and parsing outputs.</p>
+
+<h2>Running BLAST via NCBI Web Services</h2>
+
+<h3>Bio.Blast.NCBIWWW</h3>
+
+<p>The <code>qblast()</code> function submits sequences to NCBI's online BLAST service:</p>
+
+<pre><code class="language-python">from Bio.Blast import NCBIWWW
+from Bio import SeqIO
+
+# Read sequence from file
+record = SeqIO.read("sequence.fasta", "fasta")
+
+# Run BLAST search
+result_handle = NCBIWWW.qblast(
+    program="blastn",           # BLAST program
+    database="nt",              # Database to search
+    sequence=str(record.seq)    # Query sequence
+)
+
+# Save results
+with open("blast_results.xml", "w") as out_file:
+    out_file.write(result_handle.read())
+result_handle.close()</code></pre>
+
+<h3>BLAST Programs Available</h3>
+
+<ul><li><strong>blastn</strong> - Nucleotide vs nucleotide</li>
+<li><strong>blastp</strong> - Protein vs protein</li>
+<li><strong>blastx</strong> - Translated nucleotide vs protein</li>
+<li><strong>tblastn</strong> - Protein vs translated nucleotide</li>
+<li><strong>tblastx</strong> - Translated nucleotide vs translated nucleotide</li>
+</ul>
+<h3>Common Databases</h3>
+
+<p><strong>Nucleotide databases:</strong></p>
+<ul><li><code>nt</code> - All GenBank+EMBL+DDBJ+PDB sequences</li>
+<li><code>refseq_rna</code> - RefSeq RNA sequences</li>
+</ul>
+<p><strong>Protein databases:</strong></p>
+<ul><li><code>nr</code> - All non-redundant GenBank CDS translations</li>
+<li><code>refseq_protein</code> - RefSeq protein sequences</li>
+<li><code>pdb</code> - Protein Data Bank sequences</li>
+<li><code>swissprot</code> - Curated UniProtKB/Swiss-Prot</li>
+</ul>
+<h3>Advanced qblast Parameters</h3>
+
+<pre><code class="language-python">result_handle = NCBIWWW.qblast(
+    program="blastn",
+    database="nt",
+    sequence=str(record.seq),
+    expect=0.001,              # E-value threshold
+    hitlist_size=50,           # Number of hits to return
+    alignments=25,             # Number of alignments to show
+    word_size=11,              # Word size for initial match
+    gapcosts="5 2",            # Gap costs (open extend)
+    format_type="XML"          # Output format (default)
+)</code></pre>
+
+<h3>Using Sequence Files or IDs</h3>
+
+<pre><code class="language-python"># Use FASTA format string
+fasta_string = open("sequence.fasta").read()
+result_handle = NCBIWWW.qblast("blastn", "nt", fasta_string)
+
+# Use GenBank ID
+result_handle = NCBIWWW.qblast("blastn", "nt", "EU490707")
+
+# Use GI number
+result_handle = NCBIWWW.qblast("blastn", "nt", "160418")</code></pre>
+
+<h2>Parsing BLAST Results</h2>
+
+<h3>Bio.Blast.NCBIXML</h3>
+
+<p>NCBIXML provides parsers for BLAST XML output (the recommended format):</p>
+
+<pre><code class="language-python">from Bio.Blast import NCBIXML
+
+# Parse single BLAST result
+with open("blast_results.xml") as result_handle:
+    blast_record = NCBIXML.read(result_handle)</code></pre>
+
+<h3>Accessing BLAST Record Data</h3>
+
+<pre><code class="language-python"># Query information
+print(f"Query: {blast_record.query}")
+print(f"Query length: {blast_record.query_length}")
+print(f"Database: {blast_record.database}")
+print(f"Number of sequences in database: {blast_record.database_sequences}")
+
+# Iterate through alignments (hits)
+for alignment in blast_record.alignments:
+    print(f"\nHit: {alignment.title}")
+    print(f"Length: {alignment.length}")
+    print(f"Accession: {alignment.accession}")
+
+    # Each alignment can have multiple HSPs (high-scoring pairs)
+    for hsp in alignment.hsps:
+        print(f"  E-value: {hsp.expect}")
+        print(f"  Score: {hsp.score}")
+        print(f"  Bits: {hsp.bits}")
+        print(f"  Identities: {hsp.identities}/{hsp.align_length}")
+        print(f"  Gaps: {hsp.gaps}")
+        print(f"  Query: {hsp.query}")
+        print(f"  Match: {hsp.match}")
+        print(f"  Subject: {hsp.sbjct}")</code></pre>
+
+<h3>Filtering Results</h3>
+
+<pre><code class="language-python"># Only show hits with E-value &lt; 0.001
+E_VALUE_THRESH = 0.001
+
+for alignment in blast_record.alignments:
+    for hsp in alignment.hsps:
+        if hsp.expect &lt; E_VALUE_THRESH:
+            print(f"Hit: {alignment.title}")
+            print(f"E-value: {hsp.expect}")
+            print(f"Identities: {hsp.identities}/{hsp.align_length}")
+            print()</code></pre>
+
+<h3>Multiple BLAST Results</h3>
+
+<p>For files containing multiple BLAST results (e.g., from batch searches):</p>
+
+<pre><code class="language-python">from Bio.Blast import NCBIXML
+
+with open("batch_blast_results.xml") as result_handle:
+    blast_records = NCBIXML.parse(result_handle)
+
+    for blast_record in blast_records:
+        print(f"\nQuery: {blast_record.query}")
+        print(f"Hits: {len(blast_record.alignments)}")
+
+        if blast_record.alignments:
+            # Get best hit
+            best_alignment = blast_record.alignments[0]
+            best_hsp = best_alignment.hsps[0]
+            print(f"Best hit: {best_alignment.title}")
+            print(f"E-value: {best_hsp.expect}")</code></pre>
+
+<h2>Running Local BLAST</h2>
+
+<h3>Prerequisites</h3>
+
+<p>Local BLAST requires:</p>
+<ul><li>BLAST+ command-line tools installed</li>
+<li>BLAST databases downloaded locally</li>
+</ul>
+<h3>Using Command-Line Wrappers</h3>
+
+<pre><code class="language-python">from Bio.Blast.Applications import NcbiblastnCommandline
+
+# Setup BLAST command
+blastn_cline = NcbiblastnCommandline(
+    query="input.fasta",
+    db="local_database",
+    evalue=0.001,
+    outfmt=5,                    # XML format
+    out="results.xml"
+)
+
+# Run BLAST
+stdout, stderr = blastn_cline()
+
+# Parse results
+from Bio.Blast import NCBIXML
+with open("results.xml") as result_handle:
+    blast_record = NCBIXML.read(result_handle)</code></pre>
+
+<h3>Available Command-Line Wrappers</h3>
+
+<ul><li><code>NcbiblastnCommandline</code> - BLASTN wrapper</li>
+<li><code>NcbiblastpCommandline</code> - BLASTP wrapper</li>
+<li><code>NcbiblastxCommandline</code> - BLASTX wrapper</li>
+<li><code>NcbitblastnCommandline</code> - TBLASTN wrapper</li>
+<li><code>NcbitblastxCommandline</code> - TBLASTX wrapper</li>
+</ul>
+<h3>Creating BLAST Databases</h3>
+
+<pre><code class="language-python">from Bio.Blast.Applications import NcbimakeblastdbCommandline
+
+# Create nucleotide database
+makedb_cline = NcbimakeblastdbCommandline(
+    input_file="sequences.fasta",
+    dbtype="nucl",
+    out="my_database"
+)
+stdout, stderr = makedb_cline()</code></pre>
+
+<h2>Analyzing BLAST Results</h2>
+
+<h3>Extract Best Hits</h3>
+
+<pre><code class="language-python">def get_best_hits(blast_record, num_hits=10, e_value_thresh=0.001):
+    """Extract best hits from BLAST record."""
+    hits = []
+    for alignment in blast_record.alignments[:num_hits]:
+        for hsp in alignment.hsps:
+            if hsp.expect &lt; e_value_thresh:
+                hits.append({
+                    'title': alignment.title,
+                    'accession': alignment.accession,
+                    'length': alignment.length,
+                    'e_value': hsp.expect,
+                    'score': hsp.score,
+                    'identities': hsp.identities,
+                    'align_length': hsp.align_length,
+                    'query_start': hsp.query_start,
+                    'query_end': hsp.query_end,
+                    'sbjct_start': hsp.sbjct_start,
+                    'sbjct_end': hsp.sbjct_end
+                })
+                break  # Only take best HSP per alignment
+    return hits</code></pre>
+
+<h3>Calculate Percent Identity</h3>
+
+<pre><code class="language-python">def calculate_percent_identity(hsp):
+    """Calculate percent identity for an HSP."""
+    return (hsp.identities / hsp.align_length) * 100
+
+# Use it
+for alignment in blast_record.alignments:
+    for hsp in alignment.hsps:
+        if hsp.expect &lt; 0.001:
+            identity = calculate_percent_identity(hsp)
+            print(f"{alignment.title}: {identity:.2f}% identity")</code></pre>
+
+<h3>Extract Hit Sequences</h3>
+
+<pre><code class="language-python">from Bio import Entrez, SeqIO
+
+Entrez.email = "your.email@example.com"
+
+def fetch_hit_sequences(blast_record, num_sequences=5):
+    """Fetch sequences for top BLAST hits."""
+    sequences = []
+
+    for alignment in blast_record.alignments[:num_sequences]:
+        accession = alignment.accession
+
+        # Fetch sequence from GenBank
+        handle = Entrez.efetch(
+            db="nucleotide",
+            id=accession,
+            rettype="fasta",
+            retmode="text"
+        )
+        record = SeqIO.read(handle, "fasta")
+        handle.close()
+
+        sequences.append(record)
+
+    return sequences</code></pre>
+
+<h2>Parsing Other BLAST Formats</h2>
+
+<h3>Tab-Delimited Output (outfmt 6/7)</h3>
+
+<pre><code class="language-python"># Run BLAST with tabular output
+blastn_cline = NcbiblastnCommandline(
+    query="input.fasta",
+    db="database",
+    outfmt=6,
+    out="results.txt"
+)
+
+# Parse tabular results
+with open("results.txt") as f:
+    for line in f:
+        fields = line.strip().split('\t')
+        query_id = fields[0]
+        subject_id = fields[1]
+        percent_identity = float(fields[2])
+        align_length = int(fields[3])
+        e_value = float(fields[10])
+        bit_score = float(fields[11])
+
+        print(f"{query_id} -&gt; {subject_id}: {percent_identity}% identity, E={e_value}")</code></pre>
+
+<h3>Custom Output Formats</h3>
+
+<pre><code class="language-python"># Specify custom columns (outfmt 6 with custom fields)
+blastn_cline = NcbiblastnCommandline(
+    query="input.fasta",
+    db="database",
+    outfmt="6 qseqid sseqid pident length evalue bitscore qseq sseq",
+    out="results.txt"
+)</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Use XML format</strong> for parsing (outfmt 5) - most reliable and complete</li>
+<li><strong>Save BLAST results</strong> - Don't re-run searches unnecessarily</li>
+<li><strong>Set appropriate E-value thresholds</strong> - Default is 10, but 0.001-0.01 is often better</li>
+<li><strong>Handle rate limits</strong> - NCBI limits request frequency</li>
+<li><strong>Use local BLAST</strong> for large-scale searches or repeated queries</li>
+<li><strong>Cache results</strong> - Save parsed data to avoid re-parsing</li>
+<li><strong>Check for empty results</strong> - Handle cases with no hits gracefully</li>
+<li><strong>Consider alternatives</strong> - For large datasets, consider DIAMOND or other fast aligners</li>
+<li><strong>Batch searches</strong> - Submit multiple sequences together when possible</li>
+<li><strong>Filter by identity</strong> - E-value alone may not be sufficient</li>
+</ul>
+<h2>Common Use Cases</h2>
+
+<h3>Basic BLAST Search and Parse</h3>
+
+<pre><code class="language-python">from Bio.Blast import NCBIWWW, NCBIXML
+from Bio import SeqIO
+
+# Read query sequence
+record = SeqIO.read("query.fasta", "fasta")
+
+# Run BLAST
+print("Running BLAST search...")
+result_handle = NCBIWWW.qblast("blastn", "nt", str(record.seq))
+
+# Parse results
+blast_record = NCBIXML.read(result_handle)
+
+# Display top 5 hits
+print(f"\nTop 5 hits for {blast_record.query}:")
+for i, alignment in enumerate(blast_record.alignments[:5], 1):
+    hsp = alignment.hsps[0]
+    identity = (hsp.identities / hsp.align_length) * 100
+    print(f"{i}. {alignment.title}")
+    print(f"   E-value: {hsp.expect}, Identity: {identity:.1f}%")</code></pre>
+
+<h3>Find Orthologs</h3>
+
+<pre><code class="language-python">from Bio.Blast import NCBIWWW, NCBIXML
+from Bio import Entrez, SeqIO
+
+Entrez.email = "your.email@example.com"
+
+# Query gene sequence
+query_record = SeqIO.read("gene.fasta", "fasta")
+
+# BLAST against specific organism
+result_handle = NCBIWWW.qblast(
+    "blastn",
+    "nt",
+    str(query_record.seq),
+    entrez_query="Mus musculus[Organism]"  # Restrict to mouse
+)
+
+blast_record = NCBIXML.read(result_handle)
+
+# Find best hit
+if blast_record.alignments:
+    best_hit = blast_record.alignments[0]
+    print(f"Potential ortholog: {best_hit.title}")
+    print(f"Accession: {best_hit.accession}")</code></pre>
+
+<h3>Batch BLAST Multiple Sequences</h3>
+
+<pre><code class="language-python">from Bio.Blast import NCBIWWW, NCBIXML
+from Bio import SeqIO
+
+# Read multiple sequences
+sequences = list(SeqIO.parse("queries.fasta", "fasta"))
+
+# Create batch results file
+with open("batch_results.xml", "w") as out_file:
+    for seq_record in sequences:
+        print(f"Searching for {seq_record.id}...")
+
+        result_handle = NCBIWWW.qblast("blastn", "nt", str(seq_record.seq))
+        out_file.write(result_handle.read())
+        result_handle.close()
+
+# Parse batch results
+with open("batch_results.xml") as result_handle:
+    for blast_record in NCBIXML.parse(result_handle):
+        print(f"\n{blast_record.query}: {len(blast_record.alignments)} hits")</code></pre>
+
+<h3>Reciprocal Best Hits</h3>
+
+<pre><code class="language-python">def reciprocal_best_hit(seq1_id, seq2_id, database="nr", program="blastp"):
+    """Check if two sequences are reciprocal best hits."""
+    from Bio.Blast import NCBIWWW, NCBIXML
+    from Bio import Entrez
+
+    Entrez.email = "your.email@example.com"
+
+    # Forward BLAST
+    result1 = NCBIWWW.qblast(program, database, seq1_id)
+    record1 = NCBIXML.read(result1)
+    best_hit1 = record1.alignments[0].accession if record1.alignments else None
+
+    # Reverse BLAST
+    result2 = NCBIWWW.qblast(program, database, seq2_id)
+    record2 = NCBIXML.read(result2)
+    best_hit2 = record2.alignments[0].accession if record2.alignments else None
+
+    # Check reciprocity
+    return best_hit1 == seq2_id and best_hit2 == seq1_id</code></pre>
+
+<h2>Error Handling</h2>
+
+<pre><code class="language-python">from Bio.Blast import NCBIWWW, NCBIXML
+from urllib.error import HTTPError
+
+try:
+    result_handle = NCBIWWW.qblast("blastn", "nt", "ATCGATCGATCG")
+    blast_record = NCBIXML.read(result_handle)
+    result_handle.close()
+except HTTPError as e:
+    print(f"HTTP Error: {e.code}")
+except Exception as e:
+    print(f"Error running BLAST: {e}")</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Databases</h3>
+  <h1>Database Access with Bio.Entrez</h1>
+
+<h2>Overview</h2>
+
+<p>Bio.Entrez provides programmatic access to NCBI's Entrez databases, including PubMed, GenBank, Gene, Protein, Nucleotide, and many others. It handles all the complexity of API calls, rate limiting, and data parsing.</p>
+
+<h2>Setup and Configuration</h2>
+
+<h3>Email Address (Required)</h3>
+
+<p>NCBI requires an email address to track usage and contact users if issues arise:</p>
+
+<pre><code class="language-python">from Bio import Entrez
+
+# Always set your email
+Entrez.email = "your.email@example.com"</code></pre>
+
+<h3>API Key (Recommended)</h3>
+
+<p>Using an API key increases rate limits from 3 to 10 requests per second:</p>
+
+<pre><code class="language-python"># Get API key from: https://www.ncbi.nlm.nih.gov/account/settings/
+Entrez.api_key = "your_api_key_here"</code></pre>
+
+<h3>Rate Limiting</h3>
+
+<p>Biopython automatically respects NCBI rate limits:</p>
+<ul><li><strong>Without API key</strong>: 3 requests per second</li>
+<li><strong>With API key</strong>: 10 requests per second</li>
+</ul>
+<p>The module handles this automatically, so you don't need to add delays between requests.</p>
+
+<h2>Core Entrez Functions</h2>
+
+<h3>EInfo - Database Information</h3>
+
+<p>Get information about available databases and their statistics:</p>
+
+<pre><code class="language-python"># List all databases
+handle = Entrez.einfo()
+result = Entrez.read(handle)
+print(result["DbList"])
+
+# Get information about a specific database
+handle = Entrez.einfo(db="pubmed")
+result = Entrez.read(handle)
+print(result["DbInfo"]["Description"])
+print(result["DbInfo"]["Count"])  # Number of records</code></pre>
+
+<h3>ESearch - Search Databases</h3>
+
+<p>Search for records and retrieve their IDs:</p>
+
+<pre><code class="language-python"># Search PubMed
+handle = Entrez.esearch(db="pubmed", term="biopython")
+result = Entrez.read(handle)
+handle.close()
+
+id_list = result["IdList"]
+count = result["Count"]
+print(f"Found {count} results")
+print(f"Retrieved IDs: {id_list}")</code></pre>
+
+<h3>Advanced ESearch Parameters</h3>
+
+<pre><code class="language-python"># Search with additional parameters
+handle = Entrez.esearch(
+    db="pubmed",
+    term="biopython[Title]",
+    retmax=100,           # Return up to 100 IDs
+    sort="relevance",     # Sort by relevance
+    reldate=365,          # Only results from last year
+    datetype="pdat"       # Use publication date
+)
+result = Entrez.read(handle)
+handle.close()</code></pre>
+
+<h3>ESummary - Get Record Summaries</h3>
+
+<p>Retrieve summary information for a list of IDs:</p>
+
+<pre><code class="language-python"># Get summaries for multiple records
+handle = Entrez.esummary(db="pubmed", id="19304878,18606172")
+results = Entrez.read(handle)
+handle.close()
+
+for record in results:
+    print(f"Title: {record['Title']}")
+    print(f"Authors: {record['AuthorList']}")
+    print(f"Journal: {record['Source']}")
+    print()</code></pre>
+
+<h3>EFetch - Retrieve Full Records</h3>
+
+<p>Fetch complete records in various formats:</p>
+
+<pre><code class="language-python"># Fetch a GenBank record
+handle = Entrez.efetch(db="nucleotide", id="EU490707", rettype="gb", retmode="text")
+record_text = handle.read()
+handle.close()
+
+# Parse with SeqIO
+from Bio import SeqIO
+handle = Entrez.efetch(db="nucleotide", id="EU490707", rettype="gb", retmode="text")
+record = SeqIO.read(handle, "genbank")
+handle.close()
+print(record.description)</code></pre>
+
+<h3>EFetch Return Types</h3>
+
+<p>Different databases support different return types:</p>
+
+<p><strong>Nucleotide/Protein:</strong></p>
+<ul><li><code>rettype="fasta"</code> - FASTA format</li>
+<li><code>rettype="gb"</code> or <code>"genbank"</code> - GenBank format</li>
+<li><code>rettype="gp"</code> - GenPept format (proteins)</li>
+</ul>
+<p><strong>PubMed:</strong></p>
+<ul><li><code>rettype="medline"</code> - MEDLINE format</li>
+<li><code>rettype="abstract"</code> - Abstract text</li>
+</ul>
+<p><strong>Common modes:</strong></p>
+<ul><li><code>retmode="text"</code> - Plain text</li>
+<li><code>retmode="xml"</code> - XML format</li>
+</ul>
+<h3>ELink - Find Related Records</h3>
+
+<p>Find links between records in different databases:</p>
+
+<pre><code class="language-python"># Find protein records linked to a nucleotide record
+handle = Entrez.elink(dbfrom="nucleotide", db="protein", id="EU490707")
+result = Entrez.read(handle)
+handle.close()
+
+# Extract linked IDs
+for linkset in result[0]["LinkSetDb"]:
+    if linkset["LinkName"] == "nucleotide_protein":
+        protein_ids = [link["Id"] for link in linkset["Link"]]
+        print(f"Linked protein IDs: {protein_ids}")</code></pre>
+
+<h3>EPost - Upload ID Lists</h3>
+
+<p>Upload large lists of IDs to the server for later use:</p>
+
+<pre><code class="language-python"># Post IDs to server
+id_list = ["19304878", "18606172", "16403221"]
+handle = Entrez.epost(db="pubmed", id=",".join(id_list))
+result = Entrez.read(handle)
+handle.close()
+
+# Get query_key and WebEnv for later use
+query_key = result["QueryKey"]
+webenv = result["WebEnv"]
+
+# Use in subsequent queries
+handle = Entrez.efetch(
+    db="pubmed",
+    query_key=query_key,
+    WebEnv=webenv,
+    rettype="medline",
+    retmode="text"
+)</code></pre>
+
+<h3>EGQuery - Global Query</h3>
+
+<p>Search across all Entrez databases at once:</p>
+
+<pre><code class="language-python">handle = Entrez.egquery(term="biopython")
+result = Entrez.read(handle)
+handle.close()
+
+for row in result["eGQueryResult"]:
+    print(f"{row['DbName']}: {row['Count']} results")</code></pre>
+
+<h3>ESpell - Spelling Suggestions</h3>
+
+<p>Get spelling suggestions for search terms:</p>
+
+<pre><code class="language-python">handle = Entrez.espell(db="pubmed", term="biopythn")
+result = Entrez.read(handle)
+handle.close()
+
+print(f"Original: {result['Query']}")
+print(f"Suggestion: {result['CorrectedQuery']}")</code></pre>
+
+<h2>Working with Different Databases</h2>
+
+<h3>PubMed</h3>
+
+<pre><code class="language-python"># Search for articles
+handle = Entrez.esearch(db="pubmed", term="cancer genomics", retmax=10)
+result = Entrez.read(handle)
+handle.close()
+
+# Fetch abstracts
+handle = Entrez.efetch(
+    db="pubmed",
+    id=result["IdList"],
+    rettype="medline",
+    retmode="text"
+)
+records = handle.read()
+handle.close()
+print(records)</code></pre>
+
+<h3>GenBank / Nucleotide</h3>
+
+<pre><code class="language-python"># Search for sequences
+handle = Entrez.esearch(db="nucleotide", term="Cypripedioideae[Orgn] AND matK[Gene]")
+result = Entrez.read(handle)
+handle.close()
+
+# Fetch sequences
+if result["IdList"]:
+    handle = Entrez.efetch(
+        db="nucleotide",
+        id=result["IdList"][:5],
+        rettype="fasta",
+        retmode="text"
+    )
+    sequences = handle.read()
+    handle.close()</code></pre>
+
+<h3>Protein</h3>
+
+<pre><code class="language-python"># Search for protein sequences
+handle = Entrez.esearch(db="protein", term="human insulin")
+result = Entrez.read(handle)
+handle.close()
+
+# Fetch protein records
+from Bio import SeqIO
+handle = Entrez.efetch(
+    db="protein",
+    id=result["IdList"][:5],
+    rettype="gp",
+    retmode="text"
+)
+records = SeqIO.parse(handle, "genbank")
+for record in records:
+    print(f"{record.id}: {record.description}")
+handle.close()</code></pre>
+
+<h3>Gene</h3>
+
+<pre><code class="language-python"># Search for gene records
+handle = Entrez.esearch(db="gene", term="BRCA1[Gene] AND human[Organism]")
+result = Entrez.read(handle)
+handle.close()
+
+# Get gene information
+handle = Entrez.efetch(db="gene", id=result["IdList"][0], retmode="xml")
+record = Entrez.read(handle)
+handle.close()</code></pre>
+
+<h3>Taxonomy</h3>
+
+<pre><code class="language-python"># Search for organism
+handle = Entrez.esearch(db="taxonomy", term="Homo sapiens")
+result = Entrez.read(handle)
+handle.close()
+
+# Fetch taxonomic information
+handle = Entrez.efetch(db="taxonomy", id=result["IdList"][0], retmode="xml")
+records = Entrez.read(handle)
+handle.close()
+
+for record in records:
+    print(f"TaxID: {record['TaxId']}")
+    print(f"Scientific Name: {record['ScientificName']}")
+    print(f"Lineage: {record['Lineage']}")</code></pre>
+
+<h2>Parsing Entrez Results</h2>
+
+<h3>Reading XML Results</h3>
+
+<pre><code class="language-python"># Most results can be parsed with Entrez.read()
+handle = Entrez.efetch(db="pubmed", id="19304878", retmode="xml")
+records = Entrez.read(handle)
+handle.close()
+
+# Access parsed data
+article = records['PubmedArticle'][0]['MedlineCitation']['Article']
+print(article['ArticleTitle'])</code></pre>
+
+<h3>Handling Large Result Sets</h3>
+
+<pre><code class="language-python"># Batch processing for large searches
+search_term = "cancer[Title]"
+handle = Entrez.esearch(db="pubmed", term=search_term, retmax=0)
+result = Entrez.read(handle)
+handle.close()
+
+total_count = int(result["Count"])
+batch_size = 500
+
+for start in range(0, total_count, batch_size):
+    # Fetch batch
+    handle = Entrez.esearch(
+        db="pubmed",
+        term=search_term,
+        retstart=start,
+        retmax=batch_size
+    )
+    result = Entrez.read(handle)
+    handle.close()
+
+    # Process IDs
+    id_list = result["IdList"]
+    print(f"Processing IDs {start} to {start + len(id_list)}")</code></pre>
+
+<h2>Advanced Patterns</h2>
+
+<h3>Search History with WebEnv</h3>
+
+<pre><code class="language-python"># Perform search and store on server
+handle = Entrez.esearch(
+    db="pubmed",
+    term="biopython",
+    usehistory="y"
+)
+result = Entrez.read(handle)
+handle.close()
+
+webenv = result["WebEnv"]
+query_key = result["QueryKey"]
+count = int(result["Count"])
+
+# Fetch results in batches using history
+batch_size = 100
+for start in range(0, count, batch_size):
+    handle = Entrez.efetch(
+        db="pubmed",
+        retstart=start,
+        retmax=batch_size,
+        rettype="medline",
+        retmode="text",
+        webenv=webenv,
+        query_key=query_key
+    )
+    data = handle.read()
+    handle.close()
+    # Process data</code></pre>
+
+<h3>Combining Searches</h3>
+
+<pre><code class="language-python"># Use boolean operators
+complex_search = "(cancer[Title]) AND (genomics[Title]) AND 2020:2025[PDAT]"
+handle = Entrez.esearch(db="pubmed", term=complex_search, retmax=100)
+result = Entrez.read(handle)
+handle.close()</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Always set Entrez.email</strong> - Required by NCBI</li>
+<li><strong>Use API key</strong> for higher rate limits (10 req/s vs 3 req/s)</li>
+<li><strong>Close handles</strong> after reading to free resources</li>
+<li><strong>Batch large requests</strong> - Use retstart and retmax for pagination</li>
+<li><strong>Use WebEnv for large downloads</strong> - Store results on server</li>
+<li><strong>Cache locally</strong> - Download once and save to avoid repeated requests</li>
+<li><strong>Handle errors gracefully</strong> - Network issues and API limits can occur</li>
+<li><strong>Respect NCBI guidelines</strong> - Don't overwhelm the service</li>
+<li><strong>Use appropriate rettype</strong> - Choose format that matches your needs</li>
+<li><strong>Parse XML carefully</strong> - Structure varies by database and record type</li>
+</ul>
+<h2>Error Handling</h2>
+
+<pre><code class="language-python">from urllib.error import HTTPError
+from Bio import Entrez
+
+Entrez.email = "your.email@example.com"
+
+try:
+    handle = Entrez.efetch(db="nucleotide", id="invalid_id", rettype="gb")
+    record = handle.read()
+    handle.close()
+except HTTPError as e:
+    print(f"HTTP Error: {e.code} - {e.reason}")
+except Exception as e:
+    print(f"Error: {e}")</code></pre>
+
+<h2>Common Use Cases</h2>
+
+<h3>Download GenBank Records</h3>
+
+<pre><code class="language-python">from Bio import Entrez, SeqIO
+
+Entrez.email = "your.email@example.com"
+
+# List of accession numbers
+accessions = ["EU490707", "EU490708", "EU490709"]
+
+for acc in accessions:
+    handle = Entrez.efetch(db="nucleotide", id=acc, rettype="gb", retmode="text")
+    record = SeqIO.read(handle, "genbank")
+    handle.close()
+
+    # Save to file
+    SeqIO.write(record, f"{acc}.gb", "genbank")</code></pre>
+
+<h3>Search and Download Papers</h3>
+
+<pre><code class="language-python"># Search PubMed
+handle = Entrez.esearch(db="pubmed", term="machine learning bioinformatics", retmax=20)
+result = Entrez.read(handle)
+handle.close()
+
+# Get details
+handle = Entrez.efetch(db="pubmed", id=result["IdList"], retmode="xml")
+papers = Entrez.read(handle)
+handle.close()
+
+# Extract information
+for paper in papers['PubmedArticle']:
+    article = paper['MedlineCitation']['Article']
+    print(f"Title: {article['ArticleTitle']}")
+    print(f"Journal: {article['Journal']['Title']}")
+    print()</code></pre>
+
+<h3>Find Related Sequences</h3>
+
+<pre><code class="language-python"># Start with one sequence
+handle = Entrez.efetch(db="nucleotide", id="EU490707", rettype="gb", retmode="text")
+record = SeqIO.read(handle, "genbank")
+handle.close()
+
+# Find similar sequences
+handle = Entrez.elink(dbfrom="nucleotide", db="nucleotide", id="EU490707")
+result = Entrez.read(handle)
+handle.close()
+
+# Get related IDs
+related_ids = []
+for linkset in result[0]["LinkSetDb"]:
+    for link in linkset["Link"]:
+        related_ids.append(link["Id"])</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Phylogenetics</h3>
+  <h1>Phylogenetics with Bio.Phylo</h1>
+
+<h2>Overview</h2>
+
+<p>Bio.Phylo provides a unified toolkit for reading, writing, analyzing, and visualizing phylogenetic trees. It supports multiple file formats including Newick, NEXUS, phyloXML, NeXML, and CDAO.</p>
+
+<h2>Supported File Formats</h2>
+
+<ul><li><strong>Newick</strong> - Simple tree representation (most common)</li>
+<li><strong>NEXUS</strong> - Extended format with additional data</li>
+<li><strong>phyloXML</strong> - XML-based format with rich annotations</li>
+<li><strong>NeXML</strong> - Modern XML format</li>
+<li><strong>CDAO</strong> - Comparative Data Analysis Ontology</li>
+</ul>
+<h2>Reading and Writing Trees</h2>
+
+<h3>Reading Trees</h3>
+
+<pre><code class="language-python">from Bio import Phylo
+
+# Read a tree from file
+tree = Phylo.read("tree.nwk", "newick")
+
+# Parse multiple trees from a file
+trees = list(Phylo.parse("trees.nwk", "newick"))
+print(f"Found {len(trees)} trees")</code></pre>
+
+<h3>Writing Trees</h3>
+
+<pre><code class="language-python"># Write tree to file
+Phylo.write(tree, "output.nwk", "newick")
+
+# Write multiple trees
+Phylo.write(trees, "output.nex", "nexus")</code></pre>
+
+<h3>Format Conversion</h3>
+
+<pre><code class="language-python"># Convert between formats
+count = Phylo.convert("input.nwk", "newick", "output.xml", "phyloxml")
+print(f"Converted {count} trees")</code></pre>
+
+<h2>Tree Structure and Navigation</h2>
+
+<h3>Basic Tree Components</h3>
+
+<p>Trees consist of:</p>
+<ul><li><strong>Clade</strong> - A node (internal or terminal) in the tree</li>
+<li><strong>Terminal clades</strong> - Leaves/tips (taxa)</li>
+<li><strong>Internal clades</strong> - Internal nodes</li>
+<li><strong>Branch length</strong> - Evolutionary distance</li>
+</ul>
+<h3>Accessing Tree Properties</h3>
+
+<pre><code class="language-python"># Tree root
+root = tree.root
+
+# Terminal nodes (leaves)
+terminals = tree.get_terminals()
+print(f"Number of taxa: {len(terminals)}")
+
+# Non-terminal nodes
+nonterminals = tree.get_nonterminals()
+print(f"Number of internal nodes: {len(nonterminals)}")
+
+# All clades
+all_clades = list(tree.find_clades())
+print(f"Total clades: {len(all_clades)}")</code></pre>
+
+<h3>Traversing Trees</h3>
+
+<pre><code class="language-python"># Iterate through all clades
+for clade in tree.find_clades():
+    if clade.name:
+        print(f"Clade: {clade.name}, Branch length: {clade.branch_length}")
+
+# Iterate through terminals only
+for terminal in tree.get_terminals():
+    print(f"Taxon: {terminal.name}")
+
+# Depth-first traversal
+for clade in tree.find_clades(order="preorder"):
+    print(clade.name)
+
+# Level-order (breadth-first) traversal
+for clade in tree.find_clades(order="level"):
+    print(clade.name)</code></pre>
+
+<h3>Finding Specific Clades</h3>
+
+<pre><code class="language-python"># Find clade by name
+clade = tree.find_any(name="Species_A")
+
+# Find all clades matching criteria
+def is_long_branch(clade):
+    return clade.branch_length and clade.branch_length &gt; 0.5
+
+long_branches = tree.find_clades(is_long_branch)</code></pre>
+
+<h2>Tree Analysis</h2>
+
+<h3>Tree Statistics</h3>
+
+<pre><code class="language-python"># Total branch length
+total_length = tree.total_branch_length()
+print(f"Total tree length: {total_length:.3f}")
+
+# Tree depth (root to furthest leaf)
+depths = tree.depths()
+max_depth = max(depths.values())
+print(f"Maximum depth: {max_depth:.3f}")
+
+# Terminal count
+terminal_count = tree.count_terminals()
+print(f"Number of taxa: {terminal_count}")</code></pre>
+
+<h3>Distance Calculations</h3>
+
+<pre><code class="language-python"># Distance between two taxa
+distance = tree.distance("Species_A", "Species_B")
+print(f"Distance: {distance:.3f}")
+
+# Create distance matrix
+from Bio import Phylo
+
+terminals = tree.get_terminals()
+taxa_names = [t.name for t in terminals]
+
+print("Distance Matrix:")
+for taxon1 in taxa_names:
+    row = []
+    for taxon2 in taxa_names:
+        if taxon1 == taxon2:
+            row.append(0)
+        else:
+            dist = tree.distance(taxon1, taxon2)
+            row.append(dist)
+    print(f"{taxon1}: {row}")</code></pre>
+
+<h3>Common Ancestors</h3>
+
+<pre><code class="language-python"># Find common ancestor of two clades
+clade1 = tree.find_any(name="Species_A")
+clade2 = tree.find_any(name="Species_B")
+ancestor = tree.common_ancestor(clade1, clade2)
+print(f"Common ancestor: {ancestor.name}")
+
+# Find common ancestor of multiple clades
+clades = [tree.find_any(name=n) for n in ["Species_A", "Species_B", "Species_C"]]
+ancestor = tree.common_ancestor(*clades)</code></pre>
+
+<h3>Tree Comparison</h3>
+
+<pre><code class="language-python"># Compare tree topologies
+def compare_trees(tree1, tree2):
+    """Compare two trees."""
+    # Get terminal names
+    taxa1 = set(t.name for t in tree1.get_terminals())
+    taxa2 = set(t.name for t in tree2.get_terminals())
+
+    # Check if they have same taxa
+    if taxa1 != taxa2:
+        return False, "Different taxa"
+
+    # Compare distances
+    differences = []
+    for taxon1 in taxa1:
+        for taxon2 in taxa1:
+            if taxon1 &lt; taxon2:
+                dist1 = tree1.distance(taxon1, taxon2)
+                dist2 = tree2.distance(taxon1, taxon2)
+                if abs(dist1 - dist2) &gt; 0.01:
+                    differences.append((taxon1, taxon2, dist1, dist2))
+
+    return len(differences) == 0, differences</code></pre>
+
+<h2>Tree Manipulation</h2>
+
+<h3>Pruning Trees</h3>
+
+<pre><code class="language-python"># Prune (remove) specific taxa
+tree_copy = tree.copy()
+tree_copy.prune("Species_A")
+
+# Keep only specific taxa
+taxa_to_keep = ["Species_B", "Species_C", "Species_D"]
+terminals = tree_copy.get_terminals()
+for terminal in terminals:
+    if terminal.name not in taxa_to_keep:
+        tree_copy.prune(terminal)</code></pre>
+
+<h3>Collapsing Short Branches</h3>
+
+<pre><code class="language-python"># Collapse branches shorter than threshold
+def collapse_short_branches(tree, threshold=0.01):
+    """Collapse branches shorter than threshold."""
+    for clade in tree.find_clades():
+        if clade.branch_length and clade.branch_length &lt; threshold:
+            clade.branch_length = 0
+    return tree</code></pre>
+
+<h3>Ladderizing Trees</h3>
+
+<pre><code class="language-python"># Ladderize tree (sort branches by size)
+tree.ladderize()  # ascending order
+tree.ladderize(reverse=True)  # descending order</code></pre>
+
+<h3>Rerooting Trees</h3>
+
+<pre><code class="language-python"># Reroot at midpoint
+tree.root_at_midpoint()
+
+# Reroot with outgroup
+outgroup = tree.find_any(name="Outgroup_Species")
+tree.root_with_outgroup(outgroup)
+
+# Reroot at internal node
+internal = tree.get_nonterminals()[0]
+tree.root_with_outgroup(internal)</code></pre>
+
+<h2>Tree Visualization</h2>
+
+<h3>Basic ASCII Drawing</h3>
+
+<pre><code class="language-python"># Draw tree to console
+Phylo.draw_ascii(tree)
+
+# Draw with custom format
+Phylo.draw_ascii(tree, column_width=80)</code></pre>
+
+<h3>Matplotlib Visualization</h3>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+from Bio import Phylo
+
+# Simple plot
+fig = plt.figure(figsize=(10, 8))
+axes = fig.add_subplot(1, 1, 1)
+Phylo.draw(tree, axes=axes)
+plt.show()
+
+# Customize plot
+fig = plt.figure(figsize=(10, 8))
+axes = fig.add_subplot(1, 1, 1)
+Phylo.draw(tree, axes=axes, do_show=False)
+axes.set_title("Phylogenetic Tree")
+plt.tight_layout()
+plt.savefig("tree.png", dpi=300)</code></pre>
+
+<h3>Advanced Visualization Options</h3>
+
+<pre><code class="language-python"># Radial (circular) tree
+Phylo.draw(tree, branch_labels=lambda c: c.branch_length)
+
+# Show branch support values
+Phylo.draw(tree, label_func=lambda n: str(n.confidence) if n.confidence else "")
+
+# Color branches
+def color_by_length(clade):
+    if clade.branch_length:
+        if clade.branch_length &gt; 0.5:
+            return "red"
+        elif clade.branch_length &gt; 0.2:
+            return "orange"
+    return "black"
+
+# Note: Direct branch coloring requires custom matplotlib code</code></pre>
+
+<h2>Building Trees</h2>
+
+<h3>From Distance Matrix</h3>
+
+<pre><code class="language-python">from Bio.Phylo.TreeConstruction import DistanceTreeConstructor, DistanceMatrix
+
+# Create distance matrix
+dm = DistanceMatrix(
+    names=["Alpha", "Beta", "Gamma", "Delta"],
+    matrix=[
+        [],
+        [0.23],
+        [0.45, 0.34],
+        [0.67, 0.58, 0.29]
+    ]
+)
+
+# Build tree using UPGMA
+constructor = DistanceTreeConstructor()
+tree = constructor.upgma(dm)
+Phylo.draw_ascii(tree)
+
+# Build tree using Neighbor-Joining
+tree = constructor.nj(dm)</code></pre>
+
+<h3>From Multiple Sequence Alignment</h3>
+
+<pre><code class="language-python">from Bio import AlignIO, Phylo
+from Bio.Phylo.TreeConstruction import DistanceCalculator, DistanceTreeConstructor
+
+# Read alignment
+alignment = AlignIO.read("alignment.fasta", "fasta")
+
+# Calculate distance matrix
+calculator = DistanceCalculator("identity")
+distance_matrix = calculator.get_distance(alignment)
+
+# Build tree
+constructor = DistanceTreeConstructor()
+tree = constructor.upgma(distance_matrix)
+
+# Write tree
+Phylo.write(tree, "output_tree.nwk", "newick")</code></pre>
+
+<h3>Distance Models</h3>
+
+<p>Available distance calculation models:</p>
+<ul><li><strong>identity</strong> - Simple identity</li>
+<li><strong>blastn</strong> - BLASTN identity</li>
+<li><strong>trans</strong> - Transition/transversion ratio</li>
+<li><strong>blosum62</strong> - BLOSUM62 matrix</li>
+<li><strong>pam250</strong> - PAM250 matrix</li>
+</ul>
+<pre><code class="language-python"># Use different model
+calculator = DistanceCalculator("blosum62")
+dm = calculator.get_distance(alignment)</code></pre>
+
+<h2>Consensus Trees</h2>
+
+<pre><code class="language-python">from Bio.Phylo.Consensus import majority_consensus, strict_consensus
+
+# Read multiple trees
+trees = list(Phylo.parse("bootstrap_trees.nwk", "newick"))
+
+# Majority-rule consensus
+consensus = majority_consensus(trees, cutoff=0.5)
+
+# Strict consensus
+strict_cons = strict_consensus(trees)
+
+# Write consensus tree
+Phylo.write(consensus, "consensus.nwk", "newick")</code></pre>
+
+<h2>PhyloXML Features</h2>
+
+<p>PhyloXML format supports rich annotations:</p>
+
+<pre><code class="language-python">from Bio.Phylo.PhyloXML import Phylogeny, Clade
+
+# Create PhyloXML tree
+tree = Phylogeny(rooted=True)
+tree.name = "Example Tree"
+tree.description = "A sample phylogenetic tree"
+
+# Add clades with rich annotations
+clade = Clade(branch_length=0.5)
+clade.name = "Species_A"
+clade.color = "red"
+clade.width = 2.0
+
+# Add taxonomy information
+from Bio.Phylo.PhyloXML import Taxonomy
+taxonomy = Taxonomy(scientific_name="Homo sapiens", common_name="Human")
+clade.taxonomies.append(taxonomy)</code></pre>
+
+<h2>Bootstrap Support</h2>
+
+<pre><code class="language-python"># Add bootstrap support values to tree
+def add_bootstrap_support(tree, support_values):
+    """Add bootstrap support to internal nodes."""
+    internal_nodes = tree.get_nonterminals()
+    for node, support in zip(internal_nodes, support_values):
+        node.confidence = support
+    return tree
+
+# Example
+support_values = [95, 87, 76, 92]
+tree_with_support = add_bootstrap_support(tree, support_values)</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Choose appropriate file format</strong> - Newick for simple trees, phyloXML for annotations</li>
+<li><strong>Validate tree topology</strong> - Check for polytomies and negative branch lengths</li>
+<li><strong>Root trees appropriately</strong> - Use midpoint or outgroup rooting</li>
+<li><strong>Handle bootstrap values</strong> - Store as clade confidence</li>
+<li><strong>Consider tree size</strong> - Large trees may need special handling</li>
+<li><strong>Use tree copies</strong> - Call <code>.copy()</code> before modifications</li>
+<li><strong>Export publication-ready figures</strong> - Use matplotlib for high-quality output</li>
+<li><strong>Document tree construction</strong> - Record alignment and parameters used</li>
+<li><strong>Compare multiple trees</strong> - Use consensus methods for bootstrap trees</li>
+<li><strong>Validate taxon names</strong> - Ensure consistent naming across files</li>
+</ul>
+<h2>Common Use Cases</h2>
+
+<h3>Build Tree from Sequences</h3>
+
+<pre><code class="language-python">from Bio import AlignIO, Phylo
+from Bio.Phylo.TreeConstruction import DistanceCalculator, DistanceTreeConstructor
+
+# Read aligned sequences
+alignment = AlignIO.read("sequences.aln", "clustal")
+
+# Calculate distances
+calculator = DistanceCalculator("identity")
+dm = calculator.get_distance(alignment)
+
+# Build neighbor-joining tree
+constructor = DistanceTreeConstructor()
+tree = constructor.nj(dm)
+
+# Root at midpoint
+tree.root_at_midpoint()
+
+# Save tree
+Phylo.write(tree, "tree.nwk", "newick")
+
+# Visualize
+import matplotlib.pyplot as plt
+fig = plt.figure(figsize=(10, 8))
+Phylo.draw(tree)
+plt.show()</code></pre>
+
+<h3>Extract Subtree</h3>
+
+<pre><code class="language-python">def extract_subtree(tree, taxa_list):
+    """Extract subtree containing specific taxa."""
+    # Create a copy
+    subtree = tree.copy()
+
+    # Get all terminals
+    all_terminals = subtree.get_terminals()
+
+    # Prune taxa not in list
+    for terminal in all_terminals:
+        if terminal.name not in taxa_list:
+            subtree.prune(terminal)
+
+    return subtree
+
+# Use it
+subtree = extract_subtree(tree, ["Species_A", "Species_B", "Species_C"])
+Phylo.write(subtree, "subtree.nwk", "newick")</code></pre>
+
+<h3>Calculate Phylogenetic Diversity</h3>
+
+<pre><code class="language-python">def phylogenetic_diversity(tree, taxa_subset=None):
+    """Calculate phylogenetic diversity (sum of branch lengths)."""
+    if taxa_subset:
+        # Prune to subset
+        tree = extract_subtree(tree, taxa_subset)
+
+    # Sum all branch lengths
+    total = 0
+    for clade in tree.find_clades():
+        if clade.branch_length:
+            total += clade.branch_length
+
+    return total
+
+# Calculate PD for all taxa
+pd_all = phylogenetic_diversity(tree)
+print(f"Total phylogenetic diversity: {pd_all:.3f}")
+
+# Calculate PD for subset
+pd_subset = phylogenetic_diversity(tree, ["Species_A", "Species_B"])
+print(f"Subset phylogenetic diversity: {pd_subset:.3f}")</code></pre>
+
+<h3>Annotate Tree with External Data</h3>
+
+<pre><code class="language-python">def annotate_tree_from_csv(tree, csv_file):
+    """Annotate tree leaves with data from CSV."""
+    import csv
+
+    # Read annotation data
+    annotations = {}
+    with open(csv_file) as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            annotations[row["species"]] = row
+
+    # Annotate tree
+    for terminal in tree.get_terminals():
+        if terminal.name in annotations:
+            # Add custom attributes
+            for key, value in annotations[terminal.name].items():
+                setattr(terminal, key, value)
+
+    return tree</code></pre>
+
+<h3>Compare Tree Topologies</h3>
+
+<pre><code class="language-python">def robinson_foulds_distance(tree1, tree2):
+    """Calculate Robinson-Foulds distance between two trees."""
+    # Get bipartitions for each tree
+    def get_bipartitions(tree):
+        bipartitions = set()
+        for clade in tree.get_nonterminals():
+            terminals = frozenset(t.name for t in clade.get_terminals())
+            bipartitions.add(terminals)
+        return bipartitions
+
+    bp1 = get_bipartitions(tree1)
+    bp2 = get_bipartitions(tree2)
+
+    # Symmetric difference
+    diff = len(bp1.symmetric_difference(bp2))
+    return diff
+
+# Use it
+tree1 = Phylo.read("tree1.nwk", "newick")
+tree2 = Phylo.read("tree2.nwk", "newick")
+rf_dist = robinson_foulds_distance(tree1, tree2)
+print(f"Robinson-Foulds distance: {rf_dist}")</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Sequence Io</h3>
+  <h1>Sequence Handling with Bio.Seq and Bio.SeqIO</h1>
+
+<h2>Overview</h2>
+
+<p>Bio.Seq provides the <code>Seq</code> object for biological sequences with specialized methods, while Bio.SeqIO offers a unified interface for reading, writing, and converting sequence files across multiple formats.</p>
+
+<h2>The Seq Object</h2>
+
+<h3>Creating Sequences</h3>
+
+<pre><code class="language-python">from Bio.Seq import Seq
+
+# Create a basic sequence
+my_seq = Seq("AGTACACTGGT")
+
+# Sequences support string-like operations
+print(len(my_seq))  # Length
+print(my_seq[0:5])  # Slicing</code></pre>
+
+<h3>Core Sequence Operations</h3>
+
+<pre><code class="language-python"># Complement and reverse complement
+complement = my_seq.complement()
+rev_comp = my_seq.reverse_complement()
+
+# Transcription (DNA to RNA)
+rna = my_seq.transcribe()
+
+# Translation (to protein)
+protein = my_seq.translate()
+
+# Back-transcription (RNA to DNA)
+dna = rna_seq.back_transcribe()</code></pre>
+
+<h3>Sequence Methods</h3>
+
+<ul><li><code>complement()</code> - Returns complementary strand</li>
+<li><code>reverse_complement()</code> - Returns reverse complement</li>
+<li><code>transcribe()</code> - DNA to RNA transcription</li>
+<li><code>back_transcribe()</code> - RNA to DNA conversion</li>
+<li><code>translate()</code> - Translate to protein sequence</li>
+<li><code>translate(table=N)</code> - Use specific genetic code table</li>
+<li><code>translate(to_stop=True)</code> - Stop at first stop codon</li>
+</ul>
+<h2>Bio.SeqIO: Sequence File I/O</h2>
+
+<h3>Core Functions</h3>
+
+<p><strong>Bio.SeqIO.parse()</strong>: The primary workhorse for reading sequence files as an iterator of <code>SeqRecord</code> objects.</p>
+
+<pre><code class="language-python">from Bio import SeqIO
+
+# Parse a FASTA file
+for record in SeqIO.parse("sequences.fasta", "fasta"):
+    print(record.id)
+    print(record.seq)
+    print(len(record))</code></pre>
+
+<p><strong>Bio.SeqIO.read()</strong>: For single-record files (validates exactly one record exists).</p>
+
+<pre><code class="language-python">record = SeqIO.read("single.fasta", "fasta")</code></pre>
+
+<p><strong>Bio.SeqIO.write()</strong>: Output SeqRecord objects to files.</p>
+
+<pre><code class="language-python"># Write records to file
+count = SeqIO.write(seq_records, "output.fasta", "fasta")
+print(f"Wrote {count} records")</code></pre>
+
+<p><strong>Bio.SeqIO.convert()</strong>: Streamlined format conversion.</p>
+
+<pre><code class="language-python"># Convert between formats
+count = SeqIO.convert("input.gbk", "genbank", "output.fasta", "fasta")</code></pre>
+
+<h3>Supported File Formats</h3>
+
+<p>Common formats include:</p>
+<ul><li><strong>fasta</strong> - FASTA format</li>
+<li><strong>fastq</strong> - FASTQ format (with quality scores)</li>
+<li><strong>genbank</strong> or <strong>gb</strong> - GenBank format</li>
+<li><strong>embl</strong> - EMBL format</li>
+<li><strong>swiss</strong> - SwissProt format</li>
+<li><strong>fasta-2line</strong> - FASTA with sequence on one line</li>
+<li><strong>tab</strong> - Simple tab-separated format</li>
+</ul>
+<h3>The SeqRecord Object</h3>
+
+<p><code>SeqRecord</code> objects combine sequence data with annotations:</p>
+
+<pre><code class="language-python">record.id          # Primary identifier
+record.name        # Short name
+record.description # Description line
+record.seq         # The actual sequence (Seq object)
+record.annotations # Dictionary of additional info
+record.features    # List of SeqFeature objects
+record.letter_annotations  # Per-letter annotations (e.g., quality scores)</code></pre>
+
+<h3>Modifying Records</h3>
+
+<pre><code class="language-python"># Modify record attributes
+record.id = "new_id"
+record.description = "New description"
+
+# Extract subsequences
+sub_record = record[10:30]  # Slicing preserves annotations
+
+# Modify sequence
+record.seq = record.seq.reverse_complement()</code></pre>
+
+<h2>Working with Large Files</h2>
+
+<h3>Memory-Efficient Parsing</h3>
+
+<p>Use iterators to avoid loading entire files into memory:</p>
+
+<pre><code class="language-python"># Good for large files
+for record in SeqIO.parse("large_file.fasta", "fasta"):
+    if len(record.seq) &gt; 1000:
+        print(record.id)</code></pre>
+
+<h3>Dictionary-Based Access</h3>
+
+<p>Three approaches for random access:</p>
+
+<p><strong>1. Bio.SeqIO.to_dict()</strong> - Loads all records into memory:</p>
+
+<pre><code class="language-python">seq_dict = SeqIO.to_dict(SeqIO.parse("sequences.fasta", "fasta"))
+record = seq_dict["sequence_id"]</code></pre>
+
+<p><strong>2. Bio.SeqIO.index()</strong> - Lazy-loaded dictionary (memory efficient):</p>
+
+<pre><code class="language-python">seq_index = SeqIO.index("sequences.fasta", "fasta")
+record = seq_index["sequence_id"]
+seq_index.close()</code></pre>
+
+<p><strong>3. Bio.SeqIO.index_db()</strong> - SQLite-based index for very large files:</p>
+
+<pre><code class="language-python">seq_index = SeqIO.index_db("index.idx", "sequences.fasta", "fasta")
+record = seq_index["sequence_id"]
+seq_index.close()</code></pre>
+
+<h3>Low-Level Parsers for High Performance</h3>
+
+<p>For high-throughput sequencing data, use low-level parsers that return tuples instead of objects:</p>
+
+<pre><code class="language-python">from Bio.SeqIO.FastaIO import SimpleFastaParser
+
+with open("sequences.fasta") as handle:
+    for title, sequence in SimpleFastaParser(handle):
+        print(title, len(sequence))
+
+from Bio.SeqIO.QualityIO import FastqGeneralIterator
+
+with open("reads.fastq") as handle:
+    for title, sequence, quality in FastqGeneralIterator(handle):
+        print(title)</code></pre>
+
+<h2>Compressed Files</h2>
+
+<p>Bio.SeqIO automatically handles compressed files:</p>
+
+<pre><code class="language-python"># Works with gzip compression
+for record in SeqIO.parse("sequences.fasta.gz", "fasta"):
+    print(record.id)
+
+# BGZF format for random access
+from Bio import bgzf
+with bgzf.open("sequences.fasta.bgz", "r") as handle:
+    records = SeqIO.parse(handle, "fasta")</code></pre>
+
+<h2>Data Extraction Patterns</h2>
+
+<h3>Extract Specific Information</h3>
+
+<pre><code class="language-python"># Get all IDs
+ids = [record.id for record in SeqIO.parse("file.fasta", "fasta")]
+
+# Get sequences above length threshold
+long_seqs = [record for record in SeqIO.parse("file.fasta", "fasta")
+             if len(record.seq) &gt; 500]
+
+# Extract organism from GenBank
+for record in SeqIO.parse("file.gbk", "genbank"):
+    organism = record.annotations.get("organism", "Unknown")
+    print(f"{record.id}: {organism}")</code></pre>
+
+<h3>Filter and Write</h3>
+
+<pre><code class="language-python"># Filter sequences by criteria
+long_sequences = (record for record in SeqIO.parse("input.fasta", "fasta")
+                  if len(record) &gt; 500)
+SeqIO.write(long_sequences, "filtered.fasta", "fasta")</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Use iterators</strong> for large files rather than loading everything into memory</li>
+<li><strong>Prefer index()</strong> for repeated random access to large files</li>
+<li><strong>Use index_db()</strong> for millions of records or multi-file scenarios</li>
+<li><strong>Use low-level parsers</strong> for high-throughput data when speed is critical</li>
+<li><strong>Download once, reuse locally</strong> rather than repeated network access</li>
+<li><strong>Close indexed files</strong> explicitly or use context managers</li>
+<li><strong>Validate input</strong> before writing with SeqIO.write()</li>
+<li><strong>Use appropriate format strings</strong> - always lowercase (e.g., "fasta", not "FASTA")</li>
+</ul>
+<h2>Common Use Cases</h2>
+
+<h3>Format Conversion</h3>
+
+<pre><code class="language-python"># GenBank to FASTA
+SeqIO.convert("input.gbk", "genbank", "output.fasta", "fasta")
+
+# Multiple format conversion
+for fmt in ["fasta", "genbank", "embl"]:
+    SeqIO.convert("input.fasta", "fasta", f"output.{fmt}", fmt)</code></pre>
+
+<h3>Quality Filtering (FASTQ)</h3>
+
+<pre><code class="language-python">from Bio import SeqIO
+
+good_reads = (record for record in SeqIO.parse("reads.fastq", "fastq")
+              if min(record.letter_annotations["phred_quality"]) &gt;= 20)
+count = SeqIO.write(good_reads, "filtered.fastq", "fastq")</code></pre>
+
+<h3>Sequence Statistics</h3>
+
+<pre><code class="language-python">from Bio.SeqUtils import gc_fraction
+
+for record in SeqIO.parse("sequences.fasta", "fasta"):
+    gc = gc_fraction(record.seq)
+    print(f"{record.id}: GC={gc:.2%}, Length={len(record)}")</code></pre>
+
+<h3>Creating Records Programmatically</h3>
+
+<pre><code class="language-python">from Bio.Seq import Seq
+from Bio.SeqRecord import SeqRecord
+
+# Create a new record
+new_record = SeqRecord(
+    Seq("ATGCGATCGATCG"),
+    id="seq001",
+    name="MySequence",
+    description="Test sequence"
+)
+
+# Write to file
+SeqIO.write([new_record], "new.fasta", "fasta")</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Structure</h3>
+  <h1>Structural Bioinformatics with Bio.PDB</h1>
+
+<h2>Overview</h2>
+
+<p>Bio.PDB provides tools for working with macromolecular 3D structures from PDB and mmCIF files. The module uses the SMCRA (Structure/Model/Chain/Residue/Atom) architecture to represent protein structures hierarchically.</p>
+
+<h2>SMCRA Architecture</h2>
+
+<p>The Bio.PDB module organizes structures hierarchically:</p>
+
+<pre><code>Structure
+  └── Model       (multiple models for NMR structures)
+      └── Chain   (e.g., chain A, B, C)
+          └── Residue  (amino acids, nucleotides, heteroatoms)
+              └── Atom (individual atoms)</code></pre>
+
+<h2>Parsing Structure Files</h2>
+
+<h3>PDB Format</h3>
+
+<pre><code class="language-python">from Bio.PDB import PDBParser
+
+# Create parser
+parser = PDBParser(QUIET=True)  # QUIET=True suppresses warnings
+
+# Parse structure
+structure = parser.get_structure("1crn", "1crn.pdb")
+
+# Access basic information
+print(f"Structure ID: {structure.id}")
+print(f"Number of models: {len(structure)}")</code></pre>
+
+<h3>mmCIF Format</h3>
+
+<p>mmCIF format is more modern and handles large structures better:</p>
+
+<pre><code class="language-python">from Bio.PDB import MMCIFParser
+
+# Create parser
+parser = MMCIFParser(QUIET=True)
+
+# Parse structure
+structure = parser.get_structure("1crn", "1crn.cif")</code></pre>
+
+<h3>Download from PDB</h3>
+
+<pre><code class="language-python">from Bio.PDB import PDBList
+
+# Create PDB list object
+pdbl = PDBList()
+
+# Download PDB file
+pdbl.retrieve_pdb_file("1CRN", file_format="pdb", pdir="structures/")
+
+# Download mmCIF file
+pdbl.retrieve_pdb_file("1CRN", file_format="mmCif", pdir="structures/")
+
+# Download obsolete structure
+pdbl.retrieve_pdb_file("1CRN", obsolete=True, pdir="structures/")</code></pre>
+
+<h2>Navigating Structure Hierarchy</h2>
+
+<h3>Access Models</h3>
+
+<pre><code class="language-python"># Get first model
+model = structure[0]
+
+# Iterate through all models
+for model in structure:
+    print(f"Model {model.id}")</code></pre>
+
+<h3>Access Chains</h3>
+
+<pre><code class="language-python"># Get specific chain
+chain = model["A"]
+
+# Iterate through all chains
+for chain in model:
+    print(f"Chain {chain.id}")</code></pre>
+
+<h3>Access Residues</h3>
+
+<pre><code class="language-python"># Iterate through residues in a chain
+for residue in chain:
+    print(f"Residue: {residue.resname} {residue.id[1]}")
+
+# Get specific residue by ID
+# Residue ID is tuple: (hetfield, sequence_id, insertion_code)
+residue = chain[(" ", 10, " ")]  # Standard amino acid at position 10</code></pre>
+
+<h3>Access Atoms</h3>
+
+<pre><code class="language-python"># Iterate through atoms in a residue
+for atom in residue:
+    print(f"Atom: {atom.name}, Coordinates: {atom.coord}")
+
+# Get specific atom
+ca_atom = residue["CA"]  # Alpha carbon
+print(f"CA coordinates: {ca_atom.coord}")</code></pre>
+
+<h3>Alternative Access Patterns</h3>
+
+<pre><code class="language-python"># Direct access through hierarchy
+atom = structure[0]["A"][10]["CA"]
+
+# Get all atoms
+atoms = list(structure.get_atoms())
+print(f"Total atoms: {len(atoms)}")
+
+# Get all residues
+residues = list(structure.get_residues())
+
+# Get all chains
+chains = list(structure.get_chains())</code></pre>
+
+<h2>Working with Atom Coordinates</h2>
+
+<h3>Accessing Coordinates</h3>
+
+<pre><code class="language-python"># Get atom coordinates
+coord = atom.coord
+print(f"X: {coord[0]}, Y: {coord[1]}, Z: {coord[2]}")
+
+# Get B-factor (temperature factor)
+b_factor = atom.bfactor
+
+# Get occupancy
+occupancy = atom.occupancy
+
+# Get element
+element = atom.element</code></pre>
+
+<h3>Calculate Distances</h3>
+
+<pre><code class="language-python">from Bio.PDB import Vector
+
+# Calculate distance between two atoms
+atom1 = residue1["CA"]
+atom2 = residue2["CA"]
+
+distance = atom1 - atom2  # Returns distance in Angstroms
+print(f"Distance: {distance:.2f} Å")</code></pre>
+
+<h3>Calculate Angles</h3>
+
+<pre><code class="language-python">from Bio.PDB.vectors import calc_angle
+
+# Calculate angle between three atoms
+angle = calc_angle(
+    atom1.get_vector(),
+    atom2.get_vector(),
+    atom3.get_vector()
+)
+print(f"Angle: {angle:.2f} radians")</code></pre>
+
+<h3>Calculate Dihedrals</h3>
+
+<pre><code class="language-python">from Bio.PDB.vectors import calc_dihedral
+
+# Calculate dihedral angle between four atoms
+dihedral = calc_dihedral(
+    atom1.get_vector(),
+    atom2.get_vector(),
+    atom3.get_vector(),
+    atom4.get_vector()
+)
+print(f"Dihedral: {dihedral:.2f} radians")</code></pre>
+
+<h2>Structure Analysis</h2>
+
+<h3>Secondary Structure (DSSP)</h3>
+
+<p>DSSP assigns secondary structure to protein structures:</p>
+
+<pre><code class="language-python">from Bio.PDB import DSSP, PDBParser
+
+# Parse structure
+parser = PDBParser()
+structure = parser.get_structure("1crn", "1crn.pdb")
+
+# Run DSSP (requires DSSP executable installed)
+model = structure[0]
+dssp = DSSP(model, "1crn.pdb")
+
+# Access results
+for residue_key in dssp:
+    dssp_data = dssp[residue_key]
+    residue_id = residue_key[1]
+    ss = dssp_data[2]  # Secondary structure code
+    phi = dssp_data[4]  # Phi angle
+    psi = dssp_data[5]  # Psi angle
+    print(f"Residue {residue_id}: {ss}, φ={phi:.1f}°, ψ={psi:.1f}°")</code></pre>
+
+<p>Secondary structure codes:</p>
+<ul><li><code>H</code> - Alpha helix</li>
+<li><code>B</code> - Beta bridge</li>
+<li><code>E</code> - Strand</li>
+<li><code>G</code> - 3-10 helix</li>
+<li><code>I</code> - Pi helix</li>
+<li><code>T</code> - Turn</li>
+<li><code>S</code> - Bend</li>
+<li><code>-</code> - Coil/loop</li>
+</ul>
+<h3>Solvent Accessibility (DSSP)</h3>
+
+<pre><code class="language-python"># Get relative solvent accessibility
+for residue_key in dssp:
+    acc = dssp[residue_key][3]  # Relative accessibility
+    print(f"Residue {residue_key[1]}: {acc:.2f} relative accessibility")</code></pre>
+
+<h3>Neighbor Search</h3>
+
+<p>Find nearby atoms efficiently:</p>
+
+<pre><code class="language-python">from Bio.PDB import NeighborSearch
+
+# Get all atoms
+atoms = list(structure.get_atoms())
+
+# Create neighbor search object
+ns = NeighborSearch(atoms)
+
+# Find atoms within radius
+center_atom = structure[0]["A"][10]["CA"]
+nearby_atoms = ns.search(center_atom.coord, 5.0)  # 5 Å radius
+print(f"Found {len(nearby_atoms)} atoms within 5 Å")
+
+# Find residues within radius
+nearby_residues = ns.search(center_atom.coord, 5.0, level="R")
+
+# Find chains within radius
+nearby_chains = ns.search(center_atom.coord, 10.0, level="C")</code></pre>
+
+<h3>Contact Map</h3>
+
+<pre><code class="language-python">def calculate_contact_map(chain, distance_threshold=8.0):
+    """Calculate residue-residue contact map."""
+    residues = list(chain.get_residues())
+    n = len(residues)
+    contact_map = [[0] * n for _ in range(n)]
+
+    for i, res1 in enumerate(residues):
+        for j, res2 in enumerate(residues):
+            if i &lt; j:
+                # Get CA atoms
+                if res1.has_id("CA") and res2.has_id("CA"):
+                    dist = res1["CA"] - res2["CA"]
+                    if dist &lt; distance_threshold:
+                        contact_map[i][j] = 1
+                        contact_map[j][i] = 1
+
+    return contact_map</code></pre>
+
+<h2>Structure Quality Assessment</h2>
+
+<h3>Ramachandran Plot Data</h3>
+
+<pre><code class="language-python">from Bio.PDB import Polypeptide
+
+def get_phi_psi(structure):
+    """Extract phi and psi angles for Ramachandran plot."""
+    phi_psi = []
+
+    for model in structure:
+        for chain in model:
+            polypeptides = Polypeptide.PPBuilder().build_peptides(chain)
+            for poly in polypeptides:
+                angles = poly.get_phi_psi_list()
+                for residue, (phi, psi) in zip(poly, angles):
+                    if phi and psi:  # Skip None values
+                        phi_psi.append((residue.resname, phi, psi))
+
+    return phi_psi</code></pre>
+
+<h3>Check for Missing Atoms</h3>
+
+<pre><code class="language-python">def check_missing_atoms(structure):
+    """Identify residues with missing atoms."""
+    missing = []
+
+    for residue in structure.get_residues():
+        if residue.id[0] == " ":  # Standard amino acid
+            resname = residue.resname
+
+            # Expected backbone atoms
+            expected = ["N", "CA", "C", "O"]
+
+            for atom_name in expected:
+                if not residue.has_id(atom_name):
+                    missing.append((residue.full_id, atom_name))
+
+    return missing</code></pre>
+
+<h2>Structure Manipulation</h2>
+
+<h3>Select Specific Atoms</h3>
+
+<pre><code class="language-python">from Bio.PDB import Select
+
+class CASelect(Select):
+    """Select only CA atoms."""
+    def accept_atom(self, atom):
+        return atom.name == "CA"
+
+class ChainASelect(Select):
+    """Select only chain A."""
+    def accept_chain(self, chain):
+        return chain.id == "A"
+
+# Use with PDBIO
+from Bio.PDB import PDBIO
+
+io = PDBIO()
+io.set_structure(structure)
+io.save("ca_only.pdb", CASelect())
+io.save("chain_a.pdb", ChainASelect())</code></pre>
+
+<h3>Transform Structures</h3>
+
+<pre><code class="language-python">import numpy as np
+
+# Rotate structure
+from Bio.PDB.vectors import rotaxis
+
+# Define rotation axis and angle
+axis = Vector(1, 0, 0)  # X-axis
+angle = np.pi / 4  # 45 degrees
+
+# Create rotation matrix
+rotation = rotaxis(angle, axis)
+
+# Apply rotation to all atoms
+for atom in structure.get_atoms():
+    atom.transform(rotation, Vector(0, 0, 0))</code></pre>
+
+<h3>Superimpose Structures</h3>
+
+<pre><code class="language-python">from Bio.PDB import Superimposer, PDBParser
+
+# Parse two structures
+parser = PDBParser()
+structure1 = parser.get_structure("ref", "reference.pdb")
+structure2 = parser.get_structure("mov", "mobile.pdb")
+
+# Get CA atoms from both structures
+ref_atoms = [atom for atom in structure1.get_atoms() if atom.name == "CA"]
+mov_atoms = [atom for atom in structure2.get_atoms() if atom.name == "CA"]
+
+# Superimpose
+super_imposer = Superimposer()
+super_imposer.set_atoms(ref_atoms, mov_atoms)
+
+# Apply transformation
+super_imposer.apply(structure2.get_atoms())
+
+# Get RMSD
+rmsd = super_imposer.rms
+print(f"RMSD: {rmsd:.2f} Å")
+
+# Save superimposed structure
+from Bio.PDB import PDBIO
+io = PDBIO()
+io.set_structure(structure2)
+io.save("superimposed.pdb")</code></pre>
+
+<h2>Writing Structure Files</h2>
+
+<h3>Save PDB Files</h3>
+
+<pre><code class="language-python">from Bio.PDB import PDBIO
+
+io = PDBIO()
+io.set_structure(structure)
+io.save("output.pdb")</code></pre>
+
+<h3>Save mmCIF Files</h3>
+
+<pre><code class="language-python">from Bio.PDB import MMCIFIO
+
+io = MMCIFIO()
+io.set_structure(structure)
+io.save("output.cif")</code></pre>
+
+<h2>Sequence from Structure</h2>
+
+<h3>Extract Sequence</h3>
+
+<pre><code class="language-python">from Bio.PDB import Polypeptide
+
+# Get polypeptides from structure
+ppb = Polypeptide.PPBuilder()
+
+for model in structure:
+    for chain in model:
+        for pp in ppb.build_peptides(chain):
+            sequence = pp.get_sequence()
+            print(f"Chain {chain.id}: {sequence}")</code></pre>
+
+<h3>Map to FASTA</h3>
+
+<pre><code class="language-python">from Bio import SeqIO
+from Bio.SeqRecord import SeqRecord
+
+# Extract sequences and create FASTA
+records = []
+ppb = Polypeptide.PPBuilder()
+
+for model in structure:
+    for chain in model:
+        for pp in ppb.build_peptides(chain):
+            seq_record = SeqRecord(
+                pp.get_sequence(),
+                id=f"{structure.id}_{chain.id}",
+                description=f"Chain {chain.id}"
+            )
+            records.append(seq_record)
+
+SeqIO.write(records, "structure_sequences.fasta", "fasta")</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Use mmCIF</strong> for large structures and modern data</li>
+<li><strong>Set QUIET=True</strong> to suppress parser warnings</li>
+<li><strong>Check for missing atoms</strong> before analysis</li>
+<li><strong>Use NeighborSearch</strong> for efficient spatial queries</li>
+<li><strong>Validate structure quality</strong> with DSSP or Ramachandran analysis</li>
+<li><strong>Handle multiple models</strong> appropriately (NMR structures)</li>
+<li><strong>Be aware of heteroatoms</strong> - they have different residue IDs</li>
+<li><strong>Use Select classes</strong> for targeted structure output</li>
+<li><strong>Cache downloaded structures</strong> locally</li>
+<li><strong>Consider alternative conformations</strong> - some residues have multiple positions</li>
+</ul>
+<h2>Common Use Cases</h2>
+
+<h3>Calculate RMSD Between Structures</h3>
+
+<pre><code class="language-python">from Bio.PDB import PDBParser, Superimposer
+
+parser = PDBParser()
+structure1 = parser.get_structure("s1", "structure1.pdb")
+structure2 = parser.get_structure("s2", "structure2.pdb")
+
+# Get CA atoms
+atoms1 = [atom for atom in structure1[0]["A"].get_atoms() if atom.name == "CA"]
+atoms2 = [atom for atom in structure2[0]["A"].get_atoms() if atom.name == "CA"]
+
+# Ensure same number of atoms
+min_len = min(len(atoms1), len(atoms2))
+atoms1 = atoms1[:min_len]
+atoms2 = atoms2[:min_len]
+
+# Calculate RMSD
+sup = Superimposer()
+sup.set_atoms(atoms1, atoms2)
+print(f"RMSD: {sup.rms:.3f} Å")</code></pre>
+
+<h3>Find Binding Site Residues</h3>
+
+<pre><code class="language-python">def find_binding_site(structure, ligand_chain, ligand_res_id, distance=5.0):
+    """Find residues near a ligand."""
+    from Bio.PDB import NeighborSearch
+
+    # Get ligand atoms
+    ligand = structure[0][ligand_chain][ligand_res_id]
+    ligand_atoms = list(ligand.get_atoms())
+
+    # Get all protein atoms
+    protein_atoms = []
+    for chain in structure[0]:
+        if chain.id != ligand_chain:
+            for residue in chain:
+                if residue.id[0] == " ":  # Standard residue
+                    protein_atoms.extend(residue.get_atoms())
+
+    # Find nearby atoms
+    ns = NeighborSearch(protein_atoms)
+    binding_site = set()
+
+    for ligand_atom in ligand_atoms:
+        nearby = ns.search(ligand_atom.coord, distance, level="R")
+        binding_site.update(nearby)
+
+    return list(binding_site)</code></pre>
+
+<h3>Calculate Center of Mass</h3>
+
+<pre><code class="language-python">import numpy as np
+
+def center_of_mass(entity):
+    """Calculate center of mass for structure entity."""
+    masses = []
+    coords = []
+
+    # Atomic masses (simplified)
+    mass_dict = {"C": 12.0, "N": 14.0, "O": 16.0, "S": 32.0}
+
+    for atom in entity.get_atoms():
+        mass = mass_dict.get(atom.element, 12.0)
+        masses.append(mass)
+        coords.append(atom.coord)
+
+    masses = np.array(masses)
+    coords = np.array(coords)
+
+    com = np.sum(coords * masses[:, np.newaxis], axis=0) / np.sum(masses)
+    return com</code></pre>
+
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

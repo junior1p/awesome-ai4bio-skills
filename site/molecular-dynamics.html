@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Molecular Dynamics — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="">Medchem</a><a href="molecular-dynamics.html" class="active">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / Molecular Dynamics</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>Molecular Dynamics</h1>
+    <p class="description">Run and analyze molecular dynamics simulations with OpenMM and MDAnalysis. Set up protein/small molecule systems, define force fields, run energy minimization and production MD, analyze trajectories (</p>
+    <h1>Molecular Dynamics</h1>
+
+<h2>Overview</h2>
+
+<p>Molecular dynamics (MD) simulation computationally models the time evolution of molecular systems by integrating Newton's equations of motion. This skill covers two complementary tools:</p>
+
+<ul><li><strong>OpenMM</strong> (https://openmm.org/): High-performance MD simulation engine with GPU support, Python API, and flexible force field support</li>
+<li><strong>MDAnalysis</strong> (https://mdanalysis.org/): Python library for reading, writing, and analyzing MD trajectories from all major simulation packages</li>
+</ul>
+<p><strong>Installation:</strong></p>
+<pre><code class="language-bash">conda install -c conda-forge openmm mdanalysis nglview
+# or
+pip install openmm mdanalysis</code></pre>
+
+<h2>When to Use This Skill</h2>
+
+<p>Use molecular dynamics when:</p>
+
+<ul><li><strong>Protein stability analysis</strong>: How does a mutation affect protein dynamics?</li>
+<li><strong>Drug binding simulations</strong>: Characterize binding mode and residence time of a ligand</li>
+<li><strong>Conformational sampling</strong>: Explore protein flexibility and conformational changes</li>
+<li><strong>Protein-protein interaction</strong>: Model interface dynamics and binding energetics</li>
+<li><strong>RMSD/RMSF analysis</strong>: Quantify structural fluctuations from a reference structure</li>
+<li><strong>Free energy estimation</strong>: Compute binding free energy or conformational free energy</li>
+<li><strong>Membrane simulations</strong>: Model proteins in lipid bilayers</li>
+<li><strong>Intrinsically disordered proteins</strong>: Study IDR conformational ensembles</li>
+</ul>
+<h2>Core Workflow: OpenMM Simulation</h2>
+
+<h3>1. System Preparation</h3>
+
+<pre><code class="language-python">from openmm.app import *
+from openmm import *
+from openmm.unit import *
+import sys
+
+def prepare_system_from_pdb(pdb_file, forcefield_name="amber14-all.xml",
+                              water_model="amber14/tip3pfb.xml"):
+    """
+    Prepare an OpenMM system from a PDB file.
+
+    Args:
+        pdb_file: Path to cleaned PDB file (use PDBFixer for raw PDB files)
+        forcefield_name: Force field XML file
+        water_model: Water model XML file
+
+    Returns:
+        pdb, forcefield, system, topology
+    """
+    # Load PDB
+    pdb = PDBFile(pdb_file)
+
+    # Load force field
+    forcefield = ForceField(forcefield_name, water_model)
+
+    # Add hydrogens and solvate
+    modeller = Modeller(pdb.topology, pdb.positions)
+    modeller.addHydrogens(forcefield)
+
+    # Add solvent box (10 Å padding, 150 mM NaCl)
+    modeller.addSolvent(
+        forcefield,
+        model='tip3p',
+        padding=10*angstroms,
+        ionicStrength=0.15*molar
+    )
+
+    print(f"System: {modeller.topology.getNumAtoms()} atoms, "
+          f"{modeller.topology.getNumResidues()} residues")
+
+    # Create system
+    system = forcefield.createSystem(
+        modeller.topology,
+        nonbondedMethod=PME,         # Particle Mesh Ewald for long-range electrostatics
+        nonbondedCutoff=1.0*nanometer,
+        constraints=HBonds,           # Constrain hydrogen bonds (allows 2 fs timestep)
+        rigidWater=True,
+        ewaldErrorTolerance=0.0005
+    )
+
+    return modeller, system</code></pre>
+
+<h3>2. Energy Minimization</h3>
+
+<pre><code class="language-python">from openmm.app import *
+from openmm import *
+from openmm.unit import *
+
+def minimize_energy(modeller, system, output_pdb="minimized.pdb",
+                     max_iterations=1000, tolerance=10.0):
+    """
+    Energy minimize the system to remove steric clashes.
+
+    Args:
+        modeller: Modeller object with topology and positions
+        system: OpenMM System
+        output_pdb: Path to save minimized structure
+        max_iterations: Maximum minimization steps
+        tolerance: Convergence criterion in kJ/mol/nm
+
+    Returns:
+        simulation object with minimized positions
+    """
+    # Set up integrator (doesn't matter for minimization)
+    integrator = LangevinMiddleIntegrator(300*kelvin, 1/picosecond, 0.004*picoseconds)
+
+    # Create simulation
+    # Use GPU if available (CUDA or OpenCL), fall back to CPU
+    try:
+        platform = Platform.getPlatformByName('CUDA')
+        properties = {'DeviceIndex': '0', 'Precision': 'mixed'}
+    except Exception:
+        try:
+            platform = Platform.getPlatformByName('OpenCL')
+            properties = {}
+        except Exception:
+            platform = Platform.getPlatformByName('CPU')
+            properties = {}
+
+    simulation = Simulation(
+        modeller.topology, system, integrator,
+        platform, properties
+    )
+    simulation.context.setPositions(modeller.positions)
+
+    # Check initial energy
+    state = simulation.context.getState(getEnergy=True)
+    print(f"Initial energy: {state.getPotentialEnergy()}")
+
+    # Minimize
+    simulation.minimizeEnergy(
+        tolerance=tolerance*kilojoules_per_mole/nanometer,
+        maxIterations=max_iterations
+    )
+
+    state = simulation.context.getState(getEnergy=True, getPositions=True)
+    print(f"Minimized energy: {state.getPotentialEnergy()}")
+
+    # Save minimized structure
+    with open(output_pdb, 'w') as f:
+        PDBFile.writeFile(simulation.topology, state.getPositions(), f)
+
+    return simulation</code></pre>
+
+<h3>3. NVT Equilibration</h3>
+
+<pre><code class="language-python">from openmm.app import *
+from openmm import *
+from openmm.unit import *
+
+def run_nvt_equilibration(simulation, n_steps=50000, temperature=300,
+                            report_interval=1000, output_prefix="nvt"):
+    """
+    NVT equilibration: constant N, V, T.
+    Equilibrate velocities to target temperature.
+
+    Args:
+        simulation: OpenMM Simulation (after minimization)
+        n_steps: Number of MD steps (50000 × 2fs = 100 ps)
+        temperature: Temperature in Kelvin
+        report_interval: Steps between data reports
+        output_prefix: File prefix for trajectory and log
+    """
+    # Add position restraints for backbone during NVT
+    # (Optional: restraint heavy atoms)
+
+    # Set temperature
+    simulation.context.setVelocitiesToTemperature(temperature*kelvin)
+
+    # Add reporters
+    simulation.reporters = []
+
+    # Log file
+    simulation.reporters.append(
+        StateDataReporter(
+            f"{output_prefix}_log.txt",
+            report_interval,
+            step=True,
+            potentialEnergy=True,
+            kineticEnergy=True,
+            temperature=True,
+            volume=True,
+            speed=True
+        )
+    )
+
+    # DCD trajectory (compact binary format)
+    simulation.reporters.append(
+        DCDReporter(f"{output_prefix}_traj.dcd", report_interval)
+    )
+
+    print(f"Running NVT equilibration: {n_steps} steps ({n_steps*2/1000:.1f} ps)")
+    simulation.step(n_steps)
+    print("NVT equilibration complete")
+
+    return simulation</code></pre>
+
+<h3>4. NPT Equilibration and Production</h3>
+
+<pre><code class="language-python">def run_npt_production(simulation, n_steps=500000, temperature=300, pressure=1.0,
+                        report_interval=5000, output_prefix="npt"):
+    """
+    NPT production run: constant N, P, T.
+
+    Args:
+        n_steps: Production steps (500000 × 2fs = 1 ns)
+        temperature: Temperature in Kelvin
+        pressure: Pressure in bar
+        report_interval: Steps between reports
+    """
+    # Add Monte Carlo barostat for pressure control
+    system = simulation.context.getSystem()
+    system.addForce(MonteCarloBarostat(pressure*bar, temperature*kelvin, 25))
+    simulation.context.reinitialize(preserveState=True)
+
+    # Update reporters
+    simulation.reporters = []
+    simulation.reporters.append(
+        StateDataReporter(
+            f"{output_prefix}_log.txt",
+            report_interval,
+            step=True,
+            potentialEnergy=True,
+            temperature=True,
+            density=True,
+            speed=True
+        )
+    )
+    simulation.reporters.append(
+        DCDReporter(f"{output_prefix}_traj.dcd", report_interval)
+    )
+
+    # Save checkpoints
+    simulation.reporters.append(
+        CheckpointReporter(f"{output_prefix}_checkpoint.chk", 50000)
+    )
+
+    print(f"Running NPT production: {n_steps} steps ({n_steps*2/1000000:.2f} ns)")
+    simulation.step(n_steps)
+    print("Production MD complete")
+    return simulation</code></pre>
+
+<h2>Trajectory Analysis with MDAnalysis</h2>
+
+<h3>1. Load Trajectory</h3>
+
+<pre><code class="language-python">import MDAnalysis as mda
+from MDAnalysis.analysis import rms, align, contacts
+import numpy as np
+import matplotlib.pyplot as plt
+
+def load_trajectory(topology_file, trajectory_file):
+    """
+    Load an MD trajectory with MDAnalysis.
+
+    Args:
+        topology_file: PDB, PSF, or other topology file
+        trajectory_file: DCD, XTC, TRR, or other trajectory
+    """
+    u = mda.Universe(topology_file, trajectory_file)
+    print(f"Universe: {u.atoms.n_atoms} atoms, {u.trajectory.n_frames} frames")
+    print(f"Time range: 0 to {u.trajectory.totaltime:.0f} ps")
+    return u</code></pre>
+
+<h3>2. RMSD Analysis</h3>
+
+<pre><code class="language-python">def compute_rmsd(u, selection="backbone", reference_frame=0):
+    """
+    Compute RMSD of selected atoms relative to reference frame.
+
+    Args:
+        u: MDAnalysis Universe
+        selection: Atom selection string (MDAnalysis syntax)
+        reference_frame: Frame index for reference structure
+
+    Returns:
+        numpy array of (time, rmsd) values
+    """
+    # Align trajectory to minimize RMSD
+    aligner = align.AlignTraj(u, u, select=selection, in_memory=True)
+    aligner.run()
+
+    # Compute RMSD
+    R = rms.RMSD(u, select=selection, ref_frame=reference_frame)
+    R.run()
+
+    rmsd_data = R.results.rmsd  # columns: frame, time, RMSD
+    return rmsd_data
+
+def plot_rmsd(rmsd_data, title="RMSD over time", output_file="rmsd.png"):
+    """Plot RMSD over simulation time."""
+    fig, ax = plt.subplots(figsize=(10, 4))
+    ax.plot(rmsd_data[:, 1] / 1000, rmsd_data[:, 2], 'b-', linewidth=0.5)
+    ax.set_xlabel("Time (ns)")
+    ax.set_ylabel("RMSD (Å)")
+    ax.set_title(title)
+    ax.axhline(rmsd_data[:, 2].mean(), color='r', linestyle='--',
+               label=f'Mean: {rmsd_data[:, 2].mean():.2f} Å')
+    ax.legend()
+    plt.tight_layout()
+    plt.savefig(output_file, dpi=150)
+    return fig</code></pre>
+
+<h3>3. RMSF Analysis (Per-Residue Flexibility)</h3>
+
+<pre><code class="language-python">def compute_rmsf(u, selection="backbone", start_frame=0):
+    """
+    Compute per-residue RMSF (flexibility).
+
+    Returns:
+        resids, rmsf_values arrays
+    """
+    # Select atoms
+    atoms = u.select_atoms(selection)
+
+    # Compute RMSF
+    R = rms.RMSF(atoms)
+    R.run(start=start_frame)
+
+    # Average by residue
+    resids = []
+    rmsf_per_res = []
+    for res in u.select_atoms(selection).residues:
+        res_atoms = res.atoms.intersection(atoms)
+        if len(res_atoms) &gt; 0:
+            resids.append(res.resid)
+            rmsf_per_res.append(R.results.rmsf[res_atoms.indices].mean())
+
+    return np.array(resids), np.array(rmsf_per_res)</code></pre>
+
+<h3>4. Protein-Ligand Contacts</h3>
+
+<pre><code class="language-python">def analyze_contacts(u, protein_sel="protein", ligand_sel="resname LIG",
+                      radius=4.5, start_frame=0):
+    """
+    Track protein-ligand contacts over trajectory.
+
+    Args:
+        radius: Contact distance cutoff in Angstroms
+    """
+    protein = u.select_atoms(protein_sel)
+    ligand = u.select_atoms(ligand_sel)
+
+    contact_frames = []
+    for ts in u.trajectory[start_frame:]:
+        # Find protein atoms within radius of ligand
+        distances = contacts.contact_matrix(
+            protein.positions, ligand.positions, radius
+        )
+        contact_residues = set()
+        for i in range(distances.shape[0]):
+            if distances[i].any():
+                contact_residues.add(protein.atoms[i].resid)
+        contact_frames.append(contact_residues)
+
+    return contact_frames</code></pre>
+
+<h2>Force Field Selection Guide</h2>
+
+<p>| System | Recommended Force Field | Water Model |</p>
+<p>|--------|------------------------|-------------|</p>
+<p>| Standard proteins | AMBER14 (<code>amber14-all.xml</code>) | TIP3P-FB |</p>
+<p>| Proteins + small molecules | AMBER14 + GAFF2 | TIP3P-FB |</p>
+<p>| Membrane proteins | CHARMM36m | TIP3P |</p>
+<p>| Nucleic acids | AMBER99-bsc1 or AMBER14 | TIP3P |</p>
+<p>| Disordered proteins | ff19SB or CHARMM36m | TIP3P |</p>
+
+<h2>System Preparation Tools</h2>
+
+<h3>PDBFixer (for raw PDB files)</h3>
+
+<pre><code class="language-python">from pdbfixer import PDBFixer
+from openmm.app import PDBFile
+
+def fix_pdb(input_pdb, output_pdb, ph=7.0):
+    """Fix common PDB issues: missing residues, atoms, add H, standardize."""
+    fixer = PDBFixer(filename=input_pdb)
+    fixer.findMissingResidues()
+    fixer.findNonstandardResidues()
+    fixer.replaceNonstandardResidues()
+    fixer.removeHeterogens(True)    # Remove water/ligands
+    fixer.findMissingAtoms()
+    fixer.addMissingAtoms()
+    fixer.addMissingHydrogens(ph)
+
+    with open(output_pdb, 'w') as f:
+        PDBFile.writeFile(fixer.topology, fixer.positions, f)
+
+    return output_pdb</code></pre>
+
+<h3>GAFF2 for Small Molecules (via OpenFF Toolkit)</h3>
+
+<pre><code class="language-python"># For ligand parameterization, use OpenFF toolkit or ACPYPE
+# pip install openff-toolkit
+from openff.toolkit import Molecule, ForceField as OFFForceField
+from openff.interchange import Interchange
+
+def parameterize_ligand(smiles, ff_name="openff-2.0.0.offxml"):
+    """Generate GAFF2/OpenFF parameters for a small molecule."""
+    mol = Molecule.from_smiles(smiles)
+    mol.generate_conformers(n_conformers=1)
+
+    off_ff = OFFForceField(ff_name)
+    interchange = off_ff.create_interchange(mol.to_topology())
+    return interchange</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Always minimize before MD</strong>: Raw PDB structures have steric clashes</li>
+<li><strong>Equilibrate before production</strong>: NVT (50–100 ps) → NPT (100–500 ps) → Production</li>
+<li><strong>Use GPU</strong>: Simulations are 10–100× faster on GPU (CUDA/OpenCL)</li>
+<li><strong>2 fs timestep with HBonds constraints</strong>: Standard; use 4 fs with HMR (hydrogen mass repartitioning)</li>
+<li><strong>Analyze only equilibrated trajectory</strong>: Discard first 20–50% as equilibration</li>
+<li><strong>Save checkpoints</strong>: MD runs can fail; checkpoints allow restart</li>
+<li><strong>Periodic boundary conditions</strong>: Required for solvated systems</li>
+<li><strong>PME for electrostatics</strong>: More accurate than cutoff methods for charged systems</li>
+</ul>
+<h2>Additional Resources</h2>
+
+<ul><li><strong>OpenMM documentation</strong>: https://openmm.org/documentation.html</li>
+<li><strong>MDAnalysis user guide</strong>: https://docs.mdanalysis.org/</li>
+<li><strong>GROMACS</strong> (alternative MD engine): https://manual.gromacs.org/</li>
+<li><strong>NAMD</strong> (alternative): https://www.ks.uiuc.edu/Research/namd/</li>
+<li><strong>CHARMM-GUI</strong> (web-based system builder): https://charmm-gui.org/</li>
+<li><strong>AmberTools</strong> (free Amber tools): https://ambermd.org/AmberTools.php</li>
+<li><strong>OpenMM paper</strong>: Eastman P et al. (2017) PLOS Computational Biology. PMID: 28278240</li>
+<li><strong>MDAnalysis paper</strong>: Michaud-Agrawal N et al. (2011) J Computational Chemistry. PMID: 21500218</li></ul>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Mdanalysis Analysis</h3>
+  <h1>MDAnalysis Analysis Reference</h1>
+
+<h2>MDAnalysis Universe and AtomGroup</h2>
+
+<pre><code class="language-python">import MDAnalysis as mda
+
+# Load Universe
+u = mda.Universe("topology.pdb", "trajectory.dcd")
+# or for single structure:
+u = mda.Universe("structure.pdb")
+
+# Key attributes
+print(u.atoms.n_atoms)          # Total atoms
+print(u.residues.n_residues)    # Total residues
+print(u.trajectory.n_frames)   # Number of frames
+print(u.trajectory.dt)         # Time step in ps
+print(u.trajectory.totaltime)  # Total simulation time in ps</code></pre>
+
+<h2>Atom Selection Language</h2>
+
+<p>MDAnalysis uses a rich selection language:</p>
+
+<pre><code class="language-python"># Basic selections
+protein = u.select_atoms("protein")
+backbone = u.select_atoms("backbone")  # CA, N, C, O
+calpha = u.select_atoms("name CA")
+water = u.select_atoms("resname WAT or resname HOH or resname TIP3")
+ligand = u.select_atoms("resname LIG")
+
+# By residue number
+region = u.select_atoms("resid 10:50")
+specific = u.select_atoms("resid 45 and name CA")
+
+# By proximity
+near_ligand = u.select_atoms("protein and around 5.0 resname LIG")
+
+# By property
+charged = u.select_atoms("resname ARG LYS ASP GLU")
+hydrophobic = u.select_atoms("resname ALA VAL LEU ILE PRO PHE TRP MET")
+
+# Boolean combinations
+active_site = u.select_atoms("(resid 100 102 145 200) and protein")
+
+# Inverse
+not_water = u.select_atoms("not (resname WAT HOH)")</code></pre>
+
+<h2>Common Analysis Modules</h2>
+
+<h3>RMSD and RMSF</h3>
+
+<pre><code class="language-python">from MDAnalysis.analysis import rms, align
+
+# Align trajectory to first frame
+align.AlignTraj(u, u, select='backbone', in_memory=True).run()
+
+# RMSD
+R = rms.RMSD(u, u, select='backbone', groupselections=['name CA'])
+R.run()
+# R.results.rmsd: shape (n_frames, 3) = [frame, time, RMSD]
+
+# RMSF (per-atom fluctuations)
+from MDAnalysis.analysis.rms import RMSF
+rmsf = RMSF(u.select_atoms('backbone')).run()
+# rmsf.results.rmsf: per-atom RMSF values in Angstroms</code></pre>
+
+<h3>Radius of Gyration</h3>
+
+<pre><code class="language-python">rg = []
+for ts in u.trajectory:
+    rg.append(u.select_atoms("protein").radius_of_gyration())
+import numpy as np
+print(f"Mean Rg: {np.mean(rg):.2f} Å")</code></pre>
+
+<h3>Secondary Structure Analysis</h3>
+
+<pre><code class="language-python">from MDAnalysis.analysis.dssp import DSSP
+
+# DSSP secondary structure assignment per frame
+dssp = DSSP(u).run()
+# dssp.results.dssp: per-residue per-frame secondary structure codes
+# H = alpha-helix, E = beta-strand, C = coil</code></pre>
+
+<h3>Hydrogen Bonds</h3>
+
+<pre><code class="language-python">from MDAnalysis.analysis.hydrogenbonds import HydrogenBondAnalysis
+
+hbonds = HydrogenBondAnalysis(
+    u,
+    donors_sel="protein and name N",
+    acceptors_sel="protein and name O",
+    d_h_cutoff=1.2,          # donor-H distance (Å)
+    d_a_cutoff=3.0,          # donor-acceptor distance (Å)
+    d_h_a_angle_cutoff=150   # D-H-A angle (degrees)
+)
+hbonds.run()
+
+# Count H-bonds per frame
+import pandas as pd
+df = pd.DataFrame(hbonds.results.hbonds,
+                  columns=['frame', 'donor_ix', 'hydrogen_ix', 'acceptor_ix',
+                           'DA_dist', 'DHA_angle'])</code></pre>
+
+<h3>Principal Component Analysis (PCA)</h3>
+
+<pre><code class="language-python">from MDAnalysis.analysis import pca
+
+pca_analysis = pca.PCA(u, select='backbone', align=True).run()
+
+# PC variances
+print(pca_analysis.results.variance[:5])  # % variance of first 5 PCs
+
+# Project trajectory onto PCs
+projected = pca_analysis.transform(u.select_atoms('backbone'), n_components=3)
+# Shape: (n_frames, n_components)</code></pre>
+
+<h3>Free Energy Surface (FES)</h3>
+
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import gaussian_kde
+
+def plot_free_energy_surface(x, y, bins=50, T=300, xlabel="PC1", ylabel="PC2",
+                              output="fes.png"):
+    """
+    Compute 2D free energy surface from two order parameters.
+    FES = -kT * ln(P(x,y))
+    """
+    kB = 0.0083144621  # kJ/mol/K
+    kT = kB * T
+
+    # 2D histogram
+    H, xedges, yedges = np.histogram2d(x, y, bins=bins, density=True)
+    H = H.T
+
+    # Free energy
+    H_safe = np.where(H &gt; 0, H, np.nan)
+    fes = -kT * np.log(H_safe)
+    fes -= np.nanmin(fes)  # Shift minimum to 0
+
+    # Plot
+    fig, ax = plt.subplots(figsize=(8, 6))
+    im = ax.contourf(xedges[:-1], yedges[:-1], fes, levels=20, cmap='RdYlBu_r')
+    plt.colorbar(im, ax=ax, label='Free Energy (kJ/mol)')
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    plt.savefig(output, dpi=150, bbox_inches='tight')
+    return fig</code></pre>
+
+<h2>Trajectory Formats Supported</h2>
+
+<p>| Format | Extension | Notes |</p>
+<p>|--------|-----------|-------|</p>
+<p>| DCD | <code>.dcd</code> | CHARMM/NAMD binary; widely used |</p>
+<p>| XTC | <code>.xtc</code> | GROMACS compressed |</p>
+<p>| TRR | <code>.trr</code> | GROMACS full precision |</p>
+<p>| NetCDF | <code>.nc</code> | AMBER format |</p>
+<p>| LAMMPS | <code>.lammpstrj</code> | LAMMPS dump |</p>
+<p>| HDF5 | <code>.h5md</code> | H5MD standard |</p>
+<p>| PDB | <code>.pdb</code> | Multi-model PDB |</p>
+
+<h2>MDAnalysis Interoperability</h2>
+
+<pre><code class="language-python"># Convert to numpy
+positions = u.atoms.positions  # Current frame: shape (N, 3)
+
+# Write to PDB
+with mda.Writer("frame_10.pdb", u.atoms.n_atoms) as W:
+    u.trajectory[10]  # Move to frame 10
+    W.write(u.atoms)
+
+# Write trajectory subset
+with mda.Writer("protein_traj.dcd", u.select_atoms("protein").n_atoms) as W:
+    for ts in u.trajectory:
+        W.write(u.select_atoms("protein"))
+
+# Convert to MDTraj (for compatibility)
+# import mdtraj as md
+# traj = md.load("trajectory.dcd", top="topology.pdb")</code></pre>
+
+<h2>Performance Tips</h2>
+
+<ul><li><strong>Use <code>in_memory=True</code></strong> for AlignTraj when RAM allows (much faster iteration)</li>
+<li><strong>Select minimal atoms</strong> before analysis to reduce memory/compute</li>
+<li><strong>Use multiprocessing</strong> for independent frame analyses</li>
+<li><strong>Process in chunks</strong> for very long trajectories using <code>start</code>/<code>stop</code>/<code>step</code> parameters:</li>
+</ul>
+<pre><code class="language-python"># Analyze every 10th frame from frame 100 to 1000
+R.run(start=100, stop=1000, step=10)</code></pre>
+
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medchem — AI4Bio Skills</title>
+  <style>
+:root {
+  --bg: #fafbfc;
+  --sidebar-bg: #1e2530;
+  --sidebar-text: #c9d1d9;
+  --sidebar-hover: #2d3748;
+  --accent: #0969da;
+  --accent-light: #dbeafe;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --border: #d0d7de;
+  --code-bg: #f6f8fa;
+  --header-bg: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 24px 0;
+}
+#sidebar .logo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+#sidebar .logo span { color: #58a6ff; }
+#sidebar .section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #8b949e;
+  padding: 16px 20px 6px;
+}
+#sidebar a {
+  display: block;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 5px 20px;
+  border-radius: 0;
+  transition: background 0.15s, color 0.15s;
+}
+#sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+#sidebar a.active { background: var(--accent); color: #fff; }
+#main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+#topbar {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+#topbar .breadcrumb {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+#topbar .breadcrumb a { color: var(--accent); text-decoration: none; }
+#topbar .breadcrumb a:hover { text-decoration: underline; }
+#topbar .actions a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-left: 16px;
+}
+#topbar .actions a:hover { color: var(--accent); }
+#content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+#content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+#content .description {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+#content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+#content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+#content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+#content p { margin: 0 0 14px; }
+#content ul, #content ol { margin: 0 0 14px 24px; }
+#content li { margin-bottom: 6px; }
+#content a { color: var(--accent); text-decoration: none; }
+#content a:hover { text-decoration: underline; }
+#content code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+#content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+#content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#content blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-light);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  border-radius: 0 6px 6px 0;
+}
+#content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+#content th {
+  background: var(--code-bg);
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+#content td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+#content tr:nth-child(even) td { background: var(--code-bg); }
+#content hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+.ref-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+.ref-section h2 { font-size: 18px; margin-bottom: 16px; }
+.ref-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.ref-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+#footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: var(--header-bg);
+}
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; }
+  #content { padding: 24px 20px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">🧬 <span>AI4Bio</span> Skills</div>
+  <a href="index.html">🏠 Overview</a>
+  <div class="section-label">Sequence & Genomics</div><a href="biopython.html" class="">Biopython</a><a href="bioservices.html" class="">Bioservices</a><a href="dask.html" class="">Dask</a><a href="deeptools.html" class="">Deeptools</a><a href="gget.html" class="">Gget</a><a href="gtars.html" class="">Gtars</a><a href="polars.html" class="">Polars</a><a href="polars-bio.html" class="">Polars Bio</a><a href="pysam.html" class="">Pysam</a><a href="scikit-bio.html" class="">Scikit Bio</a><a href="tiledbvcf.html" class="">Tiledbvcf</a><a href="zarr-python.html" class="">Zarr Python</a><div class="section-label">Single-Cell & Multi-Omics</div><a href="anndata.html" class="">Anndata</a><a href="arboreto.html" class="">Arboreto</a><a href="cellxgene-census.html" class="">Cellxgene Census</a><a href="geniml.html" class="">Geniml</a><a href="hypogenic.html" class="">Hypogenic</a><a href="lamindb.html" class="">Lamindb</a><a href="primekg.html" class="">Primekg</a><a href="pydeseq2.html" class="">Pydeseq2</a><a href="scanpy.html" class="">Scanpy</a><a href="scvelo.html" class="">Scvelo</a><a href="scvi-tools.html" class="">Scvi Tools</a><div class="section-label">Protein & Structure</div><a href="adaptyv.html" class="">Adaptyv</a><a href="cobrapy.html" class="">Cobrapy</a><a href="datamol.html" class="">Datamol</a><a href="deepchem.html" class="">Deepchem</a><a href="diffdock.html" class="">Diffdock</a><a href="esm.html" class="">Esm</a><a href="etetoolkit.html" class="">Etetoolkit</a><a href="glycoengineering.html" class="">Glycoengineering</a><a href="medchem.html" class="active">Medchem</a><a href="molecular-dynamics.html" class="">Molecular Dynamics</a><a href="molfeat.html" class="">Molfeat</a><a href="pymatgen.html" class="">Pymatgen</a><a href="pytdc.html" class="">Pytdc</a><a href="rdkit.html" class="">Rdkit</a><a href="torchdrug.html" class="">Torchdrug</a><div class="section-label">Mass Spectrometry & Metabolism</div><a href="matchms.html" class="">Matchms</a><a href="pyopenms.html" class="">Pyopenms</a><div class="section-label">Literature & Databases</div><a href="database-lookup.html" class="">Database Lookup</a><a href="paper-lookup.html" class="">Paper Lookup</a><div class="section-label">Visualization & Analysis</div><a href="exploratory-data-analysis.html" class="">Exploratory Data Analysis</a><a href="matplotlib.html" class="">Matplotlib</a><a href="networkx.html" class="">Networkx</a><a href="scientific-visualization.html" class="">Scientific Visualization</a><a href="seaborn.html" class="">Seaborn</a>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div class="breadcrumb"><a href="index.html">AI4Bio Skills</a> / Medchem</div>
+    <div class="actions"><a href="https://github.com/junior1p/awesome-ai4bio-skills">GitHub ↗</a></div>
+  </div>
+  <div id="content">
+    <h1>Medchem</h1>
+    <p class="description">Medicinal chemistry filters. Apply drug-likeness rules (Lipinski, Veber), PAINS filters, structural alerts, complexity metrics, for compound prioritization and library filtering.</p>
+    <h1>Medchem</h1>
+
+<h2>Overview</h2>
+
+<p>Medchem is a Python library for molecular filtering and prioritization in drug discovery workflows. Apply hundreds of well-established and novel molecular filters, structural alerts, and medicinal chemistry rules to efficiently triage and prioritize compound libraries at scale. Rules and filters are context-specific—use as guidelines combined with domain expertise.</p>
+
+<h2>When to Use This Skill</h2>
+
+<p>This skill should be used when:</p>
+<ul><li>Applying drug-likeness rules (Lipinski, Veber, etc.) to compound libraries</li>
+<li>Filtering molecules by structural alerts or PAINS patterns</li>
+<li>Prioritizing compounds for lead optimization</li>
+<li>Assessing compound quality and medicinal chemistry properties</li>
+<li>Detecting reactive or problematic functional groups</li>
+<li>Calculating molecular complexity metrics</li>
+</ul>
+<h2>Installation</h2>
+
+<pre><code class="language-bash">uv pip install medchem</code></pre>
+
+<h2>Core Capabilities</h2>
+
+<h3>1. Medicinal Chemistry Rules</h3>
+
+<p>Apply established drug-likeness rules to molecules using the <code>medchem.rules</code> module.</p>
+
+<p><strong>Available Rules:</strong></p>
+<ul><li>Rule of Five (Lipinski)</li>
+<li>Rule of Oprea</li>
+<li>Rule of CNS</li>
+<li>Rule of leadlike (soft and strict)</li>
+<li>Rule of three</li>
+<li>Rule of Reos</li>
+<li>Rule of drug</li>
+<li>Rule of Veber</li>
+<li>Golden triangle</li>
+<li>PAINS filters</li>
+</ul>
+<p><strong>Single Rule Application:</strong></p>
+
+<pre><code class="language-python">import medchem as mc
+
+# Apply Rule of Five to a SMILES string
+smiles = "CC(=O)OC1=CC=CC=C1C(=O)O"  # Aspirin
+passes = mc.rules.basic_rules.rule_of_five(smiles)
+# Returns: True
+
+# Check specific rules
+passes_oprea = mc.rules.basic_rules.rule_of_oprea(smiles)
+passes_cns = mc.rules.basic_rules.rule_of_cns(smiles)</code></pre>
+
+<p><strong>Multiple Rules with RuleFilters:</strong></p>
+
+<pre><code class="language-python">import datamol as dm
+import medchem as mc
+
+# Load molecules
+mols = [dm.to_mol(smiles) for smiles in smiles_list]
+
+# Create filter with multiple rules
+rfilter = mc.rules.RuleFilters(
+    rule_list=[
+        "rule_of_five",
+        "rule_of_oprea",
+        "rule_of_cns",
+        "rule_of_leadlike_soft"
+    ]
+)
+
+# Apply filters with parallelization
+results = rfilter(
+    mols=mols,
+    n_jobs=-1,  # Use all CPU cores
+    progress=True
+)</code></pre>
+
+<p><strong>Result Format:</strong></p>
+<p>Results are returned as dictionaries with pass/fail status and detailed information for each rule.</p>
+
+<h3>2. Structural Alert Filters</h3>
+
+<p>Detect potentially problematic structural patterns using the <code>medchem.structural</code> module.</p>
+
+<p><strong>Available Filters:</strong></p>
+
+<ul><li><strong>Common Alerts</strong> - General structural alerts derived from ChEMBL curation and literature</li>
+<li><strong>NIBR Filters</strong> - Novartis Institutes for BioMedical Research filter set</li>
+<li><strong>Lilly Demerits</strong> - Eli Lilly's demerit-based system (275 rules, molecules rejected at >100 demerits)</li>
+</ul>
+<p><strong>Common Alerts:</strong></p>
+
+<pre><code class="language-python">import medchem as mc
+
+# Create filter
+alert_filter = mc.structural.CommonAlertsFilters()
+
+# Check single molecule
+mol = dm.to_mol("c1ccccc1")
+has_alerts, details = alert_filter.check_mol(mol)
+
+# Batch filtering with parallelization
+results = alert_filter(
+    mols=mol_list,
+    n_jobs=-1,
+    progress=True
+)</code></pre>
+
+<p><strong>NIBR Filters:</strong></p>
+
+<pre><code class="language-python">import medchem as mc
+
+# Apply NIBR filters
+nibr_filter = mc.structural.NIBRFilters()
+results = nibr_filter(mols=mol_list, n_jobs=-1)</code></pre>
+
+<p><strong>Lilly Demerits:</strong></p>
+
+<pre><code class="language-python">import medchem as mc
+
+# Calculate Lilly demerits
+lilly = mc.structural.LillyDemeritsFilters()
+results = lilly(mols=mol_list, n_jobs=-1)
+
+# Each result includes demerit score and whether it passes (≤100 demerits)</code></pre>
+
+<h3>3. Functional API for High-Level Operations</h3>
+
+<p>The <code>medchem.functional</code> module provides convenient functions for common workflows.</p>
+
+<p><strong>Quick Filtering:</strong></p>
+
+<pre><code class="language-python">import medchem as mc
+
+# Apply NIBR filters to a list
+filter_ok = mc.functional.nibr_filter(
+    mols=mol_list,
+    n_jobs=-1
+)
+
+# Apply common alerts
+alert_results = mc.functional.common_alerts_filter(
+    mols=mol_list,
+    n_jobs=-1
+)</code></pre>
+
+<h3>4. Chemical Groups Detection</h3>
+
+<p>Identify specific chemical groups and functional groups using <code>medchem.groups</code>.</p>
+
+<p><strong>Available Groups:</strong></p>
+<ul><li>Hinge binders</li>
+<li>Phosphate binders</li>
+<li>Michael acceptors</li>
+<li>Reactive groups</li>
+<li>Custom SMARTS patterns</li>
+</ul>
+<p><strong>Usage:</strong></p>
+
+<pre><code class="language-python">import medchem as mc
+
+# Create group detector
+group = mc.groups.ChemicalGroup(groups=["hinge_binders"])
+
+# Check for matches
+has_matches = group.has_match(mol_list)
+
+# Get detailed match information
+matches = group.get_matches(mol)</code></pre>
+
+<h3>5. Named Catalogs</h3>
+
+<p>Access curated collections of chemical structures through <code>medchem.catalogs</code>.</p>
+
+<p><strong>Available Catalogs:</strong></p>
+<ul><li>Functional groups</li>
+<li>Protecting groups</li>
+<li>Common reagents</li>
+<li>Standard fragments</li>
+</ul>
+<p><strong>Usage:</strong></p>
+
+<pre><code class="language-python">import medchem as mc
+
+# Access named catalogs
+catalogs = mc.catalogs.NamedCatalogs
+
+# Use catalog for matching
+catalog = catalogs.get("functional_groups")
+matches = catalog.get_matches(mol)</code></pre>
+
+<h3>6. Molecular Complexity</h3>
+
+<p>Calculate complexity metrics that approximate synthetic accessibility using <code>medchem.complexity</code>.</p>
+
+<p><strong>Common Metrics:</strong></p>
+<ul><li>Bertz complexity</li>
+<li>Whitlock complexity</li>
+<li>Barone complexity</li>
+</ul>
+<p><strong>Usage:</strong></p>
+
+<pre><code class="language-python">import medchem as mc
+
+# Calculate complexity
+complexity_score = mc.complexity.calculate_complexity(mol)
+
+# Filter by complexity threshold
+complex_filter = mc.complexity.ComplexityFilter(max_complexity=500)
+results = complex_filter(mols=mol_list)</code></pre>
+
+<h3>7. Constraints Filtering</h3>
+
+<p>Apply custom property-based constraints using <code>medchem.constraints</code>.</p>
+
+<p><strong>Example Constraints:</strong></p>
+<ul><li>Molecular weight ranges</li>
+<li>LogP bounds</li>
+<li>TPSA limits</li>
+<li>Rotatable bond counts</li>
+</ul>
+<p><strong>Usage:</strong></p>
+
+<pre><code class="language-python">import medchem as mc
+
+# Define constraints
+constraints = mc.constraints.Constraints(
+    mw_range=(200, 500),
+    logp_range=(-2, 5),
+    tpsa_max=140,
+    rotatable_bonds_max=10
+)
+
+# Apply constraints
+results = constraints(mols=mol_list, n_jobs=-1)</code></pre>
+
+<h3>8. Medchem Query Language</h3>
+
+<p>Use a specialized query language for complex filtering criteria.</p>
+
+<p><strong>Query Examples:</strong></p>
+<pre><code># Molecules passing Ro5 AND not having common alerts
+"rule_of_five AND NOT common_alerts"
+
+# CNS-like molecules with low complexity
+"rule_of_cns AND complexity &lt; 400"
+
+# Leadlike molecules without Lilly demerits
+"rule_of_leadlike AND lilly_demerits == 0"</code></pre>
+
+<p><strong>Usage:</strong></p>
+
+<pre><code class="language-python">import medchem as mc
+
+# Parse and apply query
+query = mc.query.parse("rule_of_five AND NOT common_alerts")
+results = query.apply(mols=mol_list, n_jobs=-1)</code></pre>
+
+<h2>Workflow Patterns</h2>
+
+<h3>Pattern 1: Initial Triage of Compound Library</h3>
+
+<p>Filter a large compound collection to identify drug-like candidates.</p>
+
+<pre><code class="language-python">import datamol as dm
+import medchem as mc
+import pandas as pd
+
+# Load compound library
+df = pd.read_csv("compounds.csv")
+mols = [dm.to_mol(smi) for smi in df["smiles"]]
+
+# Apply primary filters
+rule_filter = mc.rules.RuleFilters(rule_list=["rule_of_five", "rule_of_veber"])
+rule_results = rule_filter(mols=mols, n_jobs=-1, progress=True)
+
+# Apply structural alerts
+alert_filter = mc.structural.CommonAlertsFilters()
+alert_results = alert_filter(mols=mols, n_jobs=-1, progress=True)
+
+# Combine results
+df["passes_rules"] = rule_results["pass"]
+df["has_alerts"] = alert_results["has_alerts"]
+df["drug_like"] = df["passes_rules"] &amp; ~df["has_alerts"]
+
+# Save filtered compounds
+filtered_df = df[df["drug_like"]]
+filtered_df.to_csv("filtered_compounds.csv", index=False)</code></pre>
+
+<h3>Pattern 2: Lead Optimization Filtering</h3>
+
+<p>Apply stricter criteria during lead optimization.</p>
+
+<pre><code class="language-python">import medchem as mc
+
+# Create comprehensive filter
+filters = {
+    "rules": mc.rules.RuleFilters(rule_list=["rule_of_leadlike_strict"]),
+    "alerts": mc.structural.NIBRFilters(),
+    "lilly": mc.structural.LillyDemeritsFilters(),
+    "complexity": mc.complexity.ComplexityFilter(max_complexity=400)
+}
+
+# Apply all filters
+results = {}
+for name, filt in filters.items():
+    results[name] = filt(mols=candidate_mols, n_jobs=-1)
+
+# Identify compounds passing all filters
+passes_all = all(r["pass"] for r in results.values())</code></pre>
+
+<h3>Pattern 3: Identify Specific Chemical Groups</h3>
+
+<p>Find molecules containing specific functional groups or scaffolds.</p>
+
+<pre><code class="language-python">import medchem as mc
+
+# Create group detector for multiple groups
+group_detector = mc.groups.ChemicalGroup(
+    groups=["hinge_binders", "phosphate_binders"]
+)
+
+# Screen library
+matches = group_detector.get_all_matches(mol_list)
+
+# Filter molecules with desired groups
+mol_with_groups = [mol for mol, match in zip(mol_list, matches) if match]</code></pre>
+
+<h2>Best Practices</h2>
+
+<ul><li><strong>Context Matters</strong>: Don't blindly apply filters. Understand the biological target and chemical space.</li>
+</ul>
+<ul><li><strong>Combine Multiple Filters</strong>: Use rules, structural alerts, and domain knowledge together for better decisions.</li>
+</ul>
+<ul><li><strong>Use Parallelization</strong>: For large datasets (>1000 molecules), always use <code>n_jobs=-1</code> for parallel processing.</li>
+</ul>
+<ul><li><strong>Iterative Refinement</strong>: Start with broad filters (Ro5), then apply more specific criteria (CNS, leadlike) as needed.</li>
+</ul>
+<ul><li><strong>Document Filtering Decisions</strong>: Track which molecules were filtered out and why for reproducibility.</li>
+</ul>
+<ul><li><strong>Validate Results</strong>: Remember that marketed drugs often fail standard filters—use these as guidelines, not absolute rules.</li>
+</ul>
+<ul><li><strong>Consider Prodrugs</strong>: Molecules designed as prodrugs may intentionally violate standard medicinal chemistry rules.</li>
+</ul>
+<h2>Resources</h2>
+
+<h3>references/api_guide.md</h3>
+<p>Comprehensive API reference covering all medchem modules with detailed function signatures, parameters, and return types.</p>
+
+<h3>references/rules_catalog.md</h3>
+<p>Complete catalog of available rules, filters, and alerts with descriptions, thresholds, and literature references.</p>
+
+<h3>scripts/filter_molecules.py</h3>
+<p>Production-ready script for batch filtering workflows. Supports multiple input formats (CSV, SDF, SMILES), configurable filter combinations, and detailed reporting.</p>
+
+<p><strong>Usage:</strong></p>
+<pre><code class="language-bash">python scripts/filter_molecules.py input.csv --rules rule_of_five,rule_of_cns --alerts nibr --output filtered.csv</code></pre>
+
+<h2>Documentation</h2>
+
+<p>Official documentation: https://medchem-docs.datamol.io/</p>
+<p>GitHub repository: https://github.com/datamol-io/medchem</p>
+    <div class="ref-section"><h2>Reference Documentation</h2>
+<div class="ref-card">
+  <h3>📄 Api Guide</h3>
+  <h1>Medchem API Reference</h1>
+
+<p>Comprehensive reference for all medchem modules and functions.</p>
+
+<h2>Module: medchem.rules</h2>
+
+<h3>Class: RuleFilters</h3>
+
+<p>Filter molecules based on multiple medicinal chemistry rules.</p>
+
+<p><strong>Constructor:</strong></p>
+<pre><code class="language-python">RuleFilters(rule_list: List[str])</code></pre>
+
+<p><strong>Parameters:</strong></p>
+<ul><li><code>rule_list</code>: List of rule names to apply. See available rules below.</li>
+</ul>
+<p><strong>Methods:</strong></p>
+
+<pre><code class="language-python">__call__(mols: List[Chem.Mol], n_jobs: int = 1, progress: bool = False) -&gt; Dict</code></pre>
+<ul><li><code>mols</code>: List of RDKit molecule objects</li>
+<li><code>n_jobs</code>: Number of parallel jobs (-1 uses all cores)</li>
+<li><code>progress</code>: Show progress bar</li>
+<li><strong>Returns</strong>: Dictionary with results for each rule</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">rfilter = mc.rules.RuleFilters(rule_list=["rule_of_five", "rule_of_cns"])
+results = rfilter(mols=mol_list, n_jobs=-1, progress=True)</code></pre>
+
+<h3>Module: medchem.rules.basic_rules</h3>
+
+<p>Individual rule functions that can be applied to single molecules.</p>
+
+<h4>rule_of_five()</h4>
+
+<pre><code class="language-python">rule_of_five(mol: Union[str, Chem.Mol]) -&gt; bool</code></pre>
+
+<p>Lipinski's Rule of Five for oral bioavailability.</p>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>Molecular weight ≤ 500 Da</li>
+<li>LogP ≤ 5</li>
+<li>H-bond donors ≤ 5</li>
+<li>H-bond acceptors ≤ 10</li>
+</ul>
+<p><strong>Parameters:</strong></p>
+<ul><li><code>mol</code>: SMILES string or RDKit molecule object</li>
+</ul>
+<p><strong>Returns:</strong> True if molecule passes all criteria</p>
+
+<h4>rule_of_three()</h4>
+
+<pre><code class="language-python">rule_of_three(mol: Union[str, Chem.Mol]) -&gt; bool</code></pre>
+
+<p>Rule of Three for fragment screening libraries.</p>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>Molecular weight ≤ 300 Da</li>
+<li>LogP ≤ 3</li>
+<li>H-bond donors ≤ 3</li>
+<li>H-bond acceptors ≤ 3</li>
+<li>Rotatable bonds ≤ 3</li>
+<li>Polar surface area ≤ 60 Ų</li>
+</ul>
+<h4>rule_of_oprea()</h4>
+
+<pre><code class="language-python">rule_of_oprea(mol: Union[str, Chem.Mol]) -&gt; bool</code></pre>
+
+<p>Oprea's lead-like criteria for hit-to-lead optimization.</p>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>Molecular weight: 200-350 Da</li>
+<li>LogP: -2 to 4</li>
+<li>Rotatable bonds ≤ 7</li>
+<li>Rings ≤ 4</li>
+</ul>
+<h4>rule_of_cns()</h4>
+
+<pre><code class="language-python">rule_of_cns(mol: Union[str, Chem.Mol]) -&gt; bool</code></pre>
+
+<p>CNS drug-likeness rules.</p>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>Molecular weight ≤ 450 Da</li>
+<li>LogP: -1 to 5</li>
+<li>H-bond donors ≤ 2</li>
+<li>TPSA ≤ 90 Ų</li>
+</ul>
+<h4>rule_of_leadlike_soft()</h4>
+
+<pre><code class="language-python">rule_of_leadlike_soft(mol: Union[str, Chem.Mol]) -&gt; bool</code></pre>
+
+<p>Soft lead-like criteria (more permissive).</p>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>Molecular weight: 250-450 Da</li>
+<li>LogP: -3 to 4</li>
+<li>Rotatable bonds ≤ 10</li>
+</ul>
+<h4>rule_of_leadlike_strict()</h4>
+
+<pre><code class="language-python">rule_of_leadlike_strict(mol: Union[str, Chem.Mol]) -&gt; bool</code></pre>
+
+<p>Strict lead-like criteria (more restrictive).</p>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>Molecular weight: 200-350 Da</li>
+<li>LogP: -2 to 3.5</li>
+<li>Rotatable bonds ≤ 7</li>
+<li>Rings: 1-3</li>
+</ul>
+<h4>rule_of_veber()</h4>
+
+<pre><code class="language-python">rule_of_veber(mol: Union[str, Chem.Mol]) -&gt; bool</code></pre>
+
+<p>Veber's rules for oral bioavailability.</p>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>Rotatable bonds ≤ 10</li>
+<li>TPSA ≤ 140 Ų</li>
+</ul>
+<h4>rule_of_reos()</h4>
+
+<pre><code class="language-python">rule_of_reos(mol: Union[str, Chem.Mol]) -&gt; bool</code></pre>
+
+<p>Rapid Elimination Of Swill (REOS) filter.</p>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>Molecular weight: 200-500 Da</li>
+<li>LogP: -5 to 5</li>
+<li>H-bond donors: 0-5</li>
+<li>H-bond acceptors: 0-10</li>
+</ul>
+<h4>rule_of_drug()</h4>
+
+<pre><code class="language-python">rule_of_drug(mol: Union[str, Chem.Mol]) -&gt; bool</code></pre>
+
+<p>Combined drug-likeness criteria.</p>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>Passes Rule of Five</li>
+<li>Passes Veber rules</li>
+<li>No PAINS substructures</li>
+</ul>
+<h4>golden_triangle()</h4>
+
+<pre><code class="language-python">golden_triangle(mol: Union[str, Chem.Mol]) -&gt; bool</code></pre>
+
+<p>Golden Triangle for drug-likeness balance.</p>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>200 ≤ MW ≤ 50×LogP + 400</li>
+<li>LogP: -2 to 5</li>
+</ul>
+<h4>pains_filter()</h4>
+
+<pre><code class="language-python">pains_filter(mol: Union[str, Chem.Mol]) -&gt; bool</code></pre>
+
+<p>Pan Assay INterference compoundS (PAINS) filter.</p>
+
+<p><strong>Returns:</strong> True if molecule does NOT contain PAINS substructures</p>
+
+<hr>
+
+<h2>Module: medchem.structural</h2>
+
+<h3>Class: CommonAlertsFilters</h3>
+
+<p>Filter for common structural alerts derived from ChEMBL and literature.</p>
+
+<p><strong>Constructor:</strong></p>
+<pre><code class="language-python">CommonAlertsFilters()</code></pre>
+
+<p><strong>Methods:</strong></p>
+
+<pre><code class="language-python">__call__(mols: List[Chem.Mol], n_jobs: int = 1, progress: bool = False) -&gt; List[Dict]</code></pre>
+
+<p>Apply common alerts filter to a list of molecules.</p>
+
+<p><strong>Returns:</strong> List of dictionaries with keys:</p>
+<ul><li><code>has_alerts</code>: Boolean indicating if molecule has alerts</li>
+<li><code>alert_details</code>: List of matched alert patterns</li>
+<li><code>num_alerts</code>: Number of alerts found</li>
+</ul>
+<pre><code class="language-python">check_mol(mol: Chem.Mol) -&gt; Tuple[bool, List[str]]</code></pre>
+
+<p>Check a single molecule for structural alerts.</p>
+
+<p><strong>Returns:</strong> Tuple of (has_alerts, list_of_alert_names)</p>
+
+<h3>Class: NIBRFilters</h3>
+
+<p>Novartis NIBR medicinal chemistry filters.</p>
+
+<p><strong>Constructor:</strong></p>
+<pre><code class="language-python">NIBRFilters()</code></pre>
+
+<p><strong>Methods:</strong></p>
+
+<pre><code class="language-python">__call__(mols: List[Chem.Mol], n_jobs: int = 1, progress: bool = False) -&gt; List[bool]</code></pre>
+
+<p>Apply NIBR filters to molecules.</p>
+
+<p><strong>Returns:</strong> List of booleans (True if molecule passes)</p>
+
+<h3>Class: LillyDemeritsFilters</h3>
+
+<p>Eli Lilly's demerit-based structural alert system (275 rules).</p>
+
+<p><strong>Constructor:</strong></p>
+<pre><code class="language-python">LillyDemeritsFilters()</code></pre>
+
+<p><strong>Methods:</strong></p>
+
+<pre><code class="language-python">__call__(mols: List[Chem.Mol], n_jobs: int = 1, progress: bool = False) -&gt; List[Dict]</code></pre>
+
+<p>Calculate Lilly demerits for molecules.</p>
+
+<p><strong>Returns:</strong> List of dictionaries with keys:</p>
+<ul><li><code>demerits</code>: Total demerit score</li>
+<li><code>passes</code>: Boolean (True if demerits ≤ 100)</li>
+<li><code>matched_patterns</code>: List of matched patterns with scores</li>
+</ul>
+<hr>
+
+<h2>Module: medchem.functional</h2>
+
+<p>High-level functional API for common operations.</p>
+
+<h3>nibr_filter()</h3>
+
+<pre><code class="language-python">nibr_filter(mols: List[Chem.Mol], n_jobs: int = 1) -&gt; List[bool]</code></pre>
+
+<p>Apply NIBR filters using functional API.</p>
+
+<p><strong>Parameters:</strong></p>
+<ul><li><code>mols</code>: List of molecules</li>
+<li><code>n_jobs</code>: Parallelization level</li>
+</ul>
+<p><strong>Returns:</strong> List of pass/fail booleans</p>
+
+<h3>common_alerts_filter()</h3>
+
+<pre><code class="language-python">common_alerts_filter(mols: List[Chem.Mol], n_jobs: int = 1) -&gt; List[Dict]</code></pre>
+
+<p>Apply common alerts filter using functional API.</p>
+
+<p><strong>Returns:</strong> List of results dictionaries</p>
+
+<h3>lilly_demerits_filter()</h3>
+
+<pre><code class="language-python">lilly_demerits_filter(mols: List[Chem.Mol], n_jobs: int = 1) -&gt; List[Dict]</code></pre>
+
+<p>Calculate Lilly demerits using functional API.</p>
+
+<hr>
+
+<h2>Module: medchem.groups</h2>
+
+<h3>Class: ChemicalGroup</h3>
+
+<p>Detect specific chemical groups in molecules.</p>
+
+<p><strong>Constructor:</strong></p>
+<pre><code class="language-python">ChemicalGroup(groups: List[str], custom_smarts: Optional[Dict[str, str]] = None)</code></pre>
+
+<p><strong>Parameters:</strong></p>
+<ul><li><code>groups</code>: List of predefined group names</li>
+<li><code>custom_smarts</code>: Dictionary mapping custom group names to SMARTS patterns</li>
+</ul>
+<p><strong>Predefined Groups:</strong></p>
+<ul><li><code>"hinge_binders"</code>: Kinase hinge binding motifs</li>
+<li><code>"phosphate_binders"</code>: Phosphate binding groups</li>
+<li><code>"michael_acceptors"</code>: Michael acceptor electrophiles</li>
+<li><code>"reactive_groups"</code>: General reactive functionalities</li>
+</ul>
+<p><strong>Methods:</strong></p>
+
+<pre><code class="language-python">has_match(mols: List[Chem.Mol]) -&gt; List[bool]</code></pre>
+
+<p>Check if molecules contain any of the specified groups.</p>
+
+<pre><code class="language-python">get_matches(mol: Chem.Mol) -&gt; Dict[str, List[Tuple]]</code></pre>
+
+<p>Get detailed match information for a single molecule.</p>
+
+<p><strong>Returns:</strong> Dictionary mapping group names to lists of atom indices</p>
+
+<pre><code class="language-python">get_all_matches(mols: List[Chem.Mol]) -&gt; List[Dict]</code></pre>
+
+<p>Get match information for all molecules.</p>
+
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">group = mc.groups.ChemicalGroup(groups=["hinge_binders", "phosphate_binders"])
+matches = group.get_all_matches(mol_list)</code></pre>
+
+<hr>
+
+<h2>Module: medchem.catalogs</h2>
+
+<h3>Class: NamedCatalogs</h3>
+
+<p>Access to curated chemical catalogs.</p>
+
+<p><strong>Available Catalogs:</strong></p>
+<ul><li><code>"functional_groups"</code>: Common functional groups</li>
+<li><code>"protecting_groups"</code>: Protecting group structures</li>
+<li><code>"reagents"</code>: Common reagents</li>
+<li><code>"fragments"</code>: Standard fragments</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-python">catalog = mc.catalogs.NamedCatalogs.get("functional_groups")
+matches = catalog.get_matches(mol)</code></pre>
+
+<hr>
+
+<h2>Module: medchem.complexity</h2>
+
+<p>Calculate molecular complexity metrics.</p>
+
+<h3>calculate_complexity()</h3>
+
+<pre><code class="language-python">calculate_complexity(mol: Chem.Mol, method: str = "bertz") -&gt; float</code></pre>
+
+<p>Calculate complexity score for a molecule.</p>
+
+<p><strong>Parameters:</strong></p>
+<ul><li><code>mol</code>: RDKit molecule</li>
+<li><code>method</code>: Complexity metric ("bertz", "whitlock", "barone")</li>
+</ul>
+<p><strong>Returns:</strong> Complexity score (higher = more complex)</p>
+
+<h3>Class: ComplexityFilter</h3>
+
+<p>Filter molecules by complexity threshold.</p>
+
+<p><strong>Constructor:</strong></p>
+<pre><code class="language-python">ComplexityFilter(max_complexity: float, method: str = "bertz")</code></pre>
+
+<p><strong>Methods:</strong></p>
+
+<pre><code class="language-python">__call__(mols: List[Chem.Mol], n_jobs: int = 1) -&gt; List[bool]</code></pre>
+
+<p>Filter molecules exceeding complexity threshold.</p>
+
+<hr>
+
+<h2>Module: medchem.constraints</h2>
+
+<h3>Class: Constraints</h3>
+
+<p>Apply custom property-based constraints.</p>
+
+<p><strong>Constructor:</strong></p>
+<pre><code class="language-python">Constraints(
+    mw_range: Optional[Tuple[float, float]] = None,
+    logp_range: Optional[Tuple[float, float]] = None,
+    tpsa_max: Optional[float] = None,
+    tpsa_range: Optional[Tuple[float, float]] = None,
+    hbd_max: Optional[int] = None,
+    hba_max: Optional[int] = None,
+    rotatable_bonds_max: Optional[int] = None,
+    rings_range: Optional[Tuple[int, int]] = None,
+    aromatic_rings_max: Optional[int] = None,
+)</code></pre>
+
+<p><strong>Parameters:</strong> All parameters are optional. Specify only the constraints needed.</p>
+
+<p><strong>Methods:</strong></p>
+
+<pre><code class="language-python">__call__(mols: List[Chem.Mol], n_jobs: int = 1) -&gt; List[Dict]</code></pre>
+
+<p>Apply constraints to molecules.</p>
+
+<p><strong>Returns:</strong> List of dictionaries with keys:</p>
+<ul><li><code>passes</code>: Boolean indicating if all constraints pass</li>
+<li><code>violations</code>: List of constraint names that failed</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">constraints = mc.constraints.Constraints(
+    mw_range=(200, 500),
+    logp_range=(-2, 5),
+    tpsa_max=140
+)
+results = constraints(mols=mol_list, n_jobs=-1)</code></pre>
+
+<hr>
+
+<h2>Module: medchem.query</h2>
+
+<p>Query language for complex filtering.</p>
+
+<h3>parse()</h3>
+
+<pre><code class="language-python">parse(query: str) -&gt; Query</code></pre>
+
+<p>Parse a medchem query string into a Query object.</p>
+
+<p><strong>Query Syntax:</strong></p>
+<ul><li>Operators: <code>AND</code>, <code>OR</code>, <code>NOT</code></li>
+<li>Comparisons: <code><</code>, <code>></code>, <code><=</code>, <code>>=</code>, <code>==</code>, <code>!=</code></li>
+<li>Properties: <code>complexity</code>, <code>lilly_demerits</code>, <code>mw</code>, <code>logp</code>, <code>tpsa</code></li>
+<li>Rules: <code>rule_of_five</code>, <code>rule_of_cns</code>, etc.</li>
+<li>Filters: <code>common_alerts</code>, <code>nibr_filter</code>, <code>pains_filter</code></li>
+</ul>
+<p><strong>Example Queries:</strong></p>
+<pre><code class="language-python">"rule_of_five AND NOT common_alerts"
+"rule_of_cns AND complexity &lt; 400"
+"mw &gt; 200 AND mw &lt; 500 AND logp &lt; 5"
+"(rule_of_five OR rule_of_oprea) AND NOT pains_filter"</code></pre>
+
+<h3>Class: Query</h3>
+
+<p><strong>Methods:</strong></p>
+
+<pre><code class="language-python">apply(mols: List[Chem.Mol], n_jobs: int = 1) -&gt; List[bool]</code></pre>
+
+<p>Apply parsed query to molecules.</p>
+
+<p><strong>Example:</strong></p>
+<pre><code class="language-python">query = mc.query.parse("rule_of_five AND NOT common_alerts")
+results = query.apply(mols=mol_list, n_jobs=-1)
+passing_mols = [mol for mol, passes in zip(mol_list, results) if passes]</code></pre>
+
+<hr>
+
+<h2>Module: medchem.utils</h2>
+
+<p>Utility functions for working with molecules.</p>
+
+<h3>batch_process()</h3>
+
+<pre><code class="language-python">batch_process(
+    mols: List[Chem.Mol],
+    func: Callable,
+    n_jobs: int = 1,
+    progress: bool = False,
+    batch_size: Optional[int] = None
+) -&gt; List</code></pre>
+
+<p>Process molecules in parallel batches.</p>
+
+<p><strong>Parameters:</strong></p>
+<ul><li><code>mols</code>: List of molecules</li>
+<li><code>func</code>: Function to apply to each molecule</li>
+<li><code>n_jobs</code>: Number of parallel workers</li>
+<li><code>progress</code>: Show progress bar</li>
+<li><code>batch_size</code>: Size of processing batches</li>
+</ul>
+<h3>standardize_mol()</h3>
+
+<pre><code class="language-python">standardize_mol(mol: Chem.Mol) -&gt; Chem.Mol</code></pre>
+
+<p>Standardize molecule representation (sanitize, neutralize charges, etc.).</p>
+
+<hr>
+
+<h2>Common Patterns</h2>
+
+<h3>Pattern: Parallel Processing</h3>
+
+<p>All filters support parallelization:</p>
+
+<pre><code class="language-python"># Use all CPU cores
+results = filter_object(mols=mol_list, n_jobs=-1, progress=True)
+
+# Use specific number of cores
+results = filter_object(mols=mol_list, n_jobs=4, progress=True)</code></pre>
+
+<h3>Pattern: Combining Multiple Filters</h3>
+
+<pre><code class="language-python">import medchem as mc
+
+# Apply multiple filters
+rule_filter = mc.rules.RuleFilters(rule_list=["rule_of_five"])
+alert_filter = mc.structural.CommonAlertsFilters()
+lilly_filter = mc.structural.LillyDemeritsFilters()
+
+# Get results
+rule_results = rule_filter(mols=mol_list, n_jobs=-1)
+alert_results = alert_filter(mols=mol_list, n_jobs=-1)
+lilly_results = lilly_filter(mols=mol_list, n_jobs=-1)
+
+# Combine criteria
+passing_mols = [
+    mol for i, mol in enumerate(mol_list)
+    if rule_results[i]["passes"]
+    and not alert_results[i]["has_alerts"]
+    and lilly_results[i]["passes"]
+]</code></pre>
+
+<h3>Pattern: Working with DataFrames</h3>
+
+<pre><code class="language-python">import pandas as pd
+import datamol as dm
+import medchem as mc
+
+# Load data
+df = pd.read_csv("molecules.csv")
+df["mol"] = df["smiles"].apply(dm.to_mol)
+
+# Apply filters
+rfilter = mc.rules.RuleFilters(rule_list=["rule_of_five", "rule_of_cns"])
+results = rfilter(mols=df["mol"].tolist(), n_jobs=-1)
+
+# Add results to dataframe
+df["passes_ro5"] = [r["rule_of_five"] for r in results]
+df["passes_cns"] = [r["rule_of_cns"] for r in results]
+
+# Filter dataframe
+filtered_df = df[df["passes_ro5"] &amp; df["passes_cns"]]</code></pre>
+
+</div>
+<div class="ref-card">
+  <h3>📄 Rules Catalog</h3>
+  <h1>Medchem Rules and Filters Catalog</h1>
+
+<p>Comprehensive catalog of all available medicinal chemistry rules, structural alerts, and filters in medchem.</p>
+
+<h2>Table of Contents</h2>
+
+<ul><li><a href="#drug-likeness-rules">Drug-Likeness Rules</a></li>
+<li><a href="#lead-likeness-rules">Lead-Likeness Rules</a></li>
+<li><a href="#fragment-rules">Fragment Rules</a></li>
+<li><a href="#cns-rules">CNS Rules</a></li>
+<li><a href="#structural-alert-filters">Structural Alert Filters</a></li>
+<li><a href="#chemical-group-patterns">Chemical Group Patterns</a></li>
+</ul>
+<hr>
+
+<h2>Drug-Likeness Rules</h2>
+
+<h3>Rule of Five (Lipinski)</h3>
+
+<p><strong>Reference:</strong> Lipinski et al., Adv Drug Deliv Rev (1997) 23:3-25</p>
+
+<p><strong>Purpose:</strong> Predict oral bioavailability</p>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>Molecular Weight ≤ 500 Da</li>
+<li>LogP ≤ 5</li>
+<li>Hydrogen Bond Donors ≤ 5</li>
+<li>Hydrogen Bond Acceptors ≤ 10</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-python">mc.rules.basic_rules.rule_of_five(mol)</code></pre>
+
+<p><strong>Notes:</strong></p>
+<ul><li>One of the most widely used filters in drug discovery</li>
+<li>About 90% of orally active drugs comply with these rules</li>
+<li>Exceptions exist, especially for natural products and antibiotics</li>
+</ul>
+<hr>
+
+<h3>Rule of Veber</h3>
+
+<p><strong>Reference:</strong> Veber et al., J Med Chem (2002) 45:2615-2623</p>
+
+<p><strong>Purpose:</strong> Additional criteria for oral bioavailability</p>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>Rotatable Bonds ≤ 10</li>
+<li>Topological Polar Surface Area (TPSA) ≤ 140 Ų</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-python">mc.rules.basic_rules.rule_of_veber(mol)</code></pre>
+
+<p><strong>Notes:</strong></p>
+<ul><li>Complements Rule of Five</li>
+<li>TPSA correlates with cell permeability</li>
+<li>Rotatable bonds affect molecular flexibility</li>
+</ul>
+<hr>
+
+<h3>Rule of Drug</h3>
+
+<p><strong>Purpose:</strong> Combined drug-likeness assessment</p>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>Passes Rule of Five</li>
+<li>Passes Veber rules</li>
+<li>Does not contain PAINS substructures</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-python">mc.rules.basic_rules.rule_of_drug(mol)</code></pre>
+
+<hr>
+
+<h3>REOS (Rapid Elimination Of Swill)</h3>
+
+<p><strong>Reference:</strong> Walters & Murcko, Adv Drug Deliv Rev (2002) 54:255-271</p>
+
+<p><strong>Purpose:</strong> Filter out compounds unlikely to be drugs</p>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>Molecular Weight: 200-500 Da</li>
+<li>LogP: -5 to 5</li>
+<li>Hydrogen Bond Donors: 0-5</li>
+<li>Hydrogen Bond Acceptors: 0-10</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-python">mc.rules.basic_rules.rule_of_reos(mol)</code></pre>
+
+<hr>
+
+<h3>Golden Triangle</h3>
+
+<p><strong>Reference:</strong> Johnson et al., J Med Chem (2009) 52:5487-5500</p>
+
+<p><strong>Purpose:</strong> Balance lipophilicity and molecular weight</p>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>200 ≤ MW ≤ 50 × LogP + 400</li>
+<li>LogP: -2 to 5</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-python">mc.rules.basic_rules.golden_triangle(mol)</code></pre>
+
+<p><strong>Notes:</strong></p>
+<ul><li>Defines optimal physicochemical space</li>
+<li>Visual representation resembles a triangle on MW vs LogP plot</li>
+</ul>
+<hr>
+
+<h2>Lead-Likeness Rules</h2>
+
+<h3>Rule of Oprea</h3>
+
+<p><strong>Reference:</strong> Oprea et al., J Chem Inf Comput Sci (2001) 41:1308-1315</p>
+
+<p><strong>Purpose:</strong> Identify lead-like compounds for optimization</p>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>Molecular Weight: 200-350 Da</li>
+<li>LogP: -2 to 4</li>
+<li>Rotatable Bonds ≤ 7</li>
+<li>Number of Rings ≤ 4</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-python">mc.rules.basic_rules.rule_of_oprea(mol)</code></pre>
+
+<p><strong>Rationale:</strong> Lead compounds should have "room to grow" during optimization</p>
+
+<hr>
+
+<h3>Rule of Leadlike (Soft)</h3>
+
+<p><strong>Purpose:</strong> Permissive lead-like criteria</p>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>Molecular Weight: 250-450 Da</li>
+<li>LogP: -3 to 4</li>
+<li>Rotatable Bonds ≤ 10</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-python">mc.rules.basic_rules.rule_of_leadlike_soft(mol)</code></pre>
+
+<hr>
+
+<h3>Rule of Leadlike (Strict)</h3>
+
+<p><strong>Purpose:</strong> Restrictive lead-like criteria</p>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>Molecular Weight: 200-350 Da</li>
+<li>LogP: -2 to 3.5</li>
+<li>Rotatable Bonds ≤ 7</li>
+<li>Number of Rings: 1-3</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-python">mc.rules.basic_rules.rule_of_leadlike_strict(mol)</code></pre>
+
+<hr>
+
+<h2>Fragment Rules</h2>
+
+<h3>Rule of Three</h3>
+
+<p><strong>Reference:</strong> Congreve et al., Drug Discov Today (2003) 8:876-877</p>
+
+<p><strong>Purpose:</strong> Screen fragment libraries for fragment-based drug discovery</p>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>Molecular Weight ≤ 300 Da</li>
+<li>LogP ≤ 3</li>
+<li>Hydrogen Bond Donors ≤ 3</li>
+<li>Hydrogen Bond Acceptors ≤ 3</li>
+<li>Rotatable Bonds ≤ 3</li>
+<li>Polar Surface Area ≤ 60 Ų</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-python">mc.rules.basic_rules.rule_of_three(mol)</code></pre>
+
+<p><strong>Notes:</strong></p>
+<ul><li>Fragments are grown into leads during optimization</li>
+<li>Lower complexity allows more starting points</li>
+</ul>
+<hr>
+
+<h2>CNS Rules</h2>
+
+<h3>Rule of CNS</h3>
+
+<p><strong>Purpose:</strong> Central nervous system drug-likeness</p>
+
+<p><strong>Criteria:</strong></p>
+<ul><li>Molecular Weight ≤ 450 Da</li>
+<li>LogP: -1 to 5</li>
+<li>Hydrogen Bond Donors ≤ 2</li>
+<li>TPSA ≤ 90 Ų</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-python">mc.rules.basic_rules.rule_of_cns(mol)</code></pre>
+
+<p><strong>Rationale:</strong></p>
+<ul><li>Blood-brain barrier penetration requires specific properties</li>
+<li>Lower TPSA and HBD count improve BBB permeability</li>
+<li>Tight constraints reflect CNS challenges</li>
+</ul>
+<hr>
+
+<h2>Structural Alert Filters</h2>
+
+<h3>PAINS (Pan Assay INterference compoundS)</h3>
+
+<p><strong>Reference:</strong> Baell & Holloway, J Med Chem (2010) 53:2719-2740</p>
+
+<p><strong>Purpose:</strong> Identify compounds that interfere with assays</p>
+
+<p><strong>Categories:</strong></p>
+<ul><li>Catechols</li>
+<li>Quinones</li>
+<li>Rhodanines</li>
+<li>Hydroxyphenylhydrazones</li>
+<li>Alkyl/aryl aldehydes</li>
+<li>Michael acceptors (specific patterns)</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-python">mc.rules.basic_rules.pains_filter(mol)
+# Returns True if NO PAINS found</code></pre>
+
+<p><strong>Notes:</strong></p>
+<ul><li>PAINS compounds show activity in multiple assays through non-specific mechanisms</li>
+<li>Common false positives in screening campaigns</li>
+<li>Should be deprioritized in lead selection</li>
+</ul>
+<hr>
+
+<h3>Common Alerts Filters</h3>
+
+<p><strong>Source:</strong> Derived from ChEMBL curation and medicinal chemistry literature</p>
+
+<p><strong>Purpose:</strong> Flag common problematic structural patterns</p>
+
+<p><strong>Alert Categories:</strong></p>
+<ul><li><strong>Reactive Groups</strong></li>
+</ul><p>   - Epoxides</p>
+<p>   - Aziridines</p>
+<p>   - Acid halides</p>
+<p>   - Isocyanates</p>
+
+<ul><li><strong>Metabolic Liabilities</strong></li>
+</ul><p>   - Hydrazines</p>
+<p>   - Thioureas</p>
+<p>   - Anilines (certain patterns)</p>
+
+<ul><li><strong>Aggregators</strong></li>
+</ul><p>   - Polyaromatic systems</p>
+<p>   - Long aliphatic chains</p>
+
+<ul><li><strong>Toxicophores</strong></li>
+</ul><p>   - Nitro aromatics</p>
+<p>   - Aromatic N-oxides</p>
+<p>   - Certain heterocycles</p>
+
+<p><strong>Usage:</strong></p>
+<pre><code class="language-python">alert_filter = mc.structural.CommonAlertsFilters()
+has_alerts, details = alert_filter.check_mol(mol)</code></pre>
+
+<p><strong>Return Format:</strong></p>
+<pre><code class="language-python">{
+    "has_alerts": True,
+    "alert_details": ["reactive_epoxide", "metabolic_hydrazine"],
+    "num_alerts": 2
+}</code></pre>
+
+<hr>
+
+<h3>NIBR Filters</h3>
+
+<p><strong>Source:</strong> Novartis Institutes for BioMedical Research</p>
+
+<p><strong>Purpose:</strong> Industrial medicinal chemistry filtering rules</p>
+
+<p><strong>Features:</strong></p>
+<ul><li>Proprietary filter set developed from Novartis experience</li>
+<li>Balances drug-likeness with practical medicinal chemistry</li>
+<li>Includes both structural alerts and property filters</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-python">nibr_filter = mc.structural.NIBRFilters()
+results = nibr_filter(mols=mol_list, n_jobs=-1)</code></pre>
+
+<p><strong>Return Format:</strong> Boolean list (True = passes)</p>
+
+<hr>
+
+<h3>Lilly Demerits Filter</h3>
+
+<p><strong>Reference:</strong> Based on Eli Lilly medicinal chemistry rules</p>
+
+<p><strong>Source:</strong> 275 structural patterns accumulated over 18 years</p>
+
+<p><strong>Purpose:</strong> Identify assay interference and problematic functionalities</p>
+
+<p><strong>Mechanism:</strong></p>
+<ul><li>Each matched pattern adds demerits</li>
+<li>Molecules with >100 demerits are rejected</li>
+<li>Some patterns add 10-50 demerits, others add 100+ (instant rejection)</li>
+</ul>
+<p><strong>Demerit Categories:</strong></p>
+
+<ul><li><strong>High Demerits (>50):</strong></li>
+</ul><p>   - Known toxic groups</p>
+<p>   - Highly reactive functionalities</p>
+<p>   - Strong metal chelators</p>
+
+<ul><li><strong>Medium Demerits (20-50):</strong></li>
+</ul><p>   - Metabolic liabilities</p>
+<p>   - Aggregation-prone structures</p>
+<p>   - Frequent hitters</p>
+
+<ul><li><strong>Low Demerits (5-20):</strong></li>
+</ul><p>   - Minor concerns</p>
+<p>   - Context-dependent issues</p>
+
+<p><strong>Usage:</strong></p>
+<pre><code class="language-python">lilly_filter = mc.structural.LillyDemeritsFilters()
+results = lilly_filter(mols=mol_list, n_jobs=-1)</code></pre>
+
+<p><strong>Return Format:</strong></p>
+<pre><code class="language-python">{
+    "demerits": 35,
+    "passes": True,  # (demerits ≤ 100)
+    "matched_patterns": [
+        {"pattern": "phenolic_ester", "demerits": 20},
+        {"pattern": "aniline_derivative", "demerits": 15}
+    ]
+}</code></pre>
+
+<hr>
+
+<h2>Chemical Group Patterns</h2>
+
+<h3>Hinge Binders</h3>
+
+<p><strong>Purpose:</strong> Identify kinase hinge-binding motifs</p>
+
+<p><strong>Common Patterns:</strong></p>
+<ul><li>Aminopyridines</li>
+<li>Aminopyrimidines</li>
+<li>Indazoles</li>
+<li>Benzimidazoles</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-python">group = mc.groups.ChemicalGroup(groups=["hinge_binders"])
+has_hinge = group.has_match(mol_list)</code></pre>
+
+<p><strong>Application:</strong> Kinase inhibitor design</p>
+
+<hr>
+
+<h3>Phosphate Binders</h3>
+
+<p><strong>Purpose:</strong> Identify phosphate-binding groups</p>
+
+<p><strong>Common Patterns:</strong></p>
+<ul><li>Basic amines in specific geometries</li>
+<li>Guanidinium groups</li>
+<li>Arginine mimetics</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-python">group = mc.groups.ChemicalGroup(groups=["phosphate_binders"])</code></pre>
+
+<p><strong>Application:</strong> Kinase inhibitors, phosphatase inhibitors</p>
+
+<hr>
+
+<h3>Michael Acceptors</h3>
+
+<p><strong>Purpose:</strong> Identify electrophilic Michael acceptor groups</p>
+
+<p><strong>Common Patterns:</strong></p>
+<ul><li>α,β-Unsaturated carbonyls</li>
+<li>α,β-Unsaturated nitriles</li>
+<li>Vinyl sulfones</li>
+<li>Acrylamides</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-python">group = mc.groups.ChemicalGroup(groups=["michael_acceptors"])</code></pre>
+
+<p><strong>Notes:</strong></p>
+<ul><li>Can be desirable for covalent inhibitors</li>
+<li>Often flagged as reactive alerts in screening</li>
+</ul>
+<hr>
+
+<h3>Reactive Groups</h3>
+
+<p><strong>Purpose:</strong> Identify generally reactive functionalities</p>
+
+<p><strong>Common Patterns:</strong></p>
+<ul><li>Epoxides</li>
+<li>Aziridines</li>
+<li>Acyl halides</li>
+<li>Isocyanates</li>
+<li>Sulfonyl chlorides</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-python">group = mc.groups.ChemicalGroup(groups=["reactive_groups"])</code></pre>
+
+<hr>
+
+<h2>Custom SMARTS Patterns</h2>
+
+<p>Define custom structural patterns using SMARTS:</p>
+
+<pre><code class="language-python">custom_patterns = {
+    "my_warhead": "[C;H0](=O)C(F)(F)F",  # Trifluoromethyl ketone
+    "my_scaffold": "c1ccc2c(c1)ncc(n2)N",  # Aminobenzimidazole
+}
+
+group = mc.groups.ChemicalGroup(
+    groups=["hinge_binders"],
+    custom_smarts=custom_patterns
+)</code></pre>
+
+<hr>
+
+<h2>Filter Selection Guidelines</h2>
+
+<h3>Initial Screening (High-Throughput)</h3>
+
+<p>Recommended filters:</p>
+<ul><li>Rule of Five</li>
+<li>PAINS filter</li>
+<li>Common Alerts (permissive settings)</li>
+</ul>
+<pre><code class="language-python">rfilter = mc.rules.RuleFilters(rule_list=["rule_of_five", "pains_filter"])
+alert_filter = mc.structural.CommonAlertsFilters()</code></pre>
+
+<hr>
+
+<h3>Hit-to-Lead</h3>
+
+<p>Recommended filters:</p>
+<ul><li>Rule of Oprea or Leadlike (soft)</li>
+<li>NIBR filters</li>
+<li>Lilly Demerits</li>
+</ul>
+<pre><code class="language-python">rfilter = mc.rules.RuleFilters(rule_list=["rule_of_oprea"])
+nibr_filter = mc.structural.NIBRFilters()
+lilly_filter = mc.structural.LillyDemeritsFilters()</code></pre>
+
+<hr>
+
+<h3>Lead Optimization</h3>
+
+<p>Recommended filters:</p>
+<ul><li>Rule of Drug</li>
+<li>Leadlike (strict)</li>
+<li>Full structural alert analysis</li>
+<li>Complexity filters</li>
+</ul>
+<pre><code class="language-python">rfilter = mc.rules.RuleFilters(rule_list=["rule_of_drug", "rule_of_leadlike_strict"])
+alert_filter = mc.structural.CommonAlertsFilters()
+complexity_filter = mc.complexity.ComplexityFilter(max_complexity=400)</code></pre>
+
+<hr>
+
+<h3>CNS Targets</h3>
+
+<p>Recommended filters:</p>
+<ul><li>Rule of CNS</li>
+<li>Reduced PAINS criteria (CNS-focused)</li>
+<li>BBB permeability constraints</li>
+</ul>
+<pre><code class="language-python">rfilter = mc.rules.RuleFilters(rule_list=["rule_of_cns"])
+constraints = mc.constraints.Constraints(
+    tpsa_max=90,
+    hbd_max=2,
+    mw_range=(300, 450)
+)</code></pre>
+
+<hr>
+
+<h3>Fragment-Based Drug Discovery</h3>
+
+<p>Recommended filters:</p>
+<ul><li>Rule of Three</li>
+<li>Minimal complexity</li>
+<li>Basic reactive group check</li>
+</ul>
+<pre><code class="language-python">rfilter = mc.rules.RuleFilters(rule_list=["rule_of_three"])
+complexity_filter = mc.complexity.ComplexityFilter(max_complexity=250)</code></pre>
+
+<hr>
+
+<h2>Important Considerations</h2>
+
+<h3>False Positives and False Negatives</h3>
+
+<p><strong>Filters are guidelines, not absolutes:</strong></p>
+
+<ul><li><strong>False Positives</strong> (good drugs flagged):</li>
+</ul><p>   - ~10% of marketed drugs fail Rule of Five</p>
+<p>   - Natural products often violate standard rules</p>
+<p>   - Prodrugs intentionally break rules</p>
+<p>   - Antibiotics and antivirals frequently non-compliant</p>
+
+<ul><li><strong>False Negatives</strong> (bad compounds passing):</li>
+</ul><p>   - Passing filters doesn't guarantee success</p>
+<p>   - Target-specific issues not captured</p>
+<p>   - In vivo properties not fully predicted</p>
+
+<h3>Context-Specific Application</h3>
+
+<p><strong>Different contexts require different criteria:</strong></p>
+
+<ul><li><strong>Target Class:</strong> Kinases vs GPCRs vs ion channels have different optimal spaces</li>
+<li><strong>Modality:</strong> Small molecules vs PROTACs vs molecular glues</li>
+<li><strong>Administration Route:</strong> Oral vs IV vs topical</li>
+<li><strong>Disease Area:</strong> CNS vs oncology vs infectious disease</li>
+<li><strong>Stage:</strong> Screening vs hit-to-lead vs lead optimization</li>
+</ul>
+<h3>Complementing with Machine Learning</h3>
+
+<p>Modern approaches combine rules with ML:</p>
+
+<pre><code class="language-python"># Rule-based pre-filtering
+rule_results = mc.rules.RuleFilters(rule_list=["rule_of_five"])(mols)
+filtered_mols = [mol for mol, r in zip(mols, rule_results) if r["passes"]]
+
+# ML model scoring on filtered set
+ml_scores = ml_model.predict(filtered_mols)
+
+# Combined decision
+final_candidates = [
+    mol for mol, score in zip(filtered_mols, ml_scores)
+    if score &gt; threshold
+]</code></pre>
+
+<hr>
+
+<h2>References</h2>
+
+<ul><li>Lipinski CA et al. Adv Drug Deliv Rev (1997) 23:3-25</li>
+<li>Veber DF et al. J Med Chem (2002) 45:2615-2623</li>
+<li>Oprea TI et al. J Chem Inf Comput Sci (2001) 41:1308-1315</li>
+<li>Congreve M et al. Drug Discov Today (2003) 8:876-877</li>
+<li>Baell JB & Holloway GA. J Med Chem (2010) 53:2719-2740</li>
+<li>Johnson TW et al. J Med Chem (2009) 52:5487-5500</li>
+<li>Walters WP & Murcko MA. Adv Drug Deliv Rev (2002) 54:255-271</li>
+<li>Hann MM & Oprea TI. Curr Opin Chem Biol (2004) 8:255-263</li>
+<li>Rishton GM. Drug Discov Today (1997) 2:382-384</li>
+</ul>
+</div></div>
+  </div>
+  <div id="footer">
+    awesome-ai4bio-skills · 2026 · Built for the computational biology community
+  </div>
+</div>
+</body>
+</html>
