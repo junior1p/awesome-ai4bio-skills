@@ -23,6 +23,7 @@
   --accent-2:#2DAD7C;
   --accent-2-light:#D1F5E9;
   --accent-warn:#E88C30;
+  --sidebar-bg:#161B22;
   --serif:'Instrument Serif',Georgia,serif;
   --sans:'DM Sans',-apple-system,sans-serif;
   --mono:'JetBrains Mono',monospace;
@@ -160,8 +161,7 @@ footer a:hover{text-decoration:underline}
     <div class="skill-content">
       <h1>Datamol Cheminformatics Skill</h1>
       <p class="desc">Pythonic wrapper around RDKit with simplified interface and sensible defaults. Preferred for standard drug discovery including SMILES parsing, standardization, descriptors, fingerprints, clustering, 3</p>
-      <h1>Datamol Cheminformatics Skill</h1>
-
+      
 <h2>Overview</h2>
 
 <p>Datamol is a Python library that provides a lightweight, Pythonic abstraction layer over RDKit for molecular cheminformatics. Simplify complex molecular operations with sensible defaults, efficient parallelization, and modern I/O capabilities. All molecular objects are native <code>rdkit.Chem.Mol</code> instances, ensuring full compatibility with the RDKit ecosystem.</p>
@@ -786,8 +786,7 @@ predictions = model.predict(X_test)</code></pre>
       <div class="ref-section"><div class="ref-section-title">Reference Documentation</div>
 <div class="ref-card">
   <h3>📄 Conformers Module</h3>
-  <h1>Datamol Conformers Module Reference</h1>
-
+  
 <p>The <code>datamol.conformers</code> module provides tools for generating and analyzing 3D molecular conformations.</p>
 
 <h2>Conformer Generation</h2>
@@ -919,8 +918,7 @@ coords = dm.conformers.get_coords(mol_3d, conf_id=0)</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Core Api</h3>
-  <h1>Datamol Core API Reference</h1>
-
+  
 <p>This document covers the main functions available in the datamol namespace.</p>
 
 <h2>Molecule Creation and Conversion</h2>
@@ -1053,8 +1051,7 @@ coords = dm.conformers.get_coords(mol_3d, conf_id=0)</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Descriptors Viz</h3>
-  <h1>Datamol Descriptors and Visualization Reference</h1>
-
+  
 <h2>Descriptors Module (<code>datamol.descriptors</code>)</h2>
 
 <p>The descriptors module provides tools for computing molecular properties and descriptors.</p>
@@ -1248,8 +1245,7 @@ bbb_candidates = df[df['tpsa'] &lt; 90]</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Fragments Scaffolds</h3>
-  <h1>Datamol Fragments and Scaffolds Reference</h1>
-
+  
 <h2>Scaffolds Module (<code>datamol.scaffold</code>)</h2>
 
 <p>Scaffolds represent the core structure of molecules, useful for identifying structural families and analyzing structure-activity relationships (SAR).</p>
@@ -1416,8 +1412,7 @@ scores = [score_by_fragments(mol, active_fragments) for mol in screening_lib]</c
 </div>
 <div class="ref-card">
   <h3>📄 Io Module</h3>
-  <h1>Datamol I/O Module Reference</h1>
-
+  
 <p>The <code>datamol.io</code> module provides comprehensive file handling for molecular data across multiple formats.</p>
 
 <h2>Reading Molecular Files</h2>
@@ -1529,8 +1524,7 @@ scores = [score_by_fragments(mol, active_fragments) for mol in screening_lib]</c
 </div>
 <div class="ref-card">
   <h3>📄 Reactions Data</h3>
-  <h1>Datamol Reactions and Data Modules Reference</h1>
-
+  
 <h2>Reactions Module (<code>datamol.reactions</code>)</h2>
 
 <p>The reactions module enables programmatic application of chemical transformations using SMARTS reaction patterns.</p>

@@ -23,6 +23,7 @@
   --accent-2:#2DAD7C;
   --accent-2-light:#D1F5E9;
   --accent-warn:#E88C30;
+  --sidebar-bg:#161B22;
   --serif:'Instrument Serif',Georgia,serif;
   --sans:'DM Sans',-apple-system,sans-serif;
   --mono:'JetBrains Mono',monospace;
@@ -160,8 +161,7 @@ footer a:hover{text-decoration:underline}
     <div class="skill-content">
       <h1>polars-bio</h1>
       <p class="desc">High-performance genomic interval operations and bioinformatics file I/O on Polars DataFrames. Overlap, nearest, merge, coverage, complement, subtract for BED/VCF/BAM/GFF intervals. Streaming, cloud-n</p>
-      <h1>polars-bio</h1>
-
+      
 <h2>Overview</h2>
 
 <p>polars-bio is a high-performance Python library for genomic interval operations and bioinformatics file I/O, built on Polars, Apache Arrow, and Apache DataFusion. It provides a familiar DataFrame-centric API for interval arithmetic (overlap, nearest, merge, coverage, complement, subtract) and reading/writing common bioinformatics formats (BED, VCF, BAM, CRAM, GFF/GTF, FASTA, FASTQ).</p>
@@ -497,8 +497,7 @@ result = lf.collect(streaming=True)</code></pre>
       <div class="ref-section"><div class="ref-section-title">Reference Documentation</div>
 <div class="ref-card">
   <h3>📄 Bioframe Migration</h3>
-  <h1>Migrating from bioframe to polars-bio</h1>
-
+  
 <h2>Overview</h2>
 
 <p>polars-bio is a drop-in replacement for bioframe's core interval operations, offering 6.5-38x speedups on real-world genomic benchmarks. The main differences are: Polars DataFrames instead of pandas, a Rust/DataFusion backend instead of pure Python, streaming support for large genomes, and LazyFrame returns by default.</p>
@@ -723,8 +722,7 @@ pandas_result = pb.overlap(polars_df, other_df, output_type="pandas.DataFrame")<
 </div>
 <div class="ref-card">
   <h3>📄 Configuration</h3>
-  <h1>Configuration</h1>
-
+  
 <h2>Overview</h2>
 
 <p>polars-bio uses a global configuration system based on <code>set_option</code> and <code>get_option</code> to control execution behavior, coordinate systems, parallelism, and streaming modes.</p>
@@ -882,8 +880,7 @@ pb.from_polars("my_table", df)</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 File Io</h3>
-  <h1>Bioinformatics File I/O</h1>
-
+  
 <h2>Overview</h2>
 
 <p>polars-bio provides <code>read_<em></code>, <code>scan_</em></code>, <code>write_<em></code>, and <code>sink_</em></code> functions for common bioinformatics formats. <code>read_<em></code> loads data eagerly into a DataFrame, while <code>scan_</em></code> creates a LazyFrame for streaming/out-of-core processing. <code>write_<em></code> writes from DataFrame/LazyFrame and returns a row count, while <code>sink_</em></code> streams from a LazyFrame.</p>
@@ -1262,8 +1259,7 @@ schema_df = pb.describe_cram("aligned.cram", reference_path="ref.fasta")</code><
 </div>
 <div class="ref-card">
   <h3>📄 Interval Operations</h3>
-  <h1>Genomic Interval Operations</h1>
-
+  
 <h2>Overview</h2>
 
 <p>polars-bio provides 8 core operations for genomic interval arithmetic. All operations work on Polars DataFrames or LazyFrames containing genomic intervals (columns: <code>chrom</code>, <code>start</code>, <code>end</code> by default) and return a <strong>LazyFrame</strong> by default. Pass <code>output_type="polars.DataFrame"</code> for eager results.</p>
@@ -1606,8 +1602,7 @@ result = pb.overlap(lf1, lf2).collect()</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Pileup Operations</h3>
-  <h1>Pileup Operations</h1>
-
+  
 <h2>Overview</h2>
 
 <p>polars-bio provides the <code>pb.depth()</code> function for computing per-base or per-block read depth from BAM/CRAM files. It uses CIGAR-aware depth calculation to accurately account for insertions, deletions, and clipping. Returns a <strong>LazyFrame</strong> by default.</p>
@@ -1772,8 +1767,7 @@ overlapping = pb.overlap(
 </div>
 <div class="ref-card">
   <h3>📄 Sql Processing</h3>
-  <h1>SQL Data Processing</h1>
-
+  
 <h2>Overview</h2>
 
 <p>polars-bio integrates Apache DataFusion's SQL engine, enabling SQL queries on bioinformatics files and Polars DataFrames. Register files as tables and query them using standard SQL syntax. All queries return a <strong>LazyFrame</strong> — call <code>.collect()</code> to materialize results.</p>

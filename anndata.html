@@ -23,6 +23,7 @@
   --accent-2:#2DAD7C;
   --accent-2-light:#D1F5E9;
   --accent-warn:#E88C30;
+  --sidebar-bg:#161B22;
   --serif:'Instrument Serif',Georgia,serif;
   --sans:'DM Sans',-apple-system,sans-serif;
   --mono:'JetBrains Mono',monospace;
@@ -160,8 +161,7 @@ footer a:hover{text-decoration:underline}
     <div class="skill-content">
       <h1>AnnData</h1>
       <p class="desc">Data structure for annotated matrices in single-cell analysis. Use when working with .h5ad files or integrating with the scverse ecosystem. This is the data format skill—for analysis workflows use sca</p>
-      <h1>AnnData</h1>
-
+      
 <h2>Overview</h2>
 
 <p>AnnData is a Python package for handling annotated data matrices, storing experimental measurements (X) alongside observation metadata (obs), variable metadata (var), and multi-dimensional annotations (obsm, varm, obsp, varp, uns). Originally designed for single-cell genomics through Scanpy, it now serves as a general-purpose framework for any annotated data requiring efficient storage, manipulation, and analysis.</p>
@@ -516,8 +516,7 @@ adata.obs['new_col'] = external_data.set_index('cell_id').loc[adata.obs_names, '
       <div class="ref-section"><div class="ref-section-title">Reference Documentation</div>
 <div class="ref-card">
   <h3>📄 Best Practices</h3>
-  <h1>Best Practices</h1>
-
+  
 <p>Guidelines for efficient and effective use of AnnData.</p>
 
 <h2>Memory Management</h2>
@@ -977,8 +976,7 @@ adata.write_h5ad('processed.h5ad', compression='gzip')</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Concatenation</h3>
-  <h1>Concatenating AnnData Objects</h1>
-
+  
 <p>Combine multiple AnnData objects along either observations or variables axis.</p>
 
 <h2>Basic Concatenation</h2>
@@ -1325,8 +1323,7 @@ print(adata_combined.obs.head())</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Data Structure</h3>
-  <h1>AnnData Object Structure</h1>
-
+  
 <p>The AnnData object stores a data matrix with associated annotations, providing a flexible framework for managing experimental data and metadata.</p>
 
 <h2>Core Components</h2>
@@ -1609,8 +1606,7 @@ if adata.is_view:
 </div>
 <div class="ref-card">
   <h3>📄 Io Operations</h3>
-  <h1>Input/Output Operations</h1>
-
+  
 <p>AnnData provides comprehensive I/O functionality for reading and writing data in various formats.</p>
 
 <h2>Native Formats</h2>
@@ -1955,8 +1951,7 @@ adata = ad.read_h5ad('file.h5ad', backed='r+')</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Manipulation</h3>
-  <h1>Data Manipulation</h1>
-
+  
 <p>Operations for transforming, subsetting, and manipulating AnnData objects.</p>
 
 <h2>Subsetting</h2>

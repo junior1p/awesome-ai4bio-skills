@@ -23,6 +23,7 @@
   --accent-2:#2DAD7C;
   --accent-2-light:#D1F5E9;
   --accent-warn:#E88C30;
+  --sidebar-bg:#161B22;
   --serif:'Instrument Serif',Georgia,serif;
   --sans:'DM Sans',-apple-system,sans-serif;
   --mono:'JetBrains Mono',monospace;
@@ -160,8 +161,7 @@ footer a:hover{text-decoration:underline}
     <div class="skill-content">
       <h1>Matchms</h1>
       <p class="desc">Spectral similarity and compound identification for metabolomics. Use for comparing mass spectra, computing similarity scores (cosine, modified cosine), and identifying unknown compounds from spectral</p>
-      <h1>Matchms</h1>
-
+      
 <h2>Overview</h2>
 
 <p>Matchms is an open-source Python library for mass spectrometry data processing and analysis. Import spectra from various formats, standardize metadata, filter peaks, calculate spectral similarities, and build reproducible analytical workflows.</p>
@@ -339,8 +339,7 @@ spectrum = add_fingerprint(spectrum, fingerprint_type="morgan", nbits=2048)</cod
       <div class="ref-section"><div class="ref-section-title">Reference Documentation</div>
 <div class="ref-card">
   <h3>📄 Filtering</h3>
-  <h1>Matchms Filtering Functions Reference</h1>
-
+  
 <p>This document provides a comprehensive reference of all filtering functions available in matchms for processing mass spectrometry data.</p>
 
 <h2>Metadata Processing Filters</h2>
@@ -621,8 +620,7 @@ spectrum = reduce_to_number_of_peaks(spectrum, n_max=200)</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Importing Exporting</h3>
-  <h1>Matchms Importing and Exporting Reference</h1>
-
+  
 <p>This document details all file format support in matchms for loading and saving mass spectrometry data.</p>
 
 <h2>Importing Spectra</h2>
@@ -1007,8 +1005,7 @@ spectrum = load_from_mgf("data.mgf", metadata_harmonization=True)
 </div>
 <div class="ref-card">
   <h3>📄 Similarity</h3>
-  <h1>Matchms Similarity Functions Reference</h1>
-
+  
 <p>This document provides detailed information about all similarity scoring methods available in matchms.</p>
 
 <h2>Overview</h2>
@@ -1361,8 +1358,7 @@ cosine_scores = calculate_scores(refs, queries, CosineGreedy())</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Workflows</h3>
-  <h1>Matchms Common Workflows</h1>
-
+  
 <p>This document provides detailed examples of common mass spectrometry analysis workflows using matchms.</p>
 
 <h2>Workflow 1: Basic Spectral Library Matching</h2>

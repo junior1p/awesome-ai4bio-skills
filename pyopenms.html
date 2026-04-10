@@ -23,6 +23,7 @@
   --accent-2:#2DAD7C;
   --accent-2-light:#D1F5E9;
   --accent-warn:#E88C30;
+  --sidebar-bg:#161B22;
   --serif:'Instrument Serif',Georgia,serif;
   --sans:'DM Sans',-apple-system,sans-serif;
   --mono:'JetBrains Mono',monospace;
@@ -160,8 +161,7 @@ footer a:hover{text-decoration:underline}
     <div class="skill-content">
       <h1>PyOpenMS</h1>
       <p class="desc">Complete mass spectrometry analysis platform. Use for proteomics workflows feature detection, peptide identification, protein quantification, and complex LC-MS/MS pipelines. Supports extensive file fo</p>
-      <h1>PyOpenMS</h1>
-
+      
 <h2>Overview</h2>
 
 <p>PyOpenMS provides Python bindings to the OpenMS library for computational mass spectrometry, enabling analysis of proteomics and metabolomics data. Use for handling mass spectrometry file formats, processing spectral data, detecting features, identifying peptides/proteins, and performing quantitative analysis.</p>
@@ -351,8 +351,7 @@ print(df.head())</code></pre>
       <div class="ref-section"><div class="ref-section-title">Reference Documentation</div>
 <div class="ref-card">
   <h3>📄 Data Structures</h3>
-  <h1>Core Data Structures</h1>
-
+  
 <h2>Overview</h2>
 
 <p>PyOpenMS uses C++ objects with Python bindings. Understanding these core data structures is essential for effective data manipulation.</p>
@@ -818,8 +817,7 @@ exp_copy = ms.MSExperiment(exp)
 </div>
 <div class="ref-card">
   <h3>📄 Feature Detection</h3>
-  <h1>Feature Detection and Linking</h1>
-
+  
 <h2>Overview</h2>
 
 <p>Feature detection identifies persistent signals (chromatographic peaks) in LC-MS data. Feature linking combines features across multiple samples for quantitative comparison.</p>
@@ -1198,8 +1196,7 @@ plt.show()</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 File Io</h3>
-  <h1>File I/O and Data Formats</h1>
-
+  
 <h2>Overview</h2>
 
 <p>PyOpenMS supports multiple mass spectrometry file formats for reading and writing. This guide covers file handling strategies and format-specific operations.</p>
@@ -1511,8 +1508,7 @@ else:
 </div>
 <div class="ref-card">
   <h3>📄 Identification</h3>
-  <h1>Peptide and Protein Identification</h1>
-
+  
 <h2>Overview</h2>
 
 <p>PyOpenMS supports peptide/protein identification through integration with search engines and provides tools for post-processing identification results including FDR control, protein inference, and annotation.</p>
@@ -1907,8 +1903,7 @@ for peptide_id in peptide_ids:
 </div>
 <div class="ref-card">
   <h3>📄 Metabolomics</h3>
-  <h1>Metabolomics Workflows</h1>
-
+  
 <h2>Overview</h2>
 
 <p>PyOpenMS provides specialized tools for untargeted metabolomics analysis including feature detection optimized for small molecules, adduct grouping, compound identification, and integration with metabolomics databases.</p>
@@ -2367,8 +2362,7 @@ params.setValue("distance_RT:max_difference", 90.0)  # 90 seconds</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Signal Processing</h3>
-  <h1>Signal Processing</h1>
-
+  
 <h2>Overview</h2>
 
 <p>PyOpenMS provides algorithms for processing raw mass spectrometry data including smoothing, filtering, peak picking, centroiding, normalization, and deconvolution.</p>

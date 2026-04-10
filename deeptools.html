@@ -23,6 +23,7 @@
   --accent-2:#2DAD7C;
   --accent-2-light:#D1F5E9;
   --accent-warn:#E88C30;
+  --sidebar-bg:#161B22;
   --serif:'Instrument Serif',Georgia,serif;
   --sans:'DM Sans',-apple-system,sans-serif;
   --mono:'JetBrains Mono',monospace;
@@ -160,8 +161,7 @@ footer a:hover{text-decoration:underline}
     <div class="skill-content">
       <h1>deepTools: NGS Data Analysis Toolkit</h1>
       <p class="desc">NGS analysis toolkit. BAM to bigWig conversion, QC (correlation, PCA, fingerprints), heatmaps/profiles (TSS, peaks), for ChIP-seq, RNA-seq, ATAC-seq visualization.</p>
-      <h1>deepTools: NGS Data Analysis Toolkit</h1>
-
+      
 <h2>Overview</h2>
 
 <p>deepTools is a comprehensive suite of Python command-line tools designed for processing and analyzing high-throughput sequencing data. Use deepTools to perform quality control, normalize data, compare samples, and generate publication-quality visualizations for ChIP-seq, RNA-seq, ATAC-seq, MNase-seq, and other NGS experiments.</p>
@@ -653,8 +653,7 @@ grep -A 15 "^### Method Name" references/normalization_methods.md</code></pre>
       <div class="ref-section"><div class="ref-section-title">Reference Documentation</div>
 <div class="ref-card">
   <h3>📄 Effective Genome Sizes</h3>
-  <h1>Effective Genome Sizes</h1>
-
+  
 <h2>Definition</h2>
 
 <p>Effective genome size refers to the length of the "mappable" genome - regions that can be uniquely mapped by sequencing reads. This metric is crucial for proper normalization in many deepTools commands.</p>
@@ -765,8 +764,7 @@ seqtk comp genome.fa | awk '{x+=$2}END{print x}'</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Normalization Methods</h3>
-  <h1>deepTools Normalization Methods</h1>
-
+  
 <p>This document explains the various normalization methods available in deepTools and when to use each one.</p>
 
 <h2>Why Normalize?</h2>
@@ -1149,8 +1147,7 @@ bamCoverage --bam input.bam --outFileName output.bw \
 </div>
 <div class="ref-card">
   <h3>📄 Tools Reference</h3>
-  <h1>deepTools Complete Tool Reference</h1>
-
+  
 <p>This document provides a comprehensive reference for all deepTools command-line utilities organized by category.</p>
 
 <h2>BAM and bigWig File Processing Tools</h2>
@@ -1664,8 +1661,7 @@ computeMatrixOperations subset -m matrix.gz --samples 0 2 -o subset.gz</code></p
 </div>
 <div class="ref-card">
   <h3>📄 Workflows</h3>
-  <h1>deepTools Common Workflows</h1>
-
+  
 <p>This document provides complete workflow examples for common deepTools analyses.</p>
 
 <h2>ChIP-seq Quality Control Workflow</h2>

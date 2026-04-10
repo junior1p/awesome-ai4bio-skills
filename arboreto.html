@@ -23,6 +23,7 @@
   --accent-2:#2DAD7C;
   --accent-2-light:#D1F5E9;
   --accent-warn:#E88C30;
+  --sidebar-bg:#161B22;
   --serif:'Instrument Serif',Georgia,serif;
   --sans:'DM Sans',-apple-system,sans-serif;
   --mono:'JetBrains Mono',monospace;
@@ -160,8 +161,7 @@ footer a:hover{text-decoration:underline}
     <div class="skill-content">
       <h1>Arboreto</h1>
       <p class="desc">Infer gene regulatory networks (GRNs) from gene expression data using scalable algorithms (GRNBoost2, GENIE3). Use when analyzing transcriptomics data (bulk RNA-seq, single-cell RNA-seq) to identify t</p>
-      <h1>Arboreto</h1>
-
+      
 <h2>Overview</h2>
 
 <p>Arboreto is a computational library for inferring gene regulatory networks (GRNs) from gene expression data using parallelized algorithms that scale from single machines to multi-node clusters.</p>
@@ -367,8 +367,7 @@ if __name__ == '__main__':
       <div class="ref-section"><div class="ref-section-title">Reference Documentation</div>
 <div class="ref-card">
   <h3>📄 Algorithms</h3>
-  <h1>GRN Inference Algorithms</h1>
-
+  
 <p>Arboreto provides two algorithms for gene regulatory network (GRN) inference, both based on the multiple regression approach.</p>
 
 <h2>Algorithm Overview</h2>
@@ -499,8 +498,7 @@ custom_genie3 = genie3(
 </div>
 <div class="ref-card">
   <h3>📄 Basic Inference</h3>
-  <h1>Basic GRN Inference with Arboreto</h1>
-
+  
 <h2>Input Data Requirements</h2>
 
 <p>Arboreto requires gene expression data in one of two formats:</p>
@@ -636,8 +634,7 @@ network = genie3(expression_data=expression_matrix)</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Distributed Computing</h3>
-  <h1>Distributed Computing with Arboreto</h1>
-
+  
 <p>Arboreto leverages Dask for parallelized computation, enabling efficient GRN inference from single-machine multi-core processing to multi-node cluster environments.</p>
 
 <h2>Computation Architecture</h2>

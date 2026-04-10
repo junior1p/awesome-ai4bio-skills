@@ -23,6 +23,7 @@
   --accent-2:#2DAD7C;
   --accent-2-light:#D1F5E9;
   --accent-warn:#E88C30;
+  --sidebar-bg:#161B22;
   --serif:'Instrument Serif',Georgia,serif;
   --sans:'DM Sans',-apple-system,sans-serif;
   --mono:'JetBrains Mono',monospace;
@@ -160,8 +161,7 @@ footer a:hover{text-decoration:underline}
     <div class="skill-content">
       <h1>Pysam</h1>
       <p class="desc">Genomic file toolkit. Read/write SAM/BAM/CRAM alignments, VCF/BCF variants, FASTA/FASTQ sequences, extract regions, calculate coverage, for NGS data processing pipelines.</p>
-      <h1>Pysam</h1>
-
+      
 <h2>Overview</h2>
 
 <p>Pysam is a Python module for reading, manipulating, and writing genomic datasets. Read/write SAM/BAM/CRAM alignment files, VCF/BCF variant files, and FASTA/FASTQ sequences with a Pythonic interface to htslib. Query tabix-indexed files, perform pileup analysis for coverage, and execute samtools/bcftools commands.</p>
@@ -403,8 +403,7 @@ except pysam.SamtoolsError as e:
       <div class="ref-section"><div class="ref-section-title">Reference Documentation</div>
 <div class="ref-card">
   <h3>📄 Alignment Files</h3>
-  <h1>Working with Alignment Files (SAM/BAM/CRAM)</h1>
-
+  
 <h2>Overview</h2>
 
 <p>Pysam provides the <code>AlignmentFile</code> class for reading and writing SAM/BAM/CRAM formatted files containing aligned sequence data. BAM/CRAM files support compression and random access through indexing.</p>
@@ -657,8 +656,7 @@ samfile.fetch("chr1:1000-2000")   # samtools style: 1-based</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Common Workflows</h3>
-  <h1>Common Bioinformatics Workflows with Pysam</h1>
-
+  
 <h2>Overview</h2>
 
 <p>This document provides practical examples of common bioinformatics workflows using pysam, demonstrating how to combine different file types and operations.</p>
@@ -1153,8 +1151,7 @@ def calculate_bam_stats(bam_file):
 </div>
 <div class="ref-card">
   <h3>📄 Sequence Files</h3>
-  <h1>Working with Sequence Files (FASTA/FASTQ)</h1>
-
+  
 <h2>FASTA Files</h2>
 
 <h3>Overview</h3>
@@ -1522,8 +1519,7 @@ for feature in gtf.fetch("chr1", 1000000, 2000000, parser=pysam.asGTF()):
 </div>
 <div class="ref-card">
   <h3>📄 Variant Files</h3>
-  <h1>Working with Variant Files (VCF/BCF)</h1>
-
+  
 <h2>Overview</h2>
 
 <p>Pysam provides the <code>VariantFile</code> class for reading and writing VCF (Variant Call Format) and BCF (binary VCF) files. These files contain information about genetic variants, including SNPs, indels, and structural variants.</p>

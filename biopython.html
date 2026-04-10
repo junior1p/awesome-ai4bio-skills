@@ -23,6 +23,7 @@
   --accent-2:#2DAD7C;
   --accent-2-light:#D1F5E9;
   --accent-warn:#E88C30;
+  --sidebar-bg:#161B22;
   --serif:'Instrument Serif',Georgia,serif;
   --sans:'DM Sans',-apple-system,sans-serif;
   --mono:'JetBrains Mono',monospace;
@@ -160,8 +161,7 @@ footer a:hover{text-decoration:underline}
     <div class="skill-content">
       <h1>Biopython: Computational Molecular Biology in Python</h1>
       <p class="desc">Comprehensive molecular biology toolkit. Use for sequence manipulation, file parsing (FASTA/GenBank/PDB), phylogenetics, and programmatic NCBI/PubMed access (Bio.Entrez). Best for batch processing, cu</p>
-      <h1>Biopython: Computational Molecular Biology in Python</h1>
-
+      
 <h2>Overview</h2>
 
 <p>Biopython is a comprehensive set of freely available Python tools for biological computation. It provides functionality for sequence manipulation, file I/O, database access, structural bioinformatics, phylogenetics, and many other bioinformatics tasks. The current version is <strong>Biopython 1.85</strong> (released January 2025), which supports Python 3 and requires NumPy.</p>
@@ -565,8 +565,7 @@ grep -n "Bio.Seq" references/*.md</code></pre>
       <div class="ref-section"><div class="ref-section-title">Reference Documentation</div>
 <div class="ref-card">
   <h3>📄 Advanced</h3>
-  <h1>Advanced Biopython Features</h1>
-
+  
 <h2>Sequence Motifs with Bio.motifs</h2>
 
 <h3>Creating Motifs</h3>
@@ -1094,8 +1093,7 @@ print(f"Sequence complexity: {complexity:.3f}")</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Alignment</h3>
-  <h1>Sequence Alignments with Bio.Align and Bio.AlignIO</h1>
-
+  
 <h2>Overview</h2>
 
 <p>Bio.Align provides tools for pairwise sequence alignment using various algorithms, while Bio.AlignIO handles reading and writing multiple sequence alignment files in various formats.</p>
@@ -1420,8 +1418,7 @@ print(f"Conserved positions: {conserved_positions}")</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Blast</h3>
-  <h1>BLAST Operations with Bio.Blast</h1>
-
+  
 <h2>Overview</h2>
 
 <p>Bio.Blast provides tools for running BLAST searches (both locally and via NCBI web services) and parsing BLAST results in various formats. The module handles the complexity of submitting queries and parsing outputs.</p>
@@ -1841,8 +1838,7 @@ except Exception as e:
 </div>
 <div class="ref-card">
   <h3>📄 Databases</h3>
-  <h1>Database Access with Bio.Entrez</h1>
-
+  
 <h2>Overview</h2>
 
 <p>Bio.Entrez provides programmatic access to NCBI's Entrez databases, including PubMed, GenBank, Gene, Protein, Nucleotide, and many others. It handles all the complexity of API calls, rate limiting, and data parsing.</p>
@@ -2281,8 +2277,7 @@ for linkset in result[0]["LinkSetDb"]:
 </div>
 <div class="ref-card">
   <h3>📄 Phylogenetics</h3>
-  <h1>Phylogenetics with Bio.Phylo</h1>
-
+  
 <h2>Overview</h2>
 
 <p>Bio.Phylo provides a unified toolkit for reading, writing, analyzing, and visualizing phylogenetic trees. It supports multiple file formats including Newick, NEXUS, phyloXML, NeXML, and CDAO.</p>
@@ -2795,8 +2790,7 @@ print(f"Robinson-Foulds distance: {rf_dist}")</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Sequence Io</h3>
-  <h1>Sequence Handling with Bio.Seq and Bio.SeqIO</h1>
-
+  
 <h2>Overview</h2>
 
 <p>Bio.Seq provides the <code>Seq</code> object for biological sequences with specialized methods, while Bio.SeqIO offers a unified interface for reading, writing, and converting sequence files across multiple formats.</p>
@@ -3044,8 +3038,7 @@ SeqIO.write([new_record], "new.fasta", "fasta")</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Structure</h3>
-  <h1>Structural Bioinformatics with Bio.PDB</h1>
-
+  
 <h2>Overview</h2>
 
 <p>Bio.PDB provides tools for working with macromolecular 3D structures from PDB and mmCIF files. The module uses the SMCRA (Structure/Model/Chain/Residue/Atom) architecture to represent protein structures hierarchically.</p>

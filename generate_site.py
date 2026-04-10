@@ -77,6 +77,9 @@ def markdown_to_html(text: str) -> str:
         m = re.match(r'^(#{1,6})\s+(.*)', line)
         if m:
             level = len(m.group(1))
+            # Skip h1 — title is rendered by the page template
+            if level == 1:
+                continue
             html_lines.append(f'<h{level}>{inline_format(m.group(2))}</h{level}>')
             continue
 
@@ -193,6 +196,7 @@ CSS = """
   --accent-2:#2DAD7C;
   --accent-2-light:#D1F5E9;
   --accent-warn:#E88C30;
+  --sidebar-bg:#161B22;
   --serif:'Instrument Serif',Georgia,serif;
   --sans:'DM Sans',-apple-system,sans-serif;
   --mono:'JetBrains Mono',monospace;

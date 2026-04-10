@@ -23,6 +23,7 @@
   --accent-2:#2DAD7C;
   --accent-2-light:#D1F5E9;
   --accent-warn:#E88C30;
+  --sidebar-bg:#161B22;
   --serif:'Instrument Serif',Georgia,serif;
   --sans:'DM Sans',-apple-system,sans-serif;
   --mono:'JetBrains Mono',monospace;
@@ -160,8 +161,7 @@ footer a:hover{text-decoration:underline}
     <div class="skill-content">
       <h1>TorchDrug</h1>
       <p class="desc">PyTorch-native graph neural networks for molecules and proteins. Use when building custom GNN architectures for drug discovery, protein modeling, or knowledge graph reasoning. Best for custom model de</p>
-      <h1>TorchDrug</h1>
-
+      
 <h2>Overview</h2>
 
 <p>TorchDrug is a comprehensive PyTorch-based machine learning toolbox for drug discovery and molecular science. Apply graph neural networks, pre-trained models, and task definitions to molecules, proteins, and biological knowledge graphs, including molecular property prediction, protein modeling, knowledge graph reasoning, molecular generation, retrosynthesis planning, with 40+ curated datasets and 20+ model architectures.</p>
@@ -592,8 +592,7 @@ class LightningTask(pl.LightningModule):
       <div class="ref-section"><div class="ref-section-title">Reference Documentation</div>
 <div class="ref-card">
   <h3>📄 Core Concepts</h3>
-  <h1>Core Concepts and Technical Details</h1>
-
+  
 <h2>Overview</h2>
 
 <p>This reference covers TorchDrug's fundamental architecture, design principles, and technical implementation details.</p>
@@ -1131,8 +1130,7 @@ class CustomConv(layers.MessagePassingBase):
 </div>
 <div class="ref-card">
   <h3>📄 Datasets</h3>
-  <h1>Datasets Reference</h1>
-
+  
 <h2>Overview</h2>
 
 <p>TorchDrug provides 40+ curated datasets across multiple domains: molecular property prediction, protein modeling, knowledge graph reasoning, and retrosynthesis. All datasets support lazy loading, automatic downloading, and customizable feature extraction.</p>
@@ -1511,8 +1509,7 @@ train, valid, test = dataset.split()</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Knowledge Graphs</h3>
-  <h1>Knowledge Graph Reasoning</h1>
-
+  
 <h2>Overview</h2>
 
 <p>Knowledge graphs represent structured information as entities and relations in a graph format. TorchDrug provides comprehensive support for knowledge graph completion (link prediction) using embedding-based models and neural reasoning approaches.</p>
@@ -1833,8 +1830,7 @@ task = tasks.KnowledgeGraphCompletion(
 </div>
 <div class="ref-card">
   <h3>📄 Models Architectures</h3>
-  <h1>Models and Architectures</h1>
-
+  
 <h2>Overview</h2>
 
 <p>TorchDrug provides a comprehensive collection of pre-built model architectures for various graph-based learning tasks. This reference catalogs all available models with their characteristics, use cases, and implementation details.</p>
@@ -2378,8 +2374,7 @@ task = tasks.KnowledgeGraphCompletion(
 </div>
 <div class="ref-card">
   <h3>📄 Molecular Generation</h3>
-  <h1>Molecular Generation</h1>
-
+  
 <h2>Overview</h2>
 
 <p>Molecular generation involves creating novel molecular structures with desired properties. TorchDrug supports both unconditional generation (exploring chemical space) and conditional generation (optimizing for specific properties).</p>
@@ -2732,8 +2727,7 @@ task = tasks.GCPNGeneration(
 </div>
 <div class="ref-card">
   <h3>📄 Molecular Property Prediction</h3>
-  <h1>Molecular Property Prediction</h1>
-
+  
 <h2>Overview</h2>
 
 <p>Molecular property prediction involves predicting chemical, physical, or biological properties of molecules from their structure. TorchDrug provides comprehensive support for both classification and regression tasks on molecular graphs.</p>
@@ -2901,8 +2895,7 @@ dataset = datasets.BBBP("~/molecule-datasets/",
 </div>
 <div class="ref-card">
   <h3>📄 Protein Modeling</h3>
-  <h1>Protein Modeling</h1>
-
+  
 <h2>Overview</h2>
 
 <p>TorchDrug provides extensive support for protein-related tasks including sequence analysis, structure prediction, property prediction, and protein-protein interactions. Proteins are represented as graphs where nodes are amino acid residues and edges represent spatial or sequential relationships.</p>
@@ -3173,8 +3166,7 @@ protein = data.Protein.from_pdb("alphafold_structure.pdb")
 </div>
 <div class="ref-card">
   <h3>📄 Retrosynthesis</h3>
-  <h1>Retrosynthesis</h1>
-
+  
 <h2>Overview</h2>
 
 <p>Retrosynthesis is the process of planning synthetic routes from target molecules back to commercially available starting materials. TorchDrug provides tools for learning-based retrosynthesis prediction, breaking down the complex task into manageable subtasks.</p>

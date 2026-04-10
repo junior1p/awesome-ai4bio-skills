@@ -23,6 +23,7 @@
   --accent-2:#2DAD7C;
   --accent-2-light:#D1F5E9;
   --accent-warn:#E88C30;
+  --sidebar-bg:#161B22;
   --serif:'Instrument Serif',Georgia,serif;
   --sans:'DM Sans',-apple-system,sans-serif;
   --mono:'JetBrains Mono',monospace;
@@ -160,8 +161,7 @@ footer a:hover{text-decoration:underline}
     <div class="skill-content">
       <h1>Polars</h1>
       <p class="desc">Fast in-memory DataFrame library for datasets that fit in RAM. Use when pandas is too slow but data still fits in memory. Lazy evaluation, parallel execution, Apache Arrow backend. Best for 1-100GB da</p>
-      <h1>Polars</h1>
-
+      
 <h2>Overview</h2>
 
 <p>Polars is a lightning-fast DataFrame library for Python and Rust built on Apache Arrow. Work with Polars' expression-based API, lazy evaluation framework, and high-performance data manipulation capabilities for efficient data processing, pandas migration, and data pipeline optimization.</p>
@@ -497,8 +497,7 @@ pl.col("x").drop_nulls()</code></pre>
       <div class="ref-section"><div class="ref-section-title">Reference Documentation</div>
 <div class="ref-card">
   <h3>📄 Best Practices</h3>
-  <h1>Polars Best Practices and Performance Guide</h1>
-
+  
 <p>Comprehensive guide to writing efficient Polars code and avoiding common pitfalls.</p>
 
 <h2>Performance Optimization</h2>
@@ -1070,8 +1069,7 @@ print(pl.__version__)
 </div>
 <div class="ref-card">
   <h3>📄 Core Concepts</h3>
-  <h1>Polars Core Concepts</h1>
-
+  
 <h2>Expressions</h2>
 
 <p>Expressions are the foundation of Polars' API. They are composable units that describe data transformations without executing them immediately.</p>
@@ -1400,8 +1398,7 @@ df = pl.DataFrame({"int_col": [1, 2, None, 4]})
 </div>
 <div class="ref-card">
   <h3>📄 Io Guide</h3>
-  <h1>Polars Data I/O Guide</h1>
-
+  
 <p>Comprehensive guide to reading and writing data in various formats with Polars.</p>
 
 <h2>CSV Files</h2>
@@ -1887,8 +1884,7 @@ df = pl.read_csv("data.csv", dtypes=schema)</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Operations</h3>
-  <h1>Polars Operations Reference</h1>
-
+  
 <p>This reference covers all common Polars operations with comprehensive examples.</p>
 
 <h2>Selection Operations</h2>
@@ -2413,8 +2409,7 @@ df.select(pl.col("*").name.to_uppercase())</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Pandas Migration</h3>
-  <h1>Pandas to Polars Migration Guide</h1>
-
+  
 <p>This guide helps you migrate from pandas to Polars with comprehensive operation mappings and key differences.</p>
 
 <h2>Core Conceptual Differences</h2>
@@ -2788,8 +2783,7 @@ pd_df = pl_df.to_arrow().to_pandas()</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Transformations</h3>
-  <h1>Polars Data Transformations</h1>
-
+  
 <p>Comprehensive guide to joins, concatenation, and reshaping operations in Polars.</p>
 
 <h2>Joins</h2>

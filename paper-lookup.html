@@ -23,6 +23,7 @@
   --accent-2:#2DAD7C;
   --accent-2-light:#D1F5E9;
   --accent-warn:#E88C30;
+  --sidebar-bg:#161B22;
   --serif:'Instrument Serif',Georgia,serif;
   --sans:'DM Sans',-apple-system,sans-serif;
   --mono:'JetBrains Mono',monospace;
@@ -160,8 +161,7 @@ footer a:hover{text-decoration:underline}
     <div class="skill-content">
       <h1>Paper Lookup</h1>
       <p class="desc">Search 10 academic paper databases via their REST APIs to find research papers, preprints, and scholarly articles. Covers biomedical literature (PubMed, PMC full text), preprint servers (bioRxiv, medR</p>
-      <h1>Paper Lookup</h1>
-
+      
 <p>You have access to 10 academic paper databases through their REST APIs. Your job is to figure out which database(s) best serve the user's query, call them, and return the results.</p>
 
 <h2>Core Workflow</h2>
@@ -347,8 +347,7 @@ footer a:hover{text-decoration:underline}
       <div class="ref-section"><div class="ref-section-title">Reference Documentation</div>
 <div class="ref-card">
   <h3>📄 Arxiv</h3>
-  <h1>arXiv API</h1>
-
+  
 <p>arXiv is a preprint server for physics, mathematics, computer science, quantitative biology, quantitative finance, statistics, electrical engineering, and economics.</p>
 
 <p><strong>Important:</strong> The arXiv API returns <strong>Atom XML</strong>, not JSON. There is no JSON option.</p>
@@ -494,8 +493,7 @@ footer a:hover{text-decoration:underline}
 </div>
 <div class="ref-card">
   <h3>📄 Biorxiv</h3>
-  <h1>bioRxiv API</h1>
-
+  
 <p>bioRxiv is a preprint server for biology. The API provides metadata for preprints, including title, authors, abstract, DOI, and publication status.</p>
 
 <p><strong>Important:</strong> The bioRxiv API has <strong>no keyword search</strong>. It supports date-range browsing and DOI lookup only. For keyword search of bioRxiv preprints, use Semantic Scholar, OpenAlex, or CORE instead.</p>
@@ -598,8 +596,7 @@ GET /pubs/biorxiv/{doi}/na</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Core</h3>
-  <h1>CORE API</h1>
-
+  
 <p>CORE aggregates open access research from 15,000+ repositories worldwide. It provides <strong>full text</strong> for 37M+ articles and metadata for 368M+ papers.</p>
 
 <h2>Base URL</h2>
@@ -730,8 +727,7 @@ Content-Type: application/json
 </div>
 <div class="ref-card">
   <h3>📄 Crossref</h3>
-  <h1>Crossref API</h1>
-
+  
 <p>Crossref is the DOI registration agency for scholarly content. It provides metadata for 150M+ works including journal articles, books, conference papers, datasets, and preprints.</p>
 
 <h2>Base URL</h2>
@@ -893,8 +889,7 @@ GET /members/{id}/works?rows={n}</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Medrxiv</h3>
-  <h1>medRxiv API</h1>
-
+  
 <p>medRxiv is a preprint server for health sciences. The API is identical to bioRxiv's API -- same endpoints, same response format -- just use <code>medrxiv</code> as the server parameter.</p>
 
 <p><strong>Important:</strong> Like bioRxiv, there is <strong>no keyword search</strong>. Use Semantic Scholar, OpenAlex, or PubMed for keyword searches of medRxiv content.</p>
@@ -987,8 +982,7 @@ GET /pubs/medrxiv/{doi}/na</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Openalex</h3>
-  <h1>OpenAlex API</h1>
-
+  
 <p>OpenAlex is a comprehensive index of 250M+ scholarly works, authors, institutions, sources, and topics. It's the broadest multidisciplinary database in this skill.</p>
 
 <h2>Base URL</h2>
@@ -1141,8 +1135,7 @@ GET /topics/{id}</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Pmc</h3>
-  <h1>PMC (PubMed Central)</h1>
-
+  
 <p>PMC is a <strong>full-text archive</strong> of biomedical and life sciences articles. It is separate from PubMed -- PubMed has citations/abstracts, PMC has full text. Not all PubMed articles are in PMC, and vice versa.</p>
 
 <h2>E-utilities for PMC</h2>
@@ -1275,8 +1268,7 @@ GET /topics/{id}</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Pubmed</h3>
-  <h1>PubMed (NCBI E-utilities)</h1>
-
+  
 <p>PubMed provides citations, abstracts, and metadata for 37M+ biomedical and life science articles. It does NOT contain full text -- for that, use PMC.</p>
 
 <h2>Base URL</h2>
@@ -1383,8 +1375,7 @@ GET /topics/{id}</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Semantic Scholar</h3>
-  <h1>Semantic Scholar API</h1>
-
+  
 <p>Semantic Scholar indexes 200M+ papers across all academic fields with AI-powered features: citation context, influential citations, TLDRs, and paper recommendations.</p>
 
 <h2>Base URLs</h2>
@@ -1556,8 +1547,7 @@ Content-Type: application/json
 </div>
 <div class="ref-card">
   <h3>📄 Unpaywall</h3>
-  <h1>Unpaywall API</h1>
-
+  
 <p>Unpaywall tells you whether a legal, free copy of a scholarly article exists. Given a DOI, it returns open access status, PDF links, and location details.</p>
 
 <h2>Base URL</h2>

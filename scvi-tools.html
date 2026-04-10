@@ -23,6 +23,7 @@
   --accent-2:#2DAD7C;
   --accent-2-light:#D1F5E9;
   --accent-warn:#E88C30;
+  --sidebar-bg:#161B22;
   --serif:'Instrument Serif',Georgia,serif;
   --sans:'DM Sans',-apple-system,sans-serif;
   --mono:'JetBrains Mono',monospace;
@@ -160,8 +161,7 @@ footer a:hover{text-decoration:underline}
     <div class="skill-content">
       <h1>scvi-tools</h1>
       <p class="desc">Deep generative models for single-cell omics. Use when you need probabilistic batch correction (scVI), transfer learning, differential expression with uncertainty, or multi-modal integration (TOTALVI,</p>
-      <h1>scvi-tools</h1>
-
+      
 <h2>Overview</h2>
 
 <p>scvi-tools is a comprehensive Python framework for probabilistic models in single-cell genomics. Built on PyTorch and PyTorch Lightning, it provides deep generative models using variational inference for analyzing diverse single-cell data modalities.</p>
@@ -332,8 +332,7 @@ uv pip install scvi-tools[cuda]</code></pre>
       <div class="ref-section"><div class="ref-section-title">Reference Documentation</div>
 <div class="ref-card">
   <h3>📄 Differential Expression</h3>
-  <h1>Differential Expression Analysis in scvi-tools</h1>
-
+  
 <p>This document provides detailed information about differential expression (DE) analysis using scvi-tools' probabilistic framework.</p>
 
 <h2>Overview</h2>
@@ -863,8 +862,7 @@ downreg.to_csv("downregulated_genes.csv")</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Models Atac Seq</h3>
-  <h1>ATAC-seq and Chromatin Accessibility Models</h1>
-
+  
 <p>This document covers models for analyzing single-cell ATAC-seq and chromatin accessibility data in scvi-tools.</p>
 
 <h2>PeakVI</h2>
@@ -1176,8 +1174,7 @@ latent = model.get_latent_representation()</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Models Multimodal</h3>
-  <h1>Multimodal and Multi-omics Integration Models</h1>
-
+  
 <p>This document covers models for joint analysis of multiple data modalities in scvi-tools.</p>
 
 <h2>totalVI (Total Variational Inference)</h2>
@@ -1523,8 +1520,7 @@ model.save("totalvi_model")</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Models Scrna Seq</h3>
-  <h1>Single-Cell RNA-seq Models</h1>
-
+  
 <p>This document covers core models for analyzing single-cell RNA sequencing data in scvi-tools.</p>
 
 <h2>scVI (Single-Cell Variational Inference)</h2>
@@ -1841,8 +1837,7 @@ topic_gene_loadings = model.get_topic_distribution()</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Models Spatial</h3>
-  <h1>Spatial Transcriptomics Models</h1>
-
+  
 <p>This document covers models for analyzing spatially-resolved transcriptomics data in scvi-tools.</p>
 
 <h2>DestVI (Deconvolution of Spatial Transcriptomics using Variational Inference)</h2>
@@ -2265,8 +2260,7 @@ spatial_adata.write("spatial_deconvolved.h5ad")</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Models Specialized</h3>
-  <h1>Specialized Modality Models</h1>
-
+  
 <p>This document covers models for specialized single-cell data modalities in scvi-tools.</p>
 
 <h2>MethylVI / MethylANVI (Methylation Analysis)</h2>
@@ -2649,8 +2643,7 @@ doublets = solo.predict()</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Theoretical Foundations</h3>
-  <h1>Theoretical Foundations of scvi-tools</h1>
-
+  
 <p>This document explains the mathematical and statistical principles underlying scvi-tools.</p>
 
 <h2>Core Concepts</h2>
@@ -3065,8 +3058,7 @@ Cell level: z_i ~ N(ρ_{s(i)}, σ²)</code></pre>
 </div>
 <div class="ref-card">
   <h3>📄 Workflows</h3>
-  <h1>Common Workflows and Best Practices</h1>
-
+  
 <p>This document covers common workflows, best practices, and advanced usage patterns for scvi-tools.</p>
 
 <h2>Standard Analysis Workflow</h2>
